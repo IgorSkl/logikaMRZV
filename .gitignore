@@ -11,4 +11,6 @@ my.bat
 settings/
 
 # Ігнорувати файли з папки Flash-Debug/
-Flash-Debug/
+#Flash-Debug/
+EWP/
+
