@@ -1,0 +1,290 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        12/Oct/2015  11:05:01
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  D:\IAR projects\HR1_0100_00_I720_new2\component\logicOF.c
+#    Command line =  
+#        "D:\IAR projects\HR1_0100_00_I720_new2\component\logicOF.c" -D
+#        _STATIC_MEMORY_BOOT -lcN "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\List\" -o "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\Obj\" --debug
+#        --endian=little --cpu=ARM926EJ-S -e --fpu=VFP9-S --dlib_config
+#        "C:\Program Files\IAR Systems\Embedded Workbench
+#        7.40\arm\INC\c\DLib_Config_Normal.h" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\Igor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\component\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\" --cpu_mode arm -Ohs
+#        --use_c++_inline
+#    List file    =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\List\logicOF.lst
+#    Object file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\Obj\logicOF.o
+#
+###############################################################################
+
+D:\IAR projects\HR1_0100_00_I720_new2\component\logicOF.c
+      1          
+      2          #include <stdio.h>
+      3          #include <string.h>
+      4          
+      5          #include "psuperVisor\supermanager.h"
+      6          
+      7          #include "bazisdef.h"
+      8          #include "component\componentdef.h"
+      9          #include "psuperVisor\psvisor_helpdef.h"
+     10          
+     11          #include "logictimers\logictimersmac.h"
+     12          
+     13          #include "logictimers\logictimersfnc.h"
+     14          
+     15          #include "..\bazis.h"
+     16          
+     17          #include "toSpeedOptim.h"
+     18          
+     19          #define _HIDE_COMPONENT
+     20          #include "OFComponent.c"
+     21          
+     22          extern int GlobalPO1;
+     23          extern int GlobalPO2;
+     24          extern int GlobalPO3;
+     25          extern int GlobalPO4;
+     26          extern int GlobalLevelI_ABC[];
+     27          
+     28          extern COMPONENT_OBJ  cnfCOMPONENT[];//конфигурация
+     29          extern int  logMassTimer[];
+     30          extern int  ENAcmd[];
+     31          extern int  spvUSTAVKI[];//текущие уставки супервизора
+     32          extern int   WideCmdRTBuffer[];
+     33          extern int   tempLog[];
+     34          
+     35          extern COMPONENT_OBJ  cnfCOMPONENT_WL[];//конфигурация
+     36          extern int  logMassTimer_WL[];
+     37          extern int  ENAcmd_WL[];
+     38          extern int  spvUSTAVKI_WL[];//текущие уставки супервизора
+     39          extern int   tempLog_WL[];
+     40          
+     41          extern int offsetIOCmdPRM1;//смещение для IO PRM1
+     42          
+     43          extern int pusk1OF, pusk2OF, pusk3OF;
+     44          extern int pusk1OF2, pusk2OF2, pusk3OF2;
+     45          extern int pusk1OF3, pusk2OF3, pusk3OF3;
+     46          extern int pusk1OF4, pusk2OF4, pusk3OF4;
+     47          extern int pusk1OF5, pusk2OF5, pusk3OF5;
+     48          extern int pusk1OF6, pusk2OF6, pusk3OF6;
+     49          extern int pusk1OF7, pusk2OF7, pusk3OF7;
+     50          extern int pusk1OF8, pusk2OF8, pusk3OF8;
+     51          extern int pusk1OF9, pusk2OF9, pusk3OF9;
+     52          extern int pusk1OF10, pusk2OF10, pusk3OF10;
+     53          extern int pusk1OF11, pusk2OF11, pusk3OF11;
+     54          extern int pusk1OF12, pusk2OF12, pusk3OF12;
+     55          extern int pusk1OF13, pusk2OF13, pusk3OF13;
+     56          extern int pusk1OF14, pusk2OF14, pusk3OF14;
+     57          extern int pusk1OF15, pusk2OF15, pusk3OF15;
+     58          extern int pusk1OF16, pusk2OF16, pusk3OF16;
+     59          
+     60          void  logicOF(int idxC) @ "Fast_function"
+     61          {
+     62          //логика компонента
+     63            if(idxC>=0) {
+     64              int tmpOffsetT    =
+     65                          cnfCOMPONENT[idxC].offsetTimers;   //таймера компонента в конфигурации
+     66              int tmpOffsetIO   =
+     67                          cnfCOMPONENT[idxC].offsetIOCmd;    //IO команды
+     68              int tmpOffsetENA  =
+     69                          cnfCOMPONENT[idxC].offsetENACmd;    //ENA команды
+     70          
+     71          //  int tt2 = IO_LOGIC(IOCMD_OF1);
+     72          
+     73            //int tt1  = IO_LOGIC(IOCMD_IN_OF1);//ОФункция 1
+     74          
+     75            int tmp1 =  pusk1OF | pusk2OF | IO_LOGIC(IOCMD_IN_OF1);//ОФункция 1
+     76            LSIGNAL_TIMER(TIMERP_OF1)  =  tmp1;
+     77            int tmp2 = OFunction(tmpOffsetT + TIMERP_OF1, ENA_LOGIC(ENA_OF_1));
+     78            IO_LOGIC(IOCMD_OUT_OF1) = tmp2&(~pusk3OF );
+     79          
+     80            //int tt2  = IO_LOGIC(IOCMD_IN_OF2);//ОФункция 2
+     81          
+     82            tmp1 =  pusk1OF2 | pusk2OF2 | IO_LOGIC(IOCMD_IN_OF2);//ОФункция 2
+     83            LSIGNAL_TIMER(TIMERP_OF2)  = tmp1;
+     84            tmp2 = OFunction(tmpOffsetT + TIMERP_OF2, ENA_LOGIC(ENA_OF_2));
+     85            IO_LOGIC(IOCMD_OUT_OF2) = tmp2&(~pusk3OF2 );
+     86          
+     87           // if(tt3==1){
+     88          //    tt2=0;
+     89           // }//if
+     90            
+     91            tmp1 =  pusk1OF3 | pusk2OF3 | IO_LOGIC(IOCMD_IN_OF3);//ОФункция 3
+     92            LSIGNAL_TIMER(TIMERP_OF3)  = tmp1;
+     93            tmp2 = OFunction(tmpOffsetT + TIMERP_OF3, ENA_LOGIC(ENA_OF_3));
+     94            IO_LOGIC(IOCMD_OUT_OF3) = tmp2&(~pusk3OF3 );
+     95          
+     96            tmp1 =  pusk1OF4 | pusk2OF4 | IO_LOGIC(IOCMD_IN_OF4);//ОФункция 4
+     97            LSIGNAL_TIMER(TIMERP_OF4)  = tmp1;
+     98            tmp2 = OFunction(tmpOffsetT + TIMERP_OF4, ENA_LOGIC(ENA_OF_4));
+     99            IO_LOGIC(IOCMD_OUT_OF4) = tmp2&(~pusk3OF4 );
+    100          
+    101            tmp1 =  pusk1OF5 | pusk2OF5 | IO_LOGIC(IOCMD_IN_OF5);//ОФункция 5
+    102            LSIGNAL_TIMER(TIMERP_OF5)  = tmp1;
+    103            tmp2 = OFunction(tmpOffsetT + TIMERP_OF5, ENA_LOGIC(ENA_OF_5));
+    104            IO_LOGIC(IOCMD_OUT_OF5) = tmp2&(~pusk3OF5 );
+    105          
+    106            tmp1 =  pusk1OF6 | pusk2OF6 | IO_LOGIC(IOCMD_IN_OF6);//ОФункция 6
+    107            LSIGNAL_TIMER(TIMERP_OF6)  = tmp1;
+    108            tmp2 = OFunction(tmpOffsetT + TIMERP_OF6, ENA_LOGIC(ENA_OF_6));
+    109            IO_LOGIC(IOCMD_OUT_OF6) = tmp2&(~pusk3OF6 );
+    110          
+    111            tmp1 =  pusk1OF7 | pusk2OF7 | IO_LOGIC(IOCMD_IN_OF7);//ОФункция 7
+    112            LSIGNAL_TIMER(TIMERP_OF7)  = tmp1;
+    113            tmp2 = OFunction(tmpOffsetT + TIMERP_OF7, ENA_LOGIC(ENA_OF_7));
+    114            IO_LOGIC(IOCMD_OUT_OF7) = tmp2&(~pusk3OF7 );
+    115          
+    116            tmp1 =  pusk1OF8 | pusk2OF8 | IO_LOGIC(IOCMD_IN_OF8);//ОФункция 8
+    117            LSIGNAL_TIMER(TIMERP_OF8)  = tmp1;
+    118            tmp2 = OFunction(tmpOffsetT + TIMERP_OF8, ENA_LOGIC(ENA_OF_8));
+    119            IO_LOGIC(IOCMD_OUT_OF8) = tmp2&(~pusk3OF8 );
+    120          
+    121            tmp1 =  pusk1OF9 | pusk2OF9 | IO_LOGIC(IOCMD_IN_OF9);//ОФункция 9
+    122            LSIGNAL_TIMER(TIMERP_OF9)  = tmp1;
+    123            tmp2 = OFunction(tmpOffsetT + TIMERP_OF9, ENA_LOGIC(ENA_OF_9));
+    124            IO_LOGIC(IOCMD_OUT_OF9) = tmp2&(~pusk3OF9 );
+    125          
+    126            tmp1 =  pusk1OF10 | pusk2OF10 | IO_LOGIC(IOCMD_IN_OF10);//ОФункция 10
+    127            LSIGNAL_TIMER(TIMERP_OF10)  = tmp1;
+    128            tmp2 = OFunction(tmpOffsetT + TIMERP_OF10, ENA_LOGIC(ENA_OF_10));
+    129            IO_LOGIC(IOCMD_OUT_OF10) = tmp2&(~pusk3OF10 );
+    130          
+    131            tmp1 =  pusk1OF11 | pusk2OF11 | IO_LOGIC(IOCMD_IN_OF11);//ОФункция 11
+    132            LSIGNAL_TIMER(TIMERP_OF11)  = tmp1;
+    133            tmp2 = OFunction(tmpOffsetT + TIMERP_OF11, ENA_LOGIC(ENA_OF_11));
+    134            IO_LOGIC(IOCMD_OUT_OF11) = tmp2&(~pusk3OF11 );
+    135          
+    136            tmp1 =  pusk1OF12 | pusk2OF12 | IO_LOGIC(IOCMD_IN_OF12);//ОФункция 12
+    137            LSIGNAL_TIMER(TIMERP_OF12)  = tmp1;
+    138            tmp2 = OFunction(tmpOffsetT + TIMERP_OF12, ENA_LOGIC(ENA_OF_12));
+    139            IO_LOGIC(IOCMD_OUT_OF12) = tmp2&(~pusk3OF12 );
+    140          
+    141            tmp1 =  pusk1OF13 | pusk2OF13 |IO_LOGIC(IOCMD_IN_OF13);//ОФункция 13
+    142            LSIGNAL_TIMER(TIMERP_OF13)  = tmp1;
+    143            tmp2 = OFunction(tmpOffsetT + TIMERP_OF13, ENA_LOGIC(ENA_OF_13));
+    144            IO_LOGIC(IOCMD_OUT_OF13) = tmp2&(~pusk3OF13 );
+    145          
+    146            tmp1 =  pusk1OF14 | pusk2OF14 | IO_LOGIC(IOCMD_IN_OF14);//ОФункция 14
+    147            LSIGNAL_TIMER(TIMERP_OF14)  = tmp1;
+    148            tmp2 = OFunction(tmpOffsetT + TIMERP_OF14, ENA_LOGIC(ENA_OF_14));
+    149            IO_LOGIC(IOCMD_OUT_OF14) = tmp2&(~pusk3OF14 );
+    150          
+    151            tmp1 =  pusk1OF15 | pusk2OF15 |
+    152                    IO_LOGIC(IOCMD_IN_OF15);//ОФункция 15
+    153            LSIGNAL_TIMER(TIMERP_OF15)  = tmp1;
+    154            tmp2 = OFunction(tmpOffsetT + TIMERP_OF15, ENA_LOGIC(ENA_OF_15));
+    155            IO_LOGIC(IOCMD_OUT_OF15) = tmp2&(~pusk3OF15 );
+    156          
+    157            tmp1 =  pusk1OF16 | pusk2OF16 |
+    158                       IO_LOGIC(IOCMD_IN_OF16);//ОФункция 16
+    159            LSIGNAL_TIMER(TIMERP_OF16)  = tmp1;
+    160            tmp2 = OFunction(tmpOffsetT + TIMERP_OF16, ENA_LOGIC(ENA_OF_16));
+    161            IO_LOGIC(IOCMD_OUT_OF16) = tmp2&(~pusk3OF16 );
+    162          
+    163            }//if(idxC>=0) 
+    164            else{
+    165            //логика РЛ
+    166              int tmpOffsetT    =
+    167                          cnfCOMPONENT_WL[-idxC-1].offsetTimers;   //таймера компонента в конфигурации РЛ
+    168              int tmpOffsetIO   =
+    169                          cnfCOMPONENT_WL[-idxC-1].offsetIOCmd;    //IO команды
+    170              int tmpOffsetENA  =
+    171                          cnfCOMPONENT_WL[-idxC-1].offsetENACmd;    //ENA команды
+    172          /*
+    173              int tt2 = IO_LOGIC_WL(IOCMD_OF1);
+    174              
+    175              LSIGNAL_TIMER_WL(TIMERP_OF1)  = IO_LOGIC_WL(IOCMD_OF1);//ОФункция 1
+    176              int tt1 = OFunction_WL(tmpOffsetT + TIMERP_OF1, ENA_LOGIC_WL(ENA_OF_1));
+    177              IO_LOGIC_WL(IOCMD_OF1) = tt1;//OFunction_WL(tmpOffsetT + TIMERP_OF1, ENA_LOGIC_WL(ENA_OF_1));
+    178          */
+    179            LSIGNAL_TIMER_WL(TIMERP_OF1)  = IO_LOGIC_WL(IOCMD_IN_OF1);//ОФункция 1
+    180            IO_LOGIC_WL(IOCMD_OUT_OF1) = OFunction_WL(tmpOffsetT + TIMERP_OF1, ENA_LOGIC_WL(ENA_OF_1));
+    181          
+    182            LSIGNAL_TIMER_WL(TIMERP_OF2)  = IO_LOGIC_WL(IOCMD_IN_OF2);//ОФункция 2
+    183            IO_LOGIC_WL(IOCMD_OUT_OF2) = OFunction_WL(tmpOffsetT + TIMERP_OF2, ENA_LOGIC_WL(ENA_OF_2));
+    184          
+    185            LSIGNAL_TIMER_WL(TIMERP_OF3)  = IO_LOGIC_WL(IOCMD_IN_OF3);//ОФункция 3
+    186            IO_LOGIC_WL(IOCMD_OUT_OF3) = OFunction_WL(tmpOffsetT + TIMERP_OF3, ENA_LOGIC_WL(ENA_OF_3));
+    187          
+    188            LSIGNAL_TIMER_WL(TIMERP_OF4)  = IO_LOGIC_WL(IOCMD_IN_OF4);//ОФункция 4
+    189            IO_LOGIC_WL(IOCMD_OUT_OF4) = OFunction_WL(tmpOffsetT + TIMERP_OF4, ENA_LOGIC_WL(ENA_OF_4));
+    190          
+    191            LSIGNAL_TIMER_WL(TIMERP_OF5)  = IO_LOGIC_WL(IOCMD_IN_OF5);//ОФункция 5
+    192            IO_LOGIC_WL(IOCMD_OUT_OF5) = OFunction_WL(tmpOffsetT + TIMERP_OF5, ENA_LOGIC_WL(ENA_OF_5));
+    193          
+    194            LSIGNAL_TIMER_WL(TIMERP_OF6)  = IO_LOGIC_WL(IOCMD_IN_OF6);//ОФункция 6
+    195            IO_LOGIC_WL(IOCMD_OUT_OF6) = OFunction_WL(tmpOffsetT + TIMERP_OF6, ENA_LOGIC_WL(ENA_OF_6));
+    196          
+    197            LSIGNAL_TIMER_WL(TIMERP_OF7)  = IO_LOGIC_WL(IOCMD_IN_OF7);//ОФункция 7
+    198            IO_LOGIC_WL(IOCMD_OUT_OF7) = OFunction_WL(tmpOffsetT + TIMERP_OF7, ENA_LOGIC_WL(ENA_OF_7));
+    199          
+    200            LSIGNAL_TIMER_WL(TIMERP_OF8)  = IO_LOGIC_WL(IOCMD_IN_OF8);//ОФункция 8
+    201            IO_LOGIC_WL(IOCMD_OUT_OF8) = OFunction_WL(tmpOffsetT + TIMERP_OF8, ENA_LOGIC_WL(ENA_OF_8));
+    202          
+    203            LSIGNAL_TIMER_WL(TIMERP_OF9)  = IO_LOGIC_WL(IOCMD_IN_OF9);//ОФункция 9
+    204            IO_LOGIC_WL(IOCMD_OUT_OF9) = OFunction_WL(tmpOffsetT + TIMERP_OF9, ENA_LOGIC_WL(ENA_OF_9));
+    205          
+    206            LSIGNAL_TIMER_WL(TIMERP_OF10)  = IO_LOGIC_WL(IOCMD_IN_OF10);//ОФункция 10
+    207            IO_LOGIC_WL(IOCMD_OUT_OF10) = OFunction_WL(tmpOffsetT + TIMERP_OF10, ENA_LOGIC_WL(ENA_OF_10));
+    208          
+    209            LSIGNAL_TIMER_WL(TIMERP_OF11)  = IO_LOGIC_WL(IOCMD_IN_OF11);//ОФункция 11
+    210            IO_LOGIC_WL(IOCMD_OUT_OF11) = OFunction_WL(tmpOffsetT + TIMERP_OF11, ENA_LOGIC_WL(ENA_OF_11));
+    211          
+    212            LSIGNAL_TIMER_WL(TIMERP_OF12)  = IO_LOGIC_WL(IOCMD_IN_OF12);//ОФункция 12
+    213            IO_LOGIC_WL(IOCMD_OUT_OF12) = OFunction_WL(tmpOffsetT + TIMERP_OF12, ENA_LOGIC_WL(ENA_OF_12));
+    214          
+    215            LSIGNAL_TIMER_WL(TIMERP_OF13)  = IO_LOGIC_WL(IOCMD_IN_OF13);//ОФункция 13
+    216            IO_LOGIC_WL(IOCMD_OUT_OF13) = OFunction_WL(tmpOffsetT + TIMERP_OF13, ENA_LOGIC_WL(ENA_OF_13));
+    217          
+    218            LSIGNAL_TIMER_WL(TIMERP_OF14)  = IO_LOGIC_WL(IOCMD_IN_OF14);//ОФункция 14
+    219            IO_LOGIC_WL(IOCMD_OUT_OF14) = OFunction_WL(tmpOffsetT + TIMERP_OF14, ENA_LOGIC_WL(ENA_OF_14));
+    220          
+    221            LSIGNAL_TIMER_WL(TIMERP_OF15)  = IO_LOGIC_WL(IOCMD_IN_OF15);//ОФункция 15
+    222            IO_LOGIC_WL(IOCMD_OUT_OF15) = OFunction_WL(tmpOffsetT + TIMERP_OF15, ENA_LOGIC_WL(ENA_OF_15));
+    223          
+    224            LSIGNAL_TIMER_WL(TIMERP_OF16)  = IO_LOGIC_WL(IOCMD_IN_OF16);//ОФункция 16
+    225            IO_LOGIC_WL(IOCMD_OUT_OF16) = OFunction_WL(tmpOffsetT + TIMERP_OF16, ENA_LOGIC_WL(ENA_OF_16));
+    226          
+    227            }//if
+    228          
+    229          }//logicOF(short idxC)
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      32   logicOF
+        32   -> OFunction
+        32   -> OFunction_WL
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+    1692  logicOF
+
+ 
+ 1 692 bytes in section Fast_function
+ 
+ 1 692 bytes of CODE memory
+
+Errors: none
+Warnings: none

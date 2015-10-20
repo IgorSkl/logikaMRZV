@@ -1,0 +1,877 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  14:36:46
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\LIB\CDL_AV0\csps\lpc32xx\source\lpcAV1_timer_driver.c
+#    Command line =  
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\LIB\CDL_AV0\csps\lpc32xx\source\lpcAV1_timer_driver.c"
+#        -lcN "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\List\" -o
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\" --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=ARM926EJ-S -e --fpu=VFP9-S --dlib_config "D:\Program Files\IAR
+#        Systems\Embedded Workbench 7.2\arm\INC\c\DLib_Config_Normal.h" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\" --interwork
+#        --cpu_mode arm -On --use_c++_inline
+#    List file    =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\lpcAV1_timer_driver.lst
+#    Object file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\lpcAV1_timer_driver.o
+#
+###############################################################################
+
+D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\LIB\CDL_AV0\csps\lpc32xx\source\lpcAV1_timer_driver.c
+      1          /***********************************************************************
+      2           * $Id: lpc32xx_timer_driver.c 30870 2009-07-05 10:16:16Z anderslu $
+      3           *
+      4           * Project: LPC32XX timer driver
+      5           *
+      6           * Description:
+      7           *     This file contains driver support for the LPC32XX timer.
+      8           *
+      9           ***********************************************************************
+     10           * Software that is described herein is for illustrative purposes only
+     11           * which provides customers with programming information regarding the
+     12           * products. This software is supplied "AS IS" without any warranties.
+     13           * NXP Semiconductors assumes no responsibility or liability for the
+     14           * use of the software, conveys no license or title under any patent,
+     15           * copyright, or mask work right to the product. NXP Semiconductors
+     16           * reserves the right to make changes in the software without
+     17           * notification. NXP Semiconductors also make no representation or
+     18           * warranty that such application will be suitable for the specified
+     19           * use without further testing or modification.
+     20           *********************************************************************/
+     21          
+     22          #include "../include/lpc32xx_timer_driver.h"
+     23          #include "../include/lpc32xx_clkpwr_driver.h"
+     24          
+     25          /***********************************************************************
+     26           * Timer driver package data
+     27          ***********************************************************************/
+     28          
+     29          /* Maximum number of timers */
+     30          #define MAX_TIMERS 4
+     31          
+     32          /* Timer device configuration structure type */
+     33          typedef struct
+     34          {
+     35            TIMER_CNTR_REGS_T *regptr;
+     36          } TIMER_CFG_T;
+     37          
+     38          /* Initialized flags */
+     39          static BOOL_32 tmr_init [MAX_TIMERS];
+     40          
+     41          /* Timer driver data */
+     42          static TIMER_CFG_T tmrdat [MAX_TIMERS];
+     43          
+     44          /* Array to find a clock ID from it's timer number */
+     45          static const CLKPWR_CLK_T timer_num_to_clk_enum [MAX_TIMERS] =
+     46          {
+     47            CLKPWR_TIMER0_CLK,
+     48            CLKPWR_TIMER1_CLK,
+     49            CLKPWR_TIMER2_CLK,
+     50            CLKPWR_TIMER3_CLK
+     51          };
+     52          
+     53          /***********************************************************************
+     54           * Timer driver private functions
+     55           **********************************************************************/
+     56          
+     57          /***********************************************************************
+     58           *
+     59           * Function: timer_usec_to_val
+     60           *
+     61           * Purpose: Convert a time to a timer count value
+     62           *
+     63           * Processing:
+     64           *     See function.
+     65           *
+     66           * Parameters:
+     67           *     clknum : Timer clock ID
+     68           *     usec   : Time in microseconds
+     69           *
+     70           * Outputs: None
+     71           *
+     72           * Returns: The number of required clock ticks to give the time delay
+     73           *
+     74           * Notes: None
+     75           *
+     76           **********************************************************************/
+     77          UNS_32 Timer_usec_to_val(CLKPWR_CLK_T clknum,
+     78                                   UNS_32 usec)
+     79          {
+     80            UNS_64 clkdlycnt;
+     81            UNS_64 longcnt;
+     82          
+     83            /* Determine the value to exceed before the count reaches the
+     84               desired delay time */
+     85            longcnt = (UNS_64) clkpwr_get_clock_rate(clknum);
+     86            clkdlycnt = (longcnt / 1000);
+     87            clkdlycnt = (clkdlycnt * (UNS_64) usec) / 1000;
+     88          
+     89            return (UNS_32) clkdlycnt;
+     90          }
+     91          
+     92          /***********************************************************************
+     93           *
+     94           * Function: timer_ptr_to_timer_num
+     95           *
+     96           * Purpose: Convert a timer register pointer to a timer number
+     97           *
+     98           * Processing:
+     99           *     See function.
+    100           *
+    101           * Parameters:
+    102           *     pTimer : Pointer to a timer register set
+    103           *
+    104           * Outputs: None
+    105           *
+    106           * Returns: The timer number (0 to 3) or -1 if register pointer is bad
+    107           *
+    108           * Notes: None
+    109           *
+    110           **********************************************************************/
+    111          INT_32 Timer_ptr_to_timer_num(TIMER_CNTR_REGS_T *pTimer)
+    112          {
+    113            INT_32 tnum = -1;
+    114          
+    115            if (pTimer == TIMER_CNTR0)
+    116            {
+    117              tnum = 0;
+    118            }
+    119            else if (pTimer == TIMER_CNTR1)
+    120            {
+    121              tnum = 1;
+    122            }
+    123            else if (pTimer == TIMER_CNTR2)
+    124            {
+    125              tnum = 2;
+    126            }
+    127            else if (pTimer == TIMER_CNTR3)
+    128            {
+    129              tnum = 3;
+    130            }
+    131          
+    132            return tnum;
+    133          }
+    134          
+    135          /***********************************************************************
+    136           *
+    137           * Function: timer_cfg_to_timer_num
+    138           *
+    139           * Purpose: Convert a timer driver config pointer to a timer number
+    140           *
+    141           * Processing:
+    142           *     See function.
+    143           *
+    144           * Parameters:
+    145           *     pTimerCfg : Pointer to a timer config structure
+    146           *
+    147           * Outputs: None
+    148           *
+    149           * Returns: The timer number (0 to 3) or -1 if pointer is bad
+    150           *
+    151           * Notes: None
+    152           *
+    153           **********************************************************************/
+    154          INT_32 Timer_cfg_to_timer_num(TIMER_CFG_T *pTimerCfg)
+    155          {
+    156            INT_32 tnum = -1;
+    157          
+    158            if (pTimerCfg == &tmrdat[0])
+    159            {
+    160              tnum = 0;
+    161            }
+    162            else if (pTimerCfg == &tmrdat[1])
+    163            {
+    164              tnum = 1;
+    165            }
+    166            else if (pTimerCfg == &tmrdat[2])
+    167            {
+    168              tnum = 2;
+    169            }
+    170            else if (pTimerCfg == &tmrdat[3])
+    171            {
+    172              tnum = 3;
+    173            }
+    174          
+    175            return tnum;
+    176          }
+    177          
+    178          /***********************************************************************
+    179           *
+    180           * Function: timer_delay_cmn
+    181           *
+    182           * Purpose: Delay for a period of microseconds
+    183           *
+    184           * Processing:
+    185           *     See function.
+    186           *
+    187           * Parameters:
+    188           *     pTimer: Pointer to timer register set to use
+    189           *     usec  :  the delay time in microseconds
+    190           *
+    191           * Outputs: None
+    192           *
+    193           * Returns: The clock rate of the timer in Hz, or 0 if invalid
+    194           *
+    195           * Notes: None
+    196           *
+    197           **********************************************************************/
+    198          void Timer_delay_cmn(TIMER_CNTR_REGS_T *pTimer, UNS_32 usec)
+    199          {
+    200            INT_32 timernum;
+    201          
+    202            /* Get clock number */
+    203            timernum = Timer_ptr_to_timer_num(pTimer);
+    204            if (timernum < 0)
+    205            {
+    206              return;
+    207            }
+    208          
+    209            /* Enable timer system clock */
+    210            clkpwr_clk_en_dis(timer_num_to_clk_enum[timernum], 1);
+    211          
+    212            /* Reset timer */
+    213            pTimer->tcr = TIMER_CNTR_TCR_RESET;
+    214            pTimer->tcr = 0;
+    215          
+    216            /* Clear and enable match function */
+    217            pTimer->ir = TIMER_CNTR_MTCH_BIT(0);
+    218          
+    219            /* Count mode is PCLK edge */
+    220            pTimer->ctcr = TIMER_CNTR_SET_MODE(TIMER_CNTR_CTCR_TIMER_MODE);
+    221          
+    222            /* Set prescale counter value for a 1uS tick */
+    223            pTimer->pr = (UNS_32) Timer_usec_to_val(
+    224                           timer_num_to_clk_enum[timernum], 1);
+    225          
+    226            /* Set match for number of usecs */
+    227            pTimer->mr[0] = usec;
+    228          
+    229            /* Interrupt on match 0 */
+    230            pTimer->mcr = TIMER_CNTR_MCR_MTCH(0);
+    231          
+    232            /* Enable the timer */
+    233            pTimer->tcr = TIMER_CNTR_TCR_EN;
+    234          
+    235            /* Loop until match occurs */
+    236            while ((pTimer->ir & TIMER_CNTR_MTCH_BIT(0)) == 0);
+    237          
+    238            /* Stop timer */
+    239            pTimer->tcr = 0;
+    240          
+    241            /* Disable timer system clock */
+    242            clkpwr_clk_en_dis(timer_num_to_clk_enum[timernum], 0);
+    243          }
+    244          
+    245          /***********************************************************************
+    246           * Timer driver public functions
+    247           **********************************************************************/
+    248          
+    249          /***********************************************************************
+    250           *
+    251           * Function: timer_open
+    252           *
+    253           * Purpose: Open the timer
+    254           *
+    255           * Processing:
+    256           *     See function.
+    257           *
+    258           * Parameters:
+    259           *     ipbase: Pointer to a timer peripheral block
+    260           *     arg   : Not used
+    261           *
+    262           * Outputs: None
+    263           *
+    264           * Returns: The pointer to a timer config structure or NULL
+    265           *
+    266           * Notes: None
+    267           *
+    268           **********************************************************************/
+    269          INT_32 Timer_open(void *ipbase,
+    270                            INT_32 arg)
+    271          {
+    272            TIMER_CFG_T *pTimer;
+    273            INT_32 tnum, tptr = (INT_32) NULL;
+    274          
+    275            /* Try to find a matching timer number based on the pass pointer */
+    276            tnum = Timer_ptr_to_timer_num((TIMER_CNTR_REGS_T *) ipbase);
+    277            if (tnum >= 0)
+    278            {
+    279              /* Has the timer been previously initialized? */
+    280              if (tmr_init[tnum] == FALSE)
+    281              {
+    282                /* Timer is free */
+    283                tmr_init[tnum] = TRUE;
+    284                pTimer = &tmrdat[tnum];
+    285                pTimer->regptr = (TIMER_CNTR_REGS_T *) ipbase;
+    286          
+    287                /* Enable timer system clock */
+    288                clkpwr_clk_en_dis(timer_num_to_clk_enum[tnum], 1);
+    289          
+    290                /* Setup default timer state as standard timer mode, timer
+    291                   disabled and all match and counters disabled */
+    292                pTimer->regptr->tcr = 0;
+    293                pTimer->regptr->ctcr =
+    294                  TIMER_CNTR_SET_MODE(TIMER_CNTR_CTCR_TIMER_MODE);
+    295                pTimer->regptr->mcr = 0;
+    296                pTimer->regptr->ccr = 0;
+    297                pTimer->regptr->emr =
+    298                  TIMER_CNTR_EMR_EMC_SET(0, TIMER_CNTR_EMR_NOTHING) |
+    299                  TIMER_CNTR_EMR_EMC_SET(1, TIMER_CNTR_EMR_NOTHING) |
+    300                  TIMER_CNTR_EMR_EMC_SET(2, TIMER_CNTR_EMR_NOTHING) |
+    301                  TIMER_CNTR_EMR_EMC_SET(3, TIMER_CNTR_EMR_NOTHING);
+    302          
+    303                /* Return pointer to specific timer structure */
+    304                tptr = (INT_32) & tmrdat[tnum];
+    305          
+    306                /* Clear pending interrupts and reset counts */
+    307                pTimer->regptr->tc = 0;
+    308                pTimer->regptr->pr = 0;
+    309                pTimer->regptr->pc = 0;
+    310                for (tnum = 0; tnum < MAX_TIMERS; tnum++)
+    311                {
+    312                  pTimer->regptr->mr [tnum] = 0;
+    313                }
+    314                pTimer->regptr->ir = ((TIMER_CNTR_MTCH_BIT(0) |
+    315                  TIMER_CNTR_MTCH_BIT(1) | TIMER_CNTR_MTCH_BIT(2) |
+    316                  TIMER_CNTR_MTCH_BIT(3) | TIMER_CNTR_CAPT_BIT(0) |
+    317                  TIMER_CNTR_CAPT_BIT(1) | TIMER_CNTR_CAPT_BIT(2) |
+    318                  TIMER_CNTR_CAPT_BIT(3)));
+    319              }
+    320            }
+    321          
+    322            return tptr;
+    323          }
+    324          
+    325          /***********************************************************************
+    326           *
+    327           * Function: timer_close
+    328           *
+    329           * Purpose: Close the timer
+    330           *
+    331           * Processing:
+    332           *     If init is not TRUE, then return _ERROR to the caller as the
+    333           *     device was not previously opened. Otherwise, disable the timers,
+    334           *     set init to FALSE, and return _NO_ERROR to the caller.
+    335           *
+    336           * Parameters:
+    337           *     devid: Pointer to timer config structure
+    338           *
+    339           * Outputs: None
+    340           *
+    341           * Returns: The status of the close operation
+    342           *
+    343           * Notes: None
+    344           *
+    345           **********************************************************************/
+    346          STATUS Timer_close(INT_32 devid)
+    347          {
+    348            INT_32 tnum;
+    349            TIMER_CFG_T *pTimer;
+    350            STATUS status = _ERROR;
+    351          
+    352            /* Get timer number from passed device structure */
+    353            tnum = Timer_cfg_to_timer_num((TIMER_CFG_T *) devid);
+    354            if (tnum >= 0)
+    355            {
+    356              if (tmr_init[tnum] == TRUE)
+    357              {
+    358                pTimer = &tmrdat[tnum];
+    359                tmr_init[tnum] = FALSE;
+    360          
+    361                /* Disable all timer fucntions */
+    362                pTimer->regptr->tcr = 0;
+    363                pTimer->regptr->ctcr =
+    364                  TIMER_CNTR_SET_MODE(TIMER_CNTR_CTCR_TIMER_MODE);
+    365                pTimer->regptr->mcr = 0;
+    366                pTimer->regptr->ccr = 0;
+    367                pTimer->regptr->emr =
+    368                  TIMER_CNTR_EMR_EMC_SET(0, TIMER_CNTR_EMR_NOTHING) |
+    369                  TIMER_CNTR_EMR_EMC_SET(1, TIMER_CNTR_EMR_NOTHING) |
+    370                  TIMER_CNTR_EMR_EMC_SET(2, TIMER_CNTR_EMR_NOTHING) |
+    371                  TIMER_CNTR_EMR_EMC_SET(3, TIMER_CNTR_EMR_NOTHING);
+    372          
+    373                /* Disable timer system clock */
+    374                clkpwr_clk_en_dis(timer_num_to_clk_enum[tnum], 0);
+    375              }
+    376            }
+    377          
+    378            return status;
+    379          }
+    380          
+    381          /***********************************************************************
+    382           *
+    383           * Function: timer_ioctl
+    384           *
+    385           * Purpose: Timer configuration block
+    386           *
+    387           * Processing:
+    388           *     This function is a large case block. Based on the passed function
+    389           *     and option values, set or get the appropriate timer parameter.
+    390           *
+    391           * Parameters:
+    392           *     devid: Pointer to timer config structure
+    393           *     cmd:   ioctl command
+    394           *     arg:   ioctl argument
+    395           *
+    396           * Outputs: None
+    397           *
+    398           * Returns: The status of the ioctl operation
+    399           *
+    400           * Notes: None
+    401           *
+    402           **********************************************************************/
+    403          STATUS Timer_ioctl(INT_32 devid,
+    404                             INT_32 cmd,
+    405                             INT_32 arg)
+    406          {
+    407            UNS_32 msk, tmp;
+    408            INT_32 tnum;
+    409            TIMER_CFG_T *pTimerCfg;
+    410            TIMER_CNTR_REGS_T *pTimer;
+    411            TMR_PSCALE_SETUP_T *ppstp;
+    412            TMR_INPUT_CLK_T *pclkins;
+    413            TMR_MATCH_SETUP_T *pmstp;
+    414            TMR_CAP_CLOCK_CTRL_T *pstpcap;
+    415            TMR_MATCH_GEN_T *pmgen;
+    416            TMR_COUNTS_T *ptcnts;
+    417            INT_32 status = _ERROR;
+    418          
+    419            /* Get timer number from passed device structure */
+    420            tnum = Timer_cfg_to_timer_num((TIMER_CFG_T *) devid);
+    421            if (tnum >= 0)
+    422            {
+    423              if (tmr_init[tnum] == TRUE)
+    424              {
+    425                status = _NO_ERROR;
+    426                pTimerCfg = &tmrdat[tnum];
+    427                pTimer = pTimerCfg->regptr;
+    428          
+    429                switch (cmd)
+    430                {
+    431                  case TMR_ENABLE:
+    432                    if (arg != 0)
+    433                    {
+    434                      /* Enable the timer */
+    435                      pTimer->tcr |= TIMER_CNTR_TCR_EN;
+    436                    }
+    437                    else
+    438                    {
+    439                      /* Disable the timer */
+    440                      pTimer->tcr &= ~TIMER_CNTR_TCR_EN;
+    441                    }
+    442                    break;
+    443          
+    444                  case TMR_RESET:
+    445                    pTimer->tcr |= TIMER_CNTR_TCR_RESET;
+    446                    while (pTimer->tc != 0);
+    447                    pTimer->tcr &= ~TIMER_CNTR_TCR_RESET;
+    448                    break;
+    449          
+    450                  case TMR_SETUP_PSCALE:
+    451                    ppstp = (TMR_PSCALE_SETUP_T *) arg;
+    452                    if (ppstp->ps_tick_val != 0)
+    453                    {
+    454                      pTimer->pr = ppstp->ps_tick_val;
+    455                    }
+    456                    else
+    457                    {
+    458                      pTimer->pr =
+    459                        Timer_usec_to_val(timer_num_to_clk_enum[
+    460                                            tnum], ppstp->ps_us_val);
+    461                    }
+    462                    break;
+    463          
+    464                  case TMR_SETUP_CLKIN:
+    465                    pclkins = (TMR_INPUT_CLK_T *) arg;
+    466                    if (pclkins->use_pclk == TRUE)
+    467                    {
+    468                      pTimer->ctcr = TIMER_CNTR_SET_MODE(
+    469                                       TIMER_CNTR_CTCR_TIMER_MODE);
+    470                    }
+    471                    else
+    472                    {
+    473                      tmp = 0;
+    474                      if ((pclkins->use_cap0_pos == TRUE) &&
+    475                          (pclkins->use_cap0_neg == TRUE))
+    476                      {
+    477                        tmp = TIMER_CNTR_SET_MODE(
+    478                                TIMER_CNTR_CTCR_TCBOTH_MODE);
+    479                      }
+    480                      else if (pclkins->use_cap0_pos == TRUE)
+    481                      {
+    482                        tmp = TIMER_CNTR_SET_MODE(
+    483                                TIMER_CNTR_CTCR_TCINC_MODE);
+    484                      }
+    485                      else if (pclkins->use_cap0_neg == TRUE)
+    486                      {
+    487                        tmp = TIMER_CNTR_SET_MODE(
+    488                                TIMER_CNTR_CTCR_TCDEC_MODE);
+    489                      }
+    490          
+    491                      /* Select clock input CAPn.x */
+    492                      if (pclkins->cap_input <= 3)
+    493                      {
+    494                        tmp |= TIMER_CNTR_SET_INPUT(
+    495                                 pclkins->cap_input);
+    496                        pTimer->ctcr = tmp;
+    497                      }
+    498                      else
+    499                      {
+    500                        status = LPC_BAD_PARAMS;
+    501                      }
+    502                    }
+    503                    break;
+    504          
+    505                  case TMR_SETUP_MATCH:
+    506                    pmstp = (TMR_MATCH_SETUP_T *) arg;
+    507          
+    508                    if (pmstp->timer_num <= 3)
+    509                    {
+    510                      /* Generate mask for match bits */
+    511                      msk = ~((TIMER_CNTR_MCR_MTCH(pmstp->timer_num))
+    512                              | (TIMER_CNTR_MCR_RESET(pmstp->timer_num))
+    513                              | (TIMER_CNTR_MCR_STOP(pmstp->timer_num)));
+    514          
+    515                      /* Save timer match value */
+    516                      pTimer->mr [pmstp->timer_num] =
+    517                        pmstp->match_tick_val;
+    518          
+    519                      tmp = 0;
+    520                      if (pmstp->use_match_int == TRUE)
+    521                      {
+    522                        tmp |=
+    523                          TIMER_CNTR_MCR_MTCH(pmstp->timer_num);
+    524                      }
+    525                      if (pmstp->stop_on_match == TRUE)
+    526                      {
+    527                        tmp |=
+    528                          TIMER_CNTR_MCR_STOP(pmstp->timer_num);
+    529                      }
+    530                      if (pmstp->reset_on_match == TRUE)
+    531                      {
+    532                        tmp |=
+    533                          TIMER_CNTR_MCR_RESET(pmstp->timer_num);
+    534                      }
+    535                      pTimer->mcr = (pTimer->mcr & msk) | tmp;
+    536                    }
+    537                    else
+    538                    {
+    539                      status = LPC_BAD_PARAMS;
+    540                    }
+    541                    break;
+    542          
+    543                  case TMR_SETUP_CAPTURE:
+    544                    pstpcap = (TMR_CAP_CLOCK_CTRL_T *) arg;
+    545                    if (pstpcap->timer_num <= 3)
+    546                    {
+    547                      /* Generate mask for capture control bits */
+    548                      msk = ~((TIMER_CNTR_CCR_CAPNI(
+    549                                 pstpcap->timer_num)) |
+    550                              (TIMER_CNTR_CCR_CAPNFE(pstpcap->timer_num))
+    551                              | (TIMER_CNTR_CCR_CAPNRE(
+    552                                   pstpcap->timer_num)));
+    553          
+    554                      /* Setup capture control */
+    555                      tmp = 0;
+    556                      if (pstpcap->cap_on_rising == TRUE)
+    557                      {
+    558                        tmp |= TIMER_CNTR_CCR_CAPNRE(
+    559                                 pstpcap->timer_num);
+    560                      }
+    561                      if (pstpcap->cap_on_falling == TRUE)
+    562                      {
+    563                        tmp |= TIMER_CNTR_CCR_CAPNFE(
+    564                                 pstpcap->timer_num);
+    565                      }
+    566                      if (pstpcap->use_capture_int == TRUE)
+    567                      {
+    568                        tmp |= TIMER_CNTR_CCR_CAPNI(
+    569                                 pstpcap->timer_num);
+    570                      }
+    571                      pTimer->ccr = (pTimer->ccr & msk) | tmp;
+    572                    }
+    573                    else
+    574                    {
+    575                      status = LPC_BAD_PARAMS;
+    576                    }
+    577                    break;
+    578          
+    579                  case TMR_SETUP_MATCHOUT:
+    580                    pmgen = (TMR_MATCH_GEN_T *) arg;
+    581                    if (pmgen->timer_num <= 3)
+    582                    {
+    583                      /* Generate mask for match output bits */
+    584                      msk = ~((TIMER_CNTR_EMR_DRIVE(pmgen->timer_num))
+    585                              | TIMER_CNTR_EMR_EMC_MASK(
+    586                                pmgen->timer_num));
+    587                      tmp = (TIMER_CNTR_EMR_DRIVE_SET(pmgen->timer_num,
+    588                                                      pmgen->matn_state) |
+    589                             TIMER_CNTR_EMR_EMC_SET(pmgen->timer_num,
+    590                                                    pmgen->matn_state_ctrl));
+    591                      pTimer->emr = (pTimer->emr & msk) | tmp;
+    592                    }
+    593                    else
+    594                    {
+    595                      status = LPC_BAD_PARAMS;
+    596                    }
+    597                    break;
+    598          
+    599                  case TMR_CLEAR_INTS:
+    600                    pTimer->ir = (UNS_32) arg;
+    601                    break;
+    602          
+    603                  case TMR_GET_COUNTS:
+    604                    ptcnts = (TMR_COUNTS_T *) arg;
+    605                    for (tmp = 0; tmp <= 3; tmp++)
+    606                    {
+    607                      ptcnts->cap_count_val [tmp] =
+    608                        pTimer->cr [tmp];
+    609                    }
+    610                    ptcnts->ps_count_val = pTimer->pc;
+    611                    ptcnts->count_val = pTimer->tc;
+    612                    break;
+    613          
+    614                  case TMR_GET_STATUS:
+    615                    /* Return a timer status */
+    616                    switch (arg)
+    617                    {
+    618                      case TMR_GET_CLOCK:
+    619                        status =
+    620                          clkpwr_get_clock_rate(timer_num_to_clk_enum[tnum]);
+    621                        break;
+    622          
+    623                      case TMR_VALUE_ST:
+    624                        status = pTimer->tc;
+    625                        break;
+    626          
+    627                      case TMR_INT_PEND:
+    628                        status = pTimer->ir;
+    629                        break;
+    630          
+    631                      default:
+    632                        /* Unsupported parameter */
+    633                        status = LPC_BAD_PARAMS;
+    634                        break;
+    635                    }
+    636                    break;
+    637          
+    638                  default:
+    639                    /* Unsupported parameter */
+    640                    status = LPC_BAD_PARAMS;
+    641                }
+    642              }
+    643            }
+    644          
+    645            return status;
+    646          }
+    647          
+    648          /***********************************************************************
+    649           *
+    650           * Function: timer_read
+    651           *
+    652           * Purpose: Timer read function (stub only)
+    653           *
+    654           * Processing:
+    655           *     Return 0 to the caller.
+    656           *
+    657           * Parameters:
+    658           *     devid:     Pointer to timer descriptor
+    659           *     buffer:    Pointer to data buffer to copy to
+    660           *     max_bytes: Number of bytes to read
+    661           *
+    662           * Outputs: None
+    663           *
+    664           * Returns: Number of bytes actually read (always 0)
+    665           *
+    666           * Notes: None
+    667           *
+    668           **********************************************************************/
+    669          INT_32 Timer_read(INT_32 devid,
+    670                            void *buffer,
+    671                            INT_32 max_bytes)
+    672          {
+    673            return 0;
+    674          }
+    675          
+    676          /***********************************************************************
+    677           *
+    678           * Function: timer_write
+    679           *
+    680           * Purpose: Timer write function (stub only)
+    681           *
+    682           * Processing:
+    683           *     Return 0 to the caller.
+    684           *
+    685           * Parameters:
+    686           *     devid:   Pointer to timer descriptor
+    687           *     buffer:  Pointer to data buffer to copy from
+    688           *     n_bytes: Number of bytes to write
+    689           *
+    690           * Outputs: None
+    691           *
+    692           * Returns: Number of bytes actually written (always 0)
+    693           *
+    694           * Notes: None
+    695           *
+    696           **********************************************************************/
+    697          INT_32 Timer_write(INT_32 devid,
+    698                             void *buffer,
+    699                             INT_32 n_bytes)
+    700          {
+    701            return 0;
+    702          }
+    703          
+    704          /***********************************************************************
+    705           *
+    706           * Function: timer_wait_ms
+    707           *
+    708           * Purpose: Delay for msec milliseconds (minimum)
+    709           *
+    710           * Processing:
+    711           *     See function.
+    712           *
+    713           * Parameters:
+    714           *     pTimer: Pointer to timer register set to use
+    715           *     msec  :  the delay time in milliseconds
+    716           *
+    717           * Outputs: None
+    718           *
+    719           * Returns: Nothing
+    720           *
+    721           * Notes:
+    722           *     Use of this function will destroy any previous timer settings
+    723           *     (for the specific timer used) and should not be used if that
+    724           *     timer is simultaneously being used for something else.
+    725           *
+    726           **********************************************************************/
+    727          void Timer_wait_ms(TIMER_CNTR_REGS_T *pTimer, UNS_32 msec)
+    728          {
+    729            Timer_delay_cmn(pTimer, (msec * 1000));
+    730          }
+    731          
+    732          /***********************************************************************
+    733           *
+    734           * Function: timer_wait_us
+    735           *
+    736           * Purpose: Delay for usec microseconds (minimum)
+    737           *
+    738           * Processing:
+    739           *     See function.
+    740           *
+    741           * Parameters:
+    742           *     pTimer: Pointer to timer register set to use
+    743           *     usec  :  the delay time in microseconds
+    744           *
+    745           * Outputs: None
+    746           *
+    747           * Returns: Nothing
+    748           *
+    749           * Notes:
+    750           *     Use of this function will destroy any previous timer settings
+    751           *     (for the specific timer used) and should not be used if that
+    752           *     timer is simultaneously being used for something else.
+    753           *
+    754           **********************************************************************/
+    755          void Timer_wait_us(TIMER_CNTR_REGS_T *pTimer, UNS_32 usec)
+    756          {
+    757            Timer_delay_cmn(pTimer, usec);
+    758          }
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   Timer_cfg_to_timer_num
+      24   Timer_close
+        24   -> Timer_cfg_to_timer_num
+        24   -> clkpwr_clk_en_dis
+      16   Timer_delay_cmn
+        16   -> Timer_ptr_to_timer_num
+        16   -> Timer_usec_to_val
+        16   -> clkpwr_clk_en_dis
+      64   Timer_ioctl
+        64   -> Timer_cfg_to_timer_num
+        64   -> Timer_usec_to_val
+        64   -> clkpwr_get_clock_rate
+      24   Timer_open
+        24   -> Timer_ptr_to_timer_num
+        24   -> clkpwr_clk_en_dis
+       0   Timer_ptr_to_timer_num
+       0   Timer_read
+      32   Timer_usec_to_val
+        32   -> clkpwr_get_clock_rate
+        32 __aeabi_uldivmod
+      16   Timer_wait_ms
+        16   -> Timer_delay_cmn
+      16   Timer_wait_us
+        16   -> Timer_delay_cmn
+       0   Timer_write
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable4
+       4  ??DataTable4_1
+       4  ??DataTable4_2
+       4  ??DataTable4_3
+       4  ??DataTable4_4
+       4  ??DataTable4_5
+     104  Timer_cfg_to_timer_num
+     168  Timer_close
+     160  Timer_delay_cmn
+    1280  Timer_ioctl
+     284  Timer_open
+     120  Timer_ptr_to_timer_num
+      12  Timer_read
+     112  Timer_usec_to_val
+      32  Timer_wait_ms
+      28  Timer_wait_us
+      12  Timer_write
+       4  timer_num_to_clk_enum
+      16  tmr_init
+      16  tmrdat
+
+ 
+    32 bytes in section .bss
+     4 bytes in section .rodata
+ 2 336 bytes in section .text
+ 
+ 2 336 bytes of CODE  memory
+     4 bytes of CONST memory
+    32 bytes of DATA  memory
+
+Errors: none
+Warnings: none

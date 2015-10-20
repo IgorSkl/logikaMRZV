@@ -1,0 +1,42 @@
+
+short  KadrMenuFormat_viewRang(void *workCntr);
+void OpenMenuViewRangDV();
+void OpenMenuViewRangRele();
+void OpenMenuViewActual();
+void OpenMenuViewActualDV();
+void OpenMenuViewActualRele();
+void OpenMenuViewRDIS();
+void PereinitViewRang(short flg);
+void PereinitViewActual(short flg);
+void PereinitViewRDIS(short flg);
+short  KadrMenuFormat_prc_editrang(void *workCntr);
+short  KadrMenuFormat_openEditRang(void *workCntr);
+void ClickOpenEditRang(UNS_32 *cmdUVV);
+void ClickProcessEditRang();
+void RangRedactor(short cmdPosition);
+void  ClickEditRangOKButton();
+void  FinishEditRang(int);
+void  Universal_viewRang(void *workCntr, UNS_32 *pDQuadro);
+short  KadrMenuFormat_viewActual(void *workCntr);
+short  KadrMenuFormat_viewRDIS(void *workCntr);
+void OpenMenuViewRangCDI();
+short  KadrMenuFormat_viewActualDV(void *pstr);
+short  KadrMenuFormat_viewActualRele(void *pstr);
+void PereinitViewActualDV(short flg);
+void PereinitViewActualRele(short flg);
+void  Universal_viewUVV(void *pstr, char *inStr, short offset);
+
+short  KadrMenuFormat_viewP3OF(void *pstr);
+short  KadrMenuFormat_viewP2OF(void *pstr);
+short  KadrMenuFormat_viewP1OF(void *pstr);
+void OpenMenuViewAPV();
+void PereinitViewAPV(short flg);
+void OpenMenuViewUROV();
+void PereinitViewUROV(short flg);
+void OpenMenuViewP1OF();
+void PereinitViewP1OF(short flg);
+void OpenMenuViewP2OF();
+void PereinitViewP2OF(short flg);
+void OpenMenuViewP3OF();
+void PereinitViewP3OF(short flg);
+

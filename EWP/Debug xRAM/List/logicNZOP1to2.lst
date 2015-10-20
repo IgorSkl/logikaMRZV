@@ -1,0 +1,268 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  17:17:34
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\component\logicNZOP1to2.c
+#    Command line =  
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\component\logicNZOP1to2.c" -lcN
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\" -o "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\Obj\" --debug
+#        --endian=little --cpu=ARM926EJ-S -e --fpu=VFP9-S --dlib_config
+#        "D:\Program Files\IAR Systems\Embedded Workbench
+#        7.2\arm\INC\c\DLib_Config_Normal.h" -I "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\"
+#        --interwork --cpu_mode arm -Ohs --use_c++_inline
+#    List file    =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\logicNZOP1to2.lst
+#    Object file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\logicNZOP1to2.o
+#
+###############################################################################
+
+D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\component\logicNZOP1to2.c
+      1          
+      2          #include <stdio.h>
+      3          #include <string.h>
+      4          
+      5          #include "bazisdef.h"
+      6          #include "component\componentdef.h"
+      7          #include "psuperVisor\psvisor_helpdef.h"
+      8          
+      9          #include "logictimers\logictimersmac.h"
+     10          
+     11          #include "logictimers\logictimersfnc.h"
+     12          
+     13          #include "..\bazis.h"
+     14          
+     15          #include "toSpeedOptim.h"
+     16          
+     17          #define _HIDE_COMPONENT
+     18          #include "PRM1Component.c"
+     19          #include "NZOP1Component.c"
+     20          
+     21          extern int GlobalPO1;
+     22          extern int GlobalPO2;
+     23          extern int GlobalPO3;
+     24          extern int GlobalPO4;
+     25          
+     26          extern int GlobalLevel_UCM;
+     27          extern int GlobalLevel_ICM;
+     28          
+     29          extern COMPONENT_OBJ  cnfCOMPONENT[];//конфигурация
+     30          extern int  logMassTimer[];
+     31          extern int  ENAcmd[];
+     32          extern int  spvUSTAVKI[];//текущие уставки супервизора
+     33          extern int   WideCmdRTBuffer[];
+     34          extern int   tempLog[];
+     35          //сектора направл NZOP
+     36          extern int sectorNZOP1_V, sectorNZOP1_N, sectorNZOP2_V, sectorNZOP2_N;
+     37          extern int offsetSPVCmdPRM1;//смещение для SPV PRM1
+     38          
+     39          //напр UCM меньше UCM005
+     40          //extern int  isFAILUCM005_COMMON;
+     41          //ток ICM  меньше ICM005
+     42          //extern int  isFAILICM005_COMMON;
+     43          
+     44          void  logicNZOP1to2(int idxC) @ "Fast_function"
+     45          {
+     46          //логика компонента
+     47              int tmpOffsetT    =
+     48                          cnfCOMPONENT[idxC].offsetTimers;   //таймера компонента в конфигурации
+     49              int tmpOffsetIO   =
+     50                          cnfCOMPONENT[idxC].offsetIOCmd;    //IO команды
+     51              int tmpOffsetENA  =
+     52                          cnfCOMPONENT[idxC].offsetENACmd;    //ENA команды
+     53              int tmpOffsetUSpv =
+     54                          cnfCOMPONENT[idxC].offsetUstSpv;    //уставки SPV
+     55              int tmpOffsetTL   =
+     56                          cnfCOMPONENT[idxC].offsetTLCmd;    //TL команды
+     57          
+     58            int numC =    //номер клона
+     59                          cnfCOMPONENT[idxC].numClon-1;    
+     60          
+     61            detectorLevelUP(GlobalLevel_ICM,
+     62                                               tmpOffsetUSpv+SPVSRABUST_ICM_NZOP1to2,
+     63                                               tmpOffsetUSpv+SPVVOZVUST_ICM_NZOP1to2,
+     64                                               tmpOffsetUSpv+SPV_OUT_ICM_NZOP1to2);
+     65            detectorLevelUP(GlobalLevel_ICM,
+     66                                               tmpOffsetUSpv+SPVSRABUST_ICM_NZOP1to2_V,
+     67                                               tmpOffsetUSpv+SPVVOZVUST_ICM_NZOP1to2_V,
+     68                                               tmpOffsetUSpv+SPV_OUT_ICM_NZOP1to2_V);
+     69            detectorLevelUP(GlobalLevel_ICM,
+     70                                               tmpOffsetUSpv+SPVSRABUST_ICM_NZOP1to2_N,
+     71                                               tmpOffsetUSpv+SPVVOZVUST_ICM_NZOP1to2_N,
+     72                                               tmpOffsetUSpv+SPV_OUT_ICM_NZOP1to2_N);
+     73          
+     74            detectorLevelUP(GlobalLevel_UCM,
+     75                                               tmpOffsetUSpv+SPVSRABUST_UCM_NZOP1to2,
+     76                                               tmpOffsetUSpv+SPVVOZVUST_UCM_NZOP1to2,
+     77                                               tmpOffsetUSpv+SPV_OUT_UCM_NZOP1to2);
+     78            detectorLevelUP(GlobalLevel_UCM,
+     79                                               tmpOffsetUSpv+SPVSRABUST_UCM_NZOP1to2_V,
+     80                                               tmpOffsetUSpv+SPVVOZVUST_UCM_NZOP1to2_V,
+     81                                               tmpOffsetUSpv+SPV_OUT_UCM_NZOP1to2_V);
+     82            detectorLevelUP(GlobalLevel_UCM,
+     83                                               tmpOffsetUSpv+SPVSRABUST_UCM_NZOP1to2_N,
+     84                                               tmpOffsetUSpv+SPVVOZVUST_UCM_NZOP1to2_N,
+     85                                               tmpOffsetUSpv+SPV_OUT_UCM_NZOP1to2_N);
+     86          
+     87           int LocalPO_NZOP1to2 = SPV_UST(SPV_OUT_UCM_NZOP1to2) &
+     88                                  SPV_UST(SPV_OUT_ICM_NZOP1to2) & 
+     89          		//Простая\Направл NZOP
+     90                          (ENA_LOGIC(ENA_NZOP1to2_1)^1);
+     91          
+     92           int tmp_blok =               (SPV_USTOUT(offsetSPVCmdPRM1+SPV_OUT_UCM005)^1) &
+     93                                        (SPV_USTOUT(offsetSPVCmdPRM1+SPV_OUT_ICM005)^1);
+     94           int LocalSector_NZOP1_V     = sectorNZOP1_V &
+     95                                         tmp_blok;
+     96           int LocalSector_NZOP1_N     = sectorNZOP1_N &
+     97                                         tmp_blok;
+     98           int LocalSector_NZOP2_V     = sectorNZOP2_V &
+     99                                         tmp_blok;
+    100           int LocalSector_NZOP2_N     = sectorNZOP2_N &
+    101                                         tmp_blok;
+    102           int LocalSector_V=0;
+    103           int LocalSector_N=0;
+    104            switch(numC){
+    105              case 0:
+    106               LocalSector_V= LocalSector_NZOP1_V;
+    107               LocalSector_N= LocalSector_NZOP1_N;
+    108              break;
+    109              case 1:
+    110               LocalSector_V= LocalSector_NZOP2_V;
+    111               LocalSector_N= LocalSector_NZOP2_N;
+    112              break;
+    113            }//switch
+    114          
+    115          
+    116           int LocalPO_NZOP1to2_V = SPV_UST(SPV_OUT_UCM_NZOP1to2_V) &
+    117                                    SPV_UST(SPV_OUT_ICM_NZOP1to2_V) &
+    118                          LocalSector_V &
+    119          		//Простая\Направл NZOP
+    120                          ENA_LOGIC(ENA_NZOP1to2_1) &
+    121          		//Вперед\Назад
+    122          		ENA_LOGIC(ENA_NZOP1to2_3);
+    123          
+    124           int LocalPO_NZOP1to2_N = SPV_UST(SPV_OUT_UCM_NZOP1to2_N) &
+    125                                    SPV_UST(SPV_OUT_ICM_NZOP1to2_N) &
+    126                          LocalSector_N &
+    127          		//Простая\Направл NZOP
+    128                          ENA_LOGIC(ENA_NZOP1to2_1) &
+    129          		//Вперед\Назад
+    130          		(ENA_LOGIC(ENA_NZOP1to2_3)^1);
+    131          
+    132              //*******NZOP1********
+    133              int commonNZOP1 = 
+    134                               //CMD1_NZOP1
+    135                               (IO_LOGIC(IOCMD1_NZOP1to2)^1) &
+    136                               ENA_LOGIC(ENA_NZOP1to2_2);// ENA_NZOP1;
+    137                               
+    138              //Сектор НЗОП1 ВПД
+    139              IO_LOGIC(IOCMD6_NZOP1to2) =
+    140                            commonNZOP1 &
+    141                            LocalSector_V;
+    142             //Сектор НЗОП1 НЗД
+    143              IO_LOGIC(IOCMD7_NZOP1to2) = 
+    144                            commonNZOP1 &
+    145                            LocalSector_N;
+    146          
+    147          //int tt1 =
+    148              //L1 NZOP1
+    149              LSIGNAL_TIMER(TIMER1_NZOP1to2)  = //NZOP1_TIM1
+    150              //Сраб ПО НЗОП1
+    151              IO_LOGIC(IOCMD2_NZOP1to2) =
+    152                           commonNZOP1 &
+    153                           //ПО НЗОП1
+    154                           (GlobalPO1 | LocalPO_NZOP1to2) &
+    155                           //NZOP1_PROSTAJA
+    156                           (ENA_LOGIC(ENA_NZOP1to2_1)^1);
+    157          
+    158              //L2 NZOP1_V
+    159              LSIGNAL_TIMER(TIMER2_NZOP1to2)  = //NZOP1_TIM2
+    160              //NZOP1to2_PO2
+    161            //  TL_LOGIC(TLCMD2_NZOP1to2) = 
+    162              //Сраб ПО НЗОП1 ВПД
+    163              IO_LOGIC(IOCMD3_NZOP1to2) =
+    164                           commonNZOP1 &
+    165                           //ПО НЗОП1 ВПД
+    166                           (GlobalPO2 | LocalPO_NZOP1to2_V);// &
+    167                           //NZOP1_NAPRAVL
+    168          //                 ENA_LOGIC(ENA_NZOP1to2_1);// &
+    169                           //NZOP1 WPERED
+    170          //                 (ENA_LOGIC(ENA_NZOP1to2_3)^1);
+    171          
+    172              //L3 НЗОП1_N
+    173              LSIGNAL_TIMER(TIMER3_NZOP1to2)  = //NZOP1_TIM3
+    174              //NZOP1to2_PO3
+    175          //    TL_LOGIC(TLCMD3_NZOP1to2) = 
+    176              //Сраб ПО НЗОП1 НЗД
+    177              IO_LOGIC(IOCMD4_NZOP1to2) =
+    178                           commonNZOP1 &
+    179                           //ПО НЗОП2 НЗД
+    180                           (GlobalPO3 | LocalPO_NZOP1to2_N);// & 
+    181                           //NZOP1_NAPRAVL
+    182          //                 ENA_LOGIC(ENA_NZOP1to2_1);// &
+    183                           //NZOP1 NAZAD
+    184          //                 ENA_LOGIC(ENA_NZOP1to2_3);
+    185          
+    186           int tmp = //L4
+    187              LSIGNAL_TIMER(TIMER_BO_NZOP1to2)  = 
+    188                      PLOG_TIMER(TIMER1_NZOP1to2)| //NZOP1_TIM1
+    189                      PLOG_TIMER(TIMER2_NZOP1to2)| //NZOP1_TIM2
+    190                      PLOG_TIMER(TIMER3_NZOP1to2); //NZOP1_TIM3
+    191          
+    192              //Сраб НЗОП1
+    193              IO_LOGIC(IOCMD5_NZOP1to2) =
+    194                    ILOG_TIMER(TIMER_BO_NZOP1to2)|tmp;
+    195          }//logicNZOP1to2(short idxC)
+    196          
+    197          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      32   logicNZOP1to2
+        32   -> ILogTimer
+        32   -> PLogTimer
+        32   -> detectorLevelUP
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+     620  logicNZOP1to2
+
+ 
+ 620 bytes in section Fast_function
+ 
+ 620 bytes of CODE memory
+
+Errors: none
+Warnings: 1

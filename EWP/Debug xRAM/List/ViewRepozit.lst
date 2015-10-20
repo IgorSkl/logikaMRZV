@@ -1,0 +1,330 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  16:25:10
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\virtualMenu\ViewRepozit.c
+#    Command line =  
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\virtualMenu\ViewRepozit.c" -lcN
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\" -o "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "D:\Program Files\IAR Systems\Embedded
+#        Workbench 7.2\arm\INC\c\DLib_Config_Normal.h" -I "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\" --interwork
+#        --cpu_mode arm -On --use_c++_inline
+#    List file    =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\ViewRepozit.lst
+#    Object file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\ViewRepozit.o
+#
+###############################################################################
+
+D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\virtualMenu\ViewRepozit.c
+      1          /*
+      2          #include <vcl.h>
+      3          #include <strstrea.h>
+      4          #include <math.h>
+      5          #include <mem.h>
+      6          #include <fstream.h>
+      7          #include <strstrea.h>
+      8          #include <iomanip.h>
+      9          #pragma hdrstop
+     10          
+     11          #include "vmenuDis.h"
+     12          */
+     13          
+     14          #include <stdio.h>
+     15          #include <string.h>
+     16          
+     17          #include "bazisdef.h"
+     18          #include "psuperVisor\supermanager.h"
+     19          #include "virtualMenu\systemmenudef.h"
+     20          #include "component\componentdef.h"
+     21          #include "virtualMenu\repozitdef.h"
+     22          
+     23          #include "logictimers\logictimersfnc.h"
+     24          #include "virtualMenu\systemmenufnc.h"
+     25          #include "virtualMenu\textstreamfnc.h"
+     26          #include "virtualMenu\ustmanagerfnc.h"
+     27          
+     28          #include "virtualMenu\viewMenuCnf.h"
+     29          
+     30          #include "..\bazis.h"
+     31          
+     32          extern LineMenuItem sub_menu_cnf[];
+     33          
+     34          COMPONENT_OBJ rpzcomponent_obj;//обект компонента для репозитария
+     35          
+     36          char copyMTZpacketToRepozitar(char packet);
+     37          char copyDZpacketToRepozitar(char packet);
+     38          char copyTZNPpacketToRepozitar(char packet);
+     39          char copyNZOPpacketToRepozitar(char packet);
+     40          char copyUROVToRepozitar(char packet);
+     41          char copyUMMToRepozitar(char packet);
+     42          char copyAPVToRepozitar(char packet);
+     43          char copyOFToRepozitar(char packet);
+     44          char copyPRM1ToRepozitar(char packet);
+     45          char copyWLToRepozitar(char packet);
+     46          char copyPFToRepozitar(char packet);
+     47          
+     48          //доступные компоненты
+     49          LineMenuItem sub_menu_rpz[MAX_CNFCOMPONENT+3] =
+     50          {
+     51            { "Репозитарий", NULL},//title
+     52            { NULL, NULL}
+     53          };
+     54          
+     55          
+     56          //репозитарий компонентов
+     57          ELEMENT_RPZ  rpzCOMPONENT[] =
+     58          {
+     59            {
+     60              //MTZ packet
+     61              1,
+     62              &copyMTZpacketToRepozitar,
+     63              {MTZ_COMP1, "МТЗ"}
+     64            },
+     65          
+     66            {
+     67              //DZ packet
+     68              1,
+     69              &copyDZpacketToRepozitar,
+     70              {DZ_COMP1, "ДЗ"}
+     71            },
+     72          
+     73            {
+     74              //TZNP packet
+     75              1,
+     76              &copyTZNPpacketToRepozitar,
+     77              {TZNP_COMP1, "ТЗНП"}
+     78            },
+     79          
+     80            {
+     81              //NZOP packet
+     82              1,
+     83              &copyNZOPpacketToRepozitar,
+     84              {NZOP_COMP1, "НЗОП"}
+     85            },
+     86          
+     87            {
+     88              //UMM
+     89              1,
+     90              &copyUMMToRepozitar,
+     91              {UMM_COMP1}
+     92            },
+     93          
+     94            {
+     95              //UROV
+     96              1,
+     97              &copyUROVToRepozitar,
+     98              {UROV_COMP1}
+     99            },
+    100          
+    101            {
+    102              //APV
+    103              1,
+    104              &copyAPVToRepozitar,
+    105              {APV_COMP1}
+    106            },
+    107          
+    108            {
+    109              //OF
+    110              1,
+    111              &copyOFToRepozitar,
+    112              {OF_COMP1}
+    113            },
+    114          
+    115            {
+    116              //PRM1
+    117              1,
+    118              &copyPRM1ToRepozitar,
+    119              {PRM1_COMP1}
+    120            },
+    121          
+    122            {
+    123              //WL
+    124              1,
+    125              &copyWLToRepozitar,
+    126              {WL_COMP1}
+    127            },
+    128          
+    129            {
+    130              //PF
+    131              1,
+    132              &copyPFToRepozitar,
+    133              {PF_COMP1}
+    134            },
+    135          
+    136            {
+    137              //NULL
+    138              0
+    139            }
+    140          };
+    141          
+    142          void  RpzComponent()
+    143          {
+    144          //доступные компоненты
+    145          //допустить все компоненты
+    146            short i=0;
+    147            while(rpzCOMPONENT[i].componentEnable)
+    148            {
+    149              rpzCOMPONENT[i].componentPermission = 1;//компонент допущен
+    150              i++;
+    151            }//while
+    152          //допуск по к-ву клонов
+    153            i=0;
+    154            short kC;         //код компонента
+    155            short cntC;//к-во клонов компонента
+    156            while(rpzCOMPONENT[i].componentEnable)
+    157            {
+    158              rpzCOMPONENT[i].load2RPZ(1);//заглянуть в репозитарий
+    159              kC = rpzcomponent_obj.kodC;         //код компонента
+    160          //искать в cnf к-во клонов данного компонента
+    161              cntC = SearchCnfClonComponent(kC);
+    162              if(cntC>=rpzcomponent_obj.cntClon)
+    163                rpzCOMPONENT[i].componentPermission = 0;//нет допуска
+    164              i++;
+    165            }//while
+    166          
+    167          //отобразить только допущенные компоненты
+    168          //обзор репозитария
+    169            short rpzI=0;
+    170            short mnI=0;
+    171            while(rpzCOMPONENT[rpzI].componentEnable)
+    172            {
+    173              if(rpzCOMPONENT[rpzI].load2RPZ(1));//заглянуть в репозитарий
+    174              else strcpy(rpzCOMPONENT[rpzI].rpzKodName.rpzNameComponent, rpzcomponent_obj.nameComponent);
+    175          
+    176              if(rpzCOMPONENT[rpzI].componentPermission)//есть допуск
+    177              {
+    178                sub_menu_rpz[mnI+1+SUBDATA].Line1 = rpzCOMPONENT[rpzI].rpzKodName.rpzNameComponent;//name
+    179                sub_menu_rpz[mnI+1+SUBDATA].Line2 = (void *)&ConfigMaker;
+    180                sub_menu_rpz[mnI+1+SUBDATA].TypesWin = typeMenuProg;
+    181                mnI++;
+    182              }//if
+    183              rpzI++;
+    184            }//while
+    185          
+    186            sub_menu_rpz[mnI+1+SUBDATA].Line1 = NULL;
+    187            sub_menu_rpz[mnI+1+SUBDATA].Line2 = NULL;
+    188          
+    189            sub_menu_rpz[SUBDATA].Line1 = &CONTROL_RPZ;//control
+    190            sub_menu_rpz[SUBDATA].Line2 = sub_menu_cnf;//parent
+    191            sub_menu_rpz[SUBDATA].TypesWin = typeMenuSub;
+    192          
+    193          //  CRR_SUBMENU = sub_menu_rpz;//текущее субменю
+    194            SelectorSUBMENU(sub_menu_rpz);//уcтановить текущее субменю
+    195          
+    196          //  CRR_TEXTSTREAM = &CONTROL_RPZ;//текущий control
+    197            SelectorTEXTCONTROL(&CONTROL_RPZ);//установить текущую ссылку на текстовый поток
+    198          
+    199            PereinitAvaitCnf(1);//переиниц
+    200          //  CRR_FHOME = &PereinitAvaitCnf;//указатель на ф-цию HOME
+    201            SelectorFHOME(&PereinitAvaitCnf);//указатель на ф-цию HOME
+    202          
+    203          }//RpzComponent()
+    204          
+    205          short GetKodCompRpz(short numL)
+    206          {
+    207          //получить из номера строки репозитария код компонента
+    208            char ltxt[50];
+    209            strcpy(ltxt, (char *)sub_menu_rpz[numL+1+SUBDATA].Line1);
+    210            //мл и ст части кода компонента
+    211            char lowK = ((char *)(sub_menu_rpz[numL+1+SUBDATA].Line1))[-2];
+    212            char hiK = ((char *)(sub_menu_rpz[numL+1+SUBDATA].Line1))[-1];
+    213            return lowK + 256*hiK;
+    214          }//GetKodCompRpz(short numL)
+    215          
+    216          short GetOffsetClonRpz(short numK)
+    217          {
+    218          //получить смещение репозитария по коду компонента
+    219            short i=0;
+    220            while(rpzCOMPONENT[i].componentEnable)
+    221            {
+    222              if(rpzCOMPONENT[i].rpzKodName.kodC==numK)
+    223                return i;
+    224              i++;
+    225            }//while
+    226            return 0;
+    227          }//GetOffsetClonRpz(short numK)
+    228          
+    229          
+    230          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      64   GetKodCompRpz
+        64   -> strcpy
+       0   GetOffsetClonRpz
+      24   RpzComponent
+        24   -- Indirect call
+        24   -> PereinitAvaitCnf
+        24   -> SearchCnfClonComponent
+        24   -> SelectorFHOME
+        24   -> SelectorSUBMENU
+        24   -> SelectorTEXTCONTROL
+        24   -> strcpy
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable2
+       4  ??DataTable2_1
+       4  ??DataTable2_2
+       4  ??DataTable2_3
+       4  ??DataTable2_4
+       4  ??DataTable2_5
+       4  ??DataTable2_6
+       4  ??DataTable2_7
+      12  ?_0
+     144  GetKodCompRpz
+      96  GetOffsetClonRpz
+     568  RpzComponent
+     528  rpzCOMPONENT
+     144  rpzcomponent_obj
+     636  sub_menu_rpz
+
+ 
+   144 bytes in section .bss
+ 1 164 bytes in section .data
+    12 bytes in section .rodata
+   840 bytes in section .text
+ 
+   840 bytes of CODE  memory
+    12 bytes of CONST memory
+ 1 308 bytes of DATA  memory
+
+Errors: none
+Warnings: none

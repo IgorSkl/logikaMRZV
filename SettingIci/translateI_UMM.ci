@@ -1,0 +1,77 @@
+
+//трансляция UMM-------------------------------------------
+// Блокировка UMin1
+   WideCmdStateINTERFACE[BLOCK_UMIN1_DI_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[offsetIOCmdUMM +
+			 IOCMD3_UMM 
+			 ];
+// Блокировка UMin2
+   WideCmdStateINTERFACE[BLOCK_UMIN2_DI_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[offsetIOCmdUMM +
+			 IOCMD4_UMM 
+			 ];
+// ПО UMin1
+   WideCmdStateINTERFACE[STPDEV_UMIN1_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[offsetIOCmdUMM +
+			 IOCMD9_UMM 
+			 ];
+// UMin1
+   WideCmdStateINTERFACE[UMIN1_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[offsetIOCmdUMM +
+			 IOCMD10_UMM 
+			 ];
+
+// ПО UMin2
+   WideCmdStateINTERFACE[STPDEV_UMIN2_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[offsetIOCmdUMM +
+			 IOCMD11_UMM 
+			 ];
+// UMin2
+   WideCmdStateINTERFACE[STPDEV_UMIN2_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[offsetIOCmdUMM +
+			 IOCMD12_UMM 
+			 ];
+
+// Блокировка UMax1
+//   WideCmdStateINTERFACE[] =
+	   //широкий ком массив RT 
+//	   WideCmdRTBuffer[offsetIOCmdUMM +
+//			 IOCMD1_UMM 
+//			 ];
+// Блокировка UMax2
+//   WideCmdStateINTERFACE[] =
+	   //широкий ком массив RT 
+//	   WideCmdRTBuffer[offsetIOCmdUMM +
+//			 IOCMD2_UMM 
+//			 ];
+  
+// ПО UMax1
+   WideCmdStateINTERFACE[STPDEV_UMAX1_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[offsetIOCmdUMM +
+			 IOCMD5_UMM 
+			 ];
+// UMax1
+   WideCmdStateINTERFACE[UMAX1_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[offsetIOCmdUMM +
+			 IOCMD6_UMM 
+			 ];
+// ПО UMax2
+   WideCmdStateINTERFACE[STPDEV_UMAX2_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[offsetIOCmdUMM +
+			 IOCMD7_UMM 
+			 ];
+// UMax2
+   WideCmdStateINTERFACE[UMAX2_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[offsetIOCmdUMM +
+			 IOCMD8_UMM 
+			 ];

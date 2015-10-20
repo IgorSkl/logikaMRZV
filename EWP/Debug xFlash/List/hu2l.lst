@@ -1,0 +1,831 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        12/Oct/2015  11:05:00
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  D:\IAR projects\HR1_0100_00_I720_new2\ici\hu2l.c
+#    Command line =  
+#        "D:\IAR projects\HR1_0100_00_I720_new2\ici\hu2l.c" -D
+#        _STATIC_MEMORY_BOOT -lcN "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\List\" -o "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "C:\Program Files\IAR Systems\Embedded
+#        Workbench 7.40\arm\INC\c\DLib_Config_Normal.h" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\Igor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\component\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\" --cpu_mode arm -On
+#        --use_c++_inline
+#    List file    =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\List\hu2l.lst
+#    Object file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\Obj\hu2l.o
+#
+###############################################################################
+
+D:\IAR projects\HR1_0100_00_I720_new2\ici\hu2l.c
+      1          /*------------------------------------------------------------------------------
+      2          * Copyright (c) 2013 - Factory “KyivPrylad”
+      3          * 
+      4          * Permission to use, copy, modify, and distribute this software for any
+      5          * purpose with or without fee is hereby granted, provided that the above
+      6          * copyright notice and this permission notice appear in all copies.
+      7          * 
+      8          * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+      9          * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+     10          * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+     11          * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+     12          * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+     13          * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+     14          * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+     15          * 
+     16          *------------------------------------------------------------------------------
+     17          *
+     18          * Processor       : Lpc_3240
+     19          * File Name       : u3l.c
+     20          * Description     : Functions and Data for Low Level Communication,
+     21                              BO BR
+     22          
+     23          *  Version        : 1.00
+     24          *
+     25          *       +----- (NEW | MODify | ADD | DELete)
+     26          *       |
+     27          *  No   |   When       Who                What
+     28          *-----+---+----------+------------------+--------------------------------------
+     29          * 000  NEW  02/09/13   Markovsky A       Creation
+     30          *----------------------------------------------------------------------------*/
+     31          
+     32          
+     33          //.#include "lpc32xx_chip.h"
+     34          //.#include "phy3250_board.h"
+     35          //.#include "lpc32xx_timer_driver.h"
+     36          //.#include "lpc32xx_intc_driver.h"
+     37          //.#include "lpc32xx_gpio_driver.h"
+     38          //.#include "lpc32xx_clkpwr_driver.h"
+     39          //.#include "lpc32xx_hsuart_driver.h"
+     40          //.#include "lpc32xx_uart.h"
+     41          
+     42          
+     43          #include "../LIB/CDL_AV0/lpc/include/lpc_types.h"
+     44          #include "../LIB/CDL_AV0/lpc/include/lpc_irq_fiq.h"
+     45          #include "../LIB/CDL_AV0/lpc/include/lpc_arm922t_cp15_driver.h"
+     46          //
+     47          #include "../LIB/CDL_AV0/csps/lpc32xx/include/lpc32xx_hsuart_driver.h"
+     48          #include "../LIB/CDL_AV0/csps/lpc32xx/include/lpc32xx_intc_driver.h"
+     49          #include "../LIB/CDL_AV0/csps/lpc32xx/include/lpc32xx_timer_driver.h"
+     50          
+     51          long lMaxTimeTransmit = 0;extern unsigned long lTmrHSU2Val;
+     52          /* Prototype for external IRQ handler */
+     53          void lpc32xx_irq_handler(void);
+     54          extern unsigned char chEntry_Hs2;extern unsigned char chEOI_Hs2;
+     55          extern unsigned char chHdwErorHSU2;
+     56          /* HSUART device handles */
+     57           INT_32 hs2uartdev = 0;
+     58          // INT_32 hsuartdev = 0;
+     59          static UNS_8 hs2_txbuff [512], hs2_rxbuff [512];
+     60          volatile  int hs2_txsize = 0, hs2_rxsize = 0;
+     61          
+     62           int hs2_txfill  = 0;
+     63           int hs2_rxget   = 0; 
+     64           int hs2_txget   = 0;
+     65           int hs2_rxfill  = 0;
+     66          
+     67          void foo2(void)
+     68          {
+     69          	hs2_txfill = hs2_txget = hs2_rxfill = 
+     70          	hs2_rxget = hs2_txsize = hs2_rxsize = 0;
+     71          
+     72          }
+     73          /***********************************************************************
+     74           *
+     75           * Function: term_dat_send_cb
+     76           *
+     77           * Purpose: HS UART transmit data callback
+     78           *
+     79           * Processing:
+     80           *     Move data from the ring buffer to the driver.
+     81           *
+     82           * Parameters: None
+     83           *
+     84           * Outputs: None
+     85           *
+     86           * Returns: Nothing
+     87           *
+     88           * Notes: This function is called in interrupt context.
+     89           *
+     90           **********************************************************************/
+     91          //.void term_dat_send_cb(void)
+     92          //.{
+     93          //.  INT_32 bwrite, tosend = 512 - txget;
+     94          //.  HSUART_CFG_T *phsuart = (HSUART_CFG_T *) hsuartdev;
+     95          //.
+     96          //.  if (tosend > txsize)
+     97          //.  {
+     98          //.    tosend = txsize;
+     99          //.  }
+    100          //.
+    101          //.  if (tosend == 0)
+    102          //.  {
+    103          //.    phsuart->regptr->ctrl &= ~HSU_TX_INT_EN;
+    104          //.  }
+    105          //.  else
+    106          //.  {
+    107          //.    phsuart->regptr->ctrl |= HSU_TX_INT_EN;
+    108          //.  }
+    109          //.
+    110          //.  /* Write data */
+    111          //.  bwrite = hsuart_write(hsuartdev, &txbuff[txget], tosend);
+    112          //.  txsize = txsize - bwrite;
+    113          //.  txget = txget + bwrite;
+    114          //.  if (txget >= 512)
+    115          //.  {
+    116          //.    txget = 0;
+    117          //.  }
+    118          //.
+    119          //.}
+    120          
+    121          /***********************************************************************
+    122           *
+    123           * Function: term_dat_recv_cb
+    124           *
+    125           * Purpose: HS UART receive data callback
+    126           *
+    127           * Processing:
+    128           *     Read data from the driver into the RX ring buffer.
+    129           *
+    130           * Parameters: None
+    131           *
+    132           * Outputs: None
+    133           *
+    134           * Returns: Nothing
+    135           *
+    136           * Notes:
+    137           *     Ring buffer overflow is not accounted for in this application.
+    138           *     This function is called in interrupt context.
+    139           *
+    140           **********************************************************************/
+    141           
+    142          //.void term_dat_recv_cb(void)
+    143          //.{
+    144          //.  INT_32 bread, toreadmax = 512 - rxfill;
+    145          //.
+    146          //.  /* Read data */
+    147          //.  bread = hsuart_read(hsuartdev, &rxbuff[rxfill], toreadmax);
+    148          //.  rxsize = rxsize + bread;
+    149          //.  rxfill = rxfill + bread;
+    150          //.  if (rxfill >= 512)
+    151          //.  {
+    152          //.    rxfill = 0;
+    153          //.  }
+    154          //.}
+    155          
+    156          /***********************************************************************
+    157           *
+    158           * Function: term_dat_out
+    159           *
+    160           * Purpose: Send some data on the terminal interface
+    161           *
+    162           * Processing:
+    163           *     Place data into the TX ring buffer and start HS UART transmission.
+    164           *
+    165           * Parameters:
+    166           *     dat   : Data to send
+    167           *     bytes : Number of bytes to send
+    168           *
+    169           * Outputs: None
+    170           *
+    171           * Returns: Nothing
+    172           *
+    173           * Notes: Will block until all bytes are sent.
+    174           *
+    175           **********************************************************************/
+    176          //.void term_dat_out(UNS_8 *dat, int bytes)
+    177          //.{
+    178          //.  while (bytes > 0)
+    179          //.  {
+    180          //.    while ((bytes > 0) && (txsize < 512))
+    181          //.    {
+    182          //.      txbuff[txfill] = *dat;
+    183          //.      txfill++;
+    184          //.      if (txfill >= 512)
+    185          //.      {
+    186          //.        txfill = 0;
+    187          //.      }
+    188          //.      dat++;
+    189          //.      bytes--;
+    190          //.      int_disable(IRQ_UART_IIR2);
+    191          //.      txsize++;
+    192          //.      int_enable(IRQ_UART_IIR2);
+    193          //.    }
+    194          //.
+    195          //.    int_disable(IRQ_UART_IIR2);
+    196          //.    term_dat_send_cb();
+    197          //.    int_enable(IRQ_UART_IIR2);
+    198          //.  }
+    199          //.}
+    200          
+    201          /***********************************************************************
+    202           *
+    203           * Function: term_dat_in
+    204           *
+    205           * Purpose: Read some data from the terminal interface
+    206           *
+    207           * Processing:
+    208           *     Move data from the ring buffer to the passed buffer.
+    209           *
+    210           * Parameters:
+    211           *     buff  : Where to place the data
+    212           *     bytes : Number of bytes to read
+    213           *
+    214           * Outputs: None
+    215           *
+    216           * Returns: Number of bytes actually read
+    217           *
+    218           * Notes: None
+    219           *
+    220           **********************************************************************/
+    221          //.int term_dat_in(UNS_8 *buff, int bytes)
+    222          //.{
+    223          //.  int bread = 0;
+    224          //.
+    225          //.  while ((bytes > 0) && (rxsize > 0))
+    226          //.  {
+    227          //.    *buff = rxbuff[rxget];
+    228          //.    buff++;
+    229          //.    rxget++;
+    230          //.    if (rxget >= 512)
+    231          //.    {
+    232          //.      rxget = 0;
+    233          //.    }
+    234          //.    bytes--;
+    235          //.    bread++;
+    236          //.    int_disable(IRQ_UART_IIR2);
+    237          //.    rxsize--;
+    238          //.    int_enable(IRQ_UART_IIR2);
+    239          //.  }
+    240          //.
+    241          //.  return bread;
+    242          //.}
+    243          
+    244          /*
+    245          
+    246          char chI; 
+    247          
+    248           INT_32 uartdev = 0;
+    249          static UNS_8 txbuff [512], rxbuff [512];
+    250          volatile static int txsize, rxsize;
+    251          static int txfill = 0;
+    252          static int rxget  = 0;
+    253          static int txget  = 0;
+    254          static int rxfill = 0;
+    255          void foo(void)
+    256          {
+    257          	txfill = txget = rxfill = rxget = txsize = rxsize = 0;
+    258          
+    259          }*/
+    260          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    261          //---   
+    262          void hs2_recv_cb(void)  @ "Fast_function";
+    263          //..................................................................................
+    264          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    265          //~~~ Purpose: Read some data from the terminal interface                        ~~~
+    266          //~~~ Processing: Move data from the ring buffer to the passed buffer            ~~~
+    267          //~~~        ~~~
+    268          //~~~        ~~~
+    269          //~~~        ~~~
+    270          //``````````````````````````````````````````````````````````````````````````````````
+    271          //~~~ Returns: Number of bytes actually read                                      ~~
+    272          //~~~                                                                             ~~ 
+    273          //~~~                                                                             ~~
+    274          //~~~          ~~
+    275          //~~~          ~~
+    276          //,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+    277          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    278          //=================================================================================
+    279          //Body func                                                                  
+    280          //=================================================================================
+    281          void hs2_recv_cb(void)  @ "Fast_function"
+    282          {
+    283            INT_32 bread, toreadmax = 512 - hs2_rxfill;
+    284          
+    285            /* Read data */
+    286            //bread = uart_read(uartdev, &rxbuff[rxfill], toreadmax);
+    287            bread = hs_uart_read( hs2uartdev, &hs2_rxbuff[hs2_rxfill], toreadmax);
+    288            
+    289            hs2_rxsize = hs2_rxsize + bread;
+    290            hs2_rxfill = hs2_rxfill + bread;
+    291            if (hs2_rxfill >= 512)
+    292            {
+    293              hs2_rxfill = 0;
+    294            }
+    295          }
+    296          
+    297          //---------------------------------------------------------------------------------
+    298          static long lLast_Copy_tosend;
+    299          static long lInhs2_send_cb = 0;
+    300           char chHSU2SendHdwEror = 0;
+    301          extern char chEndTransmitHSU2; 
+    302          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    303          //---   
+    304          void hs2_send_cb(void)  @ "Fast_function";
+    305          //..................................................................................
+    306          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    307          //~~~ Purpose: Read some data from the terminal interface                        ~~~
+    308          //~~~ Processing: Move data from the ring buffer to the passed buffer            ~~~
+    309          //~~~        ~~~
+    310          //~~~        ~~~
+    311          //~~~        ~~~
+    312          //``````````````````````````````````````````````````````````````````````````````````
+    313          //~~~ Returns: Number of bytes actually read                                      ~~
+    314          //~~~                                                                             ~~ 
+    315          //~~~                                                                             ~~
+    316          //~~~          ~~
+    317          //~~~          ~~
+    318          //,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+    319          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    320          //=================================================================================
+    321          //Body func                                                                  
+    322          //=================================================================================
+    323          
+    324          void hs2_send_cb(void)  @ "Fast_function"
+    325          {
+    326            lInhs2_send_cb++;
+    327            INT_32 bwrite, tosend = 512 - hs2_txget;
+    328            HSUART_CFG_T *phsuart = (HSUART_CFG_T *)  hs2uartdev;//hsuartdev;
+    329            if(lInhs2_send_cb>1)
+    330            chHSU2SendHdwEror++;//Debug Code
+    331            lLast_Copy_tosend = hs2_txsize;
+    332            if (tosend > hs2_txsize)
+    333            {
+    334              tosend = hs2_txsize;
+    335            }
+    336            else         //Debug Code
+    337              tosend = 0;//Debug Code
+    338            if (tosend == 0)
+    339            {
+    340              phsuart->regptr->ctrl &= ~HSU_TX_INT_EN;
+    341          	chEOI_Hs2++;
+    342          	//Look Fifo Lever
+    343          
+    344          	//.tosend = (INT_32) TIMER_CNTR0;
+    345          	//.bwrite =  ((TIMER_CNTR_REGS_T*) tosend)->tc;//chEndTransmitHSU2--;
+    346          	//.bwrite -= lMaxTimeTransmit;
+    347          	//.tosend = 0;
+    348          	//.if(bwrite>1000)
+    349          	//.lMaxTimeTransmit = bwrite;
+    350          	//.tosend = 0;
+    351            }
+    352            else
+    353            {
+    354              phsuart->regptr->ctrl |= HSU_TX_INT_EN;
+    355          	
+    356            }
+    357             if(tosend > hs2_txsize)//Debug Code
+    358             chHSU2SendHdwEror++;//tosend = 0;//Debug Code
+    359            /* Write data */
+    360            bwrite = hs_uart_write1( hs2uartdev, &hs2_txbuff[hs2_txget], tosend);//hsuartdev
+    361            if(bwrite <= hs2_txsize)//Debug Code
+    362            hs2_txsize = hs2_txsize - bwrite;
+    363            else          //Debug code
+    364            {
+    365            hs2_txsize= 0;//Debug code
+    366            chHSU2SendHdwEror++;
+    367            }
+    368            //if(hs2_txsize<0)
+    369            //hs2_txsize= 0;
+    370            hs2_txget  = hs2_txget + bwrite;
+    371            if (hs2_txget >= 512)
+    372            {
+    373              hs2_txget = 0;
+    374            }
+    375          lInhs2_send_cb--;
+    376          }
+    377          //---------------------------------------------------------------------------------
+    378          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    379          //---   
+    380          void hs2_rxerr_cb(void)  @ "Fast_function";
+    381          //..................................................................................
+    382          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    383          //~~~ Purpose: Read some data from the terminal interface                        ~~~
+    384          //~~~ Processing: Move data from the ring buffer to the passed buffer            ~~~
+    385          //~~~        ~~~
+    386          //~~~        ~~~
+    387          //~~~        ~~~
+    388          //``````````````````````````````````````````````````````````````````````````````````
+    389          //~~~ Returns: Number of bytes actually read                                      ~~
+    390          //~~~                                                                             ~~ 
+    391          //~~~                                                                             ~~
+    392          //~~~          ~~
+    393          //~~~          ~~
+    394          //,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+    395          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    396          //=================================================================================
+    397          //Body func                                                                  
+    398          //=================================================================================
+    399          void hs2_rxerr_cb(void)  @ "Fast_function"
+    400          {
+    401            //.INT_32 bread, toreadmax = 512 - hs2_rxfill;
+    402          HSUART_CFG_T* pHs_uart_dat = (HSUART_CFG_T* )hs2uartdev;//hs_uart_dat[2];
+    403          register unsigned long i;
+    404            /* Read data */
+    405            i = pHs_uart_dat->regptr->iir;
+    406            if (i|(HSU_RX_OE_INT))
+    407            {
+    408               pHs_uart_dat->regptr->iir = HSU_RX_OE_INT;
+    409            }
+    410            if (i|(HSU_BRK_INT))
+    411            {
+    412               pHs_uart_dat->regptr->iir = HSU_BRK_INT;
+    413            }
+    414            if (i|(HSU_FE_INT))
+    415            {
+    416               pHs_uart_dat->regptr->iir = HSU_FE_INT;
+    417            }
+    418            
+    419            while ((pHs_uart_dat->regptr->level & 0xFF) != 0)
+    420            {
+    421              //i =	pregs->txrx_fifo;
+    422          	i =	pHs_uart_dat->regptr->txrx_fifo;
+    423            }
+    424            //bread = uart_read(uartdev, &rxbuff[rxfill], toreadmax);
+    425            
+    426            //.bread = hs_uart_read(hsuartdev, &hs2_rxbuff[hs2_rxfill], toreadmax);
+    427            //.hs2_rxsize = hs2_rxsize + bread;
+    428            //.hs2_rxfill = hs2_rxfill + bread;
+    429            //.if (hs2_rxfill >= 512)
+    430            //.{
+    431            //.  hs2_rxfill = 0;
+    432            //.}
+    433            
+    434            hs2_txfill = hs2_txget = hs2_rxfill = 
+    435            hs2_rxget = hs2_txsize = hs2_rxsize = 0;
+    436          }
+    437          
+    438          //---------------------------------------------------------------------------------
+    439          //Transmit 60 Byte
+    440          //Receve 60 Biytea
+    441          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    442          //---   
+    443          long outU2(UNS_8 *dat, int bytes)  @ "Fast_function";
+    444          //..................................................................................
+    445          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    446          //~~~ Purpose:  Send some data on the terminal interface                         ~~~
+    447          //~~~ Processing: Place data into the TX ring buffer and start UART transmission ~~~
+    448          //~~~        ~~~
+    449          //~~~  dat   : Data to send                                                      ~~~
+    450          //~~~  bytes : Number of bytes to send                                           ~~~
+    451          //``````````````````````````````````````````````````````````````````````````````````
+    452          //~~~ Notes: Will block until all bytes are sent                                  ~~
+    453          //~~~                                                                             ~~ 
+    454          //~~~                                                                             ~~
+    455          //~~~          ~~
+    456          //~~~          ~~
+    457          //,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+    458          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    459          //=================================================================================
+    460          //Body func                                                                  
+    461          //=================================================================================
+    462          
+    463          long outU2(UNS_8 *dat, int bytes)  @ "Fast_function"
+    464          {
+    465            if (hs2_txsize>bytes)
+    466            {
+    467          	return 0;//Stop Do Something
+    468            }
+    469            disable_irq();//int_disable(IRQ_UART_IIR2);
+    470            if ((hs2_txfill == hs2_txget)&&(hs2_txsize==0))
+    471            hs2_txget = hs2_txfill = 0;//.!!!
+    472             enable_irq();//int_enable(IRQ_UART_IIR2);
+    473             if(hs2_txsize!=0)//Debug Code
+    474             {
+    475                  hs2_txsize++;    //Debug Code
+    476          		while(1);
+    477          	} 
+    478            while (bytes > 0)
+    479            {
+    480              while ((bytes > 0) && (hs2_txsize < 512))
+    481              {
+    482                hs2_txbuff[hs2_txfill] = *dat;
+    483                hs2_txfill++;
+    484                if (hs2_txfill >= 512)
+    485                {
+    486                  hs2_txfill = 0;
+    487                }
+    488                dat++;
+    489                bytes--;
+    490                disable_irq();//int_disable(IRQ_UART_IIR2);
+    491                hs2_txsize++;
+    492                 enable_irq();//int_enable(IRQ_UART_IIR2);
+    493              }
+    494          
+    495               disable_irq();//int_disable(IRQ_UART_IIR2);
+    496              //.term_dat_send_cb();
+    497          	 chEndTransmitHSU2++;lMaxTimeTransmit = 1;
+    498          	 //.dat = (UNS_8 *) TIMER_CNTR0;
+    499          	 //.lMaxTimeTransmit =  ((TIMER_CNTR_REGS_T*) dat)->tc;//chEndTransmitHSU2--;
+    500          	hs2_send_cb();
+    501              enable_irq();//int_enable(IRQ_UART_IIR2);
+    502            }
+    503            return  bytes;
+    504          }
+    505          //---------------------------------------------------------------------------------
+    506          extern INT_32 hs2uartdev;
+    507          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    508          //---   
+    509          long inU2(UNS_8 *buff, int bytes)  @ "Fast_function";
+    510          //..................................................................................
+    511          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    512          //~~~ Purpose: Read some data from the terminal interface                        ~~~
+    513          //~~~ Processing: Move data from the ring buffer to the passed buffer            ~~~
+    514          //~~~        ~~~
+    515          //~~~        ~~~
+    516          //~~~        ~~~
+    517          //``````````````````````````````````````````````````````````````````````````````````
+    518          //~~~ Returns: Number of bytes actually read                                      ~~
+    519          //~~~                                                                             ~~ 
+    520          //~~~                                                                             ~~
+    521          //~~~          ~~
+    522          //~~~          ~~
+    523          //,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+    524          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    525          //=================================================================================
+    526          //Body func                                                                  
+    527          //=================================================================================
+    528          long inU2(UNS_8 *buff, int bytes)  @ "Fast_function"
+    529          {
+    530          
+    531          int bread = 0;
+    532          
+    533            while ((bytes > 0) && (hs2_rxsize > 0))
+    534            {
+    535              *buff = hs2_rxbuff[hs2_rxget];
+    536              buff++;
+    537              hs2_rxget++;
+    538              if (hs2_rxget >= 512)
+    539              {
+    540                hs2_rxget = 0;
+    541              }
+    542              bytes--;
+    543              bread++;
+    544              disable_irq();//int_disable(IRQ_UART_IIR2);
+    545              hs2_rxsize--;
+    546              enable_irq();//int_enable(IRQ_UART_IIR2);
+    547            }
+    548            if (hs2_rxfill == hs2_rxget)
+    549            {
+    550          	disable_irq();//int_disable(IRQ_UART_IIR2);
+    551          	hs2_rxfill = hs2_rxget = 0;
+    552          	enable_irq();//int_enable(IRQ_UART_IIR2);
+    553            }
+    554            if(chHdwErorHSU2)
+    555            {
+    556              Int_disableGen(IRQ_UART_IIR2);//int_disable(IRQ_UART_IIR2);
+    557              int_clear(IRQ_UART_IIR2);
+    558          	chHdwErorHSU2 = 0;
+    559              bytes = hs_uart_recover(hs2uartdev);
+    560            }
+    561          //MIC-> er |= 1<<IRQ_UART_IIR7;
+    562          Int_enableGen(IRQ_UART_IIR2);// int_enable(IRQ_UART_IIR2);
+    563            return bread;
+    564          	
+    565          	
+    566          }
+    567          //---------------------------------------------------------------------------------
+    568          
+    569          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    570          //---   
+    571          void hs2_eof_cb(void)  @ "Fast_function";
+    572          //..................................................................................
+    573          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    574          //~~~ Purpose:                          ~~~
+    575          //~~~ Processing:                       ~~~
+    576          //~~~        ~~~
+    577          //~~~        ~~~
+    578          //~~~        ~~~
+    579          //``````````````````````````````````````````````````````````````````````````````````
+    580          //~~~                                                                             ~~
+    581          //~~~                                                                             ~~ 
+    582          //~~~                                                                             ~~
+    583          //~~~          ~~
+    584          //~~~          ~~
+    585          //,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+    586          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    587          //=================================================================================
+    588          //Body func                                                                  
+    589          //=================================================================================
+    590          void hs2_eof_cb(void) @ "Fast_function"
+    591          {
+    592          
+    593          //HSUART_CFG_T *phsuart = (HSUART_CFG_T *) hs2uartdev;
+    594          
+    595          //if need Start Process of Analises
+    596          
+    597          //hs2_rxfill = hs2_rxget = hs2_rxsize = 0;
+    598          	chEntry_Hs2++;
+    599          	//MIC-> er &= ~tmp;
+    600          }
+    601          //---------------------------------------------------------------------------------
+    602          
+    603          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    604          //---   
+    605          void RecoverHSU2(void)  @ "Fast_function";
+    606          //..................................................................................
+    607          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    608          //~~~ Purpose:                          ~~~
+    609          //~~~ Processing:                       ~~~
+    610          //~~~        ~~~
+    611          //~~~        ~~~
+    612          //~~~        ~~~
+    613          //``````````````````````````````````````````````````````````````````````````````````
+    614          //~~~                                                                             ~~
+    615          //~~~                                                                             ~~ 
+    616          //~~~                                                                             ~~
+    617          //~~~          ~~
+    618          //~~~          ~~
+    619          //,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+    620          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    621          //=================================================================================
+    622          //Body func                                                                  
+    623          //=================================================================================
+    624          void RecoverHSU2(void) @ "Fast_function"
+    625          {
+    626          int bytes ;
+    627          chHSU2SendHdwEror = 0;
+    628           //if(chHdwErorHSU2)
+    629            {
+    630              Int_disableGen(IRQ_UART_IIR2);//int_disable(IRQ_UART_IIR2);
+    631              int_clear(IRQ_UART_IIR2);
+    632          	chHSU2SendHdwEror = 0;
+    633              bytes = hs_uart_recover(hs2uartdev);
+    634          	hs2_txfill = hs2_txget = hs2_rxfill = 
+    635            hs2_rxget = hs2_txsize = hs2_rxsize = 0;
+    636            }
+    637          //MIC-> er |= 1<<IRQ_UART_IIR7;
+    638          Int_enableGen(IRQ_UART_IIR2);// int_enable(IRQ_UART_IIR2);
+    639          
+    640          	
+    641          
+    642          }
+    643          //---------------------------------------------------------------------------------
+    644          void RstTmr0(void)
+    645          {
+    646          void *pv;
+    647          pv = (void*)TIMER_CNTR0;
+    648          if( (( ((TIMER_CNTR_REGS_T *)pv)->ir & TIMER_CNTR_MTCH_BIT(0)) != 0 ))
+    649          {
+    650          	//if (hs2_txsize==0)//You can insert in this place additonal vars for ctrl end Transmit 
+    651          	{
+    652          		//-hldrHSU2LpduTRUnit.uchLpuHSU2State = 0;lMaxTimeTransmit = 0;
+    653          		((TIMER_CNTR_REGS_T *)pv)->tcr = TIMER_CNTR_TCR_RESET;
+    654          		//Clear timer
+    655          		//-* Stop timer *-/
+    656          		((TIMER_CNTR_REGS_T *)pv)->tcr = 0;
+    657          		((TIMER_CNTR_REGS_T *)pv)->tc  = 0;
+    658          		//-* Clear and enable match function *-/
+    659          		((TIMER_CNTR_REGS_T *)pv)->ir = TIMER_CNTR_MTCH_BIT(0);
+    660          		((TIMER_CNTR_REGS_T *)pv)->tcr = TIMER_CNTR_TCR_RESET;
+    661          	}
+    662          }
+    663          			
+    664          
+    665          
+    666          }
+    667          
+    668          long IsEOI_HS2(void)
+    669          {
+    670          register long i;
+    671           HSUART_CFG_T *phsuart = (HSUART_CFG_T *)  hs2uartdev;//hsuartdev;
+    672          	//do
+    673          	{
+    674          		i = HSU_TX_LEV(phsuart->regptr->level);
+    675          		//if (i>1)
+    676          		//while(1);
+    677          	}
+    678          	//while(bwrite);
+    679          	if(i==0)
+    680          	{
+    681          		//Clear IIR
+    682          		phsuart->regptr->iir |= HSU_TX_INT;
+    683          		//-only for alwayes work Timer! lTmrHSU2Val = ((TIMER_CNTR_REGS_T *)TIMER_CNTR0)-> tc;
+    684          		((TIMER_CNTR_REGS_T *)TIMER_CNTR0)-> tc = 0;
+    685          		((TIMER_CNTR_REGS_T *)TIMER_CNTR0)-> tcr = TIMER_CNTR_TCR_EN;
+    686          	
+    687          		return 1;
+    688          	}
+    689          	else
+    690          	return 0;
+    691          
+    692          }
+    693          
+    694          
+    695          /* EOF */
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   IsEOI_HS2
+       8   RecoverHSU2
+         8   -> Int_disableGen
+         8   -> Int_enableGen
+         8   -> hs_uart_recover
+         8   -> int_clear
+       0   RstTmr0
+       0   disable_irq
+       0   enable_irq
+       0   foo2
+       0   hs2_eof_cb
+      16   hs2_recv_cb
+        16   -> hs_uart_read
+       0   hs2_rxerr_cb
+      16   hs2_send_cb
+        16   -> hs_uart_write1
+      16   inU2
+        16   -> Int_disableGen
+        16   -> Int_enableGen
+        16   -> disable_irq
+        16   -> enable_irq
+        16   -> hs_uart_recover
+        16   -> int_clear
+      16   outU2
+        16   -> disable_irq
+        16   -> enable_irq
+        16   -> hs2_send_cb
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable1
+       4  ??DataTable14
+       4  ??DataTable14_1
+       4  ??DataTable14_10
+       4  ??DataTable14_11
+       4  ??DataTable14_12
+       4  ??DataTable14_13
+       4  ??DataTable14_14
+       4  ??DataTable14_15
+       4  ??DataTable14_16
+       4  ??DataTable14_2
+       4  ??DataTable14_3
+       4  ??DataTable14_4
+       4  ??DataTable14_5
+       4  ??DataTable14_6
+       4  ??DataTable14_7
+       4  ??DataTable14_8
+       4  ??DataTable14_9
+       4  ??DataTable1_1
+       4  ??DataTable1_2
+       4  ??DataTable1_3
+       4  ??DataTable1_4
+       4  ??DataTable1_5
+       4  ??DataTable1_6
+     104  IsEOI_HS2
+     124  RecoverHSU2
+      68  RstTmr0
+       1  chHSU2SendHdwEror
+      20  disable_irq
+      20  enable_irq
+      56  foo2
+      24  hs2_eof_cb
+     124  hs2_recv_cb
+     512  hs2_rxbuff
+     144  hs2_rxerr_cb
+       4  hs2_rxfill
+       4  hs2_rxget
+       4  hs2_rxsize
+     424  hs2_send_cb
+     512  hs2_txbuff
+       4  hs2_txfill
+       4  hs2_txget
+       4  hs2_txsize
+       4  hs2uartdev
+     288  inU2
+       4  lInhs2_send_cb
+       4  lLast_Copy_tosend
+       4  lMaxTimeTransmit
+     348  outU2
+
+ 
+ 1 065 bytes in section .bss
+   296 bytes in section .text
+ 1 544 bytes in section Fast_function
+ 
+ 1 840 bytes of CODE memory
+ 1 065 bytes of DATA memory
+
+Errors: none
+Warnings: 2

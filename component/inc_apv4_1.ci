@@ -1,0 +1,63 @@
+
+//{
+//*******APV4_1********
+  tmp0 = 
+       //BVCMD_APV2
+       TL_LOGIC(TLCMD12_APV);
+  //L8
+  tmp7 =
+        //BLOK3
+       TL_LOGIC(TLCMD3_APV) |
+        //RES_APV  
+       TL_LOGIC(TLCMD7_APV);
+
+  //L4
+  //¬ÂÏˇ ÓÊ Ì‡Ô ¿œ¬2 tim11
+  LSIGNAL_TIMER(TIMER11_APV) =
+        //L1
+       (tmp0 &
+       //Õ≈“ À»Õ»» ≈—“‹ ÿ»Õ¿
+        ENA_OL_NC) |
+        //L2
+       (tmp0 &
+       //≈—“‹ À»Õ»ﬂ Õ≈“ ÿ»Õ€
+       ENA_NL_OC) |
+        //L3
+       (tmp0 &
+       //≈—“‹ À»Õ»ﬂ ≈—“‹ ÿ»Õ¿ Õ≈“ —»Õ
+       ENA_NL_NC_BS);
+
+       //TOU2_APV
+  TL_LOGIC(TLCMD15_APV) =
+         //¬ÂÏˇ ÓÊ Ì‡Ô ¿œ¬2 tim11
+         FLOG_TIMERRES(TIMER11_APV, tmp7);
+
+  //L5
+  tmp1 =
+       //BVCMD_APV2
+       tmp0 &
+       //¡≈«  ŒÕ“–ŒÀﬂ
+       ENA_BK;
+
+  //L6
+  tmp2 = 
+       //Õ≈“ À»Õ»» ≈—“‹ ÿ»Õ¿
+        ENA_OL_NC &
+       //PO1_APV
+       (GlobalPO1 | LocalPO1_APV) &
+       //PO4_APV
+       (GlobalPO4 | LocalPO4_APV) &
+       //TOU2_APV
+       TL_LOGIC(TLCMD15_APV);
+
+  //L7
+  tmp3 = 
+       //TOU2_APV
+       TL_LOGIC(TLCMD15_APV) &
+       //≈—“‹ À»Õ»ﬂ Õ≈“ ÿ»Õ€
+       ENA_NL_OC &
+       //PO2_APV
+       (GlobalPO2 | LocalPO2_APV) &
+       //PO3_APV
+       (GlobalPO3 | LocalPO3_APV);
+

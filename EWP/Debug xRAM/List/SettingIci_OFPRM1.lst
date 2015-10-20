@@ -1,0 +1,95 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        08/Oct/2015  12:37:53
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\SettingIci\SettingIci_OFPRM1.c
+#    Command line =  
+#        "D:\IAR projects\HR1_0100_00_I720_new2\SettingIci\SettingIci_OFPRM1.c"
+#        -lcN "D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug xRAM\List\" -o
+#        "D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug xRAM\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "C:\Program Files\IAR Systems\Embedded
+#        Workbench 7.40\arm\INC\c\DLib_Config_Normal.h" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\Igor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\component\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\" --interwork --cpu_mode arm -On
+#        --use_c++_inline
+#    List file    =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\SettingIci_OFPRM1.lst
+#    Object file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\SettingIci_OFPRM1.o
+#
+###############################################################################
+
+D:\IAR projects\HR1_0100_00_I720_new2\SettingIci\SettingIci_OFPRM1.c
+      1          #include "lpc_types.h"
+      2          #include "lpc_irq_fiq.h"
+      3          #include "lpc_arm922t_cp15_driver.h"
+      4          
+      5          #include "lpc32xx_hstimer.h"
+      6          #include "lpc32xx_ssp.h"
+      7          #include "lpc32xx_gpio.h"
+      8          
+      9          #include "lpc32xx_intc_driver.h"
+     10          #include "lpc32xx_clkpwr_driver.h"
+     11          
+     12          #include "arm926ej_cp15_drv.h"
+     13          #include "ttbl.h"
+     14          
+     15          #include <stdio.h>
+     16          #include <string.h>
+     17          
+     18          #include "psuperVisor\supermanager.h"
+     19          
+     20          #include "component\componentdef.h"
+     21          #include "psuperVisor\psvisor_helpdef.h"
+     22          
+     23          #include "psuperVisor\psvisor_helpfnc.h"
+     24          #include "SettingIci\SettingIci.h"
+     25          #include "virtualmenu\systemmenufnc.h"
+     26          #include "virtualMenu\rangmanagerfnc.h"
+     27          
+     28          #include "toSpeedOptim.h"
+     29          #include "toSpeedDIS.h"
+     30          
+     31          #include "header.h"
+     32          #include "ici_r_ef.h"
+     33          
+     34          #define _HIDE_COMPONENT
+     35          #include "PRM1Component.c"
+     36          
+     37          extern char chProtectTableComeIn;
+     38          extern char chResultCallGetMeasPrt;
+     39          //extern tic long lDemo_IA,lDemo_IB,lDemo_IC;
+     40          extern  long lMtz1,lMtz1Tmr,lSt1,lSt2, lst3, lst4;
+     41          extern __MEASUREMENT_TO_PROTECTION TestMeasProtection;
+     42          
+     43          extern  puskOFfunction *pntPuskOF;//указатель на ф-цию
+     44          
+     45          void  SettingIci_OFPRM1(puskOFfunction *pntPuskOF, int typRang)
+     46          {
+     47          
+     48          //----------------------------PRM1------------------------------
+     49            lSt1 = pntPuskOF(HVSW_ON_DI_OEPRF_ONB );// Вкл. ВВ от ДВ 
+     50            //if(lSt1) SetCmdToUVV(PRM1_COMP1,  1, IOCMD6_MTZ1, typRang);//PUSK1OF_SM);//запуск OF+
+     51          }
+     52          
+
+Errors: 2
+Warnings: none

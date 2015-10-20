@@ -1,0 +1,569 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        12/Oct/2015  11:05:01
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\component\logicDZ2to5.c
+#    Command line =  
+#        "D:\IAR projects\HR1_0100_00_I720_new2\component\logicDZ2to5.c" -D
+#        _STATIC_MEMORY_BOOT -lcN "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\List\" -o "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\Obj\" --debug
+#        --endian=little --cpu=ARM926EJ-S -e --fpu=VFP9-S --dlib_config
+#        "C:\Program Files\IAR Systems\Embedded Workbench
+#        7.40\arm\INC\c\DLib_Config_Normal.h" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\Igor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\component\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\" --cpu_mode arm -Ohs
+#        --use_c++_inline
+#    List file    =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\List\logicDZ2to5.lst
+#    Object file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\Obj\logicDZ2to5.o
+#
+###############################################################################
+
+D:\IAR projects\HR1_0100_00_I720_new2\component\logicDZ2to5.c
+      1          
+      2          #include <stdio.h>
+      3          #include <string.h>
+      4          #include "bazisdef.h"
+      5          #include "component\componentdef.h"
+      6          #include "psuperVisor\psvisor_helpdef.h"
+      7          
+      8          #include "logictimers\logictimersmac.h"
+      9          
+     10          #include "logictimers\logictimersfnc.h"
+     11          
+     12          #include "..\bazis.h"
+     13          
+     14          #include "zonaVRT\zonaVRTdef.h"
+     15          #include "zonaVRT\zonaVRTfnc.h"
+     16          
+     17          #include "toSpeedOptim.h"
+     18          
+     19          #define _HIDE_COMPONENT
+     20          #include "PRM1Component.c"
+     21          #include "DZ2Component.c"
+     22          
+     23          extern int GlobalPO1;
+     24          extern int GlobalPO2;
+     25          extern int GlobalPO3;
+     26          extern int GlobalPO4;
+     27          
+     28          extern COMPONENT_OBJ  cnfCOMPONENT[];//конфигурация
+     29          extern int  logMassTimer[];
+     30          extern int  ENAcmd[];
+     31          extern int  spvUSTAVKI[];//текущие уставки супервизора
+     32          extern int   WideCmdRTBuffer[];
+     33          extern int   tempLog[];
+     34          extern int offsetIOCmdPRM1;//смещение для IO PRM1
+     35          extern int offsetSPVCmdPRM1;//смещение для SPV PRM1
+     36          extern int GlobalLevelI_ABC[];
+     37          extern int  isFAILU_DZ;
+     38          
+     39          extern INT_64 koordXZ_64;//=353534;//125001;//160697;//250000;
+     40          extern INT_64 koordYZ_64;//=421325;//216507;//191512;//0;
+     41          //комплексные сопротивления
+     42          extern INT_64 resistance_fA0X2, resistance_fA0Y2;
+     43          extern INT_64 resistance_fB0X2, resistance_fB0Y2;
+     44          extern INT_64 resistance_fC0X2, resistance_fC0Y2;
+     45          
+     46          extern INT_64 resistance_fA0X3, resistance_fA0Y3;
+     47          extern INT_64 resistance_fB0X3, resistance_fB0Y3;
+     48          extern INT_64 resistance_fC0X3, resistance_fC0Y3;
+     49          
+     50          extern INT_64 resistance_fA0X4, resistance_fA0Y4;
+     51          extern INT_64 resistance_fB0X4, resistance_fB0Y4;
+     52          extern INT_64 resistance_fC0X4, resistance_fC0Y4;
+     53          
+     54          extern INT_64 resistance_fA0X5, resistance_fA0Y5;
+     55          extern INT_64 resistance_fB0X5, resistance_fB0Y5;
+     56          extern INT_64 resistance_fC0X5, resistance_fC0Y5;
+     57          
+     58          extern INT_64 resistance_fAMX, resistance_fAMY;
+     59          extern INT_64 resistance_fBMX, resistance_fBMY;
+     60          extern INT_64 resistance_fCMX, resistance_fCMY;
+     61          extern int isValidZonaDZ2OF;//флаг валидности зоны
+     62          extern int isValidZonaDZ2MF;//флаг валидности зоны
+     63          extern int isValidZonaDZ3OF;//флаг валидности зоны
+     64          extern int isValidZonaDZ3MF;//флаг валидности зоны
+     65          extern int isValidZonaDZ4OF;//флаг валидности зоны
+     66          extern int isValidZonaDZ4MF;//флаг валидности зоны
+     67          extern int isValidZonaDZ5OF;//флаг валидности зоны
+     68          extern int isValidZonaDZ5MF;//флаг валидности зоны
+     69          extern int isTriangleZonaBD[];//зона ДЗ треугольник-четырехугольник
+     70          /*
+     71          extern int locPO_DZ2MF;
+     72          extern int locPO_DZ2OF;
+     73          extern int locPO_DZ3MF;
+     74          extern int locPO_DZ3OF;
+     75          extern int locPO_DZ4MF;
+     76          extern int locPO_DZ4OF;
+     77          extern int locPO_DZ5MF;
+     78          extern int locPO_DZ5OF;
+     79          */
+     80          
+     81          void  logicDZ2to5(int idxC) @ "Fast_function"
+     82          {
+     83          //логика компонента
+     84              int tmpOffsetT    =
+     85                          cnfCOMPONENT[idxC].offsetTimers;   //таймера компонента в конфигурации
+     86              int tmpOffsetIO   =
+     87                          cnfCOMPONENT[idxC].offsetIOCmd;    //IO команды
+     88              int tmpOffsetENA  =
+     89                          cnfCOMPONENT[idxC].offsetENACmd;    //ENA команды
+     90              int tmpOffsetUSpv =
+     91                          cnfCOMPONENT[idxC].offsetUstSpv;    //уставки SPV
+     92              int tmpOffsetTL   =
+     93                          cnfCOMPONENT[idxC].offsetTLCmd;    //TL команды
+     94          //    int tttttttt6 =  cnfCOMPONENT[idxC].numClon;
+     95              int numClonDZ = (cnfCOMPONENT[idxC].numClon)-1;
+     96             // int tttttttt6 =  cnfCOMPONENT[idxC].numClon;    
+     97              //int numClonDZ =    //номер клона
+     98                //            tttttttt6-1;
+     99                          //(cnfCOMPONENT[idxC].numClon)-1;    
+    100             
+    101           // /int numberClon =    //номер клона
+    102             //             cnfCOMPONENT[idxC].numClon;//)-1;    
+    103              
+    104           //if(numC!=2) return;//только для ДЗ3
+    105          /* 
+    106          if(tttttttt6==3) {//for DZ3
+    107          int tt1 = TL_LOGIC(TLCMDOUTNCN_DZ2to5MF);
+    108          int tt2 = isFAILU_DZ;
+    109          int tt5 = (IO_LOGIC(IOCMD1_DZ2to5)^1);
+    110          int tt3 = isFAILU_DZ;
+    111          int tt6 = ENA_LOGIC(ENA_DZ2to5_1);// ENA_DZ2;
+    112          
+    113          
+    114              int tmpOffsetENA_test  =
+    115                          cnfCOMPONENT[idxC].offsetENACmd;    //ENA команды
+    116          
+    117          int tt4 = isFAILU_DZ;
+    118          
+    119          
+    120                     }//if
+    121          
+    122          */
+    123          /*
+    124          if(numClonDZ==2) {//for DZ3
+    125          int tt1 = TL_LOGIC(TLCMDOUTNCN_DZ2to5MF);
+    126          int tt2 = isFAILU_DZ;
+    127          int tt5 = (IO_LOGIC(IOCMD1_DZ2to5)^1);
+    128          int tt3 = isFAILU_DZ;
+    129          int tt6 = ENA_LOGIC(ENA_DZ2to5_1);// ENA_DZ2;
+    130          
+    131          
+    132              int tmpOffsetENA_test  =
+    133                          cnfCOMPONENT[idxC].offsetENACmd;    //ENA команды
+    134          
+    135          int tt4 = isFAILU_DZ;
+    136          
+    137          
+    138                     }//ifif(numC==2)
+    139          */
+    140          //токи
+    141            detectorLevelUP3F(GlobalLevelI_ABC,
+    142                                               tmpOffsetUSpv+SPVSRAB_DZ2to5_MTZ,
+    143                                               tmpOffsetUSpv+SPVVOZV_DZ2to5_MTZ,
+    144                                               tmpOffsetUSpv+SPV_OUTA_DZ2to5_MTZ);
+    145          
+    146            int isz_separatorA = 0;
+    147            int isz_separatorB = 0;
+    148            int isz_separatorC = 0;
+    149            INT_64 meassAXZ = 0, meassAYZ = 0;
+    150            INT_64 meassBXZ = 0, meassBYZ = 0;
+    151            INT_64 meassCXZ = 0, meassCYZ = 0;
+    152            switch(numClonDZ){
+    153              case 1:
+    154                isz_separatorA = ISZ_DZ2OFA;
+    155                isz_separatorB = ISZ_DZ2OFB;
+    156                isz_separatorC = ISZ_DZ2OFC;
+    157                meassAXZ = resistance_fA0X2; meassAYZ = resistance_fA0Y2;
+    158                meassBXZ = resistance_fB0X2; meassBYZ = resistance_fB0Y2;
+    159                meassCXZ = resistance_fC0X2; meassCYZ = resistance_fC0Y2;
+    160              break;
+    161              case 2:
+    162                isz_separatorA = ISZ_DZ3OFA;
+    163                isz_separatorB = ISZ_DZ3OFB;
+    164                isz_separatorC = ISZ_DZ3OFC;
+    165                meassAXZ = resistance_fA0X3; meassAYZ = resistance_fA0Y3;
+    166                meassBXZ = resistance_fB0X3; meassBYZ = resistance_fB0Y3;
+    167                meassCXZ = resistance_fC0X3; meassCYZ = resistance_fC0Y3;
+    168              break;
+    169              case 3:
+    170                isz_separatorA = ISZ_DZ4OFA;
+    171                isz_separatorB = ISZ_DZ4OFB;
+    172                isz_separatorC = ISZ_DZ4OFC;
+    173                meassAXZ = resistance_fA0X4; meassAYZ = resistance_fA0Y4;
+    174                meassBXZ = resistance_fB0X4; meassBYZ = resistance_fB0Y4;
+    175                meassCXZ = resistance_fC0X4; meassCYZ = resistance_fC0Y4;
+    176              break;
+    177              case 4:
+    178                isz_separatorA = ISZ_DZ5OFA;
+    179                isz_separatorB = ISZ_DZ5OFB;
+    180                isz_separatorC = ISZ_DZ5OFC;
+    181                meassAXZ = resistance_fA0X5; meassAYZ = resistance_fA0Y5;
+    182                meassBXZ = resistance_fB0X5; meassBYZ = resistance_fB0Y5;
+    183                meassCXZ = resistance_fC0X5; meassCYZ = resistance_fC0Y5;
+    184              break;
+    185            }//switch
+    186          //попадание Z в зону  
+    187          int LocalPO_DZ2to5OF = 0;
+    188          if(isTriangleZonaBD[numClonDZ*2]){
+    189          //треугольник
+    190            koordXZ_64=meassAXZ; koordYZ_64=meassAYZ;
+    191          int LocalPO_DZ2to5OFA = isViewZTrianMethod_64VRT(numClonDZ*2, isz_separatorA);// &
+    192          //          (SPV_USTOUT(offsetSPVCmdPRM1+SPV_OUTA_I005)^1);
+    193            //koordXZ_64=resistance_fB0X1; koordYZ_64=resistance_fB0Y1;
+    194            koordXZ_64=meassBXZ; koordYZ_64=meassBYZ;
+    195          int LocalPO_DZ2to5OFB = isViewZTrianMethod_64VRT(numClonDZ*2, isz_separatorB);// &
+    196          //          (SPV_USTOUT(offsetSPVCmdPRM1+SPV_OUTB_I005)^1);
+    197            //koordXZ_64=resistance_fC0X1; koordYZ_64=resistance_fC0Y1;
+    198            koordXZ_64=meassCXZ; koordYZ_64=meassCYZ;
+    199          int LocalPO_DZ2to5OFC = isViewZTrianMethod_64VRT(numClonDZ*2, isz_separatorC);// &
+    200          //          (SPV_USTOUT(offsetSPVCmdPRM1+SPV_OUTC_I005)^1);
+    201              LocalPO_DZ2to5OF = LocalPO_DZ2to5OFA | LocalPO_DZ2to5OFB | LocalPO_DZ2to5OFC;
+    202               }//if(isTriangleZonaBD[numClonDZ*2])
+    203          else {
+    204            koordXZ_64=meassAXZ; koordYZ_64=meassAYZ;
+    205          int LocalPO_DZ2to5OFA = isViewZMethod_64VRT(numClonDZ*2, isz_separatorA);// &
+    206          //          (SPV_USTOUT(offsetSPVCmdPRM1+SPV_OUTA_I005)^1);
+    207            //koordXZ_64=resistance_fB0X1; koordYZ_64=resistance_fB0Y1;
+    208            koordXZ_64=meassBXZ; koordYZ_64=meassBYZ;
+    209          int LocalPO_DZ2to5OFB = isViewZMethod_64VRT(numClonDZ*2, isz_separatorB);// &
+    210          //          (SPV_USTOUT(offsetSPVCmdPRM1+SPV_OUTB_I005)^1);
+    211            //koordXZ_64=resistance_fC0X1; koordYZ_64=resistance_fC0Y1;
+    212            koordXZ_64=meassCXZ; koordYZ_64=meassCYZ;
+    213          int LocalPO_DZ2to5OFC = isViewZMethod_64VRT(numClonDZ*2, isz_separatorC);// &
+    214          //          (SPV_USTOUT(offsetSPVCmdPRM1+SPV_OUTC_I005)^1);
+    215              LocalPO_DZ2to5OF = LocalPO_DZ2to5OFA | LocalPO_DZ2to5OFB | LocalPO_DZ2to5OFC;
+    216              }//else
+    217          
+    218          //------------MF
+    219            isz_separatorA = 0;
+    220            isz_separatorB = 0;
+    221            isz_separatorC = 0;
+    222            switch(numClonDZ){
+    223              case 1:
+    224                isz_separatorA = ISZ_DZ2MFA;
+    225                isz_separatorB = ISZ_DZ2MFB;
+    226                isz_separatorC = ISZ_DZ2MFC;
+    227              break;
+    228              case 2:
+    229                isz_separatorA = ISZ_DZ3MFA;
+    230                isz_separatorB = ISZ_DZ3MFB;
+    231                isz_separatorC = ISZ_DZ3MFC;
+    232              break;
+    233              case 3:
+    234                isz_separatorA = ISZ_DZ4MFA;
+    235                isz_separatorB = ISZ_DZ4MFB;
+    236                isz_separatorC = ISZ_DZ4MFC;
+    237              break;
+    238              case 4:
+    239                isz_separatorA = ISZ_DZ5MFA;
+    240                isz_separatorB = ISZ_DZ5MFB;
+    241                isz_separatorC = ISZ_DZ5MFC;
+    242              break;
+    243            }//switch
+    244          //попадание Z в зону  
+    245          int LocalPO_DZ2to5MF = 0;
+    246          if(isTriangleZonaBD[numClonDZ*2 +1]){
+    247          //треугольник
+    248            koordXZ_64=resistance_fAMX; koordYZ_64=resistance_fAMY;
+    249          int LocalPO_DZ2to5MFA = isViewZTrianMethod_64VRT( 1+ numClonDZ*2, isz_separatorA);// &
+    250          //          (SPV_USTOUT(offsetSPVCmdPRM1+SPV_OUTA_I005)^1);
+    251            koordXZ_64=resistance_fBMX; koordYZ_64=resistance_fBMY;
+    252          int LocalPO_DZ2to5MFB = isViewZTrianMethod_64VRT( 1+ numClonDZ*2, isz_separatorB);// &
+    253            //        (SPV_USTOUT(offsetSPVCmdPRM1+SPV_OUTB_I005)^1);
+    254            koordXZ_64=resistance_fCMX; koordYZ_64=resistance_fCMY;
+    255          int LocalPO_DZ2to5MFC = isViewZTrianMethod_64VRT( 1+ numClonDZ*2, isz_separatorC);// &
+    256          //          (SPV_USTOUT(offsetSPVCmdPRM1+SPV_OUTC_I005)^1);
+    257          
+    258              LocalPO_DZ2to5MF = LocalPO_DZ2to5MFA | LocalPO_DZ2to5MFB | LocalPO_DZ2to5MFC;
+    259            }//if(isTriangleZonaBD[numClonDZ*2] +1)
+    260          else {
+    261            koordXZ_64=resistance_fAMX; koordYZ_64=resistance_fAMY;
+    262          int LocalPO_DZ2to5MFA = isViewZMethod_64VRT( 1+ numClonDZ*2, isz_separatorA);// &
+    263          //          (SPV_USTOUT(offsetSPVCmdPRM1+SPV_OUTA_I005)^1);
+    264            koordXZ_64=resistance_fBMX; koordYZ_64=resistance_fBMY;
+    265          int LocalPO_DZ2to5MFB = isViewZMethod_64VRT( 1+ numClonDZ*2, isz_separatorB);// &
+    266            //        (SPV_USTOUT(offsetSPVCmdPRM1+SPV_OUTB_I005)^1);
+    267            koordXZ_64=resistance_fCMX; koordYZ_64=resistance_fCMY;
+    268          int LocalPO_DZ2to5MFC = isViewZMethod_64VRT( 1+ numClonDZ*2, isz_separatorC);// &
+    269          //          (SPV_USTOUT(offsetSPVCmdPRM1+SPV_OUTC_I005)^1);
+    270          
+    271              LocalPO_DZ2to5MF = LocalPO_DZ2to5MFA | LocalPO_DZ2to5MFB | LocalPO_DZ2to5MFC;
+    272           }//else
+    273          
+    274          //    isValidZonaDZ5OF = isNewZonaMethodVRT(getOffsetSPVUstCnf(idxC), (numClonDZlon-1)*2);//флаг валидности зоны
+    275             switch(numClonDZ){
+    276              case 1:
+    277                if(isValidZonaDZ2OF) LocalPO_DZ2to5OF=0;//флаг валидности зоны
+    278                if(isValidZonaDZ2MF) LocalPO_DZ2to5MF=0;//флаг валидности зоны
+    279              break;
+    280              case 2:
+    281                if(isValidZonaDZ3OF) LocalPO_DZ2to5OF=0;//флаг валидности зоны
+    282                if(isValidZonaDZ3MF) LocalPO_DZ2to5MF=0;//флаг валидности зоны
+    283              break;
+    284              case 3:
+    285                if(isValidZonaDZ4OF) LocalPO_DZ2to5OF=0;//флаг валидности зоны
+    286                if(isValidZonaDZ4MF) LocalPO_DZ2to5MF=0;//флаг валидности зоны
+    287              break;
+    288              case 4:
+    289                if(isValidZonaDZ5OF) LocalPO_DZ2to5OF=0;//флаг валидности зоны
+    290                if(isValidZonaDZ5MF) LocalPO_DZ2to5MF=0;//флаг валидности зоны
+    291              break;
+    292            }//switch
+    293            
+    294            int LocalPO_MDZ2to5MF = //LocalPO_DZ2to5MF & (
+    295                                                        SPV_UST(SPV_OUTA_DZ2to5_MTZ) |
+    296                                                        SPV_UST(SPV_OUTB_DZ2to5_MTZ) |
+    297                                                        SPV_UST(SPV_OUTC_DZ2to5_MTZ) ;
+    298                                      //                  );
+    299          
+    300           #include "inc_uskdz2mf.ci"
+    301          #include "inc_uskdz2of.ci"
+    302          #include "inc_uskmdz2mf.ci"
+    303          
+    304            //*******DZ2********
+    305            int commonDZ2 = 
+    306              //CMD1_DZ2
+    307              (IO_LOGIC(IOCMD1_DZ2to5)^1) &
+    308              ENA_LOGIC(ENA_DZ2to5_1);// ENA_DZ2;
+    309          
+    310            if(numClonDZ=2) {//for DZ3
+    311          int tt1 = TL_LOGIC(TLCMDOUTNCN_DZ2to5MF);
+    312          int tt2 = isFAILU_DZ;
+    313          int tt5 = (IO_LOGIC(IOCMD1_DZ2to5)^1);
+    314          int tt3 = isFAILU_DZ;
+    315          int tt6 = ENA_LOGIC(ENA_DZ2to5_1);// ENA_DZ2;
+    316          
+    317          
+    318              int tmpOffsetENA_test  =
+    319                          cnfCOMPONENT[idxC].offsetENACmd;    //ENA команды
+    320          
+    321          int tt4 = isFAILU_DZ;
+    322          
+    323          
+    324                     }//if
+    325          
+    326            //L1
+    327            int locPO_DZ2to5MF = 
+    328                  commonDZ2 &
+    329                  //ПО ДЗ2
+    330                  (GlobalPO1 | LocalPO_DZ2to5MF) &
+    331                  //ELOUTTRG_NCN_DZ2to5MF
+    332                  (TL_LOGIC(TLCMDOUTNCN_DZ2to5MF)^1);
+    333          
+    334                //L2 DZ2
+    335            int locPO_MDZ2MF = 
+    336                  commonDZ2 &
+    337                  //ENA_MDZ2to5MF
+    338                  ENA_LOGIC(ENA_DZ2to5_2) &
+    339                  //ПО МТЗ ДЗ2МФ
+    340                  (GlobalPO2 | LocalPO_MDZ2to5MF) &
+    341                  //ELOUTTRG_NCN_MDZ2to5MF
+    342                  TL_LOGIC(TLCMDOUTNCN_MDZ2to5MF) &
+    343                  ((
+    344            //DZ2to5_PO3
+    345            TL_LOGIC(TLCMD30_DZ2to5OF) |
+    346            //DZ2to5_PO1
+    347            TL_LOGIC(TLCMD30_DZ2to5MF) 
+    348                  )^1);
+    349          
+    350            //L3
+    351            int locPO_DZ2to5OF = 
+    352                    commonDZ2 &
+    353                    //ПО ДЗ2ОФ
+    354                    (GlobalPO3 | LocalPO_DZ2to5OF) &
+    355                    //ELOUTTRG_NCN_MDZ2to5OF
+    356                    (TL_LOGIC(TLCMDOUTNCN_DZ2to5OF)^1);
+    357          
+    358          //триг по восх фронту
+    359          //TRG_FRONT(set, clr, old, out)
+    360          //          //DZ2_PO1                ELOLDTRG_NCN_DZ2to5MF  ELOUTTRG_NCN_DZ2to5MF
+    361            TRG_FRONT(locPO_DZ2to5MF, isFAILU_DZ, TLCMDOLDNCN_DZ2to5MF,  TLCMDOUTNCN_DZ2to5MF)
+    362          //триг по восх фронту
+    363          //TRG_FRONT(set, clr, old, out)
+    364          //          //DZ2_PO3                 ELOLDTRG_NCN_DZ2to5OF  ELOUTTRG_NCN_DZ2to5OF
+    365            TRG_FRONT(locPO_DZ2to5OF, isFAILU_DZ, TLCMDOLDNCN_DZ2to5OF,  TLCMDOUTNCN_DZ2to5OF)
+    366          //триг по восх MMF
+    367          //TRG_MMF(set, clr, old, out)
+    368          //                    //DZ2_PO2      ELOLDTRG_NCN_MDZ2to5MF  ELOUTTRG_NCN_MDZ2to5MF
+    369            TRG_MMF(isFAILU_DZ, locPO_MDZ2MF,  TLCMDOLDNCN_MDZ2to5MF,  TLCMDOUTNCN_MDZ2to5MF)
+    370          
+    371            //Сраб ПО ДЗ2МФ
+    372            locPO_DZ2to5MF &=
+    373                  //ELOUTTRG_NCN_DZ2to5MF
+    374                  (TL_LOGIC(TLCMDOUTNCN_DZ2to5MF)^1);
+    375          
+    376            //Сраб ПО ДЗ2ОФ
+    377            locPO_DZ2to5OF &=
+    378                  //ELOUTTRG_NCN_DZ2to5OF
+    379                  (TL_LOGIC(TLCMDOUTNCN_DZ2to5OF)^1);
+    380            
+    381            //Сраб ПО МТЗ ДЗ2МФ
+    382            locPO_MDZ2MF &=
+    383                  //ELOUTTRG_NCN_MDZ2to5MF
+    384                  TL_LOGIC(TLCMDOUTNCN_MDZ2to5MF);
+    385          
+    386          //гасим МФ и ОФ если активный МТЗ МФ
+    387            //Сраб ПО ДЗ2МФ
+    388            locPO_DZ2to5MF &=
+    389                //Сраб ПО МТЗ ДЗ2МФ
+    390                (locPO_MDZ2MF^1);
+    391          
+    392            //Сраб ПО ДЗ2ОФ
+    393            locPO_DZ2to5OF &=
+    394                //Сраб МТЗ ДЗ2МФ
+    395                (locPO_MDZ2MF^1);
+    396          
+    397            //DZ2to5_PO1
+    398            TL_LOGIC(TLCMD30_DZ2to5MF) =
+    399            //Сраб ПО ДЗ2МФ
+    400            IO_LOGIC(IOCMD4_DZ2to5MF) =
+    401              locPO_DZ2to5MF;
+    402          
+    403            //L7
+    404            //DZ2_TIM1
+    405            LSIGNAL_TIMER(TIMER1_DZ2to5)  = 
+    406              //RES_DZ2MF
+    407              TL_LOGIC(TLCMD1_DZ2to5MF) &
+    408              locPO_DZ2to5MF;
+    409          
+    410            //дельта таймера 
+    411            TL_LOGIC(TL10_DZ2TO5MF) = IS_TIMER_DELTA12(TIMER1_DZ2to5)^1;   
+    412          
+    413            //L10
+    414            int tmp = 
+    415                     LSIGNAL_TIMER(TIMER_BODZ2to5MF)  =
+    416                        //DZ2MF_USKOR
+    417                        TL_LOGIC(TLCMD27_DZ2to5MF) |
+    418                        //DZ2_TIM1
+    419                        PLOG_TIMER(TIMER1_DZ2to5); 
+    420          
+    421            //Сраб ДЗ2МФ
+    422            IO_LOGIC(IOCMD5_DZ2to5MF) =
+    423              ILOG_TIMER(TIMER_BODZ2to5MF)|tmp;//DZ2_TIM1
+    424          
+    425              //DZ2to5_PO2
+    426             TL_LOGIC(TLCMD30_MDZ2to5MF) =
+    427            //Сраб ПО МТЗ ДЗ2МФ
+    428            IO_LOGIC(IOCMD4_MDZ2to5MF) =
+    429              locPO_MDZ2MF;
+    430          
+    431            //L8
+    432            LSIGNAL_TIMER(TIMER2_DZ2to5)  = //DZ2_TIM2
+    433              //RES_MDZ2MF
+    434              TL_LOGIC(TLCMD1_MDZ2to5MF) &
+    435              locPO_MDZ2MF;
+    436          
+    437            //дельта таймера
+    438            TL_LOGIC(TL10_MDZ2TO5MF) = IS_TIMER_DELTA12(TIMER2_DZ2to5)^1;
+    439          
+    440            //L11
+    441            tmp =
+    442            LSIGNAL_TIMER(TIMER_BOMDZ2to5MF)  =
+    443                    //MDZ2MF_USKOR
+    444                    TL_LOGIC(TLCMD27_MDZ2to5MF) |
+    445                    //DZ2_TIM2
+    446                    PLOG_TIMER(TIMER2_DZ2to5); 
+    447          
+    448            //Сраб MTZ ДЗ2МФ
+    449            IO_LOGIC(IOCMD5_MDZ2to5MF) =
+    450              ILOG_TIMER(TIMER_BOMDZ2to5MF)|tmp;//DZ2_TIM2
+    451          
+    452            //DZ2to5_PO3
+    453            TL_LOGIC(TLCMD30_DZ2to5OF) =
+    454            //Сраб ПО ДЗ2ОФ
+    455            IO_LOGIC(IOCMD4_DZ2to5OF) =
+    456              locPO_DZ2to5OF;
+    457          
+    458            //L9
+    459            LSIGNAL_TIMER(TIMER3_DZ2to5)  = //DZ2_TIM3
+    460              //RES_DZ2OF
+    461              TL_LOGIC(TLCMD1_DZ2to5OF) &
+    462              locPO_DZ2to5OF;
+    463          
+    464            //дельта таймера 
+    465            TL_LOGIC(TL10_DZ2TO5OF) = IS_TIMER_DELTA12(TIMER3_DZ2to5)^1;   
+    466          
+    467            //L12
+    468            tmp =
+    469            LSIGNAL_TIMER(TIMER_BODZ2to5OF)  =
+    470                    //DZ2OF_USKOR
+    471                    TL_LOGIC(TLCMD27_DZ2to5OF) | 
+    472                    //DZ2_TIM3
+    473                    PLOG_TIMER(TIMER3_DZ2to5); 
+    474          
+    475            //Сраб ДЗ2OФ
+    476            IO_LOGIC(IOCMD5_DZ2to5OF) =
+    477              ILOG_TIMER(TIMER_BODZ2to5OF)|tmp;//DZ2_TIM3
+    478          /*
+    479            switch(numClonDZ){
+    480              case 1:
+    481                locPO_DZ2MF = locPO_DZ2to5MF;
+    482                locPO_DZ2OF = locPO_DZ2to5OF;
+    483              break;
+    484              case 2:
+    485                locPO_DZ3MF = locPO_DZ2to5MF;
+    486                locPO_DZ3OF = locPO_DZ2to5OF;
+    487              break;
+    488              case 3:
+    489                locPO_DZ4MF = locPO_DZ2to5MF;
+    490                locPO_DZ4OF = locPO_DZ2to5OF;
+    491              break;
+    492              case 4:
+    493                locPO_DZ5MF = locPO_DZ2to5MF;
+    494                locPO_DZ5OF = locPO_DZ2to5OF;
+    495              break;
+    496            }//switch
+    497          */
+    498          
+    499          }//logicDZ2(short idxC)
+    500          
+    501          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      96   logicDZ2to5
+        96   -> FLogTimer
+        96   -> ILogTimer
+        96   -> PLogTimer
+        96   -> detectorLevelUP3F
+        96   -> isTimerDelta
+        96   -> isViewZMethod_64VRT
+        96   -> isViewZTrianMethod_64VRT
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+    3532  logicDZ2to5
+
+ 
+ 3 532 bytes in section Fast_function
+ 
+ 3 532 bytes of CODE memory
+
+Errors: none
+Warnings: 8

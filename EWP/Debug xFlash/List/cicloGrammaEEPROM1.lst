@@ -1,0 +1,363 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        12/Oct/2015  11:04:58
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\dataEEPROM\cicloGrammaEEPROM1.c
+#    Command line =  
+#        "D:\IAR
+#        projects\HR1_0100_00_I720_new2\dataEEPROM\cicloGrammaEEPROM1.c" -D
+#        _STATIC_MEMORY_BOOT -lcN "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\List\" -o "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "C:\Program Files\IAR Systems\Embedded
+#        Workbench 7.40\arm\INC\c\DLib_Config_Normal.h" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\Igor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\component\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\" --cpu_mode arm -On
+#        --use_c++_inline
+#    List file    =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\List\cicloGrammaEEPROM1.lst
+#    Object file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\Obj\cicloGrammaEEPROM1.o
+#
+###############################################################################
+
+D:\IAR projects\HR1_0100_00_I720_new2\dataEEPROM\cicloGrammaEEPROM1.c
+      1          
+      2          #include "callbackelement\callbackelementdef.h"
+      3          #include "callbackelement\ustrangEEPROMdef.h"
+      4          #include "dataEEPROM\dataEEPROMdef.h"
+      5          
+      6          #include "callbackelement\callbackelementfnc.h"
+      7          #include "dataEEPROM\dataEEPROM.h"
+      8          
+      9          int eeprom_status;//статусный регистр EEPROM
+     10          
+     11          int missionCicling;//циклы одинаковых миссий
+     12          int eepromCicling = UST_NOWORK;//циклы работы с EEPROM
+     13          int alterEEPROM = 0;//x101;//0;//байты alter ext устaвок и ранжир EEPROM
+     14          int maskaAlterEEPROM = 0;//маска для alter ext устaвок и ранжир EEPROM
+     15          int ratingEEPROM = 0;//кратность чтения EEPROM
+     16          
+     17          void dataAccessEEPROM() @ "Fast_function"
+     18          {
+     19          //доступ к данным EEPROM 
+     20            
+     21            if( !//статусный регистр EEPROM
+     22                //отказ EEPROM
+     23                (eeprom_status & (1<<EEPROM_FAIL)) 
+     24                
+     25               ){
+     26                //EEPROM EXT_BUSY
+     27                if(!(eeprom_status & (1<<EEPROMEXT_BUSY))){
+     28          		  //статус UST_ATTEMPT
+     29                      if((eeprom_status & (1<<EEPROMUST_ATTEMPT))){//статусный регистр EEPROM
+     30                                    eeprom_status |= (1<<EEPROMUST_BUSY);
+     31          			  cicloGrammaEEPROM_DEVICE1();//циклограмма EEPROM DEVICE1
+     32          			    }//if
+     33          			  }//if
+     34                //EEPROM UST_BUSY
+     35                if(!(eeprom_status & (1<<EEPROMUST_BUSY))){
+     36          		  //статус EXT_ATTEMPT
+     37                      if((eeprom_status & (1<<EEPROMEXT_ATTEMPT))){//статусный регистр EEPROM
+     38                                    eeprom_status |= (1<<EEPROMEXT_BUSY);
+     39          			  cicloGrammaEEPROM_DEVICE2();//циклограмма EEPROM DEVICE2
+     40          			    }//if
+     41          			  }//if
+     42                }//if
+     43          }//dataAccessEEPROM()
+     44          
+     45          void cicloGrammaEEPROM_DEVICE1()// @ "Fast_function"
+     46          {
+     47          //доступ к данным EEPROM
+     48          //исполнение пошаговых миссий для DEVICE1
+     49            switch(isActivStepElementDEVICE1())//активность пошагового элемента
+     50            {
+     51             case -1:
+     52             {
+     53             //авария EEPROM
+     54             //отказ EEPROM при записи уст
+     55             //установить статус _FAIL
+     56              eeprom_status |= (1<<EEPROM_FAIL);//статусный регистр EEPROM
+     57             } break;
+     58             case 1:
+     59             {
+     60             //миссия закончилась
+     61              switch(eepromCicling)//циклы работы с EEPROM
+     62              {
+     63              case BREAK_BUSY://процесс записи ломалки
+     64                eepromCicling = UST_NOWORK;//циклы работы с EEPROM
+     65                eeprom_status &= ~(1<<EEPROMUST_ATTEMPT);
+     66                eeprom_status &= ~(1<<EEPROMUST_BUSY);//статусный регистр EEPROM
+     67              break;
+     68          
+     69              case SAVE_UST_BUSY://процесс записи уст занят
+     70                eepromCicling = stepElementSaveUSTAVKItoEEPROM(alterEEPROM^USTALTER_MASKA);//запись уст EEPROM в другой блок
+     71                break;
+     72              case SAVE_UST_COMPLETE: //процесс записи уст завершен
+     73                if(controlSaveUst())
+     74                {
+     75                  //отказ EEPROM при записи уст
+     76                  //установить статус _FAIL
+     77                  eeprom_status |= (1<<EEPROM_FAIL);//статусный регистр EEPROM
+     78                  eepromCicling = UST_NOWORK;//циклы работы с EEPROM
+     79                  return;//контроль результ записи уст
+     80                }//if
+     81              case SAVE_RANG_BUSY://процесс записи ранж занят
+     82              {
+     83                eepromCicling = stepElementSaveRANGtoEEPROM(alterEEPROM^USTALTER_MASKA);//запись ранжир EEPROM
+     84              }
+     85              break;
+     86              case WRITE_USTALTER_BUSY://процесс записи alter уставок и ранж занят
+     87                eepromCicling = stepElementUSTALTERtoEEPROM();//запись alter уставок и ранж EEPROM
+     88                break;
+     89          
+     90              case READ_ALT_BUSY://процесс чтения alter занят
+     91                alterEEPROM = //байты alter ext устaвок и ранжир EEPROM
+     92                  controlPREPAREalter();//подготовка alter
+     93                alterEEPROM ^= maskaAlterEEPROM;//маска для alter ext устaвок и ранжир EEPROM
+     94                eepromCicling = stepElementReadEXTPRItoEEPROM(alterEEPROM);//чтение ext primary EEPROM
+     95                break;
+     96              case READ_EXT_BUSY://процесс чтения ext занят
+     97                eepromCicling = stepElementReadEXTtoEEPROM(alterEEPROM);//чтение ext EEPROM
+     98                break;
+     99              case READ_RANG_BUSY://процесс чтения ранж занят
+    100              {
+    101                eepromCicling = stepElementReadRANGtoEEPROM(alterEEPROM);//чтение ранжир EEPROM
+    102              }
+    103              break;
+    104              case READ_UST_BUSY://процесс чтения уст занят
+    105              {
+    106                eepromCicling = stepElementReadUSTAVKItoEEPROM(alterEEPROM);//чтение уст EEPROM
+    107              }
+    108              break;
+    109              default:
+    110                ;
+    111              }//switch
+    112            } break;
+    113          
+    114          //  else
+    115             case 2:
+    116            {
+    117               //миссии не было
+    118              switch(eepromCicling)//циклы работы с EEPROM
+    119              {
+    120              case READ_EXT_COMPLETE: //процесс чтения ext завершен
+    121              {
+    122                if(controlPREPAREext())//подготовка ext
+    123                 {
+    124                  //ошибка чтения уставок
+    125                  if(ratingEEPROM == 0) //кратность чтения-записи EEPROM
+    126                  {
+    127                    //повтор чтения ext
+    128                    maskaAlterEEPROM |= EXTALTER_MASKA;//маска для alter ext EEPROM
+    129          	  //сбросить статус UST_CRC
+    130                    eeprom_status &= ~(1<<EEPROMUST_CRC);
+    131                    ratingEEPROM++;
+    132                    readPARAMfromEEPROM();//повторно читать ext из EEPROM
+    133                      return;
+    134                  }//if(ratingEEPROM == 0)
+    135                  else {
+    136          	   //EEPROM ext нет CRC
+    137                     eeprom_status |= (1<<EEPROMEXT_CRC);
+    138                     ratingEEPROM=0;
+    139                     //сбросить статус UST_BUSY
+    140             //        eeprom_status &= ~(1<<EEPROMUST_BUSY);//статусный регистр EEPROM
+    141             //        eeprom_status &= ~(1<<EEPROMUST_ATTEMPT);
+    142                      //return;
+    143                       }//else
+    144                }//if(controlPREPAREext())
+    145                eepromCicling = stepElementRead1RANGtoEEPROM(alterEEPROM);//чтение ранж EEPROM
+    146              }
+    147              break;
+    148          
+    149              case READ_RANG_COMPLETE: //процесс чтения ранж завершен
+    150              {
+    151                if(controlPREPARErang())//подготовка ранж
+    152                 {
+    153                  //ошибка чтения уставок-ранжир
+    154                  if(ratingEEPROM == 0) //кратность чтения EEPROM
+    155                  {
+    156                    //повтор чтения 
+    157                    if(eeprom_status & (1<<EEPROMEXT_CRC)){
+    158                      //EXT тоже не прочиталось - уйти
+    159          	   //EEPROM уст нет CRC
+    160                     eeprom_status |= (1<<EEPROMUST_CRC);
+    161                     //сбросить статус UST_BUSY
+    162                     eeprom_status &= ~(1<<EEPROMUST_BUSY);//статусный регистр EEPROM
+    163                     eeprom_status &= ~(1<<EEPROMUST_ATTEMPT);
+    164                     ratingEEPROM=0;
+    165                      return;
+    166                    }//if
+    167                    maskaAlterEEPROM |= USTALTER_MASKA;//маска для alter уст ранж EEPROM
+    168          	  //сбросить статус UST_CRC
+    169                    eeprom_status &= ~(1<<EEPROMUST_CRC);
+    170                    ratingEEPROM++;
+    171                    readPARAMfromEEPROM();//повторно читать параметры из EEPROM
+    172                      return;
+    173                  }//if(ratingEEPROM == 0)
+    174                  else {
+    175          	   //EEPROM уст нет CRC
+    176                     eeprom_status |= (1<<EEPROMUST_CRC);
+    177                     //сбросить статус UST_BUSY
+    178                     eeprom_status &= ~(1<<EEPROMUST_BUSY);//статусный регистр EEPROM
+    179                     eeprom_status &= ~(1<<EEPROMUST_ATTEMPT);
+    180                     ratingEEPROM=0;
+    181                      return;
+    182                       }//else
+    183                }//if(controlPREPARErang())
+    184                eepromCicling = stepElementRead1USTAVKItoEEPROM(alterEEPROM);//чтение уст EEPROM
+    185              }
+    186              break;
+    187          
+    188              case READ_UST_COMPLETE: //процесс чтения уст завершен
+    189              {
+    190                eepromCicling = UST_NOWORK;//циклы работы с EEPROM
+    191                if(controlPREPAREust()) //подготовка уставок
+    192                {
+    193                  //ошибка чтения уставок
+    194                  if(ratingEEPROM == 0) //кратность чтения EEPROM
+    195                  {
+    196                    //повтор чтения уставок
+    197                    maskaAlterEEPROM |= USTALTER_MASKA;//маска для alter устaвок и ранжир EEPROM
+    198                   //сбросить статус UST_CRC
+    199                    eeprom_status &= ~(1<<EEPROMUST_CRC);
+    200                    ratingEEPROM++;
+    201                    readPARAMfromEEPROM();//повторно читать уставки и ранж из EEPROM
+    202                      return;
+    203                  }//if(ratingEEPROM == 0)
+    204                  else {
+    205                     ratingEEPROM = 0;
+    206          	   //EEPROM уст нет CRC
+    207                     eeprom_status |= (1<<EEPROMUST_CRC);
+    208                     //сбросить статус UST_BUSY
+    209                     eeprom_status &= ~(1<<EEPROMUST_BUSY);//статусный регистр EEPROM
+    210                     eeprom_status &= ~(1<<EEPROMUST_ATTEMPT);
+    211                     return;
+    212                       }//else
+    213                }//if(controlPREPAREust())
+    214                else {
+    215                     ratingEEPROM = 0;
+    216                     //сбросить статус UST_BUSY
+    217                     eeprom_status &= ~(1<<EEPROMUST_BUSY);//статусный регистр EEPROM
+    218          	   //сбросить статус UST_CRC
+    219                     eeprom_status &= ~(1<<EEPROMUST_CRC);
+    220                     eeprom_status &= ~(1<<EEPROMUST_ATTEMPT);
+    221                      }//else
+    222          
+    223              }
+    224              break;
+    225          
+    226              case SAVE_RANG_COMPLETE: //процесс записи уст ранж завершен
+    227                eepromCicling = UST_NOWORK;//циклы работы с EEPROM
+    228                if(controlSaveRang()) //контроль результ записи ранж
+    229                {
+    230                  //отказ EEPROM при записи ранж
+    231                  //установить статус _FAIL
+    232                  eeprom_status |= (1<<EEPROM_FAIL);//статусный регистр EEPROM
+    233                  return;//контроль результ записи
+    234                }//if
+    235                alterEEPROM ^= USTALTER_MASKA;//перекл уст на другой блок
+    236                writeUSTALTERtoEEPROM(alterEEPROM);//записать alter уставок и ранжир в EEPROM
+    237                break;
+    238              case WRITE_USTALTER_COMPLETE://процесс записи alter ext завершен
+    239                eepromCicling = UST_NOWORK;//циклы работы с EEPROM
+    240                if(controlWriteUSTALTER())//контроль результ записи alter уст и ранж
+    241                {
+    242                  //отказ EEPROM при записи alter
+    243                  //установить статус _FAIL
+    244                  eeprom_status |= (1<<EEPROM_FAIL);//статусный регистр EEPROM
+    245                  return;//контроль результ записи
+    246                }//if
+    247                if(ratingEEPROM == 0){ //кратность чтения-записи EEPROM
+    248                   //повторное сохранение
+    249                   savePARAMtoEEPROM(alterEEPROM^USTALTER_MASKA);//сохранить уставки и ранж в EEPROM
+    250                   ratingEEPROM++;//кратность чтения-записи EEPROM
+    251                }//if
+    252                else {
+    253                //сбросить статус UST_BUSY
+    254                eeprom_status &= ~(1<<EEPROMUST_BUSY);//статусный регистр EEPROM
+    255                eeprom_status &= ~(1<<EEPROMUST_ATTEMPT);
+    256                //сбросить статус UST_CRC
+    257                eeprom_status &= ~(1<<EEPROMUST_CRC);
+    258                ratingEEPROM=0;//кратность чтения-записи EEPROM
+    259                }
+    260                break;
+    261              default:
+    262                ;
+    263              }//switch
+    264            } break;//
+    265           }//switch
+    266          }//cicloGrammaEEPROM()
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   cicloGrammaEEPROM_DEVICE1
+         8   -> controlPREPAREalter
+         8   -> controlPREPAREext
+         8   -> controlPREPARErang
+         8   -> controlPREPAREust
+         8   -> controlSaveRang
+         8   -> controlSaveUst
+         8   -> controlWriteUSTALTER
+         8   -> isActivStepElementDEVICE1
+         8   -> readPARAMfromEEPROM
+         8   -> savePARAMtoEEPROM
+         8   -> stepElementRead1RANGtoEEPROM
+         8   -> stepElementRead1USTAVKItoEEPROM
+         8   -> stepElementReadEXTPRItoEEPROM
+         8   -> stepElementReadEXTtoEEPROM
+         8   -> stepElementReadRANGtoEEPROM
+         8   -> stepElementReadUSTAVKItoEEPROM
+         8   -> stepElementSaveRANGtoEEPROM
+         8   -> stepElementSaveUSTAVKItoEEPROM
+         8   -> stepElementUSTALTERtoEEPROM
+         8   -> writeUSTALTERtoEEPROM
+       8   dataAccessEEPROM
+         8   -> cicloGrammaEEPROM_DEVICE1
+         8   -> cicloGrammaEEPROM_DEVICE2
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  alterEEPROM
+    1444  cicloGrammaEEPROM_DEVICE1
+     140  dataAccessEEPROM
+       4  eepromCicling
+       4  eeprom_status
+       4  maskaAlterEEPROM
+       4  missionCicling
+       4  ratingEEPROM
+
+ 
+    20 bytes in section .bss
+     4 bytes in section .data
+ 1 444 bytes in section .text
+   140 bytes in section Fast_function
+ 
+ 1 584 bytes of CODE memory
+    24 bytes of DATA memory
+
+Errors: none
+Warnings: none

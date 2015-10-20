@@ -1,0 +1,150 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        12/Oct/2015  11:05:00
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  D:\IAR projects\HR1_0100_00_I720_new2\ici\hu1.c
+#    Command line =  
+#        "D:\IAR projects\HR1_0100_00_I720_new2\ici\hu1.c" -D
+#        _STATIC_MEMORY_BOOT -lcN "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\List\" -o "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "C:\Program Files\IAR Systems\Embedded
+#        Workbench 7.40\arm\INC\c\DLib_Config_Normal.h" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\Igor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\component\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\" --cpu_mode arm -On
+#        --use_c++_inline
+#    List file    =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\List\hu1.lst
+#    Object file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\Obj\hu1.o
+#
+###############################################################################
+
+D:\IAR projects\HR1_0100_00_I720_new2\ici\hu1.c
+      1          #include "../LIB/CDL_AV0/lpc/include/lpc_types.h"
+      2          #include "../LIB/CDL_AV0/lpc/include/lpc_irq_fiq.h"
+      3          #include "../LIB/CDL_AV0/lpc/include/lpc_arm922t_cp15_driver.h"
+      4          //#include "ea3250_board.h"
+      5          #include "../LIB/CDL_AV0/csps/lpc32xx/include/lpc32xx_hsuart_driver.h"
+      6          
+      7          #include "../LIB/CDL_AV0/csps/lpc32xx/include/lpc32xx_intc_driver.h"
+      8          
+      9          #include "../LIB/CDL_AV0/csps/lpc32xx/include/lpc32xx_timer_driver.h"
+     10          
+     11          
+     12          extern INT_32 hsuartdev, hs1uartdev;
+     13          extern  UNS_8 hs1_txbuff [512], hs1_rxbuff [512];
+     14          extern int hs1_txsize, hs1_rxsize;
+     15          extern int hs1_txfill, hs1_rxget, hs1_txget, hs1_rxfill;
+     16          extern void hs1_recv_cb(void);
+     17          extern void hs1_send_cb(void);
+     18          extern void hs1_eof_cb(void);
+     19          extern void hs1_rxerr_cb(void);
+     20          
+     21          void hs1_uart_hdw_init(void)
+     22          {
+     23          //register long i;
+     24          
+     25          
+     26          HSUART_CBS_T cbs;
+     27          HSUART_CONTROL_T hsucntl[3];
+     28          //. UNS_8 ch[16];
+     29          
+     30          hsucntl[0].baud_rate = 115200;
+     31          hsucntl[0].cts_en	 = FALSE;
+     32          hsucntl[0].rts_en	 = FALSE;
+     33          disable_irq();
+     34            /* Set UART3 to not use modem control pins */
+     35            //.UARTCNTL->ctrl &= ~UART_U3_MD_CTRL_EN;
+     36          
+     37            hsuartdev = hs_uart_open((void *) UART1, (INT_32) & hsucntl[0]);
+     38            if (hsuartdev != 0)
+     39            {
+     40              /* Setup RX and TX callbacks */
+     41              cbs.rxcb    = hs1_recv_cb;//term_dat_recv_cb;
+     42              cbs.txcb    = hs1_send_cb;//term_dat_send_cb;
+     43              cbs.rxerrcb = hs1_rxerr_cb;
+     44              cbs.eofcb   = hs1_eof_cb; 
+     45              hs_uart_ioctl(hsuartdev, HSUART_INSTALL_CBS, (INT_32) &cbs);
+     46          	hs_uart_ioctl(hsuartdev, HSUART_CLEAR_FIFOS, 0);
+     47          
+     48              //..!! int_enable(IRQ_UART_IIR7);
+     49          
+     50              /* Initialize TX and RX ring buffers */
+     51              hs1_txfill = hs1_txget = hs1_rxfill = 
+     52              hs1_rxget = hs1_txsize = hs1_rxsize = 0;
+     53          	
+     54          	hs1uartdev = hsuartdev;
+     55          
+     56              /* Loop returning the data from the terminal */
+     57              //.term_dat_out(sendstr, sizeof(sendstr));
+     58              //.ch[0] = 0;
+     59              //.while (ch[0] != 27)
+     60              //.{
+     61              //.  if (term_dat_in(&ch[0], 16) > 0)
+     62              //.  {
+     63              //.    term_dat_out(&ch[0], 1);
+     64              //.  }
+     65              //.}
+     66          	int_clear(IRQ_UART_IIR1);
+     67          	//int_enable(IRQ_UART_IIR7);
+     68            }
+     69          
+     70          
+     71          
+     72          
+     73          }
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   disable_irq
+      80   hs1_uart_hdw_init
+        80   -> disable_irq
+        80   -> hs_uart_ioctl
+        80   -> hs_uart_open
+        80   -> int_clear
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable0
+       4  ??DataTable0_1
+       4  ??DataTable0_10
+       4  ??DataTable0_11
+       4  ??DataTable0_2
+       4  ??DataTable0_3
+       4  ??DataTable0_4
+       4  ??DataTable0_5
+       4  ??DataTable0_6
+       4  ??DataTable0_7
+       4  ??DataTable0_8
+       4  ??DataTable0_9
+      20  disable_irq
+     236  hs1_uart_hdw_init
+
+ 
+ 304 bytes in section .text
+ 
+ 304 bytes of CODE memory
+
+Errors: none
+Warnings: none

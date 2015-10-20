@@ -1,0 +1,320 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        12/Oct/2015  11:05:10
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\dataEEPROM\ustavkitoEEPROM.c
+#    Command line =  
+#        "D:\IAR projects\HR1_0100_00_I720_new2\dataEEPROM\ustavkitoEEPROM.c"
+#        -D _STATIC_MEMORY_BOOT -lcN "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\List\" -o "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "C:\Program Files\IAR Systems\Embedded
+#        Workbench 7.40\arm\INC\c\DLib_Config_Normal.h" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\Igor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\component\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\" --cpu_mode arm -On
+#        --use_c++_inline
+#    List file    =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\List\ustavkitoEEPROM.lst
+#    Object file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\Obj\ustavkitoEEPROM.o
+#
+###############################################################################
+
+D:\IAR projects\HR1_0100_00_I720_new2\dataEEPROM\ustavkitoEEPROM.c
+      1          /*
+      2          #include "lpc_types.h"
+      3          #include "lpc_irq_fiq.h"
+      4          #include "lpc_arm922t_cp15_driver.h"
+      5          
+      6          #include "lpc32xx_hstimer.h"
+      7          #include "lpc32xx_ssp.h"
+      8          #include "lpc32xx_gpio.h"
+      9          
+     10          #include "lpc32xx_intc_driver.h"
+     11          #include "lpc32xx_clkpwr_driver.h"
+     12          
+     13          #include "arm926ej_cp15_drv.h"
+     14          #include "ttbl.h"
+     15          */
+     16          
+     17          #include "lpc_types.h"
+     18          
+     19          #include <stdio.h>
+     20          #include <string.h>
+     21          
+     22          #include "psuperVisor\supermanager.h"
+     23          
+     24          #include "callbackelement\callbackelementdef.h"
+     25          #include "callbackelement\ustrangEEPROMdef.h"
+     26          #include "dataEEPROM\dataEEPROMdef.h"
+     27          
+     28          #include "virtualMenu\systemmenufnc.h"
+     29          #include "virtualMenu\ustmanagerfnc.h"
+     30          #include "callbackelement\callbackelementfnc.h"
+     31          #include "callbackelement\missionCollectionEEPROM.h"
+     32          #include "psuperVisor\psvisor_helpfnc.h"
+     33          #include "dataEEPROM\dataEEPROM.h"
+     34          
+     35          extern CALLBACK_MISSION cb_missionDEVICE1;
+     36          extern CALLBACK_MISSION *cb_mission_crrDEVICE1;//текущая миссия
+     37          extern short  missionSeparatorDEVICE1;//сепаратор миссии
+     38          extern int timing;
+     39          extern int timingLoad;
+     40          extern int cicling;
+     41          extern int  blokUSTAVKI[];
+     42          extern UNS_32 ArrayRANGIR[];
+     43          extern char  tmp_eeprom[];//MAX_MNGUSTAVKI*4блока *4байта
+     44          
+     45          extern int missionCicling;//циклы одинаковых миссий
+     46          extern int eepromCicling;//циклы работы с EEPROM
+     47          extern int alterEEPROM;//байты alter ext устaвок и ранжир EEPROM
+     48          extern int eeprom_status;//статусный регистр EEPROM
+     49          
+     50          int controlUst;
+     51          int breakMass[3] = {100, 200, 300};
+     52          int savePARAMtoEEPROM(int alter)
+     53          {
+     54          //сохранить уставки в EEPROM
+     55            int                      alter_offset_ust = OFF1_B64UST;
+     56            if(alter&USTALTER_MASKA)
+     57              alter_offset_ust = OFF2_B64UST;
+     58            if(missionSeparatorDEVICE1!=CBACK_NOMISSION) return 1;
+     59            //установить статус UST_ATTEMPT
+     60            eeprom_status |= (1<<EEPROMUST_ATTEMPT);//статусный регистр EEPROM
+     61            //циклы работы с уставками
+     62            eepromCicling = SAVE_UST_BUSY;//процесс записи уст занят;
+     63            missionCicling = 0;//циклы одинаковых миссий
+     64            //сформировать миссию записи уставок в EEPROM 1 блок
+     65            Build_cbMission_1BWRITE_MASSIV((char *)blokUSTAVKI, 0, alter_offset_ust);
+     66            return 0;
+     67          }//savePARAMtoEEPROM()
+     68          
+     69          int stepElementSaveUSTAVKItoEEPROM(int alter)
+     70          {
+     71          //исполнение миссий для записи уставок
+     72            int                      alter_offset_ust = OFF1_B64UST;
+     73            if(alter&USTALTER_MASKA)
+     74              alter_offset_ust = OFF2_B64UST;
+     75            int                      alter_offset_rang = OFF1_B64RANG;
+     76            if(alter&USTALTER_MASKA)
+     77              alter_offset_rang = OFF2_B64RANG;
+     78            //сост процесса записи уставок
+     79            int condition = SAVE_UST_BUSY;//процесс записи уст занят
+     80            switch(missionSeparatorDEVICE1)
+     81            {
+     82            case CBACK_MISSION_1BWRITE_MASSIV:
+     83            {
+     84              char *sourceData = (char *)blokUSTAVKI;
+     85              missionSeparatorDEVICE1 = CBACK_NOMISSION;//больше миссий не будет
+     86              if(missionCicling<(MAX_B64UST-1)) //циклы одинаковых миссий
+     87              {
+     88                //сформировать миссию записи уставок в EEPROM 1 блок
+     89                Build_cbMission_1BWRITE_MASSIV(sourceData,
+     90                                               BLOKMISSION_1 +BLOKMISSION_1*missionCicling,
+     91                                               BLOKMISSION_1 +BLOKMISSION_1*missionCicling +alter_offset_ust);
+     92                missionCicling++;//циклы одинаковых миссий
+     93              }///if
+     94              else
+     95              {
+     96                missionCicling = 0;//циклы одинаковых миссий
+     97                //сформировать миссию чтения уставок EEPROM 1 блок
+     98                Build_cbMission_1BREAD_MASSIV((char *)tmp_eeprom, alter_offset_ust, 0);
+     99              }
+    100            }
+    101            break;
+    102          
+    103            case CBACK_MISSION_1BREAD_MASSIV:
+    104            {
+    105              missionSeparatorDEVICE1 = CBACK_NOMISSION;//больше миссий не будет
+    106              if(missionCicling<(MAX_B64UST-1)) //циклы одинаковых миссий
+    107              {
+    108                //сформировать миссию чтения уставок EEPROM 1 блок
+    109                Build_cbMission_1BREAD_MASSIV((char *)tmp_eeprom,
+    110                                              BLOKMISSION_1 +BLOKMISSION_1*missionCicling +alter_offset_ust,
+    111                                              BLOKMISSION_1 +BLOKMISSION_1*missionCicling);
+    112                missionCicling++;//циклы одинаковых миссий
+    113              }//if
+    114              else
+    115              {
+    116                missionCicling = 0;//циклы одинаковых миссий
+    117                condition = SAVE_UST_COMPLETE;//процесс записи уст завершен
+    118                //сформировать миссию записи ранж EEPROM 1 блок
+    119                Build_cbMission_1BWRITE_MASSIV((char *)ArrayRANGIR, 0, alter_offset_rang);
+    120              }
+    121            }
+    122            break;
+    123          
+    124            default:;//NO MORE MISSION
+    125            }//switch
+    126          
+    127            return  condition;//процесс записи уст
+    128          }//stepElementSaveUSTAVKItoEEPROM()
+    129          
+    130          int stepElementReadUSTAVKItoEEPROM(int alter)
+    131          {
+    132          //исполнение миссий для чтения уставок
+    133            int                      alter_offset_ust = OFF1_B64UST;
+    134            if(alter&USTALTER_MASKA)
+    135              alter_offset_ust = OFF2_B64UST;
+    136            //сост процесса чтения уставок
+    137            int condition = READ_UST_BUSY;//процесс чтения уст занят
+    138            switch(missionSeparatorDEVICE1)
+    139            {
+    140            case CBACK_MISSION_1BREAD_MASSIV:
+    141            {
+    142              missionSeparatorDEVICE1 = CBACK_NOMISSION;//больше миссий не будет
+    143              if(missionCicling<(MAX_B64UST -1)) //циклы одинаковых миссий
+    144              {
+    145                //сформировать миссию записи уставок в EEPROM 1 блок
+    146                Build_cbMission_1BREAD_MASSIV((char *)tmp_eeprom,
+    147                                              BLOKMISSION_1 +BLOKMISSION_1*missionCicling +alter_offset_ust,
+    148                                              BLOKMISSION_1 +BLOKMISSION_1*missionCicling);
+    149                missionCicling++;//циклы одинаковых миссий
+    150              }//if
+    151              else
+    152              {
+    153                missionCicling = 0;//циклы одинаковых миссий
+    154                condition = READ_UST_COMPLETE;//процесс чтения уст завершен
+    155              }
+    156            }
+    157            break;
+    158          
+    159            default:;//NO MORE MISSION
+    160            }//switch
+    161          
+    162            return  condition;//процесс чтения уст
+    163          }//stepElementReadUSTAVKItoEEPROM()
+    164          
+    165          int stepElementRead1USTAVKItoEEPROM(int alter)
+    166          {
+    167          //исполнение миссий для чтения уставок
+    168            int                      alter_offset_ust = OFF1_B64UST;
+    169            if(alter&USTALTER_MASKA)
+    170              alter_offset_ust = OFF2_B64UST;
+    171          //чтение уст EEPROM
+    172            int condition = READ_UST_BUSY;//процесс чтения уст занят
+    173            //сформировать миссию чтения уст  EEPROM 1 блок
+    174            Build_cbMission_1BREAD_MASSIV((char *)tmp_eeprom, alter_offset_ust, 0);
+    175            return  condition;//процесс чтения уст
+    176          }//stepElementRead1USTAVKItoEEPROM(int alter)
+    177          
+    178          int controlPREPAREust()
+    179          {
+    180            controlUst ++;
+    181          //подготовка уставок
+    182            if(
+    183              setCRCMassiv((int *)tmp_eeprom, 4*MAX_MNGUSTAVKI)== //CRC для 4 блока уставок
+    184              ((int *)tmp_eeprom)[4*MAX_MNGUSTAVKI]
+    185            ){
+    186          
+    187              CopyEEPROMtoUstavki(0);//копировать данные из EEPROM в текущие уставки
+    188              AllComponentUstTimers();//Инит таймеров всех комп и подготовка уставок всех комп
+    189              return 0;//нет ошибок
+    190             }//if
+    191            return 1;//ошибка
+    192          }//controlPREPAREust()
+    193          
+    194          int controlSaveUst()
+    195          {
+    196          //контроль результ записи уст
+    197            if(
+    198              setCRCMassiv((int *)tmp_eeprom, 4*MAX_MNGUSTAVKI) == //CRC для 4 блока уставок
+    199              ((int *)tmp_eeprom)[4*MAX_MNGUSTAVKI]  //получить CRC уставок
+    200              //getCRCUstavki()//получить CRC уставок
+    201            ) return 0;
+    202            return 1;//ошибка
+    203          }//controlSaveUst()
+    204          
+    205          int breakEEPROM(int alter_offset)
+    206          {
+    207          //сломать массив в EEPROM
+    208          //  int                      alter_offset_ust = OFF1_B64UST;
+    209          //  if(alter&USTALTER_MASKA)
+    210          //    alter_offset_ust = OFF2_B64UST;
+    211            if(missionSeparatorDEVICE1!=CBACK_NOMISSION) return 1;
+    212            //установить статус UST_ATTEMPT
+    213            eeprom_status |= (1<<EEPROMUST_ATTEMPT);//статусный регистр EEPROM
+    214            //циклы работы с уставками
+    215            eepromCicling = BREAK_BUSY;//процесс записи ломалки занят;
+    216            missionCicling = 0;//циклы одинаковых миссий
+    217            //сформировать миссию записи ломалки  в EEPROM 1 блок
+    218            Build_cbMission_1BWRITE_MASSIV((char *)breakMass, 0, alter_offset);
+    219            return 0;
+    220          }//savePARAMtoEEPROM()
+    221          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   breakEEPROM
+         8   -> Build_cbMission_1BWRITE_MASSIV
+       8   controlPREPAREust
+         8   -> AllComponentUstTimers
+         8   -> CopyEEPROMtoUstavki
+         8   -> setCRCMassiv
+       8   controlSaveUst
+         8   -> setCRCMassiv
+      16   savePARAMtoEEPROM
+        16   -> Build_cbMission_1BWRITE_MASSIV
+      16   stepElementRead1USTAVKItoEEPROM
+        16   -> Build_cbMission_1BREAD_MASSIV
+      16   stepElementReadUSTAVKItoEEPROM
+        16   -> Build_cbMission_1BREAD_MASSIV
+      24   stepElementSaveUSTAVKItoEEPROM
+        24   -> Build_cbMission_1BREAD_MASSIV
+        24   -> Build_cbMission_1BWRITE_MASSIV
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable6
+       4  ??DataTable6_1
+       4  ??DataTable6_2
+       4  ??DataTable6_3
+       4  ??DataTable6_4
+       4  ??DataTable6_5
+       4  ??DataTable6_6
+       4  ??DataTable6_7
+       4  ??DataTable6_8
+       4  ??DataTable6_9
+     100  breakEEPROM
+      12  breakMass
+      80  controlPREPAREust
+      48  controlSaveUst
+       4  controlUst
+     120  savePARAMtoEEPROM
+      56  stepElementRead1USTAVKItoEEPROM
+     164  stepElementReadUSTAVKItoEEPROM
+     340  stepElementSaveUSTAVKItoEEPROM
+
+ 
+   4 bytes in section .bss
+  12 bytes in section .data
+ 948 bytes in section .text
+ 
+ 948 bytes of CODE memory
+  16 bytes of DATA memory
+
+Errors: none
+Warnings: none

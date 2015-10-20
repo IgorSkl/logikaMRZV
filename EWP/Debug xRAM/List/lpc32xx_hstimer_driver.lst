@@ -1,0 +1,539 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  14:35:42
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\LIB\source\lpc32xx_hstimer_driver.c
+#    Command line =  
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\LIB\source\lpc32xx_hstimer_driver.c"
+#        -lcN "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\List\" -o
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\" --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=ARM926EJ-S -e --fpu=VFP9-S --dlib_config "D:\Program Files\IAR
+#        Systems\Embedded Workbench 7.2\arm\INC\c\DLib_Config_Normal.h" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\" --interwork
+#        --cpu_mode arm -On --use_c++_inline
+#    List file    =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\lpc32xx_hstimer_driver.lst
+#    Object file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\lpc32xx_hstimer_driver.o
+#
+###############################################################################
+
+D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\LIB\source\lpc32xx_hstimer_driver.c
+      1          /***********************************************************************
+      2           * $Id: lpc32xx_hstimer_driver.c 30870 2009-07-05 10:16:16Z anderslu $
+      3           *
+      4           * Project: LPC32xx high speed timer driver
+      5           *
+      6           * Description:
+      7           *     This file contains driver support for the LPC32xx high speed
+      8           *     timer.
+      9           *
+     10           ***********************************************************************
+     11           * Software that is described herein is for illustrative purposes only
+     12           * which provides customers with programming information regarding the
+     13           * products. This software is supplied "AS IS" without any warranties.
+     14           * NXP Semiconductors assumes no responsibility or liability for the
+     15           * use of the software, conveys no license or title under any patent,
+     16           * copyright, or mask work right to the product. NXP Semiconductors
+     17           * reserves the right to make changes in the software without
+     18           * notification. NXP Semiconductors also make no representation or
+     19           * warranty that such application will be suitable for the specified
+     20           * use without further testing or modification.
+     21           *********************************************************************/
+     22          
+     23          #include "lpc32xx_hstimer_driver.h"
+     24          #include "lpc32xx_clkpwr_driver.h"
+     25          
+     26          /***********************************************************************
+     27           * HSTIMER driver package data
+     28          ***********************************************************************/
+     29          
+     30          /* HSTIMER device configuration structure type */
+     31          typedef struct
+     32          {
+     33            BOOL_32 init;           /* Device initialized flag */
+     34            HSTIMER_REGS_T *regptr; /* Pointer to HSTIMER registers */
+     35          } HSTIMER_CFG_T;
+     36          
+     37          /* HSTIMER driver data */
+     38          static HSTIMER_CFG_T hstdat;
+     39          
+     40          /***********************************************************************
+     41           * HSTIMER driver private functions
+     42           **********************************************************************/
+     43          
+     44          /***********************************************************************
+     45           *
+     46           * Function: timer_usec_to_val
+     47           *
+     48           * Purpose: Convert a time to a timer count value
+     49           *
+     50           * Processing:
+     51           *     See function.
+     52           *
+     53           * Parameters:
+     54           *     clknum : Timer clock ID
+     55           *     usec   : Time in microseconds
+     56           *
+     57           * Outputs: None
+     58           *
+     59           * Returns: The number of required clock ticks to give the time delay
+     60           *
+     61           * Notes: None
+     62           *
+     63           **********************************************************************/
+     64          UNS_32 timer_usec_to_value(CLKPWR_CLK_T clknum,
+     65                                     UNS_32 usec)
+     66          {
+     67            UNS_64 clkdlycnt;
+     68            UNS_64 longcnt;
+     69          
+     70            /* Determine the value to exceed before the count reaches the
+     71               desired delay time */
+     72            longcnt = (UNS_64) clkpwr_get_clock_rate(clknum);
+     73            clkdlycnt = (longcnt / 1000);
+     74            clkdlycnt = (clkdlycnt * (UNS_64) usec) / 1000;
+     75          
+     76            return (UNS_32) clkdlycnt;
+     77          }
+     78          
+     79          /***********************************************************************
+     80           * HSTIMER driver public functions
+     81           **********************************************************************/
+     82          
+     83          /***********************************************************************
+     84           *
+     85           * Function: hstimer_open
+     86           *
+     87           * Purpose: Open the high speed timer
+     88           *
+     89           * Processing:
+     90           *     If the passed register base is valid and the high speed timer
+     91           *     driver isn't already initialized, then setup the high speed
+     92           *     timer into a default initialized state that is disabled. Return
+     93           *     a pointer to the driver's data structure or NULL if driver
+     94           *     initialization failed.
+     95           *
+     96           * Parameters:
+     97           *     ipbase: Pointer to a high speed timer peripheral block
+     98           *     arg   : Not used
+     99           *
+    100           * Outputs: None
+    101           *
+    102           * Returns: The pointer to a high speed timer config structure or NULL
+    103           *
+    104           * Notes: None
+    105           *
+    106           **********************************************************************/
+    107          INT_32 hstimer_open(void *ipbase, INT_32 arg)
+    108          {
+    109            INT_32 tptr = (INT_32) NULL;
+    110          
+    111            if ((HSTIMER_REGS_T *) ipbase == HSTIMER)
+    112            {
+    113              /* Valid timer selected, has it been previously initialized? */
+    114              if (hstdat.init == FALSE)
+    115              {
+    116                /* Device not initialized and it usable, so set it to
+    117                   used */
+    118                hstdat.init = TRUE;
+    119          
+    120                /* Save address of register block */
+    121                hstdat.regptr = HSTIMER;
+    122          
+    123                /* Enable timer system clock */
+    124                clkpwr_clk_en_dis(CLKPWR_HSTIMER_CLK, 1);
+    125          
+    126                /* Disable high speed timer and match timers */
+    127                hstdat.regptr->hstim_ctrl = HSTIM_CTRL_RESET_COUNT;
+    128                hstdat.regptr->hstim_mctrl = 0;
+    129                hstdat.regptr->hstim_ctrl = 0;
+    130          
+    131                /* Clear pending interrupts */
+    132                hstdat.regptr->hstim_int = (HSTIM_MATCH0_INT |
+    133                                            HSTIM_MATCH1_INT | HSTIM_MATCH2_INT |
+    134                                            HSTIM_GPI_06_INT | HSTIM_RTC_TICK_INT);
+    135          
+    136                tptr = (INT_32) & hstdat;
+    137              }
+    138            }
+    139          
+    140            return tptr;
+    141          }
+    142          
+    143          /***********************************************************************
+    144           *
+    145           * Function: hstimer_close
+    146           *
+    147           * Purpose: Close the high speed timer
+    148           *
+    149           * Processing:
+    150           *     If init is not TRUE, then return _ERROR to the caller as the
+    151           *     device was not previously opened. Otherwise, disable the timers,
+    152           *     set init to FALSE, and return _NO_ERROR to the caller.
+    153           *
+    154           * Parameters:
+    155           *     devid: Pointer to high speed timer config structure
+    156           *
+    157           * Outputs: None
+    158           *
+    159           * Returns: The status of the close operation
+    160           *
+    161           * Notes: None
+    162           *
+    163           **********************************************************************/
+    164          STATUS hstimer_close(INT_32 devid)
+    165          {
+    166            STATUS status = _ERROR;
+    167          
+    168            if ((HSTIMER_CFG_T *) devid == &hstdat)
+    169            {
+    170              if (hstdat.init == TRUE)
+    171              {
+    172                /* Disable timers */
+    173                hstdat.regptr->hstim_ctrl = 0;
+    174                hstdat.regptr->hstim_mctrl = 0;
+    175          
+    176                /* Set timer as uninitialized */
+    177                hstdat.init = FALSE;
+    178          
+    179                /* Successful operation */
+    180                status = _NO_ERROR;
+    181              }
+    182            }
+    183          
+    184            return status;
+    185          }
+    186          
+    187          /***********************************************************************
+    188           *
+    189           * Function: hstimer_ioctl
+    190           *
+    191           * Purpose: High speed timer configuration block
+    192           *
+    193           * Processing:
+    194           *     This function is a large case block. Based on the passed function
+    195           *     and option values, set or get the appropriate timer parameter.
+    196           *
+    197           * Parameters:
+    198           *     devid: Pointer to High speed timer config structure
+    199           *     cmd:   ioctl command
+    200           *     arg:   ioctl argument
+    201           *
+    202           * Outputs: None
+    203           *
+    204           * Returns: The status of the ioctl operation
+    205           *
+    206           * Notes: None
+    207           *
+    208           **********************************************************************/
+    209          STATUS hstimer_ioctl(INT_32 devid,
+    210                               INT_32 cmd,
+    211                               INT_32 arg)
+    212          {
+    213            UNS_32 msk, tmp;
+    214            HST_PSCALE_SETUP_T *ppstp;
+    215            HST_MATCH_SETUP_T *pmatstp;
+    216            HST_CAP_CLOCK_CTRL_T *pstpcap;
+    217            INT_32 status = _ERROR;
+    218          
+    219          
+    220            if ((HSTIMER_CFG_T *) devid == &hstdat)
+    221            {
+    222              if (hstdat.init == TRUE)
+    223              {
+    224                status = _NO_ERROR;
+    225          
+    226                switch (cmd)
+    227                {
+    228                  case HST_ENABLE:
+    229                    if (arg != 0)
+    230                    {
+    231                      hstdat.regptr->hstim_ctrl |=
+    232                        HSTIM_CTRL_COUNT_ENAB;
+    233                    }
+    234                    else
+    235                    {
+    236                      hstdat.regptr->hstim_ctrl &=
+    237                        ~HSTIM_CTRL_COUNT_ENAB;
+    238                    }
+    239                    break;
+    240          
+    241                  case HST_RESET:
+    242                    hstdat.regptr->hstim_ctrl |= HSTIM_CTRL_RESET_COUNT;
+    243                    while (hstdat.regptr->hstim_counter != 0);
+    244                    hstdat.regptr->hstim_ctrl &= ~HSTIM_CTRL_RESET_COUNT;
+    245                    break;
+    246          
+    247                  case HST_PAUSE:
+    248                    if (arg != 0)
+    249                    {
+    250                      hstdat.regptr->hstim_ctrl |=
+    251                        HSTIM_CTRL_PAUSE_EN;
+    252                    }
+    253                    else
+    254                    {
+    255                      hstdat.regptr->hstim_ctrl &=
+    256                        ~HSTIM_CTRL_PAUSE_EN;
+    257                    }
+    258                    break;
+    259          
+    260                  case HST_CLEAR_INTS:
+    261                    hstdat.regptr->hstim_int = (UNS_32) arg;
+    262                    break;
+    263          
+    264                  case HST_SETUP_PSCALE:
+    265                    ppstp = (HST_PSCALE_SETUP_T *) arg;
+    266                    if (ppstp->ps_tick_val != 0)
+    267                    {
+    268                      hstdat.regptr->hstim_pmatch = ppstp->ps_tick_val;
+    269                    }
+    270                    else
+    271                    {
+    272                      hstdat.regptr->hstim_pmatch =
+    273                        timer_usec_to_value(CLKPWR_HSTIMER_CLK, ppstp->ps_us_val);
+    274                    }
+    275                    break;
+    276          
+    277                  case HST_SETUP_MATCH:
+    278                    pmatstp = (HST_MATCH_SETUP_T *) arg;
+    279          
+    280                    if (pmatstp->timer_num <= 2)
+    281                    {
+    282                      /* Generate mask for match bits */
+    283                      msk = ~((HSTIM_CNTR_MCR_MTCH(pmatstp->timer_num))
+    284                              | (HSTIM_CNTR_MCR_RESET(pmatstp->timer_num))
+    285                              | (HSTIM_CNTR_MCR_STOP(pmatstp->timer_num)));
+    286          
+    287                      /* Save timer match value */
+    288                      hstdat.regptr->hstim_match [pmatstp->timer_num] =
+    289                        pmatstp->match_tick_val;
+    290          
+    291                      tmp = 0;
+    292                      if (pmatstp->use_match_int == TRUE)
+    293                      {
+    294                        tmp |=
+    295                          HSTIM_CNTR_MCR_MTCH(pmatstp->timer_num);
+    296                      }
+    297                      if (pmatstp->stop_on_match == TRUE)
+    298                      {
+    299                        tmp |=
+    300                          HSTIM_CNTR_MCR_STOP(pmatstp->timer_num);
+    301                      }
+    302                      if (pmatstp->reset_on_match == TRUE)
+    303                      {
+    304                        tmp |=
+    305                          HSTIM_CNTR_MCR_RESET(pmatstp->timer_num);
+    306                      }
+    307                      hstdat.regptr->hstim_mctrl = (hstdat.regptr->hstim_mctrl & msk) | tmp;
+    308                    }
+    309                    else
+    310                    {
+    311                      status = LPC_BAD_PARAMS;
+    312                    }
+    313                    break;
+    314          
+    315                  case HST_SETUP_CAPTURE:
+    316                    pstpcap = (HST_CAP_CLOCK_CTRL_T *) arg;
+    317                    if (pstpcap->cap_num <= 1)
+    318                    {
+    319                      /* Generate mask for capture control bits */
+    320                      msk = ~((HSTIM_CNTR_CCR_CAPNI(pstpcap->cap_num))
+    321                              | (HSTIM_CNTR_CCR_CAPNFE(pstpcap->cap_num))
+    322                              | (HSTIM_CNTR_CCR_CAPNRE(pstpcap->cap_num)));
+    323          
+    324                      /* Setup capture control */
+    325                      tmp = 0;
+    326                      if (pstpcap->cap_on_rising == TRUE)
+    327                      {
+    328                        tmp |= HSTIM_CNTR_CCR_CAPNRE(pstpcap->cap_num);
+    329                      }
+    330                      if (pstpcap->cap_on_falling == TRUE)
+    331                      {
+    332                        tmp |= HSTIM_CNTR_CCR_CAPNFE(pstpcap->cap_num);
+    333                      }
+    334                      if (pstpcap->use_capture_int == TRUE)
+    335                      {
+    336                        tmp |= HSTIM_CNTR_CCR_CAPNI(pstpcap->cap_num);
+    337                      }
+    338                      hstdat.regptr->hstim_ccr = (hstdat.regptr->hstim_ccr & msk) | tmp;
+    339                    }
+    340                    else
+    341                    {
+    342                      status = LPC_BAD_PARAMS;
+    343                    }
+    344                    break;
+    345                  case HST_GET_STATUS:
+    346                    /* Return a timer status */
+    347                    switch (arg)
+    348                    {
+    349                      case HST_GET_COUNT:
+    350                        status = hstdat.regptr->hstim_counter;
+    351                        break;
+    352                      case HST_GET_PS_COUNT:
+    353                        status = hstdat.regptr->hstim_pcount;
+    354                        break;
+    355                      case HST_GET_MATCH0_REG:
+    356                        status = hstdat.regptr->hstim_match[0];
+    357                        break;
+    358                      case HST_GET_MATCH1_REG:
+    359                        status = hstdat.regptr->hstim_match[1];
+    360                        break;
+    361                      case HST_GET_MATCH2_REG:
+    362                        status = hstdat.regptr->hstim_match[2];
+    363                        break;
+    364                      case HST_GET_CR0_REG:
+    365                        status = hstdat.regptr->hstim_cap0;
+    366                        break;
+    367                      case HST_GET_CR1_REG:
+    368                        status = hstdat.regptr->hstim_cap1;
+    369                        break;
+    370                      case HST_GET_CLOCK:
+    371                        status = clkpwr_get_clock_rate(CLKPWR_HSTIMER_CLK);
+    372                        break;
+    373                      case HST_INT_PEND:
+    374                        status = hstdat.regptr->hstim_int;
+    375                        break;
+    376                      default:
+    377                        /* Unsupported parameter */
+    378                        status = LPC_BAD_PARAMS;
+    379                        break;
+    380                    }
+    381                    break;
+    382          
+    383                  default:
+    384                    /* Unsupported parameter */
+    385                    status = LPC_BAD_PARAMS;
+    386                }
+    387              }
+    388            }
+    389          
+    390            return status;
+    391          }
+    392          
+    393          /***********************************************************************
+    394           *
+    395           * Function: hstimer_read
+    396           *
+    397           * Purpose: High speed timer read function (stub only)
+    398           *
+    399           * Processing:
+    400           *     Return 0 to the caller.
+    401           *
+    402           * Parameters:
+    403           *     devid:     Pointer to High speed timer descriptor
+    404           *     buffer:    Pointer to data buffer to copy to
+    405           *     max_bytes: Number of bytes to read
+    406           *
+    407           * Outputs: None
+    408           *
+    409           * Returns: Number of bytes actually read (always 0)
+    410           *
+    411           * Notes: None
+    412           *
+    413           **********************************************************************/
+    414          INT_32 hstimer_read(INT_32 devid,
+    415                              void *buffer,
+    416                              INT_32 max_bytes)
+    417          {
+    418            return 0;
+    419          }
+    420          
+    421          /***********************************************************************
+    422           *
+    423           * Function: hstimer_write
+    424           *
+    425           * Purpose: High speed timer write function (stub only)
+    426           *
+    427           * Processing:
+    428           *     Return 0 to the caller.
+    429           *
+    430           * Parameters:
+    431           *     devid:   Pointer to High speed timer descriptor
+    432           *     buffer:  Pointer to data buffer to copy from
+    433           *     n_bytes: Number of bytes to write
+    434           *
+    435           * Outputs: None
+    436           *
+    437           * Returns: Number of bytes actually written (always 0)
+    438           *
+    439           * Notes: None
+    440           *
+    441           **********************************************************************/
+    442          INT_32 hstimer_write(INT_32 devid,
+    443                               void *buffer,
+    444                               INT_32 n_bytes)
+    445          {
+    446            return 0;
+    447          }
+    448          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   hstimer_close
+      40   hstimer_ioctl
+        40   -> clkpwr_get_clock_rate
+        40   -> timer_usec_to_value
+      16   hstimer_open
+        16   -> clkpwr_clk_en_dis
+       0   hstimer_read
+       0   hstimer_write
+      32   timer_usec_to_value
+        32   -> clkpwr_get_clock_rate
+        32 __aeabi_uldivmod
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable2
+       8  hstdat
+      92  hstimer_close
+    1152  hstimer_ioctl
+     168  hstimer_open
+      12  hstimer_read
+      12  hstimer_write
+     112  timer_usec_to_value
+
+ 
+     8 bytes in section .bss
+ 1 552 bytes in section .text
+ 
+ 1 552 bytes of CODE memory
+     8 bytes of DATA memory
+
+Errors: none
+Warnings: none

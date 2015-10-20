@@ -1,0 +1,40 @@
+
+//{
+//*******APV4_2********
+  //L1
+  //Время ож син АПВ2 tim12
+  LSIGNAL_TIMER(TIMER12_APV) =
+       //BVCMD_APV2
+           tmp0 &
+           //ЕСТЬ ЛИНИЯ ЕСТЬ ШИНА ЕСТЬ СИН
+           ENA_NL_NC_NS;
+
+  //TOS2_APV
+  TL_LOGIC(TLCMD16_APV) = 
+         //Время ож син АПВ2 tim12
+         FLOG_TIMERRES(TIMER12_APV, tmp7);
+
+  //L2
+  tmp4 = 
+       //ЕСТЬ ЛИНИЯ ЕСТЬ ШИНА НЕТ СИН
+       ENA_NL_NC_BS &
+       //PO3_APV
+       (GlobalPO3 | LocalPO3_APV) &
+       //PO1_APV
+       (GlobalPO1 | LocalPO1_APV) &
+       //TOU2_APV
+       TL_LOGIC(TLCMD15_APV);
+
+  //L3
+  tmp5 = 
+       //ЕСТЬ ЛИНИЯ ЕСТЬ ШИНА ЕСТЬ СИН
+       //PO3_APV
+       (GlobalPO3 | LocalPO3_APV) &
+       //PO1_APV
+       (GlobalPO1 | LocalPO1_APV) &
+       LocalSYNCHR_APV &
+       //TOS2_APV
+       TL_LOGIC(TLCMD16_APV);
+
+
+

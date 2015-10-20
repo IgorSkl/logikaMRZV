@@ -1,0 +1,598 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  14:35:34
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\LIB\source\lpc32xx_dma_driver.c
+#    Command line =  
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\LIB\source\lpc32xx_dma_driver.c"
+#        -lcN "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\List\" -o
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\" --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=ARM926EJ-S -e --fpu=VFP9-S --dlib_config "D:\Program Files\IAR
+#        Systems\Embedded Workbench 7.2\arm\INC\c\DLib_Config_Normal.h" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\" --interwork
+#        --cpu_mode arm -On --use_c++_inline
+#    List file    =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\lpc32xx_dma_driver.lst
+#    Object file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\lpc32xx_dma_driver.o
+#
+###############################################################################
+
+D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\LIB\source\lpc32xx_dma_driver.c
+      1          /***********************************************************************
+      2           * $Id: lpc32xx_dma_driver.c 30870 2009-07-05 10:16:16Z anderslu $
+      3           *
+      4           * Project: LPC32XX DMA driver
+      5           *
+      6           * Description:
+      7           *     This file contains driver support for the LPC32xx DMA controller.
+      8           *
+      9           ***********************************************************************
+     10           * Software that is described herein is for illustrative purposes only
+     11           * which provides customers with programming information regarding the
+     12           * products. This software is supplied "AS IS" without any warranties.
+     13           * NXP Semiconductors assumes no responsibility or liability for the
+     14           * use of the software, conveys no license or title under any patent,
+     15           * copyright, or mask work right to the product. NXP Semiconductors
+     16           * reserves the right to make changes in the software without
+     17           * notification. NXP Semiconductors also make no representation or
+     18           * warranty that such application will be suitable for the specified
+     19           * use without further testing or modification.
+     20          ***********************************************************************/
+     21          
+     22          #include "lpc32xx_dma_driver.h"
+     23          #include "lpc32xx_intc_driver.h"
+     24          #include "lpc32xx_clkpwr_driver.h"
+     25          #include "lpc_arm922t_cp15_driver.h"
+     26          
+     27          /***********************************************************************
+     28           * DMA driver private data
+     29          ***********************************************************************/
+     30          
+     31          /* Number of DMA channels */
+     32          #define DMA_MAX_CHANNELS 8
+     33          
+     34          /* DMA driver control structure */
+     35          typedef struct
+     36          {
+     37            BOOL_32 init;
+     38            INT_32  alloc_ch [DMA_MAX_CHANNELS];
+     39            PFV     cb [DMA_MAX_CHANNELS];
+     40            INT_32  num_alloc_ch;    /* Number of allocated channels */
+     41            DMAC_REGS_T *pdma;
+     42          } DMA_DRV_DATA_T;
+     43          
+     44          /* DMAS driver data */
+     45          static DMA_DRV_DATA_T dmadrv_dat;
+     46          
+     47          /***********************************************************************
+     48           * DMA driver private functions
+     49          ***********************************************************************/
+     50          
+     51          /***********************************************************************
+     52           *
+     53           * Function: dma_interrupt
+     54           *
+     55           * Purpose: DMA controller interrupt handler
+     56           *
+     57           * Processing:
+     58           *     This function is called when a DMA interrupt occurs. It looks at
+     59           *     the DMA statuses and calls the user defined callback function
+     60           *     for the active DMA channel if it exists. If a callback function
+     61           *     doesn't exist, then interrupt support for the DMA channel is
+     62           *     disabled.
+     63           *
+     64           * Parameters: None
+     65           *
+     66           * Outputs: None
+     67           *
+     68           * Returns: Nothing
+     69           *
+     70           * Notes: None
+     71           *
+     72           **********************************************************************/
+     73          void dma_interrupt(void)
+     74          {
+     75            INT_32 ch;
+     76            UNS_32 sts_int;
+     77          
+     78            /* Get DMA statuses */
+     79            sts_int = dmadrv_dat.pdma->int_stat;
+     80          
+     81            /* Check all pending interrupt statuses */
+     82            ch = 0;
+     83            while (ch < DMA_MAX_CHANNELS)
+     84            {
+     85              /* Check channel interrupt status */
+     86              if ((sts_int & _BIT(ch)) != 0)
+     87              {
+     88                /* Channel interrupt is pending */
+     89                if (dmadrv_dat.cb [ch] != NULL)
+     90                {
+     91                  /* Call user defined callback function */
+     92                  dmadrv_dat.cb [ch]();
+     93                }
+     94                else
+     95                {
+     96                  /* Interrupt is pending, but no user callback function
+     97                     exists, so disable the interrupts for this channel
+     98                     to prevent the interrupt from continuously firing */
+     99                  dmadrv_dat.pdma->dma_chan [ch].control &=
+    100                    ~DMAC_CHAN_INT_TC_EN;
+    101                  dmadrv_dat.pdma->dma_chan [ch].config_ch &=
+    102                    ~(DMAC_CHAN_ITC | DMAC_CHAN_IE);
+    103                }
+    104              }
+    105          
+    106              /* Next channel */
+    107              ch++;
+    108            }
+    109          }
+    110          
+    111          /***********************************************************************
+    112           * DMA driver public functions
+    113          ***********************************************************************/
+    114          
+    115          /***********************************************************************
+    116           *
+    117           * Function: dma_init
+    118           *
+    119           * Purpose: Initial DMA controller and driver
+    120           *
+    121           * Processing:
+    122           *     This function sets up the DMA controller as initially disabled.
+    123           *     All DMA channels used by the driver are unallocated.
+    124           *
+    125           * Parameters: None
+    126           *
+    127           * Outputs: None
+    128           *
+    129           * Returns:
+    130           *     _ERROR if the device was already initialized, otherside _NO_ERROR
+    131           *
+    132           * Notes: None
+    133           *
+    134           **********************************************************************/
+    135          STATUS dma_init(void)
+    136          {
+    137            INT_32 idx;
+    138            STATUS init = _ERROR;
+    139          
+    140            /* Only continue if driver has not been previously initialized */
+    141            if (dmadrv_dat.init == FALSE)
+    142            {
+    143              dmadrv_dat.init = TRUE;
+    144              dmadrv_dat.num_alloc_ch = 0;
+    145          
+    146              /* Save base address of DMA controller registers */
+    147              dmadrv_dat.pdma = (DMAC_REGS_T *) DMA_BASE;
+    148          
+    149              /* Enable clock to DMA controller (for now) */
+    150              clkpwr_clk_en_dis(CLKPWR_DMA_CLK, 1);
+    151          
+    152              /* Make sure DMA controller and all channels are disabled.
+    153                 Controller is in little-endian mode. Disable sync signals */
+    154              dmadrv_dat.pdma->config = 0;
+    155              dmadrv_dat.pdma->sync = 0;
+    156          
+    157              /* Clear interrupt and error statuses */
+    158              dmadrv_dat.pdma->int_tc_clear = 0xFF;
+    159              dmadrv_dat.pdma->raw_tc_stat = 0xFF;
+    160          
+    161              /* All DMA channels are initially disabled and unallocated */
+    162              for (idx = 0; idx < DMA_MAX_CHANNELS; idx++)
+    163              {
+    164                /* Channel is currently unallocated */
+    165                dmadrv_dat.alloc_ch [idx] = FALSE;
+    166                dmadrv_dat.cb [idx] = NULL;
+    167          
+    168                /* Make sure channel is disabled */
+    169                dmadrv_dat.pdma->dma_chan [idx].control = 0;
+    170                dmadrv_dat.pdma->dma_chan [idx].config_ch = 0;
+    171              }
+    172          
+    173              /* Disable clock to DMA controller. The clock will only be
+    174                 enabled when one or moer channels are active. */
+    175              clkpwr_clk_en_dis(CLKPWR_DMA_CLK, 0);
+    176          
+    177              init = _NO_ERROR;
+    178            }
+    179          
+    180            return init;
+    181          }
+    182          
+    183          /***********************************************************************
+    184           *
+    185           * Function: dma_alloc_channel
+    186           *
+    187           * Purpose: Allocate a channel for DMA
+    188           *
+    189           * Processing:
+    190           *     If the passed channel is (-1), then a search loop is used to
+    191           *     find the first unallocated channel. The channel value is saved
+    192           *     and then checked to make sure it is unallocated. If it is
+    193           *     already allocated or not allocatable, then an error si return to
+    194           *     the caller. If the channel is not allocated, the channel is
+    195           *     marked as allocated and the channel ID is returned to the caller.
+    196           *     If at leasxt one channel is active, the DMA clock is enabled.
+    197           *
+    198           * Parameters:
+    199           *     ch : Must be 0 (highest priority) to 7, or -1 for auto-allocation
+    200           *     cb : Pointer to user callback function when an interrupt occurs
+    201           *
+    202           * Outputs: None
+    203           *
+    204           * Returns: The channel index, or _ERROR if a channel wasn't allocated
+    205           *
+    206           * Notes: None
+    207           *
+    208           **********************************************************************/
+    209          INT_32 dma_alloc_channel(INT_32 ch,
+    210                                   PFV cb)
+    211          {
+    212            INT_32 challoc = ch;
+    213          
+    214            /* If auto-allocate is used, find the first available channel
+    215               starting with the highest priority first */
+    216            if (ch == -1)
+    217            {
+    218              ch = 0;
+    219              challoc = _ERROR;
+    220              while (ch < DMA_MAX_CHANNELS)
+    221              {
+    222                if (dmadrv_dat.alloc_ch [ch] == FALSE)
+    223                {
+    224                  /* Channel is free, use it */
+    225                  challoc = ch;
+    226                  ch = DMA_MAX_CHANNELS;
+    227                }
+    228                else
+    229                {
+    230                  /* Try next channel */
+    231                  ch++;
+    232                }
+    233              }
+    234            }
+    235          
+    236            /* Only continue if channel is ok */
+    237            if (challoc != _ERROR)
+    238            {
+    239              /* If the current channel is allocated already, then return an
+    240                  error instead */
+    241              if (dmadrv_dat.alloc_ch [challoc] == FALSE)
+    242              {
+    243                /* Channel is free, so use it */
+    244                dmadrv_dat.alloc_ch [challoc] = TRUE;
+    245                dmadrv_dat.cb [challoc] = cb;
+    246                dmadrv_dat.num_alloc_ch++;
+    247          
+    248                /* Enable DMA clock if at least 1 DMA channel is used */
+    249                if (dmadrv_dat.num_alloc_ch == 1)
+    250                {
+    251                  clkpwr_clk_en_dis(CLKPWR_DMA_CLK, 1);
+    252          
+    253                  /* Enable DMA controller */
+    254                  dmadrv_dat.pdma->config = DMAC_CTRL_ENABLE;
+    255          
+    256                  /* Install DMA interrupt handler in interrupt controller
+    257                     and enable DMA interrupt */
+    258                  int_install_irq_handler(IRQ_DMA, (PFV) dma_interrupt);
+    259                  int_enable(IRQ_DMA);
+    260                }
+    261              }
+    262              else
+    263              {
+    264                /* Selected channel is allocated, return an error */
+    265                challoc = _ERROR;
+    266              }
+    267            }
+    268          
+    269            return challoc;
+    270          }
+    271          
+    272          /***********************************************************************
+    273           *
+    274           * Function: dma_free_channel
+    275           *
+    276           * Purpose: Return (free) an allocated DMA channel
+    277           *
+    278           * Processing:
+    279           *     If the channel has been previously allocated, then deallocate
+    280           *     the channel and disable the channel in the DMA controller. If
+    281           *     no other DMA channels are enabled, the disable the DMA controller
+    282           *     along with the controller clock and DMA interrupts.
+    283           *
+    284           * Parameters:
+    285           *     ch : Must be 0 to 7
+    286           *
+    287           * Outputs: None
+    288           *
+    289           * Returns: _NO_ERROR if the channel was freed, otherwise _ERROR
+    290           *
+    291           * Notes: None
+    292           *
+    293           **********************************************************************/
+    294          STATUS dma_free_channel(INT_32 ch)
+    295          {
+    296            STATUS status = _ERROR;
+    297            if (dmadrv_dat.alloc_ch [ch] == TRUE)
+    298            {
+    299              /* Deallocate channel */
+    300              dmadrv_dat.alloc_ch [ch] = FALSE;
+    301              dmadrv_dat.num_alloc_ch--;
+    302          
+    303              /* Shut down channel */
+    304              dmadrv_dat.pdma->dma_chan [ch].control = 0;
+    305              dmadrv_dat.pdma->dma_chan [ch].config_ch = 0;
+    306              dmadrv_dat.pdma->sync &= ~_BIT(ch);
+    307          
+    308              /* If no other DMA channels are enabled, then disable the DMA
+    309                 controller and disable the DMA clock */
+    310              if (dmadrv_dat.num_alloc_ch == 0)
+    311              {
+    312                dmadrv_dat.pdma->config = 0;
+    313                clkpwr_clk_en_dis(CLKPWR_DMA_CLK, 0);
+    314          
+    315                /* Disable DMA interrupt */
+    316                int_install_irq_handler(IRQ_DMA, (PFV) NULL);
+    317                int_disable(IRQ_DMA);
+    318              }
+    319          
+    320              status = _NO_ERROR;
+    321            }
+    322          
+    323            return status;
+    324          }
+    325          
+    326          /***********************************************************************
+    327           *
+    328           * Function: dma_start_m2m
+    329           *
+    330           * Purpose: Start a M2M transfer on an allocated DMA channel
+    331           *
+    332           * Processing:
+    333           *     A default memmory to memory DMA operation is performed with the
+    334           *     passed channel, source, destination, and size. If the linked
+    335           *     list pointer is not NULL, the DMA transfer is setup from the
+    336           *     first linked list entry (including the control word).
+    337           *
+    338           * Parameters:
+    339           *     ch    : Must be 0 to 7
+    340           *     src   : Physical address of source data
+    341           *     dest  : Physical address of destination data
+    342           *     plli  : Physcial address of linked list (negates src and dest)
+    343           *     trans : Number of transfers (when plli is NULL)
+    344           *
+    345           * Outputs: None
+    346           *
+    347           * Returns: _NO_ERROR if the transfer was started, otherwise _ERROR
+    348           *
+    349           * Notes:
+    350           *     This is a basic memory to memory transfer function. This starts
+    351           *     the transfer and returns immediately before the transfer may be
+    352           *     complete. No status about the ongoing transfer is returned to
+    353           *     the caller. If more control or status is needed by the caller,
+    354           *     it should monitor and check DMA channel status after the call to
+    355           *     this function, or use an alternate function.
+    356           *
+    357           **********************************************************************/
+    358          STATUS dma_start_m2m(INT_32 ch,
+    359                               void *src,
+    360                               void *dest,
+    361                               DMAC_LL_T *plli,
+    362                               INT_32 trans)
+    363          {
+    364            STATUS sts = _ERROR;
+    365          
+    366            /* Verify that the selected channel has been allocated */
+    367            if (dmadrv_dat.alloc_ch [ch] == TRUE)
+    368            {
+    369              /* Setup source and destination and clear LLI */
+    370              dmadrv_dat.pdma->dma_chan [ch].src_addr = (UNS_32) src;
+    371              dmadrv_dat.pdma->dma_chan [ch].dest_addr = (UNS_32) dest;
+    372              dmadrv_dat.pdma->dma_chan [ch].lli = (UNS_32) plli;
+    373          
+    374              /* Use linked list control word if available */
+    375              if (plli != NULL)
+    376              {
+    377                dmadrv_dat.pdma->dma_chan [ch].control = plli->next_ctrl;
+    378              }
+    379              else
+    380              {
+    381                /* Setup channel configuration */
+    382                dmadrv_dat.pdma->dma_chan [ch].control =
+    383                  (DMAC_CHAN_INT_TC_EN | DMAC_CHAN_DEST_AUTOINC |
+    384                   DMAC_CHAN_SRC_AUTOINC | DMAC_CHAN_DEST_AHB1 |
+    385                   DMAC_CHAN_SRC_AHB1 | DMAC_CHAN_DEST_WIDTH_32 |
+    386                   DMAC_CHAN_SRC_WIDTH_32 | DMAC_CHAN_DEST_BURST_4 |
+    387                   DMAC_CHAN_SRC_BURST_4 |
+    388                   DMAC_CHAN_TRANSFER_SIZE(trans));
+    389              }
+    390          
+    391              /* Start channel transfer */
+    392              dmadrv_dat.pdma->dma_chan [ch].config_ch =
+    393                (DMAC_CHAN_FLOW_D_M2M | DMAC_CHAN_ENABLE | DMAC_CHAN_ITC |
+    394                DMAC_CHAN_IE);
+    395          
+    396              sts = _NO_ERROR;
+    397            }
+    398          
+    399            return sts;
+    400          }
+    401          
+    402          /***********************************************************************
+    403           *
+    404           * Function: dma_setup_link_phy
+    405           *
+    406           * Purpose: Make a linked list entry (for physical addresses only)
+    407           *
+    408           * Processing:
+    409           *     Place the source, destination, and DMA control word entries
+    410           *     into the passed structure.
+    411           *
+    412           * Parameters:
+    413           *     plink       : Pointer to linked list entry
+    414           *     dmasrc_phy  : Physical address of source data
+    415           *     dmadest_phy : Physical address of destination data
+    416           *     dma_ctrl    : DMA control word for the transfer
+    417           *
+    418           * Outputs: None
+    419           *
+    420           * Returns: Nothing
+    421           *
+    422           * Notes: None
+    423           *
+    424           **********************************************************************/
+    425          void dma_setup_link_phy(DMAC_LL_T *plink,
+    426                                  UNS_32 *dmasrc_phy,
+    427                                  UNS_32 *dmadest_phy,
+    428                                  UNS_32 dma_ctrl)
+    429          {
+    430            plink->dma_src = (UNS_32) dmasrc_phy;
+    431            plink->dma_dest = (UNS_32) dmadest_phy;
+    432            plink->next_ctrl = dma_ctrl;
+    433          }
+    434          
+    435          /***********************************************************************
+    436           *
+    437           * Function: dma_setup_virt_link
+    438           *
+    439           * Purpose: Make a linked list entry (for virtual addresses only)
+    440           *
+    441           * Processing:
+    442           *     Convert the source and destination addresses to physical
+    443           *     addresses, Call dma_setup_link_phy() to place the source,
+    444           *     destination, and DMA control word entries into the passed
+    445           *     structure.
+    446           *
+    447           * Parameters:
+    448           *     plink        : Pointer to linked list entry
+    449           *     dmasrc_virt  : Virtual address of source data
+    450           *     dmadest_virt : Virtual address of destination data
+    451           *     dma_ctrl     : DMA control word for the transfer
+    452           *
+    453           * Outputs: None
+    454           *
+    455           * Returns: Nothing
+    456           *
+    457           * Notes: None
+    458           *
+    459           **********************************************************************/
+    460          void dma_setup_virt_link(DMAC_LL_T *plink,
+    461                                   UNS_32 *dmasrc_virt,
+    462                                   UNS_32 *dmadest_virt,
+    463                                   UNS_32 dma_ctrl)
+    464          {
+    465            UNS_32 *src_phy, *dest_phy;
+    466          
+    467            src_phy = (UNS_32 *) cp15_map_virtual_to_physical(dmasrc_virt);
+    468            dest_phy = (UNS_32 *) cp15_map_virtual_to_physical(dmadest_virt);
+    469          
+    470            dma_setup_link_phy(plink, src_phy, dest_phy, dma_ctrl);
+    471          }
+    472          
+    473          /***********************************************************************
+    474           *
+    475           * Function: dma_get_base
+    476           *
+    477           * Purpose: Return pointer to DMA registers
+    478           *
+    479           * Processing:
+    480           *     Convert the source and destination addresses to physical
+    481           *     addresses, Call dma_setup_link_phy() to place the source,
+    482           *     destination, and DMA control word entries into the passed
+    483           *     structure.
+    484           *
+    485           * Parameters: None
+    486           *
+    487           * Outputs: None
+    488           *
+    489           * Returns: Pointer to DMA base registers
+    490           *
+    491           * Notes: None
+    492           *
+    493           **********************************************************************/
+    494          DMAC_REGS_T *dma_get_base(void)
+    495          {
+    496            return dmadrv_dat.pdma;
+    497          }
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      16   dma_alloc_channel
+        16   -> clkpwr_clk_en_dis
+        16   -> int_enable
+        16   -> int_install_irq_handler
+      16   dma_free_channel
+        16   -> clkpwr_clk_en_dis
+        16   -> int_disable
+        16   -> int_install_irq_handler
+       0   dma_get_base
+      16   dma_init
+        16   -> clkpwr_clk_en_dis
+      16   dma_interrupt
+        16   -- Indirect call
+       0   dma_setup_link_phy
+      32   dma_setup_virt_link
+        32   -> cp15_map_virtual_to_physical
+        32   -> dma_setup_link_phy
+      16   dma_start_m2m
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable5
+       4  ??DataTable5_1
+     268  dma_alloc_channel
+     240  dma_free_channel
+      12  dma_get_base
+     276  dma_init
+     200  dma_interrupt
+      16  dma_setup_link_phy
+      68  dma_setup_virt_link
+     208  dma_start_m2m
+      76  dmadrv_dat
+
+ 
+    76 bytes in section .bss
+ 1 296 bytes in section .text
+ 
+ 1 296 bytes of CODE memory
+    76 bytes of DATA memory
+
+Errors: none
+Warnings: none

@@ -1,0 +1,268 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        12/Oct/2015  11:05:06
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\SettingIci\SettingIci_OFTZNP.c
+#    Command line =  
+#        "D:\IAR projects\HR1_0100_00_I720_new2\SettingIci\SettingIci_OFTZNP.c"
+#        -D _STATIC_MEMORY_BOOT -lcN "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\List\" -o "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "C:\Program Files\IAR Systems\Embedded
+#        Workbench 7.40\arm\INC\c\DLib_Config_Normal.h" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\Igor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\component\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\" --cpu_mode arm -On
+#        --use_c++_inline
+#    List file    =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\List\SettingIci_OFTZNP.lst
+#    Object file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\Obj\SettingIci_OFTZNP.o
+#
+###############################################################################
+
+D:\IAR projects\HR1_0100_00_I720_new2\SettingIci\SettingIci_OFTZNP.c
+      1          #include "lpc_types.h"
+      2          #include "lpc_irq_fiq.h"
+      3          #include "lpc_arm922t_cp15_driver.h"
+      4          
+      5          #include "lpc32xx_hstimer.h"
+      6          #include "lpc32xx_ssp.h"
+      7          #include "lpc32xx_gpio.h"
+      8          
+      9          #include "lpc32xx_intc_driver.h"
+     10          #include "lpc32xx_clkpwr_driver.h"
+     11          
+     12          #include "arm926ej_cp15_drv.h"
+     13          #include "ttbl.h"
+     14          
+     15          #include <stdio.h>
+     16          #include <string.h>
+     17          
+     18          #include "psuperVisor\supermanager.h"
+     19          
+     20          #include "component\componentdef.h"
+     21          #include "psuperVisor\psvisor_helpdef.h"
+     22          
+     23          #include "psuperVisor\psvisor_helpfnc.h"
+     24          #include "virtualMenu\rangmanagerfnc.h"
+     25          #include "virtualmenu\systemmenufnc.h"
+     26          #include "SettingIci\SettingIci.h"
+     27          
+     28          #include "toSpeedOptim.h"
+     29          #include "toSpeedDIS.h"
+     30          
+     31          #include "header.h"
+     32          #include "ici_r_ef.h"
+     33          
+     34          #define _HIDE_COMPONENT
+     35          #include "TZNP1Component.c"
+     36          
+     37          extern char chProtectTableComeIn;
+     38          extern char chResultCallGetMeasPrt;
+     39          //extern tic long lDemo_IA,lDemo_IB,lDemo_IC;
+     40          extern  long lMtz1,lMtz1Tmr,lSt1,lSt2, lst3, lst4;
+     41          extern __MEASUREMENT_TO_PROTECTION TestMeasProtection;
+     42          
+     43          void  SettingIci_OFTZNP(int FlagMaska, int numOF)
+     44          {
+     45          //отранж МТЗ на Реле
+     46          //int numRele = nRele - RELE1_SM;//нормировка
+     47          //  int typRang
+     48          puskOFfunction *pntPuskOF;
+     49          
+     50            int typRang = PUSK1OF_SM;
+     51            typRang = typRang - numOF*3 - FlagMaska;
+     52          
+     53            switch(FlagMaska){
+     54             case 0://PLUS
+     55              pntPuskOF = &puskOFotZPLUS;
+     56             break;
+     57             case 1://MINUS
+     58              pntPuskOF = &puskOFotZMINUS;
+     59             break;
+     60             case 2://BLK
+     61              pntPuskOF = &puskOFotZBLK;
+     62             break;
+     63            }//switch
+     64          //Стат блок ТЗНП1
+     65            lSt1 = pntPuskOF(BLOCK_TZNP1_DI_OEPRF_ONB, numOF);
+     66            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  1, IOCMD1_TZNP1to5, typRang);//работа с OF OT
+     67          //Блок уск ТЗНП1
+     68          // if(isActivCmdDV(, numRele))//проверка активности команды на ДВ
+     69          //      SetCmdToUVV(TZNP_COMP1,  1, IOCMD2_TZNP1to5, nRele);//отранж
+     70          //Опер уск ТЗНП1
+     71            lSt1 = pntPuskOF(ACCLT_TZNP1_DI_OEPRF_ONB, numOF);
+     72            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  1, IOCMD3_TZNP1to5, typRang);//работа с OF OT
+     73          //Сраб ПО ТЗНП1
+     74            lSt1 = pntPuskOF(STPDEV_TZNP1_OEPRF_ONB, numOF);
+     75            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  1, IOCMD4_TZNP1to5, typRang);//работа с OF OT
+     76          //Сраб ТЗНП1
+     77            lSt1 = pntPuskOF(TZNP1_OEPRF_ONB, numOF);
+     78            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  1, IOCMD5_TZNP1to5, typRang);//работа с OF OT
+     79          //Сраб ПО ТЗНП1 3I0
+     80            lSt1 = pntPuskOF(STPDEV_TZNP1_3I0_OEPRF_ONB, numOF);
+     81            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  1, IOCMD6_TZNP1to5, typRang);//работа с OF OT
+     82          //Сраб ТЗНП1 3I0
+     83            lSt1 = pntPuskOF(TZNP1_3I0_OEPRF_ONB, numOF);
+     84            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  1, IOCMD7_TZNP1to5, typRang);//работа с OF OT
+     85          //Сраб ПО ТЗНП1 3U0
+     86            lSt1 = pntPuskOF(STPDEV_TZNP1_3U0_OEPRF_ONB, numOF);
+     87            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  1, IOCMD8_TZNP1to5, typRang);//работа с OF OT
+     88          //Сраб ТЗНП1 3U0
+     89            lSt1 = pntPuskOF(TZNP1__3U0_OEPRF_ONB, numOF);
+     90            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  1, IOCMD9_TZNP1to5, typRang);//работа с OF OT
+     91          
+     92          //Стат блок ТЗНП2
+     93            lSt1 = pntPuskOF(BLOCK_TZNP1_DI_OEPRF_ONB, numOF);
+     94            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  2, IOCMD1_TZNP1to5, typRang);//работа с OF OT
+     95          //Блок уск ТЗНП2
+     96          // if(isActivCmdDV(, numRele))//проверка активности команды на ДВ
+     97          //      SetCmdToUVV(TZNP_COMP1,  2, IOCMD2_TZNP1to5, nRele);//отранж
+     98          //Опер уск ТЗНП2
+     99            lSt1 = pntPuskOF(ACCLT_TZNP2_DI_OEPRF_ONB, numOF);
+    100            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  2, IOCMD3_TZNP1to5, typRang);//работа с OF OT
+    101          //Сраб ПО ТЗНП2
+    102            lSt1 = pntPuskOF(STPDEV_TZNP2_OEPRF_ONB, numOF);
+    103            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  2, IOCMD4_TZNP1to5, typRang);//работа с OF OT
+    104          //Сраб ТЗНП2
+    105            lSt1 = pntPuskOF(TZNP2_OEPRF_ONB, numOF);
+    106            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  2, IOCMD5_TZNP1to5, typRang);//работа с OF OT
+    107          //Сраб ПО ТЗНП2 3I0
+    108            lSt1 = pntPuskOF(STPDEV_TZNP2_3I0_OEPRF_ONB, numOF);
+    109            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  2, IOCMD6_TZNP1to5, typRang);//работа с OF OT
+    110          //Сраб ТЗНП2 3I0
+    111            lSt1 = pntPuskOF(TZNP2_3I0_OEPRF_ONB, numOF);
+    112            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  2, IOCMD7_TZNP1to5, typRang);//работа с OF OT
+    113          //Сраб ПО ТЗНП2 3U0
+    114            lSt1 = pntPuskOF(STPDEV_TZNP2_3U0_OEPRF_ONB, numOF);
+    115            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  2, IOCMD8_TZNP1to5, typRang);//работа с OF OT
+    116          //Сраб ТЗНП2 3U0
+    117            lSt1 = pntPuskOF(TZNP2_3U0_OEPRF_ONB, numOF);
+    118            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  2, IOCMD9_TZNP1to5, typRang);//работа с OF OT
+    119          
+    120          //Стат блок ТЗНП3
+    121            lSt1 = pntPuskOF(BLOCK_TZNP3_DI_OEPRF_ONB, numOF);
+    122            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  3, IOCMD1_TZNP1to5, typRang);//работа с OF OT
+    123          //Блок уск ТЗНП3
+    124          // if(isActivCmdDV(, numRele))//проверка активности команды на ДВ
+    125          //      SetCmdToUVV(TZNP_COMP1,  3, IOCMD2_TZNP1to5, nRele);//отранж
+    126          //Опер уск ТЗНП3
+    127            lSt1 = pntPuskOF(ACCLT_TZNP3_DI_OEPRF_ONB, numOF);
+    128            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  3, IOCMD3_TZNP1to5, typRang);//работа с OF OT
+    129          //Сраб ПО ТЗНП3
+    130            lSt1 = pntPuskOF(STPDEV_TZNP3_OEPRF_ONB, numOF);
+    131            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  3, IOCMD4_TZNP1to5, typRang);//работа с OF OT
+    132          //Сраб ТЗНП3
+    133            lSt1 = pntPuskOF(TZNP3_OEPRF_ONB, numOF);
+    134            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  3, IOCMD5_TZNP1to5, typRang);//работа с OF OT
+    135          //Сраб ПО ТЗНП3 3I0
+    136            lSt1 = pntPuskOF(STPDEV_TZNP3_3I0_OEPRF_ONB, numOF);
+    137            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  3, IOCMD6_TZNP1to5, typRang);//работа с OF OT
+    138          //Сраб ТЗНП3 3I0
+    139            lSt1 = pntPuskOF(TZNP3_3I0_OEPRF_ONB, numOF);
+    140             if(lSt1) SetCmdToUVV(TZNP_COMP1,  3, IOCMD7_TZNP1to5, typRang);//работа с OF OT
+    141          //Сраб ПО ТЗНП3 3U0
+    142            lSt1 = pntPuskOF(STPDEV_TZNP3_3U0_OEPRF_ONB, numOF);
+    143            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  3, IOCMD8_TZNP1to5, typRang);//работа с OF OT
+    144          //Сраб ТЗНП3 3U0
+    145            lSt1 = pntPuskOF(TZNP3_3U0_OEPRF_ONB, numOF);
+    146            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  3, IOCMD9_TZNP1to5, typRang);//работа с OF OT
+    147          
+    148          //Стат блок ТЗНП4
+    149            lSt1 = pntPuskOF(BLOCK_TZNP4_DI_OEPRF_ONB, numOF);
+    150            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  4, IOCMD1_TZNP1to5, typRang);//работа с OF OT
+    151          //Блок уск ТЗНП4
+    152          // if(isActivCmdDV(, numRele))//проверка активности команды на ДВ
+    153          //      SetCmdToUVV(TZNP_COMP1,  4, IOCMD2_TZNP1to5, nRele);//отранж
+    154          //Опер уск ТЗНП4
+    155            lSt1 = pntPuskOF(ACCLT_TZNP4_DI_OEPRF_ONB, numOF);
+    156            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  4, IOCMD3_TZNP1to5, typRang);//работа с OF OT
+    157          //Сраб ПО ТЗНП4
+    158            lSt1 = pntPuskOF(STPDEV_TZNP4_OEPRF_ONB, numOF);
+    159            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  4, IOCMD4_TZNP1to5, typRang);//работа с OF OT
+    160          //Сраб ТЗНП4
+    161            lSt1 = pntPuskOF(TZNP4_OEPRF_ONB, numOF);
+    162            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  4, IOCMD5_TZNP1to5, typRang);//работа с OF OT
+    163          //Сраб ПО ТЗНП4 3I0
+    164            lSt1 = pntPuskOF(STPDEV_TZNP4_3I0_OEPRF_ONB, numOF);
+    165            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  4, IOCMD6_TZNP1to5, typRang);//работа с OF OT
+    166          //Сраб ТЗНП4 3I0
+    167            lSt1 = pntPuskOF(TZNP4_3I0_OEPRF_ONB, numOF);
+    168            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  4, IOCMD7_TZNP1to5, typRang);//работа с OF OT
+    169          //Сраб ПО ТЗНП4 3U0
+    170            lSt1 = pntPuskOF(STPDEV_TZNP4_3U0_OEPRF_ONB, numOF);
+    171            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  4, IOCMD8_TZNP1to5, typRang);//работа с OF OT
+    172          //Сраб ТЗНП4 3U0
+    173            lSt1 = pntPuskOF(TZNP4_3U0_OEPRF_ONB, numOF);
+    174            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  4, IOCMD9_TZNP1to5, typRang);//работа с OF OT
+    175          
+    176          //Стат блок ТЗНП5
+    177            lSt1 = pntPuskOF(BLOCK_TZNP5_DI_OEPRF_ONB, numOF);
+    178            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  5, IOCMD1_TZNP1to5, typRang);//работа с OF OT
+    179          //Блок уск ТЗНП5
+    180          // if(isActivCmdDV(, numRele))//проверка активности команды на ДВ
+    181          //      SetCmdToUVV(TZNP_COMP1,  5, IOCMD2_TZNP1to5, nRele);//отранж
+    182          //Опер уск ТЗНП5
+    183            lSt1 = pntPuskOF(ACCLT_TZNP5_DI_OEPRF_ONB, numOF);
+    184            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  5, IOCMD3_TZNP1to5, typRang);//работа с OF OT
+    185          //Сраб ПО ТЗНП5
+    186            lSt1 = pntPuskOF(STPDEV_TZNP5_OEPRF_ONB, numOF);
+    187            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  5, IOCMD4_TZNP1to5, typRang);//работа с OF OT
+    188          //Сраб ТЗНП5
+    189            lSt1 = pntPuskOF(TZNP5_OEPRF_ONB, numOF);
+    190            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  5, IOCMD5_TZNP1to5, typRang);//работа с OF OT
+    191          //Сраб ПО ТЗНП5 3I0
+    192            lSt1 = pntPuskOF(STPDEV_TZNP5_3I0_OEPRF_ONB, numOF);
+    193            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  5, IOCMD6_TZNP1to5, typRang);//работа с OF OT
+    194          //Сраб ТЗНП5 3I0
+    195            lSt1 = pntPuskOF(TZNP5_3I0_OEPRF_ONB, numOF);
+    196            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  5, IOCMD7_TZNP1to5, typRang);//работа с OF OT
+    197          //Сраб ПО ТЗНП5 3U0
+    198            lSt1 = pntPuskOF(STPDEV_TZNP5_3U0_OEPRF_ONB, numOF);
+    199            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  5, IOCMD8_TZNP1to5, typRang);//работа с OF OT
+    200          //Сраб ТЗНП5 3U0
+    201            lSt1 = pntPuskOF(TZNP5_3U0_OEPRF_ONB, numOF);
+    202            if(lSt1)  SetCmdToUVV(TZNP_COMP1,  5, IOCMD9_TZNP1to5, typRang);//работа с OF OT
+    203          }// SettingIci_RangirTZNP2Rele(int nRele)
+    204          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      24   SettingIci_OFTZNP
+        24   -- Indirect call
+        24   -> SetCmdToUVV
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+    2664  SettingIci_OFTZNP
+
+ 
+ 2 664 bytes in section .text
+ 
+ 2 664 bytes of CODE memory
+
+Errors: none
+Warnings: none

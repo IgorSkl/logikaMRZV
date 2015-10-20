@@ -1,0 +1,789 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        12/Oct/2015  11:05:04
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\virtualMenu\rangmanager.c
+#    Command line =  
+#        "D:\IAR projects\HR1_0100_00_I720_new2\virtualMenu\rangmanager.c" -D
+#        _STATIC_MEMORY_BOOT -lcN "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\List\" -o "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "C:\Program Files\IAR Systems\Embedded
+#        Workbench 7.40\arm\INC\c\DLib_Config_Normal.h" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\Igor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\component\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\" --cpu_mode arm -On
+#        --use_c++_inline
+#    List file    =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\List\rangmanager.lst
+#    Object file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\Obj\rangmanager.o
+#
+###############################################################################
+
+D:\IAR projects\HR1_0100_00_I720_new2\virtualMenu\rangmanager.c
+      1          /*
+      2          
+      3          #include <vcl.h>
+      4          #include <strstrea.h>
+      5          #include <math.h>
+      6          #include <mem.h>
+      7          #include <fstream.h>
+      8          #include <strstrea.h>
+      9          #include <iomanip.h>
+     10          #pragma hdrstop
+     11          
+     12          #include "vmenuDis.h"
+     13          */
+     14          
+     15          #include <stdio.h>
+     16          #include <string.h>
+     17          
+     18          #include "bazisdef.h"
+     19          #include "psuperVisor\supermanager.h"
+     20          #include "virtualMenu\systemmenudef.h"
+     21          #include "component\componentdef.h"
+     22          #include "virtualMenu\rangmanagerdef.h"
+     23          
+     24          #include "logictimers\logictimersfnc.h"
+     25          #include "virtualMenu\systemmenufnc.h"
+     26          #include "virtualMenu\textstreamfnc.h"
+     27          #include "virtualMenu\rangmanagerfnc.h"
+     28          #include "virtualMenu\wideLogManagerfnc.h"
+     29          #include "virtualMenu\ustmanagerfnc.h"
+     30          #include "psuperVisor\psvisor_helpfnc.h"
+     31          
+     32          #include "SettingIci\SettingIci.h"
+     33          
+     34          #include "virtualMenu\viewMenuCnf.h"
+     35          #include "psuperVisor\psupervisor.h"
+     36          
+     37          #include "toSpeedOptim.h"
+     38          
+     39          extern MaskaOTAPVUROVOFcmd struct_maskaOTAPVUROVOFcmd;//маски для 16 опред функций UROV APV OT
+     40          
+     41          extern UNS_32 pAPVcmdMaska[];//определение ЗапускАПВ 
+     42          extern UNS_32 pUROVcmdMaska[];//определение ЗапускУРОВ 
+     43          
+     44          
+     45          extern UNS_32 pRDIScmdMaska[];//РегистрацияДИС
+     46          extern COMPONENT_OBJ  cnfCOMPONENT[];//конфигурация
+     47          
+     48          //массив ранжирования
+     49          /*
+     50           Структура массива ранжирования
+     51          DV1   ... DV_TOTAL
+     52          RELE1 ... RELE_TOTAL
+     53          CDI1  ... CDI_TOTAL
+     54          */
+     55          UNS_32 ArrayRANGIR[MAX_MNGRANG+1];//плюс CRC для EEPROM
+     56          
+     57          //массив имен и статуса ранжирования плюс имена расширенной логики
+     58          IONAMESTATUS_RANGIR  nameStatusRANGIR[SIZE_RANGIRCMD+SIZE_RANGIRCMD+3];
+     59          //широкий ком массив плюс расшир логики
+     60          int   WideCmdBuffer[SIZE_RANGIRCMD+SIZE_RANGIRCMD+3];
+     61          
+     62          //широкий ком массив RT
+     63          int   WideCmdRTBuffer[SIZE_RANGIRCMD+3];
+     64          //широкий ком массив RT INTERFACE
+     65          int   WideCmdINTERFACE_RTBuffer[SIZE_RANGIRCMD+3];
+     66          
+     67          UNS_32 pActualCMD[2*DQUADRO];//текущие плюс расшир логика
+     68          
+     69          UNS_32 pActualCMD_INTERFACE[DQUADRO];//текущие INTERFACE
+     70          
+     71          /**********************************************
+     72          МЕНЕДЖЕР РАНЖИРОВАНИЯ
+     73          Удалить команды из Quadro
+     74          offsetRangMng - смещение команд
+     75          cntRangMng - к-во команд
+     76          **********************************************/
+     77          void MngRangDeleteQuadroRANGIR(UNS_32 *pQuadro, short offsetRangMng, short cntRangMng)
+     78          {
+     79          //удалить команды
+     80            TranslateQuadroToWideCmd(pQuadro);//Превратить Quadro в широкий ком массив
+     81            //копировать широкий ком массив в тень
+     82            memcpy((void*)getShadowBuf(), WideCmdBuffer, 4*SIZE_RANGIRCMD);
+     83          //копировать из тени Begin
+     84            if(offsetRangMng>0)
+     85              memcpy(WideCmdBuffer, (void*)getShadowBuf(), 4*offsetRangMng);
+     86          //копировать из тени End
+     87            memcpy(&(WideCmdBuffer[offsetRangMng]),
+     88                   &(((char *)getShadowBuf())[4*offsetRangMng+4*cntRangMng]),
+     89                   (4*SIZE_RANGIRCMD-4*offsetRangMng-4*cntRangMng));
+     90            //обнулить широкий ком буфер
+     91            memset(&(WideCmdBuffer[SIZE_RANGIRCMD-cntRangMng]), 0, 4*cntRangMng);
+     92            CompressorToQuadro(WideCmdBuffer, pQuadro);//КОМПРЕССОР МАССИВА
+     93          
+     94          }//MngRangDeleteQuadroRANGIR(short offsetRangMng, short cntRangMng)
+     95          
+     96          /**********************************************
+     97          МЕНЕДЖЕР РАНЖИРОВАНИЯ
+     98          Добавить команды в Quadro
+     99          cntRangMng - к-во команд
+    100          **********************************************/
+    101          void MngRangTopAddQuadroRANGIR(UNS_32 *pQuadro, short cntRangMng)
+    102          {
+    103          //добавить команды на вершину Quadro
+    104            TranslateQuadroToWideCmd(pQuadro);//Превратить Quadro в широкий ком массив
+    105            //копировать широкий ком массив в тень
+    106            memcpy((void*)getShadowBuf(), WideCmdBuffer, 4*SIZE_RANGIRCMD);
+    107            //копировать из тени
+    108            memcpy(&(WideCmdBuffer[cntRangMng]), (void*)getShadowBuf(),
+    109                   (4*SIZE_RANGIRCMD-4*cntRangMng));
+    110            //обнулить широкий ком буфер
+    111            memset(WideCmdBuffer, 0, 4*cntRangMng);
+    112            CompressorToQuadro(WideCmdBuffer, pQuadro);//КОМПРЕССОР МАССИВА
+    113          }//MngRangTopAddRANGIR(short cntRangMng)
+    114          
+    115          /**********************************************
+    116          МЕНЕДЖЕР РАНЖИРОВАНИЯ
+    117          Получить адр ArrayRANGIR конкр УВВ для редактирования
+    118          **********************************************/
+    119          UNS_32 * MngRangGetPointerUVVRANGIRtoEdit(int numUVV)
+    120          {
+    121            if(numUVV<0) return (UNS_32 *)getShadowBuf();
+    122            
+    123            return  &(((UNS_32 *)getShadowBuf())[
+    124                        numUVV*DQUADRO]);
+    125          }//MngRangGetPointerUVVRANGIRtoEdit(int numUVV)
+    126          
+    127          /**********************************************
+    128          МЕНЕДЖЕР РАНЖИРОВАНИЯ
+    129          Подготовить ArrayRANGIR к редактированию
+    130          **********************************************/
+    131          void MngRangPrepareArrayRANGIRtoEdit(int numUVV)
+    132          {
+    133            switch(numUVV)
+    134            {
+    135             case REGDIS_SM: //регистраторДИС
+    136              //копировать в тень
+    137              memcpy((void*)getShadowBuf(), pRDIScmdMaska, DQUADRO*4);
+    138              return;
+    139             case PUSKAPV_SM://определение ЗапускАПВ 
+    140              memcpy((void*)getShadowBuf(), pAPVcmdMaska, DQUADRO*4);
+    141              return;
+    142             case PUSKUROV_SM://определение ЗапускУРОВ
+    143              memcpy((void*)getShadowBuf(), pUROVcmdMaska, DQUADRO*4);
+    144              return;
+    145          /*
+    146             case PUSK1OF_SM://определение Запуск1ОФ
+    147              memcpy((void*)getShadowBuf(), pP1OFcmdMaska, DQUADRO*4);
+    148              return;
+    149             case PUSK2OF_SM://определение Запуск2ОФ
+    150              memcpy((void*)getShadowBuf(), pP2OFcmdMaska, DQUADRO*4);
+    151              return;
+    152             case PUSK3OF_SM://определение Запуск3ОФ
+    153              memcpy((void*)getShadowBuf(), pP3OFcmdMaska, DQUADRO*4);
+    154              return;
+    155          */
+    156            }//switch
+    157            //копировать в тень
+    158            memcpy((void*)getShadowBuf(), ArrayRANGIR, MAX_MNGRANG*4);
+    159          }//
+    160          
+    161          /**********************************************
+    162          МЕНЕДЖЕР РАНЖИРОВАНИЯ
+    163          Закончить редактировать ArrayRANGIR
+    164          **********************************************/
+    165          void MngRangEndingEditArrayRANGIR(int numUVV)
+    166          {
+    167            switch(numUVV)
+    168            {
+    169             case REGDIS_SM: //регистраторДИС
+    170              //копировать из тени
+    171              memcpy(pRDIScmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    172              return;
+    173             case PUSKAPV_SM://определение ЗапускАПВ 
+    174              memcpy(pAPVcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    175              return;
+    176             case PUSKUROV_SM://определение ЗапускУРОВ
+    177              memcpy(pUROVcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    178              return;
+    179          /*
+    180             case PUSK1OF_SM://определение Запуск1ОФ
+    181              memcpy(pP1OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    182              return;
+    183             case PUSK2OF_SM://определение Запуск2ОФ
+    184              memcpy(pP2OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    185              return;
+    186             case PUSK3OF_SM://определение Запуск3ОФ
+    187              memcpy(pP3OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    188              return;
+    189          */
+    190            }//switch
+    191          
+    192            //копировать из тени
+    193            memcpy(ArrayRANGIR, (void*)getShadowBuf(), MAX_MNGRANG*4);
+    194          }//
+    195          
+    196          /**********************************************
+    197          МЕНЕДЖЕР РАНЖИРОВАНИЯ
+    198          Удалить команды из nameStatus
+    199          offsetRangMng - смещение команд
+    200          cntRangMng - к-во команд
+    201          **********************************************/
+    202          void MngRangDeleteNameStatusRANGIR(short offsetRangMng, short cntRangMng)
+    203          {
+    204          //удалить команды
+    205            //копировать в тень
+    206            memcpy((void*)getShadowBuf(), nameStatusRANGIR, sizeof(IONAMESTATUS_RANGIR)*SIZE_RANGIRCMD);
+    207          //копировать из тени Begin
+    208            if(offsetRangMng>0)
+    209              memcpy(nameStatusRANGIR, (void*)getShadowBuf(), sizeof(IONAMESTATUS_RANGIR)*offsetRangMng);
+    210          //копировать из тени End
+    211            memcpy(&(nameStatusRANGIR[offsetRangMng]),
+    212                   &(((IONAMESTATUS_RANGIR *)getShadowBuf())[offsetRangMng+cntRangMng]),
+    213                   sizeof(IONAMESTATUS_RANGIR)*(SIZE_RANGIRCMD-offsetRangMng-cntRangMng));
+    214          }//MngRangDeleteNameStatusRANGIR(short offsetRangMng, short cntRangMng)
+    215          
+    216          /**********************************************
+    217          МЕНЕДЖЕР РАНЖИРОВАНИЯ РЛ
+    218          Удалить команды из nameStatus
+    219          offsetRangMng - смещение команд
+    220          cntRangMng - к-во команд
+    221          **********************************************/
+    222          void MngRangDeleteNameStatusRANGIR_WL(short offsetRangMng, short cntRangMng)
+    223          {
+    224          //удалить команды
+    225            //копировать в тень
+    226            memcpy((void*)getShadowBuf(), &(nameStatusRANGIR[SIZE_RANGIRCMD]), sizeof(IONAMESTATUS_RANGIR)*SIZE_RANGIRCMD);
+    227          //копировать из тени Begin
+    228            if(offsetRangMng>0)
+    229              memcpy(&(nameStatusRANGIR[SIZE_RANGIRCMD]), (void*)getShadowBuf(), sizeof(IONAMESTATUS_RANGIR)*offsetRangMng);
+    230          //копировать из тени End
+    231            memcpy(&(nameStatusRANGIR[offsetRangMng +SIZE_RANGIRCMD]),
+    232                   &(((IONAMESTATUS_RANGIR *)getShadowBuf())[offsetRangMng+cntRangMng]),
+    233                   sizeof(IONAMESTATUS_RANGIR)*(SIZE_RANGIRCMD-offsetRangMng-cntRangMng));
+    234          }//MngRangDeleteNameStatusRANGIR_WL(short offsetRangMng, short cntRangMng)
+    235          
+    236          /**********************************************
+    237          МЕНЕДЖЕР РАНЖИРОВАНИЯ
+    238          Добавить имена команд
+    239          cntRangMng - к-во команд
+    240          **********************************************/
+    241          void MngRangTopAddNameStatusRANGIR(short cntRangMng, void *ionsComp)
+    242          {
+    243          //добавить команды на вершину mngRang
+    244            //копировать в тень
+    245            memcpy((void*)getShadowBuf(), nameStatusRANGIR, sizeof(IONAMESTATUS_RANGIR)*SIZE_RANGIRCMD);
+    246            //копировать из тени
+    247            memcpy(&(nameStatusRANGIR[cntRangMng]), (void*)getShadowBuf(),
+    248                   sizeof(IONAMESTATUS_RANGIR)*(SIZE_RANGIRCMD-cntRangMng));
+    249            //копировать
+    250            for(short i=0; i<cntRangMng; i++)
+    251            {
+    252              //копировать статус
+    253              nameStatusRANGIR[i].statusIO = ((IONAMESTATUS_COMPONENT *)ionsComp)[i].statusIO;
+    254              //ограничить длину имени команды
+    255              if(strlen(((IONAMESTATUS_COMPONENT *)ionsComp)[i].nameIO)>SIZE_NAMEIOCOMMAND)
+    256                          ((IONAMESTATUS_COMPONENT *)ionsComp)[i].nameIO[SIZE_NAMEIOCOMMAND-2] = 0;
+    257              //копировать имя команды
+    258              strcpy(nameStatusRANGIR[i].nameIORang, ((IONAMESTATUS_COMPONENT *)ionsComp)[i].nameIO);
+    259            }//for
+    260          }//MngRangTopAddNameStatusRANGIR(short cntRangMng, void *ionsComp)
+    261          
+    262          /**********************************************
+    263          МЕНЕДЖЕР РАНЖИРОВАНИЯ
+    264          Добавить имена команд РЛ
+    265          cntRangMng - к-во команд
+    266          **********************************************/
+    267          void MngRangTopAddNameStatusRANGIR_WL(short cntRangMng, void *ionsComp)
+    268          {
+    269          //добавить имена команд на вершину
+    270            //копировать в тень
+    271            memcpy((void*)getShadowBuf(), &(nameStatusRANGIR[SIZE_RANGIRCMD]), sizeof(IONAMESTATUS_RANGIR)*SIZE_RANGIRCMD);
+    272            //копировать из тени
+    273            memcpy(&(nameStatusRANGIR[cntRangMng +SIZE_RANGIRCMD]), (void*)getShadowBuf(),
+    274                   sizeof(IONAMESTATUS_RANGIR)*(SIZE_RANGIRCMD-cntRangMng));
+    275            //копировать
+    276            for(short i=0; i<cntRangMng; i++)
+    277            {
+    278              nameStatusRANGIR[i +SIZE_RANGIRCMD].statusIO = ((IONAMESTATUS_COMPONENT *)ionsComp)[i].statusIO;
+    279              //добавить префикс
+    280              strcpy(nameStatusRANGIR[i +SIZE_RANGIRCMD].nameIORang, "РЛ:");
+    281              strcat(nameStatusRANGIR[i +SIZE_RANGIRCMD].nameIORang, ((IONAMESTATUS_COMPONENT *)ionsComp)[i].nameIO);
+    282            }//for
+    283          }//MngRangTopAddNameStatusRANGIR_WL(short cntRangMng, void *ionsComp)
+    284          
+    285          short SetCmdToUVV(short kodC, short numClon, short numIO, short numUVV)
+    286          {
+    287          //отранж команду numIO компонента kodC с номером клона numClon на numUVV
+    288            short idxClon = SearchCnfClonToComponent(kodC, numClon);
+    289            if(idxClon<0)return 1;//клон не найден
+    290            int cntIO = cnfCOMPONENT[idxClon].cntIOCmd;    //к-во IO команд
+    291            if(numIO<0) return 1;//команда меньше 0
+    292            if(numIO>=cntIO) return 1;//команда за диапазоном
+    293            short idxCmd = getOffsetIOCmdCnf(idxClon) + numIO;//индекс команды
+    294          
+    295            short conflict = SetUVVToClon(idxCmd, numUVV);
+    296            SaveCRCrang();//сохранить CRC ранжир
+    297            PrepareBOBV();//подготовить Блок ОТКЛ, Блок ВКЛ
+    298            return conflict;
+    299          }//SetCmdToUVV(short kodC, short numClon, short numIO, short numUVV)
+    300          /*
+    301          void ClrCmdToClon(short kodC, short numClon, short numIO, short numUVV)
+    302          {
+    303          //Убрать команду numIO компонента kodC с номером клона numClon на numUVV
+    304            short idxClon = SearchCnfClonToComponent(kodC, numClon);
+    305            if(idxClon<0)return;//клон не найден
+    306            short idxCmd = getOffsetIOCmdCnf(idxClon) + numIO;//индекс команды
+    307          
+    308            ClrUVVToClon(idxCmd, numUVV);
+    309          }//ClrCmdToClon(short kodC, short numClon, short numIO, short numUVV)
+    310          */
+    311          
+    312          /*
+    313          void ClrUVVToClon(int idxCmd, int numUVV)
+    314          {
+    315            MngRangPrepareArrayRANGIRtoEdit(numUVV);//Подготовить ArrayRANGIR к редактированию
+    316          
+    317            NumBitClearingQuadro(idxCmd,
+    318                                 MngRangGetPointerUVVRANGIRtoEdit(numUVV)
+    319                                ); //сброс бита по его индексу
+    320          
+    321            MngRangEndingEditArrayRANGIR(numUVV);//Закончить редактировать ArrayRANGIR
+    322          }//ClrUVVToClon(idxCmd, numUVV)
+    323          */
+    324          
+    325          short SetUVVToClon(int idxCmd, int numUVV)
+    326          {
+    327          //  MngRangPrepareArrayRANGIRtoEdit(numUVV);//Подготовить ArrayRANGIR к редактированию
+    328          
+    329            NumBitSettingQuadro(idxCmd,
+    330                                MngRangGetPointerUVVRANGIRtoRead(numUVV)
+    331                               ); //установка бита по его индексу
+    332            short isConflict = ApplyDVMaskToRead(numUVV);//наложить маску на DV
+    333          
+    334          //  MngRangEndingEditArrayRANGIR(numUVV);//Закончить редактировать ArrayRANGIR
+    335            return isConflict;//успешность операции размещения
+    336          }//SetUVVToClon(idxCmd, numUVV)
+    337          
+    338          void ClearArrayRANGIR()
+    339          {
+    340          //очистить все ранжирование
+    341            memset(ArrayRANGIR, 0, MAX_MNGRANG*4);
+    342          }//ClearArrayRANGIR()
+    343          
+    344          void SaveCRCrang()
+    345          {
+    346          //сохранить CRC ранжир
+    347            ArrayRANGIR[MAX_MNGRANG] = setCRCMassiv((int *)ArrayRANGIR, MAX_MNGRANG); //CRC для ранж
+    348          }//SaveCRCrang()
+    349          
+    350          int getCRCrang()
+    351          {
+    352          //получить CRC ранж
+    353            return ArrayRANGIR[MAX_MNGRANG]; //CRC для ранж
+    354          }//getCRCrang()
+    355          
+    356          //extern MaskaOTAPVUROVOFcmd struct_maskaOTAPVUROVOFcmd;//маски для 16 опред функций UROV APV OT
+    357          
+    358          /**********************************************
+    359          МЕНЕДЖЕР РАНЖИРОВАНИЯ
+    360          Получить адр ArrayRANGIR конкр УВВ для чтения
+    361          **********************************************/
+    362          UNS_32 * MngRangGetPointerUVVRANGIRtoRead(int numUVV)
+    363          {
+    364            switch(numUVV)
+    365            {
+    366             case REGDIS_SM: //регистраторДИС
+    367          //    pRDIScmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    368              return pRDIScmdMaska;
+    369             case PUSKAPV_SM://определение ЗапускАПВ 
+    370          //    memcpy(pAPVcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    371              return pAPVcmdMaska;
+    372             case PUSKUROV_SM://определение ЗапускУРОВ
+    373          //    memcpy(pUROVcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    374              return pUROVcmdMaska;
+    375          
+    376             case PUSK1OF_SM://определение Запуск1ОФ
+    377          //    memcpy(pP1OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    378              return struct_maskaOTAPVUROVOFcmd.pP1OFcmdMaska;
+    379             case PUSK2OF_SM://определение Запуск2ОФ
+    380          //    memcpy(pP2OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    381              return struct_maskaOTAPVUROVOFcmd.pP2OFcmdMaska;
+    382             case PUSK3OF_SM://определение Запуск3ОФ
+    383          //    memcpy(pP3OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    384              return struct_maskaOTAPVUROVOFcmd.pP3OFcmdMaska;
+    385          
+    386             case PUSK1OF2_SM://определение Запуск1ОФ
+    387          //    memcpy(pP1OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    388              return struct_maskaOTAPVUROVOFcmd.pP1OF2cmdMaska;
+    389             case PUSK2OF2_SM://определение Запуск2ОФ
+    390          //    memcpy(pP2OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    391              return struct_maskaOTAPVUROVOFcmd.pP2OF2cmdMaska;
+    392             case PUSK3OF2_SM://определение Запуск3ОФ
+    393          //    memcpy(pP3OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    394              return struct_maskaOTAPVUROVOFcmd.pP3OF2cmdMaska;
+    395          
+    396             case PUSK1OF3_SM://определение Запуск1ОФ
+    397          //    memcpy(pP1OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    398              return struct_maskaOTAPVUROVOFcmd.pP1OF3cmdMaska;
+    399             case PUSK2OF3_SM://определение Запуск2ОФ
+    400          //    memcpy(pP2OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    401              return struct_maskaOTAPVUROVOFcmd.pP2OF3cmdMaska;
+    402             case PUSK3OF3_SM://определение Запуск3ОФ
+    403          //    memcpy(pP3OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    404              return struct_maskaOTAPVUROVOFcmd.pP3OF3cmdMaska;
+    405          
+    406             case PUSK1OF4_SM://определение Запуск1ОФ
+    407          //    memcpy(pP1OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    408              return struct_maskaOTAPVUROVOFcmd.pP1OF4cmdMaska;
+    409             case PUSK2OF4_SM://определение Запуск2ОФ
+    410          //    memcpy(pP2OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    411              return struct_maskaOTAPVUROVOFcmd.pP2OF4cmdMaska;
+    412             case PUSK3OF4_SM://определение Запуск3ОФ
+    413          //    memcpy(pP3OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    414              return struct_maskaOTAPVUROVOFcmd.pP3OF4cmdMaska;
+    415          
+    416             case PUSK1OF5_SM://определение Запуск1ОФ
+    417          //    memcpy(pP1OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    418              return struct_maskaOTAPVUROVOFcmd.pP1OF5cmdMaska;
+    419             case PUSK2OF5_SM://определение Запуск2ОФ
+    420          //    memcpy(pP2OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    421              return struct_maskaOTAPVUROVOFcmd.pP2OF5cmdMaska;
+    422             case PUSK3OF5_SM://определение Запуск3ОФ
+    423          //    memcpy(pP3OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    424              return struct_maskaOTAPVUROVOFcmd.pP3OF5cmdMaska;
+    425          
+    426             case PUSK1OF6_SM://определение Запуск1ОФ
+    427          //    memcpy(pP1OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    428              return struct_maskaOTAPVUROVOFcmd.pP1OF6cmdMaska;
+    429             case PUSK2OF6_SM://определение Запуск2ОФ
+    430          //    memcpy(pP2OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    431              return struct_maskaOTAPVUROVOFcmd.pP2OF6cmdMaska;
+    432             case PUSK3OF6_SM://определение Запуск3ОФ
+    433          //    memcpy(pP3OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    434              return struct_maskaOTAPVUROVOFcmd.pP3OF6cmdMaska;
+    435          
+    436             case PUSK1OF7_SM://определение Запуск1ОФ
+    437          //    memcpy(pP1OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    438              return struct_maskaOTAPVUROVOFcmd.pP1OF7cmdMaska;
+    439             case PUSK2OF7_SM://определение Запуск2ОФ
+    440          //    memcpy(pP2OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    441              return struct_maskaOTAPVUROVOFcmd.pP2OF7cmdMaska;
+    442             case PUSK3OF7_SM://определение Запуск3ОФ
+    443          //    memcpy(pP3OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    444              return struct_maskaOTAPVUROVOFcmd.pP3OF7cmdMaska;
+    445          
+    446             case PUSK1OF8_SM://определение Запуск1ОФ
+    447          //    memcpy(pP1OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    448              return struct_maskaOTAPVUROVOFcmd.pP1OF8cmdMaska;
+    449             case PUSK2OF8_SM://определение Запуск2ОФ
+    450          //    memcpy(pP2OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    451              return struct_maskaOTAPVUROVOFcmd.pP2OF8cmdMaska;
+    452             case PUSK3OF8_SM://определение Запуск3ОФ
+    453          //    memcpy(pP3OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    454              return struct_maskaOTAPVUROVOFcmd.pP3OF8cmdMaska;
+    455          
+    456             case PUSK1OF9_SM://определение Запуск1ОФ
+    457          //    memcpy(pP1OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    458              return struct_maskaOTAPVUROVOFcmd.pP1OF9cmdMaska;
+    459             case PUSK2OF9_SM://определение Запуск2ОФ
+    460          //    memcpy(pP2OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    461              return struct_maskaOTAPVUROVOFcmd.pP2OF9cmdMaska;
+    462             case PUSK3OF9_SM://определение Запуск3ОФ
+    463          //    memcpy(pP3OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    464              return struct_maskaOTAPVUROVOFcmd.pP3OF9cmdMaska;
+    465          
+    466             case PUSK1OF10_SM://определение Запуск1ОФ
+    467          //    memcpy(pP1OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    468              return struct_maskaOTAPVUROVOFcmd.pP1OF10cmdMaska;
+    469             case PUSK2OF10_SM://определение Запуск2ОФ
+    470          //    memcpy(pP2OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    471              return struct_maskaOTAPVUROVOFcmd.pP2OF10cmdMaska;
+    472             case PUSK3OF10_SM://определение Запуск3ОФ
+    473          //    memcpy(pP3OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    474              return struct_maskaOTAPVUROVOFcmd.pP3OF10cmdMaska;
+    475          
+    476             case PUSK1OF11_SM://определение Запуск1ОФ
+    477          //    memcpy(pP1OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    478              return struct_maskaOTAPVUROVOFcmd.pP1OF11cmdMaska;
+    479             case PUSK2OF11_SM://определение Запуск2ОФ
+    480          //    memcpy(pP2OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    481              return struct_maskaOTAPVUROVOFcmd.pP2OF11cmdMaska;
+    482             case PUSK3OF11_SM://определение Запуск3ОФ
+    483          //    memcpy(pP3OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    484              return struct_maskaOTAPVUROVOFcmd.pP3OF11cmdMaska;
+    485          
+    486             case PUSK1OF12_SM://определение Запуск1ОФ
+    487          //    memcpy(pP1OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    488              return struct_maskaOTAPVUROVOFcmd.pP1OF12cmdMaska;
+    489             case PUSK2OF12_SM://определение Запуск2ОФ
+    490          //    memcpy(pP2OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    491              return struct_maskaOTAPVUROVOFcmd.pP2OF12cmdMaska;
+    492             case PUSK3OF12_SM://определение Запуск3ОФ
+    493          //    memcpy(pP3OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    494              return struct_maskaOTAPVUROVOFcmd.pP3OF12cmdMaska;
+    495          
+    496             case PUSK1OF13_SM://определение Запуск1ОФ
+    497          //    memcpy(pP1OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    498              return struct_maskaOTAPVUROVOFcmd.pP1OF13cmdMaska;
+    499             case PUSK2OF13_SM://определение Запуск2ОФ
+    500          //    memcpy(pP2OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    501              return struct_maskaOTAPVUROVOFcmd.pP2OF13cmdMaska;
+    502             case PUSK3OF13_SM://определение Запуск3ОФ
+    503          //    memcpy(pP3OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    504              return struct_maskaOTAPVUROVOFcmd.pP3OF13cmdMaska;
+    505          
+    506             case PUSK1OF14_SM://определение Запуск1ОФ
+    507          //    memcpy(pP1OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    508              return struct_maskaOTAPVUROVOFcmd.pP1OF14cmdMaska;
+    509             case PUSK2OF14_SM://определение Запуск2ОФ
+    510          //    memcpy(pP2OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    511              return struct_maskaOTAPVUROVOFcmd.pP2OF14cmdMaska;
+    512             case PUSK3OF14_SM://определение Запуск3ОФ
+    513          //    memcpy(pP3OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    514              return struct_maskaOTAPVUROVOFcmd.pP3OF14cmdMaska;
+    515          
+    516             case PUSK1OF15_SM://определение Запуск1ОФ
+    517          //    memcpy(pP1OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    518              return struct_maskaOTAPVUROVOFcmd.pP1OF15cmdMaska;
+    519             case PUSK2OF15_SM://определение Запуск2ОФ
+    520          //    memcpy(pP2OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    521              return struct_maskaOTAPVUROVOFcmd.pP2OF15cmdMaska;
+    522             case PUSK3OF15_SM://определение Запуск3ОФ
+    523          //    memcpy(pP3OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    524              return struct_maskaOTAPVUROVOFcmd.pP3OF15cmdMaska;
+    525          
+    526             case PUSK1OF16_SM://определение Запуск1ОФ
+    527          //    memcpy(pP1OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    528              return struct_maskaOTAPVUROVOFcmd.pP1OF16cmdMaska;
+    529             case PUSK2OF16_SM://определение Запуск2ОФ
+    530          //    memcpy(pP2OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    531              return struct_maskaOTAPVUROVOFcmd.pP2OF16cmdMaska;
+    532             case PUSK3OF16_SM://определение Запуск3ОФ
+    533          //    memcpy(pP3OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
+    534              return struct_maskaOTAPVUROVOFcmd.pP3OF16cmdMaska;
+    535          
+    536            }//switch
+    537          
+    538            return  &(((UNS_32 *)ArrayRANGIR)[numUVV*DQUADRO]);
+    539          }//MngRangGetPointerUVVRANGIRtoRead(int numUVV)
+    540          
+    541          int GetCmdUVVFromClon(short kodC, short numClon, short numIO, short numUVV)
+    542          {
+    543          //Проверить команду numIO компонента kodC с номером клона numClon на numUVV
+    544            short idxClon = SearchCnfClonToComponent(kodC, numClon);
+    545            if(idxClon<0)return -1;//клон не найден
+    546            short idxCmd = getOffsetIOCmdCnf(idxClon) + numIO;//индекс команды
+    547          
+    548            return  NumBitCheckQuadro(idxCmd,
+    549                                         MngRangGetPointerUVVRANGIRtoRead(numUVV)
+    550                                        ); //установка бита по его индексу
+    551          }//SetUVVToClon(idxCmd, numUVV)
+    552          
+    553          void CopyEEPROMtoRANGIR()
+    554          {
+    555          //копировать данные из EEPROM в ранжир
+    556          extern char  tmp_eeprom[];//MAX_MNGUSTAVKI*4блока *4байта
+    557           memcpy(ArrayRANGIR, tmp_eeprom, 4*(MAX_MNGRANG+1));//для ранжир и CRC
+    558          }//CopyMngUstavki(int numBlok)
+    559          
+    560          /*
+    561          char ChkUVVToClon(int idxCmd, int numUVV)
+    562          {
+    563            MngRangPrepareArrayRANGIRtoEdit(numUVV);//Подготовить ArrayRANGIR к редактированию
+    564          
+    565            char tmp = NumBitCheckQuadro(idxCmd,
+    566                                         MngRangGetPointerUVVRANGIRtoEdit(numUVV)
+    567                                        ); //установка бита по его индексу
+    568          
+    569            MngRangEndingEditArrayRANGIR(numUVV);//Закончить редактировать ArrayRANGIR
+    570            return tmp;
+    571          }//ChkUVVToClon(short idxCmd, short numUVV)
+    572          */
+    573          /*
+    574          char ChkCmdToClon(short kodC, short numClon, short numIO, short numUVV)
+    575          {
+    576          //Проверить команду numIO компонента kodC с номером клона numClon на numUVV
+    577            short idxClon = SearchCnfClonToComponent(kodC, numClon);
+    578            if(idxClon<0)return -1;//клон не найден
+    579            short idxCmd = getOffsetIOCmdCnf(idxClon) + numIO;//индекс команды
+    580          
+    581            return ChkUVVToClon(idxCmd, numUVV);
+    582          }//ClrCmdToClon(short kodC, short numClon, short numIO, short numUVV)
+    583          */
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      16   ClearArrayRANGIR
+        16   -> __aeabi_memset
+      16   CopyEEPROMtoRANGIR
+        16   -> __aeabi_memcpy
+      32   GetCmdUVVFromClon
+        32   -> MngRangGetPointerUVVRANGIRtoRead
+        32   -> NumBitCheckQuadro
+        32   -> SearchCnfClonToComponent
+        32   -> getOffsetIOCmdCnf
+      24   MngRangDeleteNameStatusRANGIR
+        24   -> __aeabi_memcpy
+        24   -> getShadowBuf
+      24   MngRangDeleteNameStatusRANGIR_WL
+        24   -> __aeabi_memcpy
+        24   -> getShadowBuf
+      40   MngRangDeleteQuadroRANGIR
+        40   -> CompressorToQuadro
+        40   -> TranslateQuadroToWideCmd
+        40   -> __aeabi_memcpy
+        40   -> __aeabi_memset
+        40   -> getShadowBuf
+      24   MngRangEndingEditArrayRANGIR
+        24   -> __aeabi_memcpy
+        24   -> getShadowBuf
+       8   MngRangGetPointerUVVRANGIRtoEdit
+         8   -> getShadowBuf
+       0   MngRangGetPointerUVVRANGIRtoRead
+      24   MngRangPrepareArrayRANGIRtoEdit
+        24   -> __aeabi_memcpy
+        24   -> getShadowBuf
+      32   MngRangTopAddNameStatusRANGIR
+        32   -> __aeabi_memcpy
+        32   -> getShadowBuf
+        32   -> strcpy
+        32   -> strlen
+      32   MngRangTopAddNameStatusRANGIR_WL
+        32   -> __aeabi_memcpy
+        32   -> getShadowBuf
+        32   -> strcat
+        32   -> strcpy
+      40   MngRangTopAddQuadroRANGIR
+        40   -> CompressorToQuadro
+        40   -> TranslateQuadroToWideCmd
+        40   -> __aeabi_memcpy
+        40   -> __aeabi_memset
+        40   -> getShadowBuf
+       8   SaveCRCrang
+         8   -> setCRCMassiv
+      40   SetCmdToUVV
+        40   -> PrepareBOBV
+        40   -> SaveCRCrang
+        40   -> SearchCnfClonToComponent
+        40   -> SetUVVToClon
+        40   -> getOffsetIOCmdCnf
+      16   SetUVVToClon
+        16   -> ApplyDVMaskToRead
+        16   -> MngRangGetPointerUVVRANGIRtoRead
+        16   -> NumBitSettingQuadro
+       0   getCRCrang
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable11
+       4  ??DataTable13
+       4  ??DataTable13_1
+       4  ??DataTable13_10
+       4  ??DataTable13_11
+       4  ??DataTable13_12
+       4  ??DataTable13_13
+       4  ??DataTable13_14
+       4  ??DataTable13_15
+       4  ??DataTable13_16
+       4  ??DataTable13_17
+       4  ??DataTable13_18
+       4  ??DataTable13_19
+       4  ??DataTable13_2
+       4  ??DataTable13_20
+       4  ??DataTable13_21
+       4  ??DataTable13_22
+       4  ??DataTable13_23
+       4  ??DataTable13_24
+       4  ??DataTable13_25
+       4  ??DataTable13_26
+       4  ??DataTable13_27
+       4  ??DataTable13_28
+       4  ??DataTable13_29
+       4  ??DataTable13_3
+       4  ??DataTable13_30
+       4  ??DataTable13_31
+       4  ??DataTable13_32
+       4  ??DataTable13_33
+       4  ??DataTable13_34
+       4  ??DataTable13_35
+       4  ??DataTable13_36
+       4  ??DataTable13_37
+       4  ??DataTable13_38
+       4  ??DataTable13_39
+       4  ??DataTable13_4
+       4  ??DataTable13_40
+       4  ??DataTable13_41
+       4  ??DataTable13_42
+       4  ??DataTable13_43
+       4  ??DataTable13_44
+       4  ??DataTable13_45
+       4  ??DataTable13_46
+       4  ??DataTable13_47
+       4  ??DataTable13_48
+       4  ??DataTable13_49
+       4  ??DataTable13_5
+       4  ??DataTable13_50
+       4  ??DataTable13_51
+       4  ??DataTable13_52
+       4  ??DataTable13_53
+       4  ??DataTable13_54
+       4  ??DataTable13_55
+       4  ??DataTable13_56
+       4  ??DataTable13_6
+       4  ??DataTable13_7
+       4  ??DataTable13_8
+       4  ??DataTable13_9
+       4  ?_0
+    2644  ArrayRANGIR
+      36  ClearArrayRANGIR
+      40  CopyEEPROMtoRANGIR
+     140  GetCmdUVVFromClon
+     236  MngRangDeleteNameStatusRANGIR
+     240  MngRangDeleteNameStatusRANGIR_WL
+     308  MngRangDeleteQuadroRANGIR
+     180  MngRangEndingEditArrayRANGIR
+      40  MngRangGetPointerUVVRANGIRtoEdit
+     508  MngRangGetPointerUVVRANGIRtoRead
+     180  MngRangPrepareArrayRANGIRtoEdit
+     328  MngRangTopAddNameStatusRANGIR
+     320  MngRangTopAddNameStatusRANGIR_WL
+     176  MngRangTopAddQuadroRANGIR
+      28  SaveCRCrang
+     240  SetCmdToUVV
+      60  SetUVVToClon
+    2572  WideCmdBuffer
+    1292  WideCmdINTERFACE_RTBuffer
+    1292  WideCmdRTBuffer
+      12  getCRCrang
+   21864  nameStatusRANGIR
+      80  pActualCMD
+      40  pActualCMD_INTERFACE
+
+ 
+ 29 784 bytes in section .bss
+      4 bytes in section .rodata
+  3 304 bytes in section .text
+ 
+  3 304 bytes of CODE  memory
+      4 bytes of CONST memory
+ 29 784 bytes of DATA  memory
+
+Errors: none
+Warnings: none

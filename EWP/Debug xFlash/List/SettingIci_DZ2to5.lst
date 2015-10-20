@@ -1,0 +1,855 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        12/Oct/2015  11:05:05
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\SettingIci\SettingIci_DZ2to5.c
+#    Command line =  
+#        "D:\IAR projects\HR1_0100_00_I720_new2\SettingIci\SettingIci_DZ2to5.c"
+#        -D _STATIC_MEMORY_BOOT -lcN "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\List\" -o "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "C:\Program Files\IAR Systems\Embedded
+#        Workbench 7.40\arm\INC\c\DLib_Config_Normal.h" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\Igor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\component\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\" --cpu_mode arm -On
+#        --use_c++_inline
+#    List file    =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\List\SettingIci_DZ2to5.lst
+#    Object file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\Obj\SettingIci_DZ2to5.o
+#
+###############################################################################
+
+D:\IAR projects\HR1_0100_00_I720_new2\SettingIci\SettingIci_DZ2to5.c
+      1          #include "lpc_types.h"
+      2          #include "lpc_irq_fiq.h"
+      3          #include "lpc_arm922t_cp15_driver.h"
+      4          
+      5          #include "lpc32xx_hstimer.h"
+      6          #include "lpc32xx_ssp.h"
+      7          #include "lpc32xx_gpio.h"
+      8          
+      9          #include "lpc32xx_intc_driver.h"
+     10          #include "lpc32xx_clkpwr_driver.h"
+     11          
+     12          #include "arm926ej_cp15_drv.h"
+     13          #include "ttbl.h"
+     14          
+     15          #include <stdio.h>
+     16          #include <string.h>
+     17          
+     18          #include "psuperVisor\supermanager.h"
+     19          
+     20          #include "component\componentdef.h"
+     21          #include "psuperVisor\psvisor_helpdef.h"
+     22          
+     23          #include "psuperVisor\psvisor_helpfnc.h"
+     24          #include "SettingIci\SettingIci.h"
+     25          #include "virtualmenu\systemmenufnc.h"
+     26          
+     27          #include "toSpeedOptim.h"
+     28          #include "toSpeedDIS.h"
+     29          
+     30          #include "header.h"
+     31          #include "ici_r_ef.h"
+     32          
+     33          #define _HIDE_COMPONENT
+     34          #include "DZ2Component.c"
+     35          
+     36          extern char chProtectTableComeIn;
+     37          extern char chResultCallGetMeasPrt;
+     38          //extern tic long lDemo_IA,lDemo_IB,lDemo_IC;
+     39          extern  long lMtz1,lMtz1Tmr,lSt1,lSt2, lst3, lst4;
+     40          extern __MEASUREMENT_TO_PROTECTION TestMeasProtection;
+     41          
+     42          /*
+     43           float X1OF_DZ2, Y1OF_DZ2, X2OF_DZ2, Y2OF_DZ2;
+     44           float X3OF_DZ2, Y3OF_DZ2, X4OF_DZ2, Y4OF_DZ2;
+     45           float X1MF_DZ2, Y1MF_DZ2, X2MF_DZ2, Y2MF_DZ2;
+     46           float X3MF_DZ2, Y3MF_DZ2, X4MF_DZ2, Y4MF_DZ2;
+     47          
+     48           float X1OF_DZ3, Y1OF_DZ3, X2OF_DZ3, Y2OF_DZ3;
+     49           float X3OF_DZ3, Y3OF_DZ3, X4OF_DZ3, Y4OF_DZ3;
+     50           float X1MF_DZ3, Y1MF_DZ3, X2MF_DZ3, Y2MF_DZ3;
+     51           float X3MF_DZ3, Y3MF_DZ3, X4MF_DZ3, Y4MF_DZ3;
+     52                                                       
+     53           float X1OF_DZ4, Y1OF_DZ4, X2OF_DZ4, Y2OF_DZ4;
+     54           float X3OF_DZ4, Y3OF_DZ4, X4OF_DZ4, Y4OF_DZ4;
+     55           float X1MF_DZ4, Y1MF_DZ4, X2MF_DZ4, Y2MF_DZ4;
+     56           float X3MF_DZ4, Y3MF_DZ4, X4MF_DZ4, Y4MF_DZ4;
+     57          
+     58           float X1OF_DZ5, Y1OF_DZ5, X2OF_DZ5, Y2OF_DZ5;
+     59           float X3OF_DZ5, Y3OF_DZ5, X4OF_DZ5, Y4OF_DZ5;
+     60           float X1MF_DZ5, Y1MF_DZ5, X2MF_DZ5, Y2MF_DZ5;
+     61           float X3MF_DZ5, Y3MF_DZ5, X4MF_DZ5, Y4MF_DZ5;
+     62          */
+     63          
+     64          void  SettingIci_DZ2to5()
+     65          {
+     66          //установки ICI DZ2to5
+     67          //  float diskr = 0.001;
+     68          //-----------DZ2------------------------------------  
+     69          //Ток МТЗ ДЗ2МФ
+     70              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage2Dstp2Pickup.Dstp2_Iovp_ov_range;
+     71              SetUstToClon(DZ_COMP1,  2, MNGUST_DZ2to5_MTZ, lMtz1);//уставка MTZ
+     72          //-----------OF
+     73          //Re1
+     74              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage2Dstp2Pickup.Z_OF_Dstp2_P1_R;
+     75          //    X1OF_DZ2 = ((float)lMtz1)*diskr;
+     76              SetUstToClon(DZ_COMP1,  2, MNGUST_DZ2to5_OX1, lMtz1);//уставка X1OF_DZ2
+     77          //Im1
+     78              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage2Dstp2Pickup.Z_OF_Dstp2_P1_X;
+     79          //    Y1OF_DZ2 = ((float)lMtz1)*diskr;
+     80              SetUstToClon(DZ_COMP1,  2, MNGUST_DZ2to5_OY1, lMtz1);//уставка Y1OF_DZ2
+     81          
+     82          //Re2
+     83              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage2Dstp2Pickup.Z_OF_Dstp2_P2_R;
+     84          //    X2OF_DZ2 = ((float)lMtz1)*diskr;
+     85              SetUstToClon(DZ_COMP1,  2, MNGUST_DZ2to5_OX2, lMtz1);//уставка X2OF_DZ2
+     86          //Im2
+     87              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage2Dstp2Pickup.Z_OF_Dstp2_P2_X;
+     88          //    Y2OF_DZ2 = ((float)lMtz1)*diskr;
+     89              SetUstToClon(DZ_COMP1,  2, MNGUST_DZ2to5_OY2, lMtz1);//уставка Y2OF_DZ2
+     90          
+     91          //Re3
+     92              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage2Dstp2Pickup.Z_OF_Dstp2_P3_R;
+     93          //    X3OF_DZ2 = ((float)lMtz1)*diskr;
+     94              SetUstToClon(DZ_COMP1,  2, MNGUST_DZ2to5_OX3, lMtz1);//уставка X3OF_DZ2
+     95          //Im3
+     96              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage2Dstp2Pickup.Z_OF_Dstp2_P3_X;
+     97          //    Y3OF_DZ2 = ((float)lMtz1)*diskr;
+     98              SetUstToClon(DZ_COMP1,  2, MNGUST_DZ2to5_OY3, lMtz1);//уставка Y3OF_DZ2
+     99          
+    100          //Re4
+    101              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage2Dstp2Pickup.Z_OF_Dstp2_P4_R;
+    102          //    X4OF_DZ2 = ((float)lMtz1)*diskr;
+    103              SetUstToClon(DZ_COMP1,  2, MNGUST_DZ2to5_OX4, lMtz1);//уставка X4OF_DZ2
+    104          //Im4
+    105              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage2Dstp2Pickup.Z_OF_Dstp2_P4_X;
+    106          //    Y4OF_DZ2 = ((float)lMtz1)*diskr;
+    107              SetUstToClon(DZ_COMP1,  2, MNGUST_DZ2to5_OY4, lMtz1);//уставка Y4OF_DZ2
+    108          
+    109          //-----------MF
+    110          //Re1
+    111              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage2Dstp2Pickup.Z_MF_Dstp2_P1_R;
+    112          //    X1MF_DZ2 = ((float)lMtz1)*diskr;
+    113              SetUstToClon(DZ_COMP1,  2, MNGUST_DZ2to5_MX1, lMtz1);//уставка X1MF_DZ2
+    114          //Im1
+    115              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage2Dstp2Pickup.Z_MF_Dstp2_P1_X;
+    116          //    Y1MF_DZ2 = ((float)lMtz1)*diskr;
+    117              SetUstToClon(DZ_COMP1,  2, MNGUST_DZ2to5_MY1, lMtz1);//уставка Y1MF_DZ2
+    118          
+    119          //Re2
+    120              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage2Dstp2Pickup.Z_MF_Dstp2_P2_R;
+    121          //    X2MF_DZ2 = ((float)lMtz1)*diskr;
+    122              SetUstToClon(DZ_COMP1,  2, MNGUST_DZ2to5_MX2, lMtz1);//уставка X2MF_DZ2
+    123          //Im2
+    124              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage2Dstp2Pickup.Z_MF_Dstp2_P2_X;
+    125          //    Y2MF_DZ2 = ((float)lMtz1)*diskr;
+    126              SetUstToClon(DZ_COMP1,  2, MNGUST_DZ2to5_MY2, lMtz1);//уставка Y2MF_DZ2
+    127          
+    128          //Re3
+    129              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage2Dstp2Pickup.Z_MF_Dstp2_P3_R;
+    130          //    X3MF_DZ2 = ((float)lMtz1)*diskr;
+    131              SetUstToClon(DZ_COMP1,  2, MNGUST_DZ2to5_MX3, lMtz1);//уставка X3MF_DZ2
+    132          //Im3
+    133              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage2Dstp2Pickup.Z_MF_Dstp2_P3_X;
+    134          //    Y3MF_DZ2 = ((float)lMtz1)*diskr;
+    135              SetUstToClon(DZ_COMP1,  2, MNGUST_DZ2to5_MY3, lMtz1);//уставка Y3MF_DZ2
+    136          
+    137          //Re4
+    138              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage2Dstp2Pickup.Z_MF_Dstp2_P4_R;
+    139          //    X4MF_DZ2 = ((float)lMtz1)*diskr;
+    140              SetUstToClon(DZ_COMP1,  2, MNGUST_DZ2to5_MX4, lMtz1);//уставка X4MF_DZ2
+    141          //Im4
+    142              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage2Dstp2Pickup.Z_MF_Dstp2_P4_X;
+    143          //    Y4MF_DZ2 = ((float)lMtz1)*diskr;
+    144              SetUstToClon(DZ_COMP1,  2, MNGUST_DZ2to5_MY4, lMtz1);//уставка Y4MF_DZ2
+    145              
+    146          //DZ2MF
+    147              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage2Dstp2StageParam.Dstp2_MF_T;
+    148          
+    149            SetUstToClon(DZ_COMP1,  2, MNGVID_DZ2to5MF, lMtz1Tmr*10);//уставка выдержки DZ2MF
+    150            
+    151          //MTZ DZ2MF
+    152              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage2Dstp2StageParam.Dstp2_Ocp_T;
+    153          
+    154            SetUstToClon(DZ_COMP1,  2, MNGVID_MDZ2to5MF, lMtz1Tmr*10);//уставка выдержки MTZ DZ2MF
+    155          
+    156          //DZ2OF
+    157              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage2Dstp2StageParam.Dstp2_OF_T;
+    158          
+    159            SetUstToClon(DZ_COMP1,  2, MNGVID_DZ2to5OF, lMtz1Tmr*10);//уставка выдержки MTZ DZ2OF
+    160            
+    161          //ускорение  
+    162              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage2Dstp2StageParam.Dstp2_HWS_Tau_Aclt;
+    163          
+    164            SetUstToClon(DZ_COMP1,  2, MNGVUSK_DZ2to5MF, lMtz1Tmr*10);//уставка ввод ускор ДЗ2 МФ
+    165            
+    166              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage2Dstp2StageParam.Dstp2_Ocp_HWS_Tau_Aclt;
+    167          
+    168            SetUstToClon(DZ_COMP1,  2, MNGVUSK_MDZ2to5MF, lMtz1Tmr*10);//уставка ввод ускор MTZ ДЗ2 МФ
+    169          
+    170             //DZ2MF
+    171              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage2Dstp2StageParam.Dstp2_MF_T_aclt;
+    172          
+    173            SetUstToClon(DZ_COMP1,  2, MNGUSK_DZ2to5MF_VV, lMtz1Tmr*10);//уставка ускор ДЗ2 МФ BB
+    174          
+    175              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage2Dstp2StageParam.Dstp2_MF_T_op_aclt;
+    176          
+    177            SetUstToClon(DZ_COMP1,  2, MNGUSK_DZ2to5MF_OU, lMtz1Tmr*10);//уставка ускор ДЗ2 МФ OU
+    178          
+    179              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage2Dstp2StageParam.Dstp2_MF_T_tele_aclt;
+    180          
+    181            SetUstToClon(DZ_COMP1,  2, MNGUSK_DZ2to5MF_TU, lMtz1Tmr*10);//уставка ускор ДЗ2 МФ TU
+    182          
+    183             //MTZ DZ2MF
+    184              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage2Dstp2StageParam.Dstp2_Ocp_T_aclt;
+    185          
+    186            SetUstToClon(DZ_COMP1,  2, MNGUSK_MDZ2to5MF_VV, lMtz1Tmr*10);//уставка ускор MTZ ДЗ2 МФ BB
+    187          
+    188              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage2Dstp2StageParam.Dstp2_Ocp_T_op_aclt;
+    189          
+    190            SetUstToClon(DZ_COMP1,  2, MNGUSK_MDZ2to5MF_OU, lMtz1Tmr*10);//уставка ускор MTZ ДЗ2 МФ OU
+    191          
+    192              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage2Dstp2StageParam.Dstp2_Ocp_T_tele_aclt;
+    193          
+    194            SetUstToClon(DZ_COMP1,  2, MNGUSK_MDZ2to5MF_TU, lMtz1Tmr*10);//уставка ускор MTZ ДЗ2 МФ TU
+    195          
+    196             //DZ2OF
+    197              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage2Dstp2StageParam.Dstp2_OF_T_aclt;
+    198          
+    199            SetUstToClon(DZ_COMP1,  2, MNGUSK_DZ2to5OF_VV, lMtz1Tmr*10);//уставка ускор ДЗ2 OФ BB
+    200          
+    201              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage2Dstp2StageParam.Dstp2_OF_T_op_aclt;
+    202          
+    203            SetUstToClon(DZ_COMP1,  2, MNGUSK_DZ2to5OF_OU, lMtz1Tmr*10);//уставка ускор ДЗ2 OФ OU
+    204          
+    205              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage2Dstp2StageParam.Dstp2_OF_T_tele_aclt;
+    206          
+    207            SetUstToClon(DZ_COMP1,  2, MNGUSK_DZ2to5OF_TU, lMtz1Tmr*10);//уставка ускор ДЗ2 OФ TU
+    208          
+    209            int uprDZ2=0;
+    210            //меню  Состояние DZ2    
+    211          //.	Состояние
+    212          //.	1 -вкл
+    213          //.	0 - выкл
+    214              lSt1 = brCfgTbl.ownrStg2Dstp2Mng.state_dstp2;
+    215            if(lSt1>0) uprDZ2 |= 1; //DZ2 WKL
+    216            else  uprDZ2 &= ~1; //DZ2 OTKL 
+    217            //меню   MTZ DZ2
+    218          //.	Состояние
+    219          //.	1 -вкл
+    220          //.	0 - выкл
+    221              lSt1 = brCfgTbl.ownrStg2Dstp2Mng.state_ocp_dstp2;
+    222            if(lSt1>0) uprDZ2 |= 2; //MTZ DZ2 WKL
+    223            else  uprDZ2 &= ~2; //MTZ DZ2 OTKL 
+    224            //меню   ускор ВВ DZ2
+    225          //.	Состояние
+    226          //.	1 -вкл
+    227          //.	0 - выкл
+    228              lSt1 = brCfgTbl.ownrStg2Dstp2Mng.state_aclt_dstp2_hws;
+    229            if(lSt1>0) uprDZ2 |= 4; //ускор BB DZ2 WKL
+    230            else  uprDZ2 &= ~4; //ускор BB DZ2 OTKL 
+    231            //меню   ускор AU DZ2
+    232          //.	Состояние
+    233          //.	1 -вкл
+    234          //.	0 - выкл
+    235              lSt1 = brCfgTbl.ownrStg2Dstp2Mng.state_Auto_aclt_dstp2;
+    236            if(lSt1>0) uprDZ2 |= 8; //ускор AU DZ2 WKL
+    237            else  uprDZ2 &= ~8; //ускор AU DZ2 OTKL 
+    238            //меню   ускор TU DZ2
+    239          //.	Состояние
+    240          //.	1 -вкл
+    241          //.	0 - выкл
+    242              lSt1 = brCfgTbl.ownrStg2Dstp2Mng.state_Tele_aclt_dstp2;
+    243            if(lSt1>0) uprDZ2 |= 16; //ускор TU DZ2 WKL
+    244            else  uprDZ2 &= ~16; //ускор TU DZ2 OTKL 
+    245            
+    246            SetUstToClon(DZ_COMP1,  2, MNGUPR_DZ2to5, uprDZ2);//управление DZ2
+    247          
+    248          //-----------DZ3------------------------------------  
+    249          //Ток МТЗ ДЗ3МФ
+    250              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage3Dstp2Pickup.Dstp2_Iovp_ov_range;
+    251              SetUstToClon(DZ_COMP1,  3, MNGUST_DZ2to5_MTZ, lMtz1);//уставка MTZ
+    252          //-----------OF
+    253          //Re1
+    254              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage3Dstp2Pickup.Z_OF_Dstp2_P1_R;
+    255          //    X1OF_DZ3 = ((float)lMtz1)*diskr;
+    256              SetUstToClon(DZ_COMP1,  3, MNGUST_DZ2to5_OX1, lMtz1);//уставка X1OF_DZ3
+    257          //Im1
+    258              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage3Dstp2Pickup.Z_OF_Dstp2_P1_X;
+    259          //    Y1OF_DZ3 = ((float)lMtz1)*diskr;
+    260              SetUstToClon(DZ_COMP1,  3, MNGUST_DZ2to5_OY1, lMtz1);//уставка Y1OF_DZ3
+    261          
+    262          //Re2
+    263              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage3Dstp2Pickup.Z_OF_Dstp2_P2_R;
+    264          //    X2OF_DZ3 = ((float)lMtz1)*diskr;
+    265              SetUstToClon(DZ_COMP1,  3, MNGUST_DZ2to5_OX2, lMtz1);//уставка X2OF_DZ3
+    266          //Im2
+    267              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage3Dstp2Pickup.Z_OF_Dstp2_P2_X;
+    268          //    Y2OF_DZ3 = ((float)lMtz1)*diskr;
+    269              SetUstToClon(DZ_COMP1,  3, MNGUST_DZ2to5_OY2, lMtz1);//уставка Y2OF_DZ3
+    270          
+    271          //Re3
+    272              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage3Dstp2Pickup.Z_OF_Dstp2_P3_R;
+    273          //    X3OF_DZ3 = ((float)lMtz1)*diskr;
+    274              SetUstToClon(DZ_COMP1,  3, MNGUST_DZ2to5_OX3, lMtz1);//уставка X3OF_DZ3
+    275          //Im3
+    276              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage3Dstp2Pickup.Z_OF_Dstp2_P3_X;
+    277          //    Y3OF_DZ3 = ((float)lMtz1)*diskr;
+    278              SetUstToClon(DZ_COMP1,  3, MNGUST_DZ2to5_OY3, lMtz1);//уставка Y3OF_DZ3
+    279          
+    280          //Re4
+    281              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage3Dstp2Pickup.Z_OF_Dstp2_P4_R;
+    282          //    X4OF_DZ3 = ((float)lMtz1)*diskr;
+    283              SetUstToClon(DZ_COMP1,  3, MNGUST_DZ2to5_OX4, lMtz1);//уставка X4OF_DZ3
+    284          //Im4
+    285              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage3Dstp2Pickup.Z_OF_Dstp2_P4_X;
+    286          //    Y4OF_DZ3 = ((float)lMtz1)*diskr;
+    287              SetUstToClon(DZ_COMP1,  3, MNGUST_DZ2to5_OY4, lMtz1);//уставка Y4OF_DZ3
+    288          
+    289              //-----------MF
+    290          //Re1
+    291              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage3Dstp2Pickup.Z_MF_Dstp2_P1_R;
+    292          //    X1MF_DZ3 = ((float)lMtz1)*diskr;
+    293              SetUstToClon(DZ_COMP1,  3, MNGUST_DZ2to5_MX1, lMtz1);//уставка X1MF_DZ3
+    294          //Im1
+    295              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage3Dstp2Pickup.Z_MF_Dstp2_P1_X;
+    296          //    Y1MF_DZ3 = ((float)lMtz1)*diskr;
+    297              SetUstToClon(DZ_COMP1,  3, MNGUST_DZ2to5_MY1, lMtz1);//уставка Y1MF_DZ3
+    298          
+    299          //Re2
+    300              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage3Dstp2Pickup.Z_MF_Dstp2_P2_R;
+    301          //    X2MF_DZ3 = ((float)lMtz1)*diskr;
+    302              SetUstToClon(DZ_COMP1,  3, MNGUST_DZ2to5_MX2, lMtz1);//уставка X2MF_DZ3
+    303          //Im2
+    304              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage3Dstp2Pickup.Z_MF_Dstp2_P2_X;
+    305          //    Y2MF_DZ3 = ((float)lMtz1)*diskr;
+    306              SetUstToClon(DZ_COMP1,  3, MNGUST_DZ2to5_MY2, lMtz1);//уставка Y2MF_DZ3
+    307          
+    308          //Re3
+    309              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage3Dstp2Pickup.Z_MF_Dstp2_P3_R;
+    310          //    X3MF_DZ3 = ((float)lMtz1)*diskr;
+    311              SetUstToClon(DZ_COMP1,  3, MNGUST_DZ2to5_MX3, lMtz1);//уставка X3MF_DZ3
+    312          //Im3
+    313              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage3Dstp2Pickup.Z_MF_Dstp2_P3_X;
+    314          //    Y3MF_DZ3 = ((float)lMtz1)*diskr;
+    315              SetUstToClon(DZ_COMP1,  3, MNGUST_DZ2to5_MY3, lMtz1);//уставка Y3MF_DZ3
+    316          
+    317          //Re4
+    318              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage3Dstp2Pickup.Z_MF_Dstp2_P4_R;
+    319          //    X4MF_DZ3 = ((float)lMtz1)*diskr;
+    320              SetUstToClon(DZ_COMP1,  3, MNGUST_DZ2to5_MX4, lMtz1);//уставка X4MF_DZ3
+    321          //Im4
+    322              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage3Dstp2Pickup.Z_MF_Dstp2_P4_X;
+    323          //    Y4MF_DZ3 = ((float)lMtz1)*diskr;
+    324              SetUstToClon(DZ_COMP1,  3, MNGUST_DZ2to5_MY4, lMtz1);//уставка Y4MF_DZ3
+    325          
+    326          //DZ3MF
+    327              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage3Dstp2StageParam.Dstp2_MF_T;
+    328          
+    329            SetUstToClon(DZ_COMP1,  3, MNGVID_DZ2to5MF, lMtz1Tmr*10);//уставка выдержки DZ3MF
+    330            
+    331          //MTZ DZ3MF
+    332              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage3Dstp2StageParam.Dstp2_Ocp_T;
+    333          
+    334            SetUstToClon(DZ_COMP1,  3, MNGVID_MDZ2to5MF, lMtz1Tmr*10);//уставка выдержки MTZ DZ3MF
+    335          
+    336          //DZ3OF
+    337              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage3Dstp2StageParam.Dstp2_OF_T;
+    338          
+    339            SetUstToClon(DZ_COMP1,  3, MNGVID_DZ2to5OF, lMtz1Tmr*10);//уставка выдержки MTZ DZ3OF
+    340            
+    341          //ускорение  
+    342              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage3Dstp2StageParam.Dstp2_HWS_Tau_Aclt;
+    343          
+    344            SetUstToClon(DZ_COMP1,  3, MNGVUSK_DZ2to5MF, lMtz1Tmr*10);//уставка ввод ускор ДЗ3 МФ
+    345            
+    346              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage3Dstp2StageParam.Dstp2_Ocp_HWS_Tau_Aclt;
+    347          
+    348            SetUstToClon(DZ_COMP1,  3, MNGVUSK_MDZ2to5MF, lMtz1Tmr*10);//уставка ввод ускор MTZ ДЗ3 МФ
+    349          
+    350             //DZ3MF
+    351              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage3Dstp2StageParam.Dstp2_MF_T_aclt;
+    352          
+    353            SetUstToClon(DZ_COMP1,  3, MNGUSK_DZ2to5MF_VV, lMtz1Tmr*10);//уставка ускор ДЗ3 МФ BB
+    354          
+    355              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage3Dstp2StageParam.Dstp2_MF_T_op_aclt;
+    356          
+    357            SetUstToClon(DZ_COMP1,  3, MNGUSK_DZ2to5MF_OU, lMtz1Tmr*10);//уставка ускор ДЗ3 МФ OU
+    358          
+    359              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage3Dstp2StageParam.Dstp2_MF_T_tele_aclt;
+    360          
+    361            SetUstToClon(DZ_COMP1,  3, MNGUSK_DZ2to5MF_TU, lMtz1Tmr*10);//уставка ускор ДЗ3 МФ TU
+    362          
+    363             //MTZ DZ3MF
+    364              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage3Dstp2StageParam.Dstp2_Ocp_T_aclt;
+    365          
+    366            SetUstToClon(DZ_COMP1,  3, MNGUSK_MDZ2to5MF_VV, lMtz1Tmr*10);//уставка ускор MTZ ДЗ3 МФ BB
+    367          
+    368              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage3Dstp2StageParam.Dstp2_Ocp_T_op_aclt;
+    369          
+    370            SetUstToClon(DZ_COMP1,  3, MNGUSK_MDZ2to5MF_OU, lMtz1Tmr*10);//уставка ускор MTZ ДЗ3 МФ OU
+    371          
+    372              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage3Dstp2StageParam.Dstp2_Ocp_T_tele_aclt;
+    373          
+    374            SetUstToClon(DZ_COMP1,  3, MNGUSK_MDZ2to5MF_TU, lMtz1Tmr*10);//уставка ускор MTZ ДЗ3 МФ TU
+    375          
+    376             //DZ3OF
+    377              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage3Dstp2StageParam.Dstp2_OF_T_aclt;
+    378          
+    379            SetUstToClon(DZ_COMP1,  3, MNGUSK_DZ2to5OF_VV, lMtz1Tmr*10);//уставка ускор ДЗ3 OФ BB
+    380          
+    381              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage3Dstp2StageParam.Dstp2_OF_T_op_aclt;
+    382          
+    383            SetUstToClon(DZ_COMP1,  3, MNGUSK_DZ2to5OF_OU, lMtz1Tmr*10);//уставка ускор ДЗ3 OФ OU
+    384          
+    385              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage3Dstp2StageParam.Dstp2_OF_T_tele_aclt;
+    386          
+    387            SetUstToClon(DZ_COMP1,  3, MNGUSK_DZ2to5OF_TU, lMtz1Tmr*10);//уставка ускор ДЗ3 OФ TU
+    388          
+    389            int uprDZ3=0;
+    390            //меню  Состояние DZ3
+    391          //.	Состояние
+    392          //.	1 -вкл
+    393          //.	0 - выкл
+    394              lSt1 = brCfgTbl.ownrStg3Dstp2Mng.state_dstp2;
+    395            if(lSt1>0) uprDZ3 |= 1; //DZ3 WKL
+    396            else  uprDZ3 &= ~1; //DZ3 OTKL 
+    397            //меню   MTZ DZ3
+    398          //.	Состояние
+    399          //.	1 -вкл
+    400          //.	0 - выкл
+    401              lSt1 = brCfgTbl.ownrStg3Dstp2Mng.state_ocp_dstp2;
+    402            if(lSt1>0) uprDZ3 |= 2; //MTZ DZ3 WKL
+    403            else  uprDZ3 &= ~2; //MTZ DZ3 OTKL 
+    404            //меню   ускор ВВ DZ3
+    405          //.	Состояние
+    406          //.	1 -вкл
+    407          //.	0 - выкл
+    408              lSt1 = brCfgTbl.ownrStg3Dstp2Mng.state_aclt_dstp2_hws;
+    409            if(lSt1>0) uprDZ3 |= 4; //ускор BB DZ3 WKL
+    410            else  uprDZ3 &= ~4; //ускор BB DZ3 OTKL 
+    411            //меню   ускор AU DZ3
+    412          //.	Состояние
+    413          //.	1 -вкл
+    414          //.	0 - выкл
+    415              lSt1 = brCfgTbl.ownrStg3Dstp2Mng.state_Auto_aclt_dstp2;
+    416            if(lSt1>0) uprDZ3 |= 8; //ускор AU DZ3 WKL
+    417            else  uprDZ3 &= ~8; //ускор AU DZ3 OTKL 
+    418            //меню   ускор TU DZ3
+    419          //.	Состояние
+    420          //.	1 -вкл
+    421          //.	0 - выкл
+    422              lSt1 = brCfgTbl.ownrStg3Dstp2Mng.state_Tele_aclt_dstp2;
+    423            if(lSt1>0) uprDZ3 |= 16; //ускор TU DZ3 WKL
+    424            else  uprDZ3 &= ~16; //ускор TU DZ3 OTKL 
+    425            
+    426            SetUstToClon(DZ_COMP1,  3, MNGUPR_DZ2to5, uprDZ3);//управление DZ3
+    427          //  int ttttttt3 = getNativUstMngUSTAVKI(8, 31);//fsetUpr);
+    428              int  global_enaDZ3 = PrepareENACmd(8, 31);//MNGUPR_DZ2to5);
+    429          
+    430          //-----------DZ4------------------------------------  
+    431          //Ток МТЗ ДЗ4МФ
+    432              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage4Dstp2Pickup.Dstp2_Iovp_ov_range;
+    433              SetUstToClon(DZ_COMP1,  4, MNGUST_DZ2to5_MTZ, lMtz1);//уставка MTZ
+    434          //-----------OF
+    435          //Re1
+    436              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage4Dstp2Pickup.Z_OF_Dstp2_P1_R;
+    437          //    X1OF_DZ4 = ((float)lMtz1)*diskr;
+    438              SetUstToClon(DZ_COMP1,  4, MNGUST_DZ2to5_OX1, lMtz1);//уставка X1OF_DZ4
+    439          //Im1
+    440              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage4Dstp2Pickup.Z_OF_Dstp2_P1_X;
+    441          //    Y1OF_DZ4 = ((float)lMtz1)*diskr;
+    442              SetUstToClon(DZ_COMP1,  4, MNGUST_DZ2to5_OY1, lMtz1);//уставка Y1OF_DZ4
+    443          
+    444          //Re2
+    445              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage4Dstp2Pickup.Z_OF_Dstp2_P2_R;
+    446          //    X2OF_DZ4 = ((float)lMtz1)*diskr;
+    447              SetUstToClon(DZ_COMP1,  4, MNGUST_DZ2to5_OX2, lMtz1);//уставка X2OF_DZ4
+    448          //Im2
+    449              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage4Dstp2Pickup.Z_OF_Dstp2_P2_X;
+    450          //    Y2OF_DZ4 = ((float)lMtz1)*diskr;
+    451              SetUstToClon(DZ_COMP1,  4, MNGUST_DZ2to5_OY2, lMtz1);//уставка Y2OF_DZ4
+    452          
+    453          //Re3
+    454              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage4Dstp2Pickup.Z_OF_Dstp2_P3_R;
+    455          //    X3OF_DZ4 = ((float)lMtz1)*diskr;
+    456              SetUstToClon(DZ_COMP1,  4, MNGUST_DZ2to5_OX3, lMtz1);//уставка X3OF_DZ4
+    457          //Im3
+    458              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage4Dstp2Pickup.Z_OF_Dstp2_P3_X;
+    459          //    Y3OF_DZ4 = ((float)lMtz1)*diskr;
+    460              SetUstToClon(DZ_COMP1,  4, MNGUST_DZ2to5_OY3, lMtz1);//уставка Y3OF_DZ4
+    461          
+    462          //Re4
+    463              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage4Dstp2Pickup.Z_OF_Dstp2_P4_R;
+    464          //    X4OF_DZ4 = ((float)lMtz1)*diskr;
+    465              SetUstToClon(DZ_COMP1,  4, MNGUST_DZ2to5_OX4, lMtz1);//уставка X4OF_DZ4
+    466          //Im4
+    467              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage4Dstp2Pickup.Z_OF_Dstp2_P4_X;
+    468          //    Y4OF_DZ4 = ((float)lMtz1)*diskr;
+    469              SetUstToClon(DZ_COMP1,  4, MNGUST_DZ2to5_OY4, lMtz1);//уставка Y4OF_DZ4
+    470          
+    471          //-----------MF
+    472          //Re1
+    473              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage4Dstp2Pickup.Z_MF_Dstp2_P1_R;
+    474          //    X1MF_DZ4 = ((float)lMtz1)*diskr;
+    475              SetUstToClon(DZ_COMP1,  4, MNGUST_DZ2to5_MX1, lMtz1);//уставка X1MF_DZ4
+    476          //Im1
+    477              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage4Dstp2Pickup.Z_MF_Dstp2_P1_X;
+    478          //    Y1MF_DZ4 = ((float)lMtz1)*diskr;
+    479              SetUstToClon(DZ_COMP1,  4, MNGUST_DZ2to5_MY1, lMtz1);//уставка Y1MF_DZ4
+    480          
+    481          //Re2
+    482              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage4Dstp2Pickup.Z_MF_Dstp2_P2_R;
+    483          //    X2MF_DZ4 = ((float)lMtz1)*diskr;
+    484              SetUstToClon(DZ_COMP1,  4, MNGUST_DZ2to5_MX2, lMtz1);//уставка X2MF_DZ4
+    485          //Im2
+    486              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage4Dstp2Pickup.Z_MF_Dstp2_P2_X;
+    487          //    Y2MF_DZ4 = ((float)lMtz1)*diskr;
+    488              SetUstToClon(DZ_COMP1,  4, MNGUST_DZ2to5_MY2, lMtz1);//уставка Y2MF_DZ4
+    489          
+    490          //Re3
+    491              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage4Dstp2Pickup.Z_MF_Dstp2_P3_R;
+    492          //    X3MF_DZ4 = ((float)lMtz1)*diskr;
+    493              SetUstToClon(DZ_COMP1,  4, MNGUST_DZ2to5_MX3, lMtz1);//уставка X3MF_DZ4
+    494          //Im3
+    495              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage4Dstp2Pickup.Z_MF_Dstp2_P3_X;
+    496          //    Y3MF_DZ4 = ((float)lMtz1)*diskr;
+    497              SetUstToClon(DZ_COMP1,  4, MNGUST_DZ2to5_MY3, lMtz1);//уставка Y3MF_DZ4
+    498          
+    499          //Re4
+    500              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage4Dstp2Pickup.Z_MF_Dstp2_P4_R;
+    501          //    X4MF_DZ4 = ((float)lMtz1)*diskr;
+    502              SetUstToClon(DZ_COMP1,  4, MNGUST_DZ2to5_MX4, lMtz1);//уставка X4MF_DZ4
+    503          //Im4
+    504              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage4Dstp2Pickup.Z_MF_Dstp2_P4_X;
+    505          //    Y4MF_DZ4 = ((float)lMtz1)*diskr;
+    506              SetUstToClon(DZ_COMP1,  4, MNGUST_DZ2to5_MY4, lMtz1);//уставка Y4MF_DZ4
+    507              
+    508          //DZ4MF
+    509              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage4Dstp2StageParam.Dstp2_MF_T;
+    510          
+    511            SetUstToClon(DZ_COMP1,  4, MNGVID_DZ2to5MF, lMtz1Tmr*10);//уставка выдержки DZ4MF
+    512            
+    513          //MTZ DZ4MF
+    514              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage4Dstp2StageParam.Dstp2_Ocp_T;
+    515          
+    516            SetUstToClon(DZ_COMP1,  4, MNGVID_MDZ2to5MF, lMtz1Tmr*10);//уставка выдержки MTZ DZ4MF
+    517          
+    518          //DZ4OF
+    519              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage4Dstp2StageParam.Dstp2_OF_T;
+    520          
+    521            SetUstToClon(DZ_COMP1,  4, MNGVID_DZ2to5OF, lMtz1Tmr*10);//уставка выдержки MTZ DZ4OF
+    522            
+    523          //ускорение  
+    524              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage4Dstp2StageParam.Dstp2_HWS_Tau_Aclt;
+    525          
+    526            SetUstToClon(DZ_COMP1,  4, MNGVUSK_DZ2to5MF, lMtz1Tmr*10);//уставка ввод ускор ДЗ4 МФ
+    527            
+    528              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage4Dstp2StageParam.Dstp2_Ocp_HWS_Tau_Aclt;
+    529          
+    530            SetUstToClon(DZ_COMP1,  4, MNGVUSK_MDZ2to5MF, lMtz1Tmr*10);//уставка ввод ускор MTZ ДЗ4 МФ
+    531          
+    532             //DZ4MF
+    533              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage4Dstp2StageParam.Dstp2_MF_T_aclt;
+    534          
+    535            SetUstToClon(DZ_COMP1,  4, MNGUSK_DZ2to5MF_VV, lMtz1Tmr*10);//уставка ускор ДЗ4 МФ BB
+    536          
+    537              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage4Dstp2StageParam.Dstp2_MF_T_op_aclt;
+    538          
+    539            SetUstToClon(DZ_COMP1,  4, MNGUSK_DZ2to5MF_OU, lMtz1Tmr*10);//уставка ускор ДЗ4 МФ OU
+    540          
+    541              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage4Dstp2StageParam.Dstp2_MF_T_tele_aclt;
+    542          
+    543            SetUstToClon(DZ_COMP1,  4, MNGUSK_DZ2to5MF_TU, lMtz1Tmr*10);//уставка ускор ДЗ4 МФ TU
+    544          
+    545             //MTZ DZ4MF
+    546              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage4Dstp2StageParam.Dstp2_Ocp_T_aclt;
+    547          
+    548            SetUstToClon(DZ_COMP1,  4, MNGUSK_MDZ2to5MF_VV, lMtz1Tmr*10);//уставка ускор MTZ ДЗ4 МФ BB
+    549          
+    550              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage4Dstp2StageParam.Dstp2_Ocp_T_op_aclt;
+    551          
+    552            SetUstToClon(DZ_COMP1,  4, MNGUSK_MDZ2to5MF_OU, lMtz1Tmr*10);//уставка ускор MTZ ДЗ4 МФ OU
+    553          
+    554              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage4Dstp2StageParam.Dstp2_Ocp_T_tele_aclt;
+    555          
+    556            SetUstToClon(DZ_COMP1,  4, MNGUSK_MDZ2to5MF_TU, lMtz1Tmr*10);//уставка ускор MTZ ДЗ4 МФ TU
+    557          
+    558             //DZ4OF
+    559              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage4Dstp2StageParam.Dstp2_OF_T_aclt;
+    560          
+    561            SetUstToClon(DZ_COMP1,  4, MNGUSK_DZ2to5OF_VV, lMtz1Tmr*10);//уставка ускор ДЗ4 OФ BB
+    562          
+    563              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage4Dstp2StageParam.Dstp2_OF_T_op_aclt;
+    564          
+    565            SetUstToClon(DZ_COMP1,  4, MNGUSK_DZ2to5OF_OU, lMtz1Tmr*10);//уставка ускор ДЗ4 OФ OU
+    566          
+    567              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage4Dstp2StageParam.Dstp2_OF_T_tele_aclt;
+    568          
+    569            SetUstToClon(DZ_COMP1,  4, MNGUSK_DZ2to5OF_TU, lMtz1Tmr*10);//уставка ускор ДЗ4 OФ TU
+    570          
+    571            int uprDZ4=0;
+    572            //меню  Состояние DZ4
+    573          //.	Состояние
+    574          //.	1 -вкл
+    575          //.	0 - выкл
+    576              lSt1 = brCfgTbl.ownrStg4Dstp2Mng.state_dstp2;
+    577            if(lSt1>0) uprDZ4 |= 1; //DZ4 WKL
+    578            else  uprDZ4 &= ~1; //DZ4 OTKL 
+    579            //меню   MTZ DZ4
+    580          //.	Состояние
+    581          //.	1 -вкл
+    582          //.	0 - выкл
+    583              lSt1 = brCfgTbl.ownrStg4Dstp2Mng.state_ocp_dstp2;
+    584            if(lSt1>0) uprDZ4 |= 2; //MTZ DZ4 WKL
+    585            else  uprDZ4 &= ~2; //MTZ DZ4 OTKL 
+    586            //меню   ускор ВВ DZ4
+    587          //.	Состояние
+    588          //.	1 -вкл
+    589          //.	0 - выкл
+    590              lSt1 = brCfgTbl.ownrStg4Dstp2Mng.state_aclt_dstp2_hws;
+    591            if(lSt1>0) uprDZ4 |= 4; //ускор BB DZ4 WKL
+    592            else  uprDZ4 &= ~4; //ускор BB DZ4 OTKL 
+    593            //меню   ускор AU DZ4
+    594          //.	Состояние
+    595          //.	1 -вкл
+    596          //.	0 - выкл
+    597              lSt1 = brCfgTbl.ownrStg4Dstp2Mng.state_Auto_aclt_dstp2;
+    598            if(lSt1>0) uprDZ4 |= 8; //ускор AU DZ4 WKL
+    599            else  uprDZ4 &= ~8; //ускор AU DZ4 OTKL 
+    600            //меню   ускор TU DZ4
+    601          //.	Состояние
+    602          //.	1 -вкл
+    603          //.	0 - выкл
+    604              lSt1 = brCfgTbl.ownrStg4Dstp2Mng.state_Tele_aclt_dstp2;
+    605            if(lSt1>0) uprDZ4 |= 16; //ускор TU DZ4 WKL
+    606            else  uprDZ4 &= ~16; //ускор TU DZ4 OTKL 
+    607            
+    608            SetUstToClon(DZ_COMP1,  4, MNGUPR_DZ2to5, uprDZ4);//управление DZ4
+    609            
+    610          //-----------DZ5------------------------------------  
+    611          //Ток МТЗ ДЗ5МФ
+    612              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage5Dstp2Pickup.Dstp2_Iovp_ov_range;
+    613              SetUstToClon(DZ_COMP1,  5, MNGUST_DZ2to5_MTZ, lMtz1);//уставка MTZ
+    614          //-----------OF
+    615          //Re1
+    616              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage5Dstp2Pickup.Z_OF_Dstp2_P1_R;
+    617          //    X1OF_DZ5 = ((float)lMtz1)*diskr;
+    618              SetUstToClon(DZ_COMP1,  5, MNGUST_DZ2to5_OX1, lMtz1);//уставка X1OF_DZ5
+    619          //Im1
+    620              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage5Dstp2Pickup.Z_OF_Dstp2_P1_X;
+    621          //    Y1OF_DZ5 = ((float)lMtz1)*diskr;
+    622              SetUstToClon(DZ_COMP1,  5, MNGUST_DZ2to5_OY1, lMtz1);//уставка Y1OF_DZ5
+    623          
+    624          //Re2
+    625              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage5Dstp2Pickup.Z_OF_Dstp2_P2_R;
+    626          //    X2OF_DZ5 = ((float)lMtz1)*diskr;
+    627              SetUstToClon(DZ_COMP1,  5, MNGUST_DZ2to5_OX2, lMtz1);//уставка X2OF_DZ5
+    628          //Im2
+    629              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage5Dstp2Pickup.Z_OF_Dstp2_P2_X;
+    630          //    Y2OF_DZ5 = ((float)lMtz1)*diskr;
+    631              SetUstToClon(DZ_COMP1,  5, MNGUST_DZ2to5_OY2, lMtz1);//уставка Y2OF_DZ5
+    632          
+    633          //Re3
+    634              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage5Dstp2Pickup.Z_OF_Dstp2_P3_R;
+    635          //    X3OF_DZ5 = ((float)lMtz1)*diskr;
+    636              SetUstToClon(DZ_COMP1,  5, MNGUST_DZ2to5_OX3, lMtz1);//уставка X3OF_DZ5
+    637          //Im3
+    638              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage5Dstp2Pickup.Z_OF_Dstp2_P3_X;
+    639          //    Y3OF_DZ5 = ((float)lMtz1)*diskr;
+    640              SetUstToClon(DZ_COMP1,  5, MNGUST_DZ2to5_OY3, lMtz1);//уставка Y3OF_DZ5
+    641          
+    642          //Re4
+    643              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage5Dstp2Pickup.Z_OF_Dstp2_P4_R;
+    644          //    X4OF_DZ5 = ((float)lMtz1)*diskr;
+    645              SetUstToClon(DZ_COMP1,  5, MNGUST_DZ2to5_OX4, lMtz1);//уставка X4OF_DZ5
+    646          //Im4
+    647              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage5Dstp2Pickup.Z_OF_Dstp2_P4_X;
+    648          //    Y4OF_DZ5 = ((float)lMtz1)*diskr;
+    649              SetUstToClon(DZ_COMP1,  5, MNGUST_DZ2to5_OY4, lMtz1);//уставка Y4OF_DZ5
+    650          
+    651              //-----------MF
+    652          //Re1
+    653              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage5Dstp2Pickup.Z_MF_Dstp2_P1_R;
+    654          //    X1MF_DZ5 = ((float)lMtz1)*diskr;
+    655              SetUstToClon(DZ_COMP1,  5, MNGUST_DZ2to5_MX1, lMtz1);//уставка X1MF_DZ5
+    656          //Im1
+    657              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage5Dstp2Pickup.Z_MF_Dstp2_P1_X;
+    658          //    Y1MF_DZ5 = ((float)lMtz1)*diskr;
+    659              SetUstToClon(DZ_COMP1,  5, MNGUST_DZ2to5_MY1, lMtz1);//уставка Y1MF_DZ5
+    660          
+    661          //Re2
+    662              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage5Dstp2Pickup.Z_MF_Dstp2_P2_R;
+    663          //    X2MF_DZ5 = ((float)lMtz1)*diskr;
+    664              SetUstToClon(DZ_COMP1,  5, MNGUST_DZ2to5_MX2, lMtz1);//уставка X2MF_DZ5
+    665          //Im2
+    666              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage5Dstp2Pickup.Z_MF_Dstp2_P2_X;
+    667          //    Y2MF_DZ5 = ((float)lMtz1)*diskr;
+    668              SetUstToClon(DZ_COMP1,  5, MNGUST_DZ2to5_MY2, lMtz1);//уставка Y2MF_DZ5
+    669          
+    670          //Re3
+    671              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage5Dstp2Pickup.Z_MF_Dstp2_P3_R;
+    672          //    X3MF_DZ5 = ((float)lMtz1)*diskr;
+    673              SetUstToClon(DZ_COMP1,  5, MNGUST_DZ2to5_MX3, lMtz1);//уставка X3MF_DZ5
+    674          //Im3
+    675              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage5Dstp2Pickup.Z_MF_Dstp2_P3_X;
+    676          //    Y3MF_DZ5 = ((float)lMtz1)*diskr;
+    677              SetUstToClon(DZ_COMP1,  5, MNGUST_DZ2to5_MY3, lMtz1);//уставка Y3MF_DZ5
+    678          
+    679          //Re4
+    680              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage5Dstp2Pickup.Z_MF_Dstp2_P4_R;
+    681          //    X4MF_DZ5 = ((float)lMtz1)*diskr;
+    682              SetUstToClon(DZ_COMP1,  5, MNGUST_DZ2to5_MX4, lMtz1);//уставка X4MF_DZ5
+    683          //Im4
+    684              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage5Dstp2Pickup.Z_MF_Dstp2_P4_X;
+    685          //    Y4MF_DZ5 = ((float)lMtz1)*diskr;
+    686              SetUstToClon(DZ_COMP1,  5, MNGUST_DZ2to5_MY4, lMtz1);//уставка Y4MF_DZ5
+    687          
+    688          //DZ5MF
+    689              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage5Dstp2StageParam.Dstp2_MF_T;
+    690          
+    691            SetUstToClon(DZ_COMP1,  5, MNGVID_DZ2to5MF, lMtz1Tmr*10);//уставка выдержки DZ5MF
+    692            
+    693          //MTZ DZ5MF
+    694              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage5Dstp2StageParam.Dstp2_Ocp_T;
+    695          
+    696            SetUstToClon(DZ_COMP1,  5, MNGVID_MDZ2to5MF, lMtz1Tmr*10);//уставка выдержки MTZ DZ5MF
+    697          
+    698          //DZ5OF
+    699              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage5Dstp2StageParam.Dstp2_OF_T;
+    700          
+    701            SetUstToClon(DZ_COMP1,  5, MNGVID_DZ2to5OF, lMtz1Tmr*10);//уставка выдержки MTZ DZ5OF
+    702            
+    703          //ускорение  
+    704              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage5Dstp2StageParam.Dstp2_HWS_Tau_Aclt;
+    705          
+    706            SetUstToClon(DZ_COMP1,  5, MNGVUSK_DZ2to5MF, lMtz1Tmr*10);//уставка ввод ускор ДЗ5 МФ
+    707            
+    708              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage5Dstp2StageParam.Dstp2_Ocp_HWS_Tau_Aclt;
+    709          
+    710            SetUstToClon(DZ_COMP1,  5, MNGVUSK_MDZ2to5MF, lMtz1Tmr*10);//уставка ввод ускор MTZ ДЗ5 МФ
+    711          
+    712             //DZ5MF
+    713              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage5Dstp2StageParam.Dstp2_MF_T_aclt;
+    714          
+    715            SetUstToClon(DZ_COMP1,  5, MNGUSK_DZ2to5MF_VV, lMtz1Tmr*10);//уставка ускор ДЗ5 МФ BB
+    716          
+    717              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage5Dstp2StageParam.Dstp2_MF_T_op_aclt;
+    718          
+    719            SetUstToClon(DZ_COMP1,  5, MNGUSK_DZ2to5MF_OU, lMtz1Tmr*10);//уставка ускор ДЗ5 МФ OU
+    720          
+    721              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage5Dstp2StageParam.Dstp2_MF_T_tele_aclt;
+    722          
+    723            SetUstToClon(DZ_COMP1,  5, MNGUSK_DZ2to5MF_TU, lMtz1Tmr*10);//уставка ускор ДЗ5 МФ TU
+    724          
+    725             //MTZ DZ5MF
+    726              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage5Dstp2StageParam.Dstp2_Ocp_T_aclt;
+    727          
+    728            SetUstToClon(DZ_COMP1,  5, MNGUSK_MDZ2to5MF_VV, lMtz1Tmr*10);//уставка ускор MTZ ДЗ5 МФ BB
+    729          
+    730              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage5Dstp2StageParam.Dstp2_Ocp_T_op_aclt;
+    731          
+    732            SetUstToClon(DZ_COMP1,  5, MNGUSK_MDZ2to5MF_OU, lMtz1Tmr*10);//уставка ускор MTZ ДЗ5 МФ OU
+    733          
+    734              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage5Dstp2StageParam.Dstp2_Ocp_T_tele_aclt;
+    735          
+    736            SetUstToClon(DZ_COMP1,  5, MNGUSK_MDZ2to5MF_TU, lMtz1Tmr*10);//уставка ускор MTZ ДЗ5 МФ TU
+    737          
+    738             //DZ5OF
+    739              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage5Dstp2StageParam.Dstp2_OF_T_aclt;
+    740          
+    741            SetUstToClon(DZ_COMP1,  5, MNGUSK_DZ2to5OF_VV, lMtz1Tmr*10);//уставка ускор ДЗ5 OФ BB
+    742          
+    743              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage5Dstp2StageParam.Dstp2_OF_T_op_aclt;
+    744          
+    745            SetUstToClon(DZ_COMP1,  5, MNGUSK_DZ2to5OF_OU, lMtz1Tmr*10);//уставка ускор ДЗ5 OФ OU
+    746          
+    747              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage5Dstp2StageParam.Dstp2_OF_T_tele_aclt;
+    748          
+    749            SetUstToClon(DZ_COMP1,  5, MNGUSK_DZ2to5OF_TU, lMtz1Tmr*10);//уставка ускор ДЗ5 OФ TU
+    750          
+    751            int uprDZ5=0;
+    752            //меню  Состояние DZ5
+    753          //.	Состояние
+    754          //.	1 -вкл
+    755          //.	0 - выкл
+    756              lSt1 = brCfgTbl.ownrStg5Dstp2Mng.state_dstp2;
+    757            if(lSt1>0) uprDZ5 |= 1; //DZ5 WKL
+    758            else  uprDZ5 &= ~1; //DZ5 OTKL 
+    759            //меню   MTZ DZ5
+    760          //.	Состояние
+    761          //.	1 -вкл
+    762          //.	0 - выкл
+    763              lSt1 = brCfgTbl.ownrStg5Dstp2Mng.state_ocp_dstp2;
+    764            if(lSt1>0) uprDZ5 |= 2; //MTZ DZ5 WKL
+    765            else  uprDZ5 &= ~2; //MTZ DZ5 OTKL 
+    766            //меню   ускор ВВ DZ5
+    767          //.	Состояние
+    768          //.	1 -вкл
+    769          //.	0 - выкл
+    770              lSt1 = brCfgTbl.ownrStg5Dstp2Mng.state_aclt_dstp2_hws;
+    771            if(lSt1>0) uprDZ5 |= 4; //ускор BB DZ5 WKL
+    772            else  uprDZ5 &= ~4; //ускор BB DZ5 OTKL 
+    773            //меню   ускор AU DZ5
+    774          //.	Состояние
+    775          //.	1 -вкл
+    776          //.	0 - выкл
+    777              lSt1 = brCfgTbl.ownrStg5Dstp2Mng.state_Auto_aclt_dstp2;
+    778            if(lSt1>0) uprDZ5 |= 8; //ускор AU DZ5 WKL
+    779            else  uprDZ5 &= ~8; //ускор AU DZ5 OTKL 
+    780            //меню   ускор TU DZ5
+    781          //.	Состояние
+    782          //.	1 -вкл
+    783          //.	0 - выкл
+    784              lSt1 = brCfgTbl.ownrStg5Dstp2Mng.state_Tele_aclt_dstp2;
+    785            if(lSt1>0) uprDZ5 |= 16; //ускор TU DZ5 WKL
+    786            else  uprDZ5 &= ~16; //ускор TU DZ5 OTKL 
+    787            
+    788            SetUstToClon(DZ_COMP1,  5, MNGUPR_DZ2to5, uprDZ5);//управление DZ5
+    789          //*/  
+    790          }//SettingIci_DZ2to5()
+    791          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      24   SettingIci_DZ2to5
+        24   -> PrepareENACmd
+        24   -> SetUstToClon
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+    6944  SettingIci_DZ2to5
+
+ 
+ 6 944 bytes in section .text
+ 
+ 6 944 bytes of CODE memory
+
+Errors: none
+Warnings: none

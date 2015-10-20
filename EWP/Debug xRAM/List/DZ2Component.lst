@@ -1,0 +1,1450 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  17:17:30
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\component\DZ2Component.c
+#    Command line =  
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\component\DZ2Component.c" -lcN
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\" -o "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "D:\Program Files\IAR Systems\Embedded
+#        Workbench 7.2\arm\INC\c\DLib_Config_Normal.h" -I "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\" --interwork
+#        --cpu_mode arm -On --use_c++_inline
+#    List file    =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\DZ2Component.lst
+#    Object file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\DZ2Component.o
+#
+###############################################################################
+
+D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\component\DZ2Component.c
+      1          #ifndef _HIDE_COMPONENT
+      2          /*
+      3          #include <vcl.h>
+      4          #include <strstrea.h>
+      5          #include <math.h>
+      6          #include <mem.h>
+      7          #include <fstream.h>
+      8          #include <strstrea.h>
+      9          #include <iomanip.h>
+     10          #pragma hdrstop
+     11          
+     12          #include "vmenuDis.h"
+     13          */
+     14          
+     15          #include <stdio.h>
+     16          #include <string.h>
+     17          
+     18          #include "bazisdef.h"
+     19          #include "component\componentdef.h"
+     20          #include "virtualMenu\systemmenudef.h"
+     21          #include "virtualMenu\ustmanagerdef.h"
+     22          #include "psuperVisor\psvisor_helpdef.h"
+     23          
+     24          #include "virtualMenu\textstreamfnc.h"
+     25          #include "virtualMenu\systemmenufnc.h"
+     26          #include "virtualMenu\ustmanagerfnc.h"
+     27          #include "psuperVisor\psvisor_helpfnc.h"
+     28          #include "virtualMenu\rangmanagerfnc.h"
+     29          #include "logictimers\logictimersfnc.h"
+     30          
+     31          #include "virtualMenu\viewMenuList.h"
+     32          
+     33          #include "psupervisor\psupervisor.h"
+     34          
+     35          #include "toSpeedOptim.h"
+     36          
+     37          #include "..\bazis.h"
+     38          
+     39          #include "zonaVRT\zonaVRTdef.h"
+     40          #include "zonaVRT\zonaVRTfnc.h"
+     41          
+     42          //код компонентов
+     43          #define KOD_COMPONENT  DZ_COMP1
+     44          //к-во ступеней
+     45          #define CNT_STUPEN_DZ  5
+     46          
+     47          #endif // _HIDE_COMPONENT
+     48          
+     49          //РАСПРЕДЕЛЕНИЕ УСТАВОК  в менеджере уставок
+     50          //уставка OF
+     51          #define MNGUST_DZ2to5_OX1  0
+     52          #define MNGUST_DZ2to5_OY1  1
+     53          #define MNGUST_DZ2to5_OX2  2
+     54          #define MNGUST_DZ2to5_OY2  3
+     55          #define MNGUST_DZ2to5_OX3  4
+     56          #define MNGUST_DZ2to5_OY3  5
+     57          #define MNGUST_DZ2to5_OX4  6
+     58          #define MNGUST_DZ2to5_OY4  7
+     59          
+     60          //уставка MF
+     61          #define MNGUST_DZ2to5_MX1  8
+     62          #define MNGUST_DZ2to5_MY1  9
+     63          #define MNGUST_DZ2to5_MX2  10
+     64          #define MNGUST_DZ2to5_MY2  11
+     65          #define MNGUST_DZ2to5_MX3  12
+     66          #define MNGUST_DZ2to5_MY3  13
+     67          #define MNGUST_DZ2to5_MX4  14
+     68          #define MNGUST_DZ2to5_MY4  15
+     69          
+     70          //MTZ DZ2to5
+     71          #define MNGUST_DZ2to5_MTZ  16
+     72          
+     73          //уставка выдержки
+     74          //Выдержка ДЗ2МФ
+     75          #define MNGVID_DZ2to5MF   17
+     76          //Выдержка МТЗ ДЗ2МФ
+     77          #define MNGVID_MDZ2to5MF  18
+     78          //Выдержка ДЗ2ОФ
+     79          #define MNGVID_DZ2to5OF   19
+     80          //Ввод ускор ДЗ2МФ
+     81          #define MNGVUSK_DZ2to5MF  20
+     82          //Ввод ускор МТЗ ДЗ2МФ    
+     83          #define MNGVUSK_MDZ2to5MF 21
+     84          
+     85          //Ускор ДЗ2МФ ВВ
+     86          #define MNGUSK_DZ2to5MF_VV  22
+     87          //Ускор ДЗ2МФ ОУ
+     88          #define MNGUSK_DZ2to5MF_OU  23
+     89          //Ускор ДЗ2МФ ТУ
+     90          #define MNGUSK_DZ2to5MF_TU  24
+     91          
+     92          //Ускор МТЗ ДЗ2МФ ВВ
+     93          #define MNGUSK_MDZ2to5MF_VV  25
+     94          //Ускор МТЗ ДЗ2МФ ОУ
+     95          #define MNGUSK_MDZ2to5MF_OU  26
+     96          //Ускор МТЗ ДЗ2МФ ТУ
+     97          #define MNGUSK_MDZ2to5MF_TU  27
+     98          
+     99          //Ускор ДЗ2ОФ ВВ
+    100          #define MNGUSK_DZ2to5OF_VV  28
+    101          //Ускор ДЗ2ОФ ОУ
+    102          #define MNGUSK_DZ2to5OF_OU  29
+    103          //Ускор ДЗ2ОФ ТУ
+    104          #define MNGUSK_DZ2to5OF_TU  30
+    105          
+    106          //уставка управления
+    107          #define MNGUPR_DZ2to5       31
+    108          //к-во уставок в менеджере уставок
+    109          #define MNGUST_DZ2to5_TOTAL  32
+    110          //#define MNGUST_BOBV_DZ2to5  MNGUST_DZ2to5_TOTAL
+    111          
+    112          //РАСПРЕДЕЛЕНИЕ УСТАВОК  УПРАВЛЕНИЯ
+    113          //ENA_DZ2to5MF
+    114          #define ENA_DZ2to5_1  0
+    115          //ENA_MDZ2to5MF
+    116          #define ENA_DZ2to5_2  1
+    117          //ENA_USK_DZ2to5_VV
+    118          #define ENA_DZ2to5_3  2
+    119          //ENA_AUSK_DZ2to5
+    120          #define ENA_DZ2to5_4  3
+    121          //ENA_TUSK_DZ2to5
+    122          #define ENA_DZ2to5_5  4
+    123          //к-во ENA команд
+    124          #define ENACMD_DZ2to5_TOTAL 5
+    125          
+    126          //РАСПРЕДЕЛЕНИЕ УСТАВОК в супервизоре
+    127          //уставка сработки
+    128          #define SPVSRAB_DZ2to5_MTZ    0
+    129          //уставка возврата
+    130          #define SPVVOZV_DZ2to5_MTZ    1
+    131          
+    132          //уставка SPV выход
+    133          #define SPV_OUTA_DZ2to5_MTZ   2          
+    134          #define SPV_OUTB_DZ2to5_MTZ   3          
+    135          #define SPV_OUTC_DZ2to5_MTZ   4          
+    136          //к-во уставок в супервизоре
+    137          #define SPVUST_DZ2to5_TOTAL  5
+    138          
+    139          //---------------IO COMMAND------------------
+    140          //РАСПРЕДЕЛЕНИЕ IO КОМАНД ДЛЯ DZ2to5
+    141          //Стат блок ДЗ2
+    142          #define IOCMD1_DZ2to5     0
+    143          //Блок уск ДЗ2
+    144          //CMD_BLOK_USK_DZ2to5
+    145          #define IOCMD2_DZ2to5     1
+    146          //Операт уск ДЗ2
+    147          //CMD_OPERAT_USK_DZ2to5
+    148          #define IOCMD3_DZ2to5     2
+    149          //Сраб ПО ДЗ2МФ
+    150          #define IOCMD4_DZ2to5MF   3
+    151          //Сраб ДЗ2МФ
+    152          #define IOCMD5_DZ2to5MF   4
+    153          //Сраб ПО МТЗ ДЗ2МФ
+    154          #define IOCMD4_MDZ2to5MF  5
+    155          //Сраб МТЗ ДЗ2МФ
+    156          #define IOCMD5_MDZ2to5MF  6
+    157          //Сраб ПО ДЗ2ОФ
+    158          #define IOCMD4_DZ2to5OF   7
+    159          //Сраб ДЗ2ОФ
+    160          #define IOCMD5_DZ2to5OF   8
+    161          //Теле уск ДЗ2
+    162          //CMD_TELE_USK_DZ2to5
+    163          #define IOCMD6_DZ2to5     9
+    164          //к-во IO команд
+    165          #define IOCMD_DZ2to5_TOTAL    10
+    166          
+    167          //---------------TL COMMAND------------------
+    168          //РАСПРЕДЕЛЕНИЕ TL КОМАНД ДЛЯ DZ2to5
+    169          //RES_DZ2to5MF
+    170          #define TLCMD1_DZ2to5MF  0
+    171          //RES_MDZ2to5MF
+    172          #define TLCMD1_MDZ2to5MF 1
+    173          //RES_DZ2to5OF
+    174          #define TLCMD1_DZ2to5OF  2
+    175          //TU_DZ2to5MF
+    176          #define TLCMD4_DZ2to5    3
+    177          //AU_DZ2to5MF
+    178          #define TLCMD5_DZ2to5    4
+    179          //POL_VV_DZ2to5
+    180          #define TLCMD6_DZ2to5    5
+    181          //VUSKOR_DZ2to5MF
+    182          #define TLCMD7_DZ2to5MF  6
+    183          //VUSKOR_MDZ2to5MF
+    184          #define TLCMD7_MDZ2to5MF 7
+    185          
+    186          //ELOLDTRG_USKOR_DZ2to5MF_OU
+    187          #define TLCMD9_DZ2to5MF  8
+    188          //ELOUTTRG_USKOR_DZ2to5MF_OU
+    189          #define TLCMD10_DZ2to5MF 9
+    190          
+    191          //ELOLDTRG_USKOR_DZ2to5MF_AU
+    192          #define TLCMD11_DZ2to5MF 10
+    193          //ELOUTTRG_USKOR_DZ2to5MF_AU
+    194          #define TLCMD12_DZ2to5MF 11
+    195          
+    196          //ELOLDTRG_USKOR_DZ2to5MF_TU
+    197          #define TLCMD13_DZ2to5MF 12
+    198          //ELOUTTRG_USKOR_DZ2to5MF_TU
+    199          #define TLCMD14_DZ2to5MF 13
+    200          
+    201          //ELOLDTRG_USKOR_MDZ2to5MF_OU
+    202          #define TLCMD9_MDZ2to5MF  14
+    203          //ELOUTTRG_USKOR_MDZ2to5MF_OU
+    204          #define TLCMD10_MDZ2to5MF 15
+    205          
+    206          //ELOLDTRG_USKOR_MDZ2to5MF_AU
+    207          #define TLCMD11_MDZ2to5MF 16
+    208          //ELOUTTRG_USKOR_MDZ2to5MF_AU
+    209          #define TLCMD12_MDZ2to5MF 17
+    210          
+    211          //ELOLDTRG_USKOR_MDZ2to5MF_TU
+    212          #define TLCMD13_MDZ2to5MF 18
+    213          //ELOUTTRG_USKOR_MDZ2to5MF_TU
+    214          #define TLCMD14_MDZ2to5MF 19
+    215          
+    216          //ELOLDTRG_USKOR_DZ2to5OF_OU
+    217          #define TLCMD9_DZ2to5OF  20
+    218          //ELOUTTRG_USKOR_DZ2to5OF_OU
+    219          #define TLCMD10_DZ2to5OF 21
+    220          
+    221          //ELOLDTRG_USKOR_DZ2to5OF_AU
+    222          #define TLCMD11_DZ2to5OF 22
+    223          //ELOUTTRG_USKOR_DZ2to5OF_AU
+    224          #define TLCMD12_DZ2to5OF 23
+    225          
+    226          //ELOLDTRG_USKOR_DZ2to5OF_TU
+    227          #define TLCMD13_DZ2to5OF 24
+    228          //ELOUTTRG_USKOR_DZ2to5OF_TU
+    229          #define TLCMD14_DZ2to5OF 25
+    230          
+    231          //DZ2to5MF_USKOR
+    232          #define TLCMD27_DZ2to5MF  26
+    233          //MDZ2to5MF_USKOR
+    234          #define TLCMD27_MDZ2to5MF 27
+    235          //DZ2to5OF_USKOR
+    236          #define TLCMD27_DZ2to5OF  28
+    237          
+    238          //ELOLDTRG_NCN_DZ2to5MF
+    239          #define TLCMDOLDNCN_DZ2to5MF  29
+    240          //ELOUTTRG_NCN_DZ2to5MF
+    241          #define TLCMDOUTNCN_DZ2to5MF  30
+    242          //ELOLDTRG_NCN_DZ2to5OF
+    243          #define TLCMDOLDNCN_DZ2to5OF  31
+    244          //ELOUTTRG_NCN_DZ2to5OF
+    245          #define TLCMDOUTNCN_DZ2to5OF  32
+    246          //ELOLDTRG_NCN_MDZ2to5MF
+    247          #define TLCMDOLDNCN_MDZ2to5MF 33
+    248          //ELOUTTRG_NCN_MDZ2to5MF
+    249          #define TLCMDOUTNCN_MDZ2to5MF 34
+    250          
+    251          //DZ2to5_PO1
+    252          #define TLCMD30_DZ2to5MF  35
+    253          //DZ2to5_PO2
+    254          #define TLCMD30_MDZ2to5MF 36
+    255          //DZ2to5_PO3
+    256          #define TLCMD30_DZ2to5OF  37
+    257          
+    258          #define TL10_DZ2TO5MF    38
+    259          #define TL10_MDZ2TO5MF   39
+    260          #define TL10_DZ2TO5OF    40
+    261          
+    262          #define TL7_DZ2TO5MF     41
+    263          #define TL8_DZ2TO5MF     42
+    264          #define TL9_DZ2TO5MF     43
+    265          
+    266          #define TL7_MDZ2TO5MF    44
+    267          #define TL8_MDZ2TO5MF    45
+    268          #define TL9_MDZ2TO5MF    46
+    269          
+    270          #define TL7_DZ2TO5OF     47
+    271          #define TL8_DZ2TO5OF     48
+    272          #define TL9_DZ2TO5OF     49
+    273          
+    274          //OU_DZ2to5MF
+    275          #define TLCMDOU_DZ2to5   50
+    276          
+    277          //к-во TL команд
+    278          #define TLCMD_DZ2to5_TOTAL   51
+    279          
+    280          //--------------- TIMERS ------------------
+    281          //РАСПРЕДЕЛЕНИЕ ТАЙМЕРОВ ДЛЯ DZ2to5
+    282          //Выдержка ДЗ2МФ
+    283          #define TIMER1_DZ2to5    0
+    284          //Выдержка МТЗ ДЗ2МФ
+    285          #define TIMER2_DZ2to5    1
+    286          //Выдержка ДЗ2ОФ
+    287          #define TIMER3_DZ2to5    2
+    288          //Ввод ускор ДЗ2МФ
+    289          #define TIMER4_DZ2to5MF  3
+    290          //Ввод ускор МТЗ ДЗ2МФ
+    291          #define TIMER4_MDZ2to5MF 4
+    292          
+    293          //Ускор ДЗ2МФ ВВ
+    294          #define TIMER6_DZ2to5MF   5
+    295          //Ускор ДЗ2МФ ОУ
+    296          #define TIMER7_DZ2to5MF   6
+    297          //Ускор ДЗ2МФ ТУ
+    298          #define TIMER8_DZ2to5MF   7
+    299          
+    300          //Ускор МТЗ ДЗ2МФ ВВ
+    301          #define TIMER6_MDZ2to5MF  8
+    302          //Ускор МТЗ ДЗ2МФ ОУ
+    303          #define TIMER7_MDZ2to5MF  9
+    304          //Ускор МТЗ ДЗ2МФ ТУ
+    305          #define TIMER8_MDZ2to5MF  10
+    306          
+    307          //Ускор ДЗ2ОФ ВВ
+    308          #define TIMER6_DZ2to5OF   11
+    309          //Ускор ДЗ2ОФ ОУ
+    310          #define TIMER7_DZ2to5OF   12
+    311          //Ускор ДЗ2ОФ ТУ
+    312          #define TIMER8_DZ2to5OF   13
+    313          
+    314          //таймер BO DZ2to5MF
+    315          #define TIMER_BODZ2to5MF  14
+    316          //таймер BO MDZ2to5MF
+    317          #define TIMER_BOMDZ2to5MF 15
+    318          //таймер BO DZ2to5OF      
+    319          #define TIMER_BODZ2to5OF  16
+    320          
+    321          //к-во таймеров
+    322          #define TIMERS_DZ2to5_TOTAL 17
+    323          
+    324          #ifndef _HIDE_COMPONENT
+    325          
+    326          #define _HIDE_COMPONENT
+    327          #include "PRM1Component.c"
+    328          
+    329          extern COMPONENT_OBJ rpzcomponent_obj;//обект компонента для репозитария
+    330          extern int  tmpUSTAVKI[];
+    331          
+    332          extern LineMenuItem sub_menu_cnf[];
+    333          extern LineMenuItem sub_menu_DZ[];
+    334          extern LineMenuItem sub_menu_tmp[];
+    335          extern int  IndexUstSPV;//индекс уставок в супервизоре
+    336          extern int  IndexIO;//индекс IO
+    337          
+    338          extern COMPONENT_OBJ  cnfCOMPONENT[];
+    339          extern int  spvUSTAVKI[];//текущие уставки супервизора
+    340          extern char *bitStringUNI[];
+    341          extern int offsetUstMngPRM1;//смещение на уставки PRM1
+    342          extern int isTriangleZonaBD[];//зона ДЗ треугольник-четырехугольник
+    343          
+    344          void PereinitUstListCompDZ2(short flg);
+    345          void UstListCompDZ2();
+    346          void ustRedactorCompDZ2();
+    347          void UstCompDZ2();
+    348          
+    349          void PereinitVidListCompDZ2(short flg);
+    350          void VidListCompDZ2();
+    351          void vidRedactorCompDZ2();
+    352          void VidCompDZ2();
+    353          
+    354          void PereinitUprListCompDZ2(short flg);
+    355          void UprListCompDZ2();
+    356          void uprRedactorCompDZ2();
+    357          void UprCompDZ2();
+    358          short  KadrMenuFormat_upr_compDZ2(void *workCntr);
+    359          short  KadrMenuFormat_ustvidDZ(void *workCntr);
+    360          int  initUstDZ2(char init);
+    361          void  prepareUstDZ2(short idxC);
+    362          char *selectorUprStrDZ2(short iBit, UNS_32 ustUpr);
+    363          void diffDZ3ToRepozitar();
+    364          void diffDZ4ToRepozitar();
+    365          void diffDZ5ToRepozitar();
+    366          
+    367          void EditUprDZ2();
+    368          void EditVidDZ2();
+    369          void EditUstDZ2();
+    370          int codecUstDZ2(char codec, short offset, int ust);
+    371          void  logicDZ2to5(int idxC);
+    372          int   isDISactiv_DZ2to5(int idxC);
+    373          
+    374          TWIN_DIFFERENT twinDZ2[3];//массив контроля близнецов
+    375          
+    376          int  offsetIOCmdDZ5;//смещение для IO DZ5
+    377          int isValidZonaDZ2OF;//флаг валидности зоны
+    378          int isValidZonaDZ2MF;//флаг валидности зоны
+    379          int isValidZonaDZ3OF;//флаг валидности зоны
+    380          int isValidZonaDZ3MF;//флаг валидности зоны
+    381          int isValidZonaDZ4OF;//флаг валидности зоны
+    382          int isValidZonaDZ4MF;//флаг валидности зоны
+    383          int isValidZonaDZ5OF;//флаг валидности зоны
+    384          int isValidZonaDZ5MF;//флаг валидности зоны
+    385          /*
+    386          int locPO_DZ2MF;
+    387          int locPO_DZ2OF;
+    388          int locPO_DZ3MF;
+    389          int locPO_DZ3OF;
+    390          int locPO_DZ4MF;
+    391          int locPO_DZ4OF;
+    392          int locPO_DZ5MF;
+    393          int locPO_DZ5OF;
+    394          */
+    395          char DZ2_TITLE[] = "ДЗ2";
+    396          
+    397          IONAMESTATUS_COMPONENT ionsDZ2[IOCMD_DZ2to5_TOTAL] =
+    398          {
+    399            {
+    400              1,//статус iocmd1
+    401              "Стат блок ДЗ2"
+    402            },
+    403            {
+    404              1,//статус iocmd2
+    405              "Блок уск ДЗ2"
+    406            },
+    407            {
+    408              1,//статус iocmd3
+    409              "Операт уск ДЗ2"
+    410            },
+    411            {
+    412              1,//статус iocmd4
+    413              "Сраб ПО ДЗ2МФ"
+    414            },
+    415            {
+    416              1,//статус iocmd5
+    417              "Сраб ДЗ2МФ"
+    418            },
+    419            {
+    420              1,//статус iocmd6
+    421              "Сраб ПО МТЗ ДЗ2МФ"
+    422            },
+    423            {
+    424              1,//статус iocmd7
+    425              "Сраб МТЗ ДЗ2МФ"
+    426            },
+    427            {
+    428              1,//статус iocmd8
+    429              "Сраб ПО ДЗ2ОФ"
+    430            },
+    431            {
+    432              1,//статус iocmd9
+    433              "Сраб ДЗ2ОФ"
+    434            },
+    435            {
+    436              1,//статус iocmd10
+    437              "Теле уск ДЗ2"
+    438            }
+    439          };
+    440          
+    441          LineMenuItem sub_menu_comp_DZ2[8] =
+    442          {
+    443            { DZ2_TITLE, NULL},//title
+    444          //  { &CONTROL1_COMP, &sub_menu_DZ, typeMenuSub},//control_item, parent
+    445          //  { "Уставки ДЗ2",     (void *)&UstListCompDZ2, typeMenuProg},
+    446          //  { "Выдержки ДЗ2",    (void *)&VidListCompDZ2, typeMenuProg},
+    447          //  { "Управление ДЗ2",  (void *)&UprListCompDZ2, typeMenuProg},
+    448            { NULL, NULL}
+    449          };
+    450          
+    451          LineMenuItem sub_menu_ust_compDZ2[] =
+    452          {
+    453            { "Уставки ДЗ2", NULL},//title
+    454            { &CONTROL2_COMP, sub_menu_comp_DZ2, typeMenuList},//control_item, parent
+    455          //  { "Уст ДЗ2",        (void *)&UstCompDZ2, typeMenuProg},
+    456          //  { "Уст ДЗ2 вперед", (void *)&UstCompDZ2, typeMenuProg},
+    457          //  { "Уст ДЗ2 назад",  (void *)&UstCompDZ2, typeMenuProg},
+    458          //  { "Уст ДЗ2 ПМ",     (void *)&UstCompDZ2, typeMenuProg},
+    459            { NULL, NULL}
+    460          
+    461          };
+    462          
+    463          LineMenuItem sub_menu_vid_compDZ2[] =
+    464          {
+    465            { "Выдержки ДЗ2", NULL},//title
+    466            { &CONTROL2_COMP, sub_menu_comp_DZ2, typeMenuList},//control_item, parent
+    467          /*
+    468            { "Выдержка ДЗ2МФ",       (void*)&VidCompDZ2, typeMenuProg},
+    469            { "Выдержка МТЗ ДЗ2МФ",   (void*)&VidCompDZ2, typeMenuProg},
+    470            { "Выдержка ДЗ2ОФ",       (void*)&VidCompDZ2, typeMenuProg},
+    471            { "Ввод ускор ДЗ2МФ",     (void*)&VidCompDZ2, typeMenuProg},
+    472            { "Ввод ускор МТЗ ДЗ2МФ", (void*)&VidCompDZ2, typeMenuProg},
+    473          
+    474            { "Ускор ДЗ2МФ ВВ",       (void*)&VidCompDZ2, typeMenuProg},
+    475            { "Ускор ДЗ2МФ ОУ",       (void*)&VidCompDZ2, typeMenuProg},
+    476            { "Ускор ДЗ2МФ ТУ",       (void*)&VidCompDZ2, typeMenuProg},
+    477          
+    478            { "Ускор МТЗ ДЗ2МФ ВВ",   (void*)&VidCompDZ2, typeMenuProg},
+    479            { "Ускор МТЗ ДЗ2МФ ОУ",   (void*)&VidCompDZ2, typeMenuProg},
+    480            { "Ускор МТЗ ДЗ2МФ ТУ",   (void*)&VidCompDZ2, typeMenuProg},
+    481          
+    482            { "Ускор ДЗ2ОФ ВВ",       (void*)&VidCompDZ2, typeMenuProg},
+    483            { "Ускор ДЗ2ОФ ОУ",       (void*)&VidCompDZ2, typeMenuProg},
+    484            { "Ускор ДЗ2ОФ ТУ",       (void*)&VidCompDZ2, typeMenuProg},
+    485          */
+    486            { NULL, NULL}
+    487          
+    488          };
+    489          
+    490          LineMenuItem sub_menu_upr_compDZ2[] =
+    491          {
+    492            { "Управл ДЗ2", NULL},//title
+    493            { &CONTROL2_COMP, sub_menu_comp_DZ2, typeMenuList},//control_item, parent
+    494          //  { "Управл ДЗ2",        (void *)&UprCompDZ2, typeMenuProg},
+    495          //  { "Управл МТЗ ДЗ2",    (void *)&UprCompDZ2, typeMenuProg},
+    496          //  { "Ускор ВВ ДЗ2",      (void *)&UprCompDZ2, typeMenuProg},
+    497          //  { "Автомат уск ДЗ2",   (void *)&UprCompDZ2, typeMenuProg},
+    498          //  { "Телеускор ДЗ2",     (void *)&UprCompDZ2, typeMenuProg},
+    499            { NULL, NULL}
+    500          
+    501          };
+    502          
+    503          void PereinitUstListCompDZ2(short flg)
+    504          {
+    505          //переиниц
+    506            //инит компонентного контроля
+    507            TxtStreamInit(&CONTROL2_COMP, &KadrMenuFormat_ustvidDZ, sub_menu_ust_compDZ2);//инит control и формир кадра
+    508            if(flg==0)//END
+    509            {
+    510              TxtStreamSetEnd(&CONTROL2_COMP, SIZE_PAGE_VIEW/2);//перейти на END
+    511            }//if
+    512          
+    513            ViewDiskrMenuList();//вывести окно отображения
+    514            ListPStr();//доступ к уставкам
+    515          }//PereinitUstListComp2()
+    516          
+    517          void UstListCompDZ2()
+    518          {
+    519            SelectorMNGBAZA(0);//установка базу уставок
+    520          
+    521            SelectorSUBMENU(sub_menu_ust_compDZ2);//уcтановить текущее субменю
+    522          
+    523            SelectorTEXTCONTROL(&CONTROL2_COMP);//текущий control
+    524          
+    525            SelectorFHOME(&PereinitUstListCompDZ2);//указатель на ф-цию HOME
+    526            InitFHOME(1);//exe ф-цию HOME
+    527          
+    528            LanderUpDown();//wkl Up Down
+    529          }//UstListCompDZ2()
+    530          
+    531          void UstCompDZ2()
+    532          {
+    533            SelectorCRRLIGHTLINE();//найти подсвеченную строку текущего текст потока
+    534            PrepareEditMenu(sub_menu_ust_compDZ2);
+    535            PassWord(EditUstDZ2);
+    536          }//VidCompDZ1()
+    537          
+    538          void EditUstDZ2()
+    539          {
+    540          //редактировать уставку
+    541            SystemEditUst(sub_menu_ust_compDZ2);
+    542          }//UstCompDZ2()
+    543          
+    544          //--------------------------------------------------
+    545          
+    546          void PereinitVidListCompDZ2(short flg)
+    547          {
+    548          //переиниц
+    549            //инит компонентного контроля
+    550            TxtStreamInit(&CONTROL2_COMP, &KadrMenuFormat_ustvidDZ, sub_menu_vid_compDZ2);//инит control и формир кадра
+    551            if(flg==0)//END
+    552            {
+    553              TxtStreamSetEnd(&CONTROL2_COMP, SIZE_PAGE_VIEW/2);//перейти на END
+    554            }//if
+    555          
+    556            ViewDiskrMenuList();//вывести окно отображения
+    557            ListPStr();//доступ к уставкам
+    558          }//PereinitUstListComp2()
+    559          
+    560          void VidListCompDZ2()
+    561          {
+    562            SelectorMNGBAZA(MNGVID_DZ2to5MF);//установка базы уставок
+    563          
+    564            SelectorSUBMENU(sub_menu_vid_compDZ2);//утановить текущее субменю
+    565          
+    566            SelectorTEXTCONTROL(&CONTROL2_COMP);//текущий control
+    567          
+    568            SelectorFHOME(&PereinitVidListCompDZ2);//указатель на ф-цию HOME
+    569            InitFHOME(1);//exe ф-цию HOME
+    570          
+    571            LanderUpDown();//wkl Up Down
+    572          }//VidListCompDZ2()
+    573          
+    574          void VidCompDZ2()
+    575          {
+    576            SelectorCRRLIGHTLINE();//найти подсвеченную строку текущего текст потока
+    577            PrepareEditMenu(sub_menu_vid_compDZ2);
+    578          //  PassWord(EditVidAPV);
+    579            EditVidDZ2();
+    580          }//VidCompDZ2()
+    581          
+    582          void EditVidDZ2()
+    583          {
+    584          //редактировать уставку
+    585            SystemEditUst(sub_menu_vid_compDZ2);
+    586          }//
+    587          
+    588          //--------------------------------------------------
+    589          
+    590          void PereinitUprListCompDZ2(short flg)
+    591          {
+    592          //переиниц
+    593            //инит компонентного контроля
+    594            TxtStreamInit(&CONTROL2_COMP, &KadrMenuFormat_upr_compDZ2, NULL);//инит control и формир кадра
+    595            if(flg==0)//END
+    596            {
+    597              TxtStreamSetEnd(&CONTROL2_COMP, SIZE_PAGE_VIEW/2);//перейти на END
+    598            }//if
+    599          
+    600            ViewDiskrMenuList();//вывести окно отображения
+    601            ListPStr();//доступ к уставкам
+    602          }//PereinitUstListComp2()
+    603          
+    604          void UprListCompDZ2()
+    605          {
+    606            SelectorMNGBAZA(MNGUPR_DZ2to5);//установка базы уставок
+    607          
+    608            SelectorSUBMENU(sub_menu_upr_compDZ2);//утановить текущее субменю
+    609          
+    610            SelectorTEXTCONTROL(&CONTROL2_COMP);//текущий control
+    611          
+    612            SelectorFHOME(&PereinitUprListCompDZ2);//указатель на ф-цию HOME
+    613            InitFHOME(1);//exe ф-цию HOME
+    614          
+    615            LanderUpDown();//wkl Up Down
+    616          }//VidListCompDZ1()
+    617          
+    618          void UprCompDZ2()
+    619          {
+    620            SelectorCRRLIGHTLINE();//найти подсвеченную строку текущего текст потока
+    621            PrepareEditMenu(sub_menu_upr_compDZ2);
+    622            PassWord(EditUprDZ2);
+    623          
+    624          }//UprCompMTZ2()
+    625          
+    626          void EditUprDZ2()
+    627          {
+    628          //редактировать уставку упр
+    629            char *nameUpr = (char *)sub_menu_upr_compDZ2[LIGHTLINEMENU +1+SUBDATA].Line1;
+    630            UpravlRedactor(nameUpr, LIGHTLINEMENU, &selectorUprStrDZ2);//редактировать уставку управления
+    631          }//EditUprDZ2()
+    632          
+    633          short  KadrMenuFormat_upr_compDZ2(void *pstr)
+    634          {
+    635           WorkControl *workCntr = (WorkControl *)pstr;
+    636          //формирователь кадра
+    637            RESET_COUNTER;//сброс счетчиков
+    638            for(int i=0;; i++)
+    639            {
+    640          //критерий терминатора
+    641              char *nameUpr = (char *)sub_menu_upr_compDZ2[i+1+SUBDATA].Line1;
+    642              if(nameUpr==NULL) break;
+    643          
+    644              COMPARE_COUNTER
+    645              {
+    646                strcpy((char *)workCntr->twoString, nameUpr);
+    647          
+    648                //отобразить уставку управления в кадре
+    649                strcpy((char *)workCntr->twoString + sizeof(WorkVariantChar)/2,
+    650                selectorUprStrDZ2(i, getCurrentMngUSTAVKI()));
+    651          
+    652                return 1;//сравнить счетчики кадров
+    653              }
+    654            }//for
+    655          
+    656            return 1;
+    657          }//KadrMenuFormat_upr_compDZ2(WorkControl *workCntr)
+    658          
+    659          char *selectorUprStrDZ2(short iBit, UNS_32 ustUpr)
+    660          {
+    661            switch(iBit)
+    662            {
+    663          
+    664            default:;
+    665            }//switch
+    666              if(NumBitCheckWord(iBit, &ustUpr)) return bitStringUNI[UNIUPR_WKL];
+    667              return bitStringUNI[UNIUPR_OTKL];
+    668          }//selectorUprStrDZ2(short ibit, UNS_32 ustUpr)
+    669          
+    670          int initUstDZ2(char init)
+    671          {
+    672            //инициал уставок
+    673            if (init)
+    674            {
+    675          //уставка сработки
+    676              tmpUSTAVKI[MNGUST_DZ2to5_OX1] = 100;
+    677              tmpUSTAVKI[MNGUST_DZ2to5_OY1] = 101;
+    678              tmpUSTAVKI[MNGUST_DZ2to5_OX2] = 102;
+    679              tmpUSTAVKI[MNGUST_DZ2to5_OY2] = 103;
+    680              tmpUSTAVKI[MNGUST_DZ2to5_OX3] = 104;
+    681              tmpUSTAVKI[MNGUST_DZ2to5_OY3] = 105;
+    682              tmpUSTAVKI[MNGUST_DZ2to5_OX4] = 106;
+    683              tmpUSTAVKI[MNGUST_DZ2to5_OY4] = 107;
+    684          
+    685              tmpUSTAVKI[MNGUST_DZ2to5_MX1] = 110;
+    686              tmpUSTAVKI[MNGUST_DZ2to5_MY1] = 111;
+    687              tmpUSTAVKI[MNGUST_DZ2to5_MX2] = 112;
+    688              tmpUSTAVKI[MNGUST_DZ2to5_MY2] = 113;
+    689              tmpUSTAVKI[MNGUST_DZ2to5_MX3] = 114;
+    690              tmpUSTAVKI[MNGUST_DZ2to5_MY3] = 115;
+    691              tmpUSTAVKI[MNGUST_DZ2to5_MX4] = 116;
+    692              tmpUSTAVKI[MNGUST_DZ2to5_MY4] = 117;
+    693          
+    694              tmpUSTAVKI[MNGUST_DZ2to5_MTZ] = 118;
+    695          //уставка выдержки
+    696              tmpUSTAVKI[MNGVID_DZ2to5MF]   = 25;
+    697          //Выдержка МТЗ ДЗ2МФ
+    698              tmpUSTAVKI[MNGVID_MDZ2to5MF]  = 26;
+    699          //Выдержка ДЗ2ОФ
+    700              tmpUSTAVKI[MNGVID_DZ2to5OF]   = 27;
+    701          //Ввод ускор ДЗ2МФ
+    702              tmpUSTAVKI[MNGVUSK_DZ2to5MF]  = 28;
+    703          //Ввод ускор МТЗ ДЗ2МФ    
+    704              tmpUSTAVKI[MNGVUSK_MDZ2to5MF] = 29;
+    705          
+    706          //ускорение
+    707          //Ускор ДЗ2МФ ВВ
+    708              tmpUSTAVKI[MNGUSK_DZ2to5MF_VV] = 30;
+    709          //Ускор ДЗ2МФ ОУ
+    710              tmpUSTAVKI[MNGUSK_DZ2to5MF_OU] = 31;
+    711          //Ускор ДЗ2МФ ТУ
+    712              tmpUSTAVKI[MNGUSK_DZ2to5MF_TU] = 32;
+    713          
+    714          //Ускор МТЗ ДЗ2МФ ВВ
+    715              tmpUSTAVKI[MNGUSK_MDZ2to5MF_VV] = 33;
+    716          //Ускор МТЗ ДЗ2МФ ОУ
+    717              tmpUSTAVKI[MNGUSK_MDZ2to5MF_OU] = 34;
+    718          //Ускор МТЗ ДЗ2МФ ТУ
+    719              tmpUSTAVKI[MNGUSK_MDZ2to5MF_TU] = 35;
+    720          
+    721          //Ускор ДЗ2ОФ ВВ
+    722              tmpUSTAVKI[MNGUSK_DZ2to5OF_VV]  = 36;
+    723          //Ускор ДЗ2ОФ ОУ
+    724              tmpUSTAVKI[MNGUSK_DZ2to5OF_OU]  = 37;
+    725          //Ускор ДЗ2ОФ ТУ
+    726              tmpUSTAVKI[MNGUSK_DZ2to5OF_TU]  = 38;
+    727          
+    728          //уставка управления
+    729              tmpUSTAVKI[MNGUPR_DZ2to5] = 0;
+    730          
+    731            }//if
+    732          
+    733          //  offsetSPVCmdDZ2 = IndexUstSPV;//смещение для SPV DZ2
+    734            IndexUstSPV += SPVUST_DZ2to5_TOTAL;//индекс уставок в супервизоре
+    735            return MNGUST_DZ2to5_TOTAL;//к-во уставок в менеджере уставок
+    736          }//initUstDZ2to5(short mngUst, char init)
+    737                              
+    738          //координаты вершин зоны сработки
+    739          extern float X1, Y1, X2, Y2;
+    740          extern float X3, Y3, X4, Y4;
+    741          
+    742          int SetOFZonaVertex2to5(int idxC);
+    743          int SetMFZonaVertex2to5(int idxC);
+    744          
+    745          int global_enaDZ3=0;
+    746          
+    747          void  prepareUstDZ2(short idxC)
+    748          {
+    749            int numClon =    //номер клона
+    750                          cnfCOMPONENT[idxC].numClon;  
+    751          //int tt3 = -1;
+    752          if(numClon==3){
+    753               global_enaDZ3 = PrepareENACmd(idxC, MNGUPR_DZ2to5);
+    754          
+    755              int  test_global_enaDZ3 = PrepareENACmd(8, 31);//(8, MNGUPR_DZ2to5);
+    756          
+    757            CopyWideENAToENAcmd(PrepareENACmd(idxC, MNGUPR_DZ2to5), ENACMD_DZ2to5_TOTAL);
+    758          
+    759          
+    760          //void CopyWideENAToENAcmd(short offset, short cnt)
+    761          //{
+    762            //копировать ENA из WideENA в ENAcmd
+    763          /*
+    764            for(short i=0; i<cnt; i++)
+    765            {
+    766              //ENA команды
+    767              ENAcmd[offset + i] = WideENABuffer[i];
+    768            }//for
+    769          */
+    770          //}//CopyWideENAToENAcmd(short offset, short cnt);
+    771          
+    772          }//if(numClon==3)
+    773          
+    774            
+    775            //подготовка зоны
+    776            switch(numClon){
+    777            case 2:{
+    778          //    X1=X1OF_DZ2; Y1=Y1OF_DZ2; X2=X2OF_DZ2; Y2=Y2OF_DZ2;
+    779          //    X3=X3OF_DZ2; Y3=Y3OF_DZ2; X4=X4OF_DZ2; Y4=Y4OF_DZ2;
+    780           //зона ДЗ треугольник-четырехугольник
+    781          // int ttt1 =   
+    782           isTriangleZonaBD[(numClon-1)*2] = SetOFZonaVertex2to5(idxC);//Формирование вершин зоны OF  
+    783           if(isTriangleZonaBD[(numClon-1)*2])
+    784                isValidZonaDZ2OF = isZonaTrianMethodVRT( (numClon-1)*2);//флаг валидности зоны
+    785           else isValidZonaDZ2OF = isNewZonaMethodVRT((numClon-1)*2);//флаг валидности зоны
+    786            }
+    787              break;
+    788              
+    789            case 3:
+    790              {
+    791          //    X1=X1OF_DZ3; Y1=Y1OF_DZ3; X2=X2OF_DZ3; Y2=Y2OF_DZ3;
+    792            //  X3=X3OF_DZ3; Y3=Y3OF_DZ3; X4=X4OF_DZ3; Y4=Y4OF_DZ3;
+    793           //зона ДЗ треугольник-четырехугольник
+    794           isTriangleZonaBD[(numClon-1)*2] = SetOFZonaVertex2to5(idxC);//Формирование вершин зоны OF  
+    795           if(isTriangleZonaBD[(numClon-1)*2])
+    796                isValidZonaDZ3OF = isZonaTrianMethodVRT( (numClon-1)*2);//флаг валидности зоны
+    797           else isValidZonaDZ3OF = isNewZonaMethodVRT((numClon-1)*2);//флаг валидности зоны
+    798              }
+    799              break;
+    800              
+    801            case 4:
+    802              {
+    803          //    X1=X1OF_DZ4; Y1=Y1OF_DZ4; X2=X2OF_DZ4; Y2=Y2OF_DZ4;
+    804              //X3=X3OF_DZ4; Y3=Y3OF_DZ4; X4=X4OF_DZ4; Y4=Y4OF_DZ4;
+    805                
+    806           //зона ДЗ треугольник-четырехугольник
+    807           isTriangleZonaBD[(numClon-1)*2] = SetOFZonaVertex2to5(idxC);//Формирование вершин зоны OF  
+    808           if(isTriangleZonaBD[(numClon-1)*2])
+    809                isValidZonaDZ4OF = isZonaTrianMethodVRT( (numClon-1)*2);//флаг валидности зоны
+    810           else isValidZonaDZ4OF = isNewZonaMethodVRT((numClon-1)*2);//флаг валидности зоны
+    811              }
+    812              break;
+    813              
+    814            case 5:
+    815              {
+    816          //    X1=X1OF_DZ5; Y1=Y1OF_DZ5; X2=X2OF_DZ5; Y2=Y2OF_DZ5;
+    817          //    X3=X3OF_DZ5; Y3=Y3OF_DZ5; X4=X4OF_DZ5; Y4=Y4OF_DZ5;
+    818                
+    819           //зона ДЗ треугольник-четырехугольник
+    820           isTriangleZonaBD[(numClon-1)*2] = SetOFZonaVertex2to5(idxC);//Формирование вершин зоны OF  
+    821           if(isTriangleZonaBD[(numClon-1)*2])
+    822                isValidZonaDZ5OF = isZonaTrianMethodVRT( (numClon-1)*2);//флаг валидности зоны
+    823           else isValidZonaDZ5OF = isNewZonaMethodVRT((numClon-1)*2);//флаг валидности зоны
+    824              }
+    825              break;
+    826              
+    827            default:;
+    828            }//switch
+    829            
+    830          //--------------MF  
+    831            switch(numClon){
+    832            case 2:
+    833              {
+    834          //    X1=X1MF_DZ2; Y1=Y1MF_DZ2; X2=X2MF_DZ2; Y2=Y2MF_DZ2;
+    835            //  X3=X3MF_DZ2; Y3=Y3MF_DZ2; X4=X4MF_DZ2; Y4=Y4MF_DZ2;
+    836           //зона ДЗ треугольник-четырехугольник
+    837           isTriangleZonaBD[(numClon-1)*2 +1] = SetMFZonaVertex2to5(idxC);//Формирование вершин зоны MF  
+    838          
+    839           if(isTriangleZonaBD[(numClon-1)*2 +1])
+    840                 isValidZonaDZ2MF = isZonaTrianMethodVRT(1+ (numClon-1)*2);//флаг валидности зоны
+    841           else  isValidZonaDZ2MF = isNewZonaMethodVRT(1+ (numClon-1)*2);//флаг валидности зоны
+    842              }
+    843              break;
+    844              
+    845            case 3:
+    846              {
+    847          //    X1=X1MF_DZ3; Y1=Y1MF_DZ3; X2=X2MF_DZ3; Y2=Y2MF_DZ3;
+    848              //X3=X3MF_DZ3; Y3=Y3MF_DZ3; X4=X4MF_DZ3; Y4=Y4MF_DZ3;
+    849           //зона ДЗ треугольник-четырехугольник
+    850           isTriangleZonaBD[(numClon-1)*2 +1] = SetMFZonaVertex2to5(idxC);//Формирование вершин зоны MF  
+    851                
+    852           if(isTriangleZonaBD[(numClon-1)*2 +1])
+    853                 isValidZonaDZ3MF = isZonaTrianMethodVRT(1+ (numClon-1)*2);//флаг валидности зоны
+    854           else   isValidZonaDZ3MF = isNewZonaMethodVRT(1+ (numClon-1)*2);//флаг валидности зоны
+    855              }
+    856              break;
+    857              
+    858            case 4:
+    859              {
+    860          //    X1=X1MF_DZ4; Y1=Y1MF_DZ4; X2=X2MF_DZ4; Y2=Y2MF_DZ4;
+    861          //    X3=X3MF_DZ4; Y3=Y3MF_DZ4; X4=X4MF_DZ4; Y4=Y4MF_DZ4;
+    862           //зона ДЗ треугольник-четырехугольник
+    863           isTriangleZonaBD[(numClon-1)*2 +1] = SetMFZonaVertex2to5(idxC);//Формирование вершин зоны MF  
+    864           if(isTriangleZonaBD[(numClon-1)*2 +1])
+    865                 isValidZonaDZ4MF = isZonaTrianMethodVRT(1+ (numClon-1)*2);//флаг валидности зоны
+    866           else  isValidZonaDZ4MF = isNewZonaMethodVRT(1+ (numClon-1)*2);//флаг валидности зоны
+    867              }
+    868              break;
+    869              
+    870            case 5:
+    871              {
+    872          //    X1=X1MF_DZ5; Y1=Y1MF_DZ5; X2=X2MF_DZ5; Y2=Y2MF_DZ5;
+    873          //    X3=X3MF_DZ5; Y3=Y3MF_DZ5; X4=X4MF_DZ5; Y4=Y4MF_DZ5;
+    874           //зона ДЗ треугольник-четырехугольник
+    875           isTriangleZonaBD[(numClon-1)*2 +1] = SetMFZonaVertex2to5(idxC);//Формирование вершин зоны MF  
+    876           if(isTriangleZonaBD[(numClon-1)*2 +1])
+    877                 isValidZonaDZ5MF = isZonaTrianMethodVRT(1+ (numClon-1)*2);//флаг валидности зоны
+    878           else  isValidZonaDZ5MF = isNewZonaMethodVRT(1+ (numClon-1)*2);//флаг валидности зоны
+    879              }
+    880              break;
+    881              
+    882            default:;
+    883            }//switch
+    884            
+    885          
+    886            //подготовка ENA команд для клона
+    887            //копировать ENA из WideENA в ENAcmd
+    888            CopyWideENAToENAcmd(PrepareENACmd(idxC, MNGUPR_DZ2to5), ENACMD_DZ2to5_TOTAL);
+    889          
+    890            //подготовка уставок
+    891              int tmpOffsetUSpv =
+    892                          cnfCOMPONENT[idxC].offsetUstSpv;    //уставки SPV
+    893              //уставка SPV сработки
+    894              int tmp1 = 
+    895              SPV_UST(SPVSRAB_DZ2to5_MTZ) = codecUstDZ2(1, MNGUST_DZ2to5_MTZ, getNativUstMngUSTAVKI(idxC, MNGUST_DZ2to5_MTZ));
+    896              //уставка SPV возврата
+    897              SPV_UST(SPVVOZV_DZ2to5_MTZ) = tmp1 - tmp1/20;//5%
+    898          
+    899            
+    900            short tmpOffsetT    =
+    901              getOffsetTimersCnf(idxC);   //компонент в конфигурации
+    902          
+    903          //Выдержка ДЗ2МФ
+    904            setTimerPorog(tmpOffsetT+ TIMER1_DZ2to5,
+    905                    codecUstDZ2(1, MNGVID_DZ2to5MF, getNativUstMngUSTAVKI(idxC, MNGVID_DZ2to5MF)));
+    906          
+    907          //Выдержка МТЗ ДЗ2МФ
+    908            setTimerPorog(tmpOffsetT+ TIMER2_DZ2to5, 
+    909                    codecUstDZ2(1, MNGVID_MDZ2to5MF, getNativUstMngUSTAVKI(idxC, MNGVID_MDZ2to5MF)));
+    910          
+    911          //Выдержка ДЗ2ОФ
+    912            setTimerPorog(tmpOffsetT+ TIMER3_DZ2to5,
+    913                    codecUstDZ2(1, MNGVID_DZ2to5OF, getNativUstMngUSTAVKI(idxC, MNGVID_DZ2to5OF)));
+    914          
+    915          //Ввод ускор ДЗ2МФ
+    916            setTimerPorog(tmpOffsetT+ TIMER4_DZ2to5MF,
+    917                    codecUstDZ2(1, MNGVUSK_DZ2to5MF, getNativUstMngUSTAVKI(idxC, MNGVUSK_DZ2to5MF)));
+    918          
+    919          //Ввод ускор МТЗ ДЗ2МФ
+    920            setTimerPorog(tmpOffsetT+ TIMER4_MDZ2to5MF,
+    921                    codecUstDZ2(1, MNGVUSK_MDZ2to5MF, getNativUstMngUSTAVKI(idxC, MNGVUSK_MDZ2to5MF)));
+    922          
+    923          
+    924          //Ускор ДЗ2МФ ВВ
+    925            int tmp =     codecUstDZ2(1, MNGUSK_DZ2to5MF_VV, getNativUstMngUSTAVKI(idxC, MNGUSK_DZ2to5MF_VV));
+    926            if(tmp==0) tmp=10;
+    927            setTimerPorog(tmpOffsetT+ TIMER6_DZ2to5MF, tmp);
+    928          
+    929          //Ускор ДЗ2МФ ОУ
+    930            tmp =        codecUstDZ2(1, MNGUSK_DZ2to5MF_OU, getNativUstMngUSTAVKI(idxC, MNGUSK_DZ2to5MF_OU));
+    931            if(tmp==0) tmp=10;
+    932            setTimerPorog(tmpOffsetT+ TIMER7_DZ2to5MF, tmp);
+    933          
+    934          //Ускор ДЗ2МФ ТУ
+    935            tmp =        codecUstDZ2(1, MNGUSK_DZ2to5MF_TU, getNativUstMngUSTAVKI(idxC, MNGUSK_DZ2to5MF_TU));
+    936            if(tmp==0) tmp=10;
+    937            setTimerPorog(tmpOffsetT+ TIMER8_DZ2to5MF, tmp);
+    938          
+    939          
+    940          //Ускор МТЗ ДЗ2МФ ВВ
+    941            tmp =        codecUstDZ2(1, MNGUSK_MDZ2to5MF_VV, getNativUstMngUSTAVKI(idxC, MNGUSK_MDZ2to5MF_VV));
+    942            if(tmp==0) tmp=10;
+    943            setTimerPorog(tmpOffsetT+ TIMER6_MDZ2to5MF, tmp);
+    944          
+    945          //Ускор МТЗ ДЗ2МФ ОУ
+    946            tmp =        codecUstDZ2(1, MNGUSK_MDZ2to5MF_OU, getNativUstMngUSTAVKI(idxC, MNGUSK_MDZ2to5MF_OU));
+    947            if(tmp==0) tmp=10;
+    948            setTimerPorog(tmpOffsetT+ TIMER7_MDZ2to5MF, tmp);
+    949          
+    950          //Ускор МТЗ ДЗ2МФ ТУ
+    951            tmp =        codecUstDZ2(1, MNGUSK_MDZ2to5MF_TU, getNativUstMngUSTAVKI(idxC, MNGUSK_MDZ2to5MF_TU));
+    952            if(tmp==0) tmp=10;
+    953            setTimerPorog(tmpOffsetT+ TIMER8_MDZ2to5MF, tmp);
+    954          
+    955          //Ускор ДЗ2ОФ ВВ
+    956            tmp =        codecUstDZ2(1, MNGUSK_DZ2to5OF_VV, getNativUstMngUSTAVKI(idxC, MNGUSK_DZ2to5OF_VV));
+    957            if(tmp==0) tmp=10;
+    958            setTimerPorog(tmpOffsetT+ TIMER6_DZ2to5OF, tmp);
+    959          
+    960          //Ускор ДЗ2ОФ ОУ
+    961            tmp =        codecUstDZ2(1, MNGUSK_DZ2to5OF_OU, getNativUstMngUSTAVKI(idxC, MNGUSK_DZ2to5OF_OU));
+    962            if(tmp==0) tmp=10;
+    963            setTimerPorog(tmpOffsetT+ TIMER7_DZ2to5OF, tmp);
+    964          
+    965          //Ускор ДЗ2ОФ ТУ
+    966            tmp =        codecUstDZ2(1, MNGUSK_DZ2to5OF_TU, getNativUstMngUSTAVKI(idxC, MNGUSK_DZ2to5OF_TU));
+    967            if(tmp==0) tmp=10;
+    968            setTimerPorog(tmpOffsetT+ TIMER8_DZ2to5OF, tmp);
+    969          
+    970          //таймер BO DZ2to5MF
+    971            setTimerPorog(tmpOffsetT+ TIMER_BODZ2to5MF, 10);
+    972          //таймер BO MDZ2to5MF
+    973            setTimerPorog(tmpOffsetT+ TIMER_BOMDZ2to5MF, 10);
+    974          //таймер BO DZ2to5OF      
+    975            setTimerPorog(tmpOffsetT+ TIMER_BODZ2to5OF, 10);
+    976          
+    977          }//prepareUstDZ2to5(short idxC)
+    978          
+    979          int SetOFZonaVertex2to5(int idxC)
+    980          {
+    981          //Формирование вершин зоны OF  
+    982          float diskr = 0.001;
+    983           int ust = codecUstDZ2(1, MNGUST_DZ2to5_OX1, getNativUstMngUSTAVKI(idxC, MNGUST_DZ2to5_OX1));
+    984           X1 = ((float)ust)*diskr;
+    985           ust = codecUstDZ2(1, MNGUST_DZ2to5_OY1, getNativUstMngUSTAVKI(idxC, MNGUST_DZ2to5_OY1));
+    986           Y1 = ((float)ust)*diskr;
+    987          
+    988           ust = codecUstDZ2(1, MNGUST_DZ2to5_OX2, getNativUstMngUSTAVKI(idxC, MNGUST_DZ2to5_OX2));
+    989           X2 = ((float)ust)*diskr;
+    990           ust = codecUstDZ2(1, MNGUST_DZ2to5_OY2, getNativUstMngUSTAVKI(idxC, MNGUST_DZ2to5_OY2));
+    991           Y2 = ((float)ust)*diskr;
+    992          
+    993          int ustx3 =
+    994           ust = codecUstDZ2(1, MNGUST_DZ2to5_OX3, getNativUstMngUSTAVKI(idxC, MNGUST_DZ2to5_OX3));
+    995           X3 = ((float)ust)*diskr;
+    996          int usty3 =
+    997           ust = codecUstDZ2(1, MNGUST_DZ2to5_OY3, getNativUstMngUSTAVKI(idxC, MNGUST_DZ2to5_OY3));
+    998           Y3 = ((float)ust)*diskr;
+    999          
+   1000          int ustx4 =
+   1001           ust = codecUstDZ2(1, MNGUST_DZ2to5_OX4, getNativUstMngUSTAVKI(idxC, MNGUST_DZ2to5_OX4));
+   1002           X4 = ((float)ust)*diskr;
+   1003          int usty4 =
+   1004           ust = codecUstDZ2(1, MNGUST_DZ2to5_OY4, getNativUstMngUSTAVKI(idxC, MNGUST_DZ2to5_OY4));
+   1005           Y4 = ((float)ust)*diskr;
+   1006           if(ustx3==ustx4 && usty3==usty4) return  1;//зона ДЗ треугольник
+   1007           return 0;//зона ДЗ четырехугольник
+   1008          }//SetOFZonaVertex2to5()
+   1009          
+   1010          int SetMFZonaVertex2to5(int idxC)
+   1011          {
+   1012          //Формирование вершин зоны MF  
+   1013          float diskr = 0.001;
+   1014           int ust = codecUstDZ2(1, MNGUST_DZ2to5_MX1, getNativUstMngUSTAVKI(idxC, MNGUST_DZ2to5_MX1));
+   1015           X1 = ((float)ust)*diskr;
+   1016           ust = codecUstDZ2(1, MNGUST_DZ2to5_MY1, getNativUstMngUSTAVKI(idxC, MNGUST_DZ2to5_MY1));
+   1017           Y1 = ((float)ust)*diskr;
+   1018          
+   1019           ust = codecUstDZ2(1, MNGUST_DZ2to5_MX2, getNativUstMngUSTAVKI(idxC, MNGUST_DZ2to5_MX2));
+   1020           X2 = ((float)ust)*diskr;
+   1021           ust = codecUstDZ2(1, MNGUST_DZ2to5_MY2, getNativUstMngUSTAVKI(idxC, MNGUST_DZ2to5_MY2));
+   1022           Y2 = ((float)ust)*diskr;
+   1023          
+   1024          int ustx3 =
+   1025           ust = codecUstDZ2(1, MNGUST_DZ2to5_MX3, getNativUstMngUSTAVKI(idxC, MNGUST_DZ2to5_MX3));
+   1026           X3 = ((float)ust)*diskr;
+   1027          int usty3 =
+   1028           ust = codecUstDZ2(1, MNGUST_DZ2to5_MY3, getNativUstMngUSTAVKI(idxC, MNGUST_DZ2to5_MY3));
+   1029           Y3 = ((float)ust)*diskr;
+   1030          
+   1031          int ustx4 =
+   1032           ust = codecUstDZ2(1, MNGUST_DZ2to5_MX4, getNativUstMngUSTAVKI(idxC, MNGUST_DZ2to5_MX4));
+   1033           X4 = ((float)ust)*diskr;
+   1034          int usty4 =
+   1035           ust = codecUstDZ2(1, MNGUST_DZ2to5_MY4, getNativUstMngUSTAVKI(idxC, MNGUST_DZ2to5_MY4));
+   1036           Y4 = ((float)ust)*diskr;
+   1037           if(ustx3==ustx4 && usty3==usty4) return  1;//зона ДЗ треугольник
+   1038           return 0;//зона ДЗ четырехугольник
+   1039          }//SetMFZonaVertex2to5(int idxC)
+   1040          
+   1041          int initIOCmd_DZ2()
+   1042          {
+   1043            //инициал IO команд
+   1044            offsetIOCmdDZ5 = IndexIO;//смещение для IO DZ5
+   1045            return commonInitIOCmd(IOCMD_DZ2to5_TOTAL);
+   1046          }//initIOCmd_DZ2()
+   1047          
+   1048          int initTLCmd_DZ2()
+   1049          {
+   1050            //инициал TL команд
+   1051            return commonInitTLCmd(TLCMD_DZ2to5_TOTAL);
+   1052          }//initTLCmd_DZ2()
+   1053          
+   1054          int initENACmd_DZ2()
+   1055          {
+   1056            //инициал ENA команд
+   1057            return commonInitENACmd(ENACMD_DZ2to5_TOTAL);
+   1058          }//initENACmd_DZ2()
+   1059          
+   1060          void initTimersDZ2(short idxC)
+   1061          {
+   1062            //запрос и инициал таймеров
+   1063            commonInitTimers(TIMERS_DZ2to5_TOTAL);//должен быть первым!
+   1064          }//initTimersDZ2()
+   1065          
+   1066          int codecUstDZ2(char codec, short offset, int ust)
+   1067          //codec=0-кодировать
+   1068          //codec=1-раскодировать
+   1069          {
+   1070            //кодировать-раскодировать уставку
+   1071          int grzHI = 0;//верх граница
+   1072          int grzLOW= 0;//низ граница
+   1073          int step  = 1;//шаг
+   1074            switch(offset)
+   1075            {
+   1076             //уставки
+   1077             case MNGUST_DZ2to5_MTZ:
+   1078                 grzHI = 1000000;//верх граница
+   1079                 grzLOW= 0;//низ граница
+   1080                 step  = 1;//шаг
+   1081             break;
+   1082          
+   1083             case MNGUST_DZ2to5_OX1:   case MNGUST_DZ2to5_OY1:
+   1084             case MNGUST_DZ2to5_OX2:   case MNGUST_DZ2to5_OY2:
+   1085             case MNGUST_DZ2to5_OX3:   case MNGUST_DZ2to5_OY3:
+   1086             case MNGUST_DZ2to5_OX4:   case MNGUST_DZ2to5_OY4:
+   1087          
+   1088             case MNGUST_DZ2to5_MX1:   case MNGUST_DZ2to5_MY1:
+   1089             case MNGUST_DZ2to5_MX2:   case MNGUST_DZ2to5_MY2:
+   1090             case MNGUST_DZ2to5_MX3:   case MNGUST_DZ2to5_MY3:
+   1091             case MNGUST_DZ2to5_MX4:   case MNGUST_DZ2to5_MY4:
+   1092                 grzHI = 1000000;//верх граница
+   1093                 grzLOW= -1000000;//низ граница
+   1094                 step  = 1;//шаг
+   1095             break;
+   1096          
+   1097            //выдержки
+   1098             case MNGVID_DZ2to5MF:
+   1099             case MNGVID_MDZ2to5MF:
+   1100             case MNGVID_DZ2to5OF:
+   1101             case MNGVUSK_DZ2to5MF:
+   1102             case MNGVUSK_MDZ2to5MF:
+   1103          
+   1104             case MNGUSK_DZ2to5MF_VV:
+   1105             case MNGUSK_DZ2to5MF_OU:
+   1106             case MNGUSK_DZ2to5MF_TU:
+   1107          
+   1108             case MNGUSK_MDZ2to5MF_VV:
+   1109             case MNGUSK_MDZ2to5MF_OU:
+   1110             case MNGUSK_MDZ2to5MF_TU:
+   1111          
+   1112             case MNGUSK_DZ2to5OF_VV:
+   1113             case MNGUSK_DZ2to5OF_OU:
+   1114             case MNGUSK_DZ2to5OF_TU:
+   1115          
+   1116                 grzHI = 2000000;//верх граница
+   1117                 grzLOW= 0;//низ граница
+   1118                 step  = 1;//шаг
+   1119             break;
+   1120          
+   1121             default:return ust;//уставка управления
+   1122            }//switch
+   1123          
+   1124            if(codec) return ust*step;
+   1125          //раскодировать уставку
+   1126            if(ust<grzLOW) return ERROR_UST;
+   1127            if(ust>grzHI)  return ERROR_UST;
+   1128            return ust/step;
+   1129          }//codecUstDZ2to5(char *buf, short offset, int ust)
+   1130          
+   1131          int isDISactiv_DZ2to5(int idxC)
+   1132          {
+   1133           //активность Регистратора ДИС
+   1134            return 0;//нет активности
+   1135          }//isDISactiv_DZ2to5(int idxC)
+   1136          
+   1137          char copyDZ2ToRepozitar(char packet)
+   1138          {
+   1139            memset(&rpzcomponent_obj, 0, sizeof(COMPONENT_OBJ));//стереть старое
+   1140          //зарегистрировать компонент в репозитарии
+   1141            rpzcomponent_obj.componentEnable = 1;//разрешение компонента
+   1142            rpzcomponent_obj.kodC   = KOD_COMPONENT;         //код компонента
+   1143            rpzcomponent_obj.permanent = 0; //перманентный компонент
+   1144          
+   1145            strcpy(rpzcomponent_obj.nameComponent,  DZ2_TITLE);       //имя компонента
+   1146            rpzcomponent_obj.sub_menu_component =  sub_menu_comp_DZ2;//sub_menu_component;
+   1147          
+   1148            rpzcomponent_obj.twinControl = &(twinDZ2[0]);//массив контроля близнецов
+   1149            twinDZ2[0].twin_different = diffDZ3ToRepozitar;//ф-ция контроля близнецов
+   1150            twinDZ2[1].twin_different = diffDZ4ToRepozitar;//ф-ция контроля близнецов
+   1151            twinDZ2[2].twin_different = diffDZ5ToRepozitar;//ф-ция контроля близнецов
+   1152          
+   1153            rpzcomponent_obj.cntClon     = CNT_STUPEN_DZ;   //к-во клонов
+   1154            rpzcomponent_obj.numClon     = 2;//номер клона
+   1155            rpzcomponent_obj.workToSignal = 0; //Работа на сигнал
+   1156          
+   1157            rpzcomponent_obj.initUstMng     = initUstDZ2;    //инициал уставок
+   1158            rpzcomponent_obj.prepareUstSpv  = prepareUstDZ2;//подготовка уставок
+   1159            rpzcomponent_obj.initIOCmd      = initIOCmd_DZ2;      //инициал IO команд
+   1160            rpzcomponent_obj.initTLCmd      = initTLCmd_DZ2;      //инициал TL команд
+   1161            rpzcomponent_obj.initENACmd     = initENACmd_DZ2;     //инициал ENA команд
+   1162            rpzcomponent_obj.bo_bvCmd       = NULL; //настройка БО БВ команд
+   1163            rpzcomponent_obj.isDISactiv     = isDISactiv_DZ2to5; //активность Регистратора ДИС
+   1164            rpzcomponent_obj.setBOBVtimer   = NULL; //инициал таймеров БО БВ
+   1165          
+   1166            rpzcomponent_obj.nameStatusIO = ionsDZ2;          //имена и статус команд IO
+   1167            rpzcomponent_obj.initTimers   = initTimersDZ2;    //запрос и инициал таймеров
+   1168            rpzcomponent_obj.logic        = logicDZ2to5;         //логика компонента
+   1169          
+   1170            rpzcomponent_obj.codecUst = codecUstDZ2;   //кодировать-раскодировать уставку
+   1171          
+   1172            return 0;//не пакетная регистрация
+   1173          }//
+   1174          
+   1175          #endif // _HIDE_COMPONENT
+   1176          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   EditUprDZ2
+         8   -> UpravlRedactor
+       8   EditUstDZ2
+         8   -> SystemEditUst
+       8   EditVidDZ2
+         8   -> SystemEditUst
+      24   KadrMenuFormat_upr_compDZ2
+        24   -> getCurrentMngUSTAVKI
+        24   -> selectorUprStrDZ2
+        24   -> strcpy
+       8   PereinitUprListCompDZ2
+         8   -> ListPStr
+         8   -> TxtStreamInit
+         8   -> TxtStreamSetEnd
+         8   -> ViewDiskrMenuList
+       8   PereinitUstListCompDZ2
+         8   -> ListPStr
+         8   -> TxtStreamInit
+         8   -> TxtStreamSetEnd
+         8   -> ViewDiskrMenuList
+       8   PereinitVidListCompDZ2
+         8   -> ListPStr
+         8   -> TxtStreamInit
+         8   -> TxtStreamSetEnd
+         8   -> ViewDiskrMenuList
+      32   SetMFZonaVertex2to5
+        32   -> codecUstDZ2
+        32   -> getNativUstMngUSTAVKI
+      32   SetOFZonaVertex2to5
+        32   -> codecUstDZ2
+        32   -> getNativUstMngUSTAVKI
+       8   UprCompDZ2
+         8   -> PassWord
+         8   -> PrepareEditMenu
+         8   -> SelectorCRRLIGHTLINE
+       8   UprListCompDZ2
+         8   -> InitFHOME
+         8   -> LanderUpDown
+         8   -> SelectorFHOME
+         8   -> SelectorMNGBAZA
+         8   -> SelectorSUBMENU
+         8   -> SelectorTEXTCONTROL
+       8   UstCompDZ2
+         8   -> PassWord
+         8   -> PrepareEditMenu
+         8   -> SelectorCRRLIGHTLINE
+       8   UstListCompDZ2
+         8   -> InitFHOME
+         8   -> LanderUpDown
+         8   -> SelectorFHOME
+         8   -> SelectorMNGBAZA
+         8   -> SelectorSUBMENU
+         8   -> SelectorTEXTCONTROL
+       8   VidCompDZ2
+         8   -> EditVidDZ2
+         8   -> PrepareEditMenu
+         8   -> SelectorCRRLIGHTLINE
+       8   VidListCompDZ2
+         8   -> InitFHOME
+         8   -> LanderUpDown
+         8   -> SelectorFHOME
+         8   -> SelectorMNGBAZA
+         8   -> SelectorSUBMENU
+         8   -> SelectorTEXTCONTROL
+      20   codecUstDZ2
+        20 __aeabi_idiv
+      24   copyDZ2ToRepozitar
+        24   -> __aeabi_memset
+        24   -> strcpy
+       8   initENACmd_DZ2
+         8   -> commonInitENACmd
+       8   initIOCmd_DZ2
+         8   -> commonInitIOCmd
+       8   initTLCmd_DZ2
+         8   -> commonInitTLCmd
+       8   initTimersDZ2
+         8   -> commonInitTimers
+       0   initUstDZ2
+       0   isDISactiv_DZ2to5
+      32   prepareUstDZ2
+        32   -> CopyWideENAToENAcmd
+        32   -> PrepareENACmd
+        32   -> SetMFZonaVertex2to5
+        32   -> SetOFZonaVertex2to5
+        32   -> codecUstDZ2
+        32   -> getNativUstMngUSTAVKI
+        32   -> getOffsetTimersCnf
+        32   -> isNewZonaMethodVRT
+        32   -> isZonaTrianMethodVRT
+        32   -> setTimerPorog
+        32 __aeabi_idiv
+      16   selectorUprStrDZ2
+        16   -> NumBitCheckWord
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable15
+       4  ??DataTable15_1
+       4  ??DataTable15_2
+       4  ??DataTable15_3
+       4  ??DataTable16
+       4  ??DataTable16_1
+       4  ??DataTable16_2
+       4  ??DataTable16_3
+       4  ??DataTable18
+       4  ??DataTable19
+       4  ??DataTable19_1
+       4  ??DataTable19_2
+       4  ??DataTable19_3
+       4  ??DataTable19_4
+       4  ??DataTable19_5
+       4  ??DataTable19_6
+       4  ??DataTable19_7
+       4  ??DataTable20
+       4  ??DataTable20_1
+       4  ??DataTable20_10
+       4  ??DataTable20_11
+       4  ??DataTable20_12
+       4  ??DataTable20_13
+       4  ??DataTable20_14
+       4  ??DataTable20_15
+       4  ??DataTable20_16
+       4  ??DataTable20_17
+       4  ??DataTable20_18
+       4  ??DataTable20_19
+       4  ??DataTable20_2
+       4  ??DataTable20_20
+       4  ??DataTable20_21
+       4  ??DataTable20_22
+       4  ??DataTable20_23
+       4  ??DataTable20_24
+       4  ??DataTable20_25
+       4  ??DataTable20_26
+       4  ??DataTable20_27
+       4  ??DataTable20_28
+       4  ??DataTable20_29
+       4  ??DataTable20_3
+       4  ??DataTable20_30
+       4  ??DataTable20_31
+       4  ??DataTable20_32
+       4  ??DataTable20_33
+       4  ??DataTable20_34
+       4  ??DataTable20_4
+       4  ??DataTable20_5
+       4  ??DataTable20_6
+       4  ??DataTable20_7
+       4  ??DataTable20_8
+       4  ??DataTable20_9
+      16  ?_0
+      16  ?_1
+      12  ?_10
+      16  ?_11
+      12  ?_12
+      16  ?_2
+      16  ?_3
+      12  ?_4
+      20  ?_5
+      16  ?_6
+      16  ?_7
+      12  ?_8
+      16  ?_9
+       4  DZ2_TITLE
+      52  EditUprDZ2
+      16  EditUstDZ2
+      16  EditVidDZ2
+     160  KadrMenuFormat_upr_compDZ2
+      68  PereinitUprListCompDZ2
+      68  PereinitUstListCompDZ2
+      68  PereinitVidListCompDZ2
+     544  SetMFZonaVertex2to5
+     544  SetOFZonaVertex2to5
+      28  UprCompDZ2
+      52  UprListCompDZ2
+      28  UstCompDZ2
+      52  UstListCompDZ2
+      24  VidCompDZ2
+      52  VidListCompDZ2
+     256  codecUstDZ2
+     332  copyDZ2ToRepozitar
+       4  global_enaDZ3
+      16  initENACmd_DZ2
+      32  initIOCmd_DZ2
+      16  initTLCmd_DZ2
+      20  initTimersDZ2
+     432  initUstDZ2
+      80  ionsDZ2
+      12  isDISactiv_DZ2to5
+       4  isValidZonaDZ2MF
+       4  isValidZonaDZ2OF
+       4  isValidZonaDZ3MF
+       4  isValidZonaDZ3OF
+       4  isValidZonaDZ4MF
+       4  isValidZonaDZ4OF
+       4  isValidZonaDZ5MF
+       4  isValidZonaDZ5OF
+       4  offsetIOCmdDZ5
+    2328  prepareUstDZ2
+      60  selectorUprStrDZ2
+      96  sub_menu_comp_DZ2
+      36  sub_menu_upr_compDZ2
+      36  sub_menu_ust_compDZ2
+      36  sub_menu_vid_compDZ2
+      12  twinDZ2
+
+ 
+    52 bytes in section .bss
+   288 bytes in section .data
+   196 bytes in section .rodata
+ 5 484 bytes in section .text
+ 
+ 5 484 bytes of CODE  memory
+   196 bytes of CONST memory
+   340 bytes of DATA  memory
+
+Errors: none
+Warnings: none

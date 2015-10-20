@@ -1,0 +1,134 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  14:35:24
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\component\logicWL.c
+#    Command line =  
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\component\logicWL.c" -lcN
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\" -o "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "D:\Program Files\IAR Systems\Embedded
+#        Workbench 7.2\arm\INC\c\DLib_Config_Normal.h" -I "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\" --interwork
+#        --cpu_mode arm -On --use_c++_inline
+#    List file    =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\logicWL.lst
+#    Object file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\logicWL.o
+#
+###############################################################################
+
+D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\component\logicWL.c
+      1          
+      2          #include <stdio.h>
+      3          #include <string.h>
+      4          
+      5          #include "psuperVisor\supermanager.h"
+      6          
+      7          #include "bazisdef.h"
+      8          #include "component\componentdef.h"
+      9          #include "psuperVisor\psvisor_helpdef.h"
+     10          
+     11          #include "logictimers\logictimersmac.h"
+     12          
+     13          #include "logictimers\logictimersfnc.h"
+     14          
+     15          #include "..\bazis.h"
+     16          
+     17          #include "toSpeedOptim.h"
+     18          
+     19          #define _HIDE_COMPONENT
+     20          #include "WLComponent.c"
+     21          
+     22          extern int GlobalPO1;
+     23          extern int GlobalPO2;
+     24          extern int GlobalPO3;
+     25          extern int GlobalPO4;
+     26          extern int GlobalLevelI_ABC[];
+     27          
+     28          extern COMPONENT_OBJ  cnfCOMPONENT[];//конфигурация
+     29          extern int  logMassTimer[];
+     30          extern int  ENAcmd[];
+     31          extern int  spvUSTAVKI[];//текущие уставки супервизора
+     32          extern int   WideCmdRTBuffer[];
+     33          extern int   tempLog[];
+     34          extern int offsetIOCmdPRM1;//смещение для IO PRM1
+     35          //неисправность цепей напр
+     36          //extern int  isFAILU_COMMON;
+     37          //глобальный сброс всех таймеров
+     38          extern int  globalTimerReset;
+     39          extern int  isRunWL;//исполнение РЛ
+     40          extern UNS_32 pActualCMD[];//текущие
+     41          
+     42          void WideLogLogic() @ "Fast_function"
+     43          {
+     44          //исполнить логика РЛ
+     45           if(isRunWL) return;
+     46           isRunWL=1;//исполнение РЛ
+     47          /*
+     48            for (int lgm=0; lgm<8; lgm++) //перебрать все лог элементы
+     49            {
+     50              executeLgm(lgm);//Исполнить логем
+     51            }//for
+     52          */
+     53          
+     54          }//WideLogLogic()
+     55          
+     56          void logicWL(int idxC) @ "Fast_function"
+     57          {
+     58          //логика компонента
+     59           isRunWL=0;//исполнение РЛ
+     60          }//logicWL(int idxC)
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   WideLogLogic
+       0   logicWL
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable1
+      32  WideLogLogic
+      16  logicWL
+
+ 
+ 52 bytes in section Fast_function
+ 
+ 52 bytes of CODE memory
+
+Errors: none
+Warnings: 1

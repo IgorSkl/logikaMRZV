@@ -1,0 +1,502 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  15:05:40
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\logictimers\logictimers.c
+#    Command line =  
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\logictimers\logictimers.c" -lcN
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\" -o "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\Obj\" --debug
+#        --endian=little --cpu=ARM926EJ-S -e --fpu=VFP9-S --dlib_config
+#        "D:\Program Files\IAR Systems\Embedded Workbench
+#        7.2\arm\INC\c\DLib_Config_Normal.h" -I "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\"
+#        --interwork --cpu_mode arm -Ohs --use_c++_inline
+#    List file    =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\logictimers.lst
+#    Object file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\logictimers.o
+#
+###############################################################################
+
+D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\logictimers\logictimers.c
+      1          
+      2          #include <stdio.h>
+      3          #include <string.h>
+      4          
+      5          #include "lpc_types.h"
+      6          #include "lpc_irq_fiq.h"
+      7          #include "lpc_arm922t_cp15_driver.h"
+      8          
+      9          #include "lpc32xx_hstimer.h"
+     10          
+     11          #include "bazisdef.h"
+     12          
+     13          #include "psuperVisor\supermanager.h"
+     14          #include "logictimers\logictimersdef.h"
+     15          #include "logictimers\logictimersfnc.h"
+     16          
+     17          extern HSTIMER_REGS_T *hst_regptr;  // Pointer to HSTIMER registers
+     18          
+     19          extern int timing;  
+     20          extern int timingLoad;  
+     21          
+     22          //массив EL триггеров для лог таймеров
+     23          int  elTrgOldTimer[MAX_LOGTIMER];
+     24          int  elTrgOutTimer[MAX_LOGTIMER];
+     25          //лог массив запуска таймеров
+     26          int  logMassTimer[MAX_LOGTIMER];
+     27          //главный массив лог таймеров
+     28          BAZIS_TIMER_MEM  bazisTimerMem[MAX_LOGTIMER];
+     29          
+     30          //массив EL триггеров для лог таймеров РЛ
+     31          int  elTrgOldTimer_WL[MAX_LOGTIMER_WL];
+     32          int  elTrgOutTimer_WL[MAX_LOGTIMER_WL];
+     33          //лог массив запуска таймеров
+     34          int  logMassTimer_WL[MAX_LOGTIMER_WL];
+     35          //главный массив лог таймеров
+     36          BAZIS_TIMER_MEM  bazisTimerMem_WL[MAX_LOGTIMER_WL];
+     37          
+     38          //глобальный сброс всех таймеров
+     39          int  globalTimerReset = 1;
+     40          int  ddvIncrementor;//счетчик времени для Допуск ДВ
+     41          int  timerEnableWL = 0;//разрешение работы таймеров РЛ
+     42          
+     43          /***********************************************************************
+     44           *
+     45           * Function: hstimer_user_interrupt
+     46           *
+     47           * Purpose: HSTIMER interrupt handler
+     48           *
+     49           **********************************************************************/
+     50          
+     51          void hstimer_user_interrupt(void) @ "Fast_function"
+     52          {
+     53            ddvIncrementor++;//счетчик времени для Допуск ДВ
+     54            if(ddvIncrementor>DDV_MAX) ddvIncrementor=0;
+     55            
+     56            for (int i=0; ; i++) //перебрать все таймера
+     57            {
+     58              if (!bazisTimerMem[i].ENABLE) break;//уйти если больше нет таймеров
+     59              if (bazisTimerMem[i].RESET) //если таймер сброшен
+     60              {
+     61                //текущее значение
+     62                bazisTimerMem[i].crrCNT = bazisTimerMem[i].BUSY = bazisTimerMem[i].FINISCH = 0;
+     63                continue;//след таймер
+     64              }//if RESET
+     65          
+     66              if (bazisTimerMem[i].BUSY)
+     67              {
+     68                bazisTimerMem[i].crrCNT ++;         //текущее значение
+     69                if (bazisTimerMem[i].crrCNT >= bazisTimerMem[i].porogCNT)
+     70                {
+     71                  bazisTimerMem[i].BUSY = 0;
+     72                  bazisTimerMem[i].FINISCH = 1;//есть окончание счета
+     73                }//if
+     74                continue;//уйти
+     75              }//if
+     76          
+     77              if (bazisTimerMem[i].FINISCH) continue;//досчитал и ждет сброса
+     78          
+     79              if(elTrgOutTimer[i])
+     80              {
+     81                bazisTimerMem[i].BUSY = 1;
+     82                bazisTimerMem[i].crrCNT = 0;         //текущее значение
+     83                continue;//продолжить
+     84              }//if
+     85            }//for
+     86          
+     87          //таймера РЛ
+     88            for (int i=0; ; i++) //перебрать все таймера РЛ
+     89            {
+     90              if (!bazisTimerMem_WL[i].ENABLE) break;//уйти если больше нет таймеров
+     91              if (bazisTimerMem_WL[i].RESET) //если таймер сброшен
+     92              {
+     93                //текущее значение
+     94                bazisTimerMem_WL[i].crrCNT = bazisTimerMem_WL[i].BUSY = bazisTimerMem_WL[i].FINISCH = 0;
+     95                continue;//след таймер
+     96              }//if RESET
+     97          
+     98              if (bazisTimerMem_WL[i].BUSY)
+     99              {
+    100                bazisTimerMem_WL[i].crrCNT ++;         //текущее значение
+    101                if (bazisTimerMem_WL[i].crrCNT >= bazisTimerMem_WL[i].porogCNT)
+    102                {
+    103                  bazisTimerMem_WL[i].BUSY = 0;
+    104                  bazisTimerMem_WL[i].FINISCH = 1;//есть окончание счета
+    105                }//if
+    106                continue;//уйти
+    107              }//if
+    108          
+    109              if (bazisTimerMem_WL[i].FINISCH) continue;//досчитал и ждет сброса
+    110          
+    111              if(elTrgOutTimer_WL[i])
+    112              {
+    113                bazisTimerMem_WL[i].BUSY = 1;
+    114                bazisTimerMem_WL[i].crrCNT = 0;         //текущее значение
+    115                continue;//продолжить
+    116              }//if
+    117            }//for
+    118          
+    119            timing ++;  
+    120            timingLoad ++;  
+    121          
+    122            // Clear latched matcg interrupt
+    123            hst_regptr->hstim_int = HSTIM_MATCH0_INT;
+    124          }//hstimer_user_interrupt(void)
+    125          
+    126          /**********************************************
+    127          ТАЙМЕР ПАУЗЫ
+    128          tNumber - номер таймера
+    129          RES - сброс таймера
+    130          Выход - флаг работы
+    131          **********************************************/
+    132          int PLogTimerRES(int tNumber, int RES) @ "Fast_function"
+    133          {
+    134            int tmp = *bazisTimerMem[tNumber].pntInputSignal;
+    135          
+    136            elTrgOutTimer[tNumber] = tmp;
+    137          
+    138            if(!tmp)//вх сигнал не активный
+    139            {
+    140              //текущее значение
+    141              bazisTimerMem[tNumber].crrCNT = bazisTimerMem[tNumber].BUSY = bazisTimerMem[tNumber].FINISCH = 0;
+    142              return 0;
+    143            }//if(!tmp)//вх сигнал не активный
+    144          
+    145            if (RES)
+    146            {
+    147              bazisTimerMem[tNumber].RESET = 1;
+    148              return 0;
+    149            }//if
+    150          
+    151            if (bazisTimerMem[tNumber].FINISCH)
+    152            {
+    153              //если таймер досчитал
+    154              if (tmp) return 1;
+    155              bazisTimerMem[tNumber].RESET = 1;
+    156            }//if
+    157            else
+    158            {
+    159          //    if (!RES)
+    160              bazisTimerMem[tNumber].RESET = 0;
+    161            }
+    162            if (bazisTimerMem[tNumber].porogCNT==0)return 1;//при нулевом пороге выход немедленно
+    163            return 0;
+    164          }
+    165          
+    166          /**********************************************
+    167          ТАЙМЕР ПАУЗЫ
+    168          tNumber - номер таймера
+    169          RES - сброс таймера
+    170          Выход - флаг работы
+    171          **********************************************/
+    172          int PLogTimer(int tNumber) @ "Fast_function"
+    173          {
+    174            int tmp = *bazisTimerMem[tNumber].pntInputSignal;
+    175          
+    176            elTrgOutTimer[tNumber] = tmp;
+    177            if(!tmp)//вх сигнал не активный
+    178            {
+    179              //текущее значение
+    180              bazisTimerMem[tNumber].crrCNT = bazisTimerMem[tNumber].BUSY = bazisTimerMem[tNumber].FINISCH = 0;
+    181              return 0;
+    182            }//if(!tmp)//вх сигнал не активный
+    183          
+    184            if (bazisTimerMem[tNumber].FINISCH)
+    185            {
+    186              //если таймер досчитал
+    187              if (tmp) return 1;
+    188              bazisTimerMem[tNumber].RESET = 1;
+    189              //  bazisTimerMem[tNumber].RESET = 1;
+    190            }//if
+    191            else
+    192            {
+    193              bazisTimerMem[tNumber].RESET = 0;
+    194            }
+    195            if (bazisTimerMem[tNumber].porogCNT==0) return 1;//при нулевом пороге выход немедленно
+    196            return 0;
+    197          }//PLogTimer(char tNumber)
+    198          
+    199          /**********************************************
+    200          ТАЙМЕР ПАУЗЫ РЛ
+    201          tNumber - номер таймера
+    202          RES - сброс таймера
+    203          Выход - флаг работы
+    204          **********************************************/
+    205          int PLogTimer_WL(int tNumber) @ "Fast_function"
+    206          {
+    207            int tmp = *bazisTimerMem_WL[tNumber].pntInputSignal;
+    208          
+    209            elTrgOutTimer_WL[tNumber] = tmp;
+    210            if(!tmp)//вх сигнал не активный
+    211            {
+    212              //текущее значение
+    213              bazisTimerMem_WL[tNumber].crrCNT = bazisTimerMem_WL[tNumber].BUSY = bazisTimerMem_WL[tNumber].FINISCH = 0;
+    214              return 0;
+    215            }//if(!tmp)//вх сигнал не активный
+    216          
+    217            if (bazisTimerMem_WL[tNumber].FINISCH)
+    218            {
+    219              //если таймер досчитал
+    220              if (tmp) return 1;
+    221              bazisTimerMem_WL[tNumber].RESET = 1;
+    222            }//if
+    223            else
+    224            {
+    225              bazisTimerMem_WL[tNumber].RESET = 0;
+    226            }
+    227            if (bazisTimerMem_WL[tNumber].porogCNT==0) return 1;//при нулевом пороге выход немедленно
+    228            return 0;
+    229          }//PLogTimer_WL(char tNumber)
+    230          
+    231          void initLogTimer(int tNumber)
+    232          {
+    233            elTrgOutTimer[tNumber] = 0;//выход триг ускор переноса
+    234            elTrgOldTimer[tNumber] = *(bazisTimerMem[tNumber].pntInputSignal);
+    235          }//initLogTimer(int tNumber)
+    236          
+    237          void initLogTimer_WL(int tNumber)
+    238          {
+    239            elTrgOutTimer_WL[tNumber] = 0;//выход триг ускор переноса
+    240            elTrgOldTimer_WL[tNumber] = *(bazisTimerMem_WL[tNumber].pntInputSignal);
+    241          }//initLogTimer(int tNumber)
+    242          
+    243          /**********************************************
+    244          О-ФУНКЦИЯ
+    245          tNumber - номер таймера паузы
+    246          cnf - конфигурация 0-прямая 1-обратная
+    247          RES - сброс таймера
+    248          Выход - флаг работы
+    249          **********************************************/
+    250          /*
+    251          char OFunctionRES(char tNumber, char cnf, char RES)
+    252          {
+    253            char tmp = logMassTimer[tNumber+1] = PLogTimerRES(tNumber, RES);
+    254            if (cnf) return ILogTimerRES(tNumber+1, RES)|tmp;
+    255            return FLogTimerRES(tNumber+1, RES);
+    256          }
+    257          */
+    258          /**********************************************
+    259          О-ФУНКЦИЯ
+    260          tNumber - номер таймера паузы
+    261          cnf - конфигурация 0-прямая 1-обратная
+    262          Выход - флаг работы
+    263          **********************************************/
+    264          int OFunction(int tNumber, int cnf) @ "Fast_function"
+    265          {
+    266            int tmp = logMassTimer[tNumber+1] = PLogTimer(tNumber);
+    267            if (cnf) return ILogTimer(tNumber+1)|tmp;
+    268            return FLogTimer(tNumber+1);
+    269          }
+    270          
+    271          /**********************************************
+    272          О-ФУНКЦИЯ РЛ
+    273          tNumber - номер таймера паузы
+    274          cnf - конфигурация 0-прямая 1-обратная
+    275          Выход - флаг работы
+    276          **********************************************/
+    277          int OFunction_WL(int tNumber, int cnf) @ "Fast_function"
+    278          {
+    279            int tmp = logMassTimer_WL[tNumber+1] = PLogTimer_WL(tNumber);
+    280            if (cnf) return ILogTimer_WL(tNumber+1)|tmp;
+    281            return FLogTimer_WL(tNumber+1);
+    282          }//OFunction_WL(int tNumber, int cnf)
+    283          
+    284          void initTimers() @ "Fast_function"
+    285          {
+    286          //инит таймеров
+    287            //TIMERS INIT
+    288            memset(bazisTimerMem, 0, sizeof(BAZIS_TIMER_MEM)*MAX_LOGTIMER);//осн массив таймеров
+    289            //связать лог таймера и лог сигналы
+    290            for (short i=0; i<MAX_LOGTIMER; i++)
+    291              bazisTimerMem[i].pntInputSignal = &(logMassTimer[i]);
+    292          }//initTimers()
+    293          
+    294          void initTimers_WL() @ "Fast_function"
+    295          {
+    296          //инит таймеров
+    297            //TIMERS INIT
+    298            memset(bazisTimerMem_WL, 0, sizeof(BAZIS_TIMER_MEM)*MAX_LOGTIMER_WL);//осн массив таймеров
+    299            //связать лог таймера и лог сигналы
+    300            for (short i=0; i<MAX_LOGTIMER_WL; i++)
+    301              bazisTimerMem_WL[i].pntInputSignal = &(logMassTimer_WL[i]);
+    302          }//initTimers_WL()
+    303          
+    304          int getTimerCrr(int numTim) @ "Fast_function"
+    305          {
+    306            //текущий счет таймера
+    307             return bazisTimerMem[numTim].crrCNT;
+    308          }//getTimerCrr(int numTim)
+    309          
+    310          int getTimerPorog(int numTim) @ "Fast_function"
+    311          {
+    312            //текущий порог таймера
+    313             return bazisTimerMem[numTim].porogCNT;
+    314          }//getTimerPorog(int numTim)
+    315          
+    316          int getTimerBUSY(int numTim) @ "Fast_function"
+    317          {
+    318            //занятость таймера
+    319             return bazisTimerMem[numTim].BUSY;
+    320          }//getTimerBUSY(int numTim)
+    321          
+    322          int getTimerFINISH(int numTim) @ "Fast_function"
+    323          {
+    324            //останов таймера
+    325             return bazisTimerMem[numTim].FINISCH;
+    326          }//getTimerFINISH(int numTim)
+    327          
+    328          int getTimerENABLE(int numTim) @ "Fast_function"
+    329          {
+    330            //разреш таймера
+    331             return bazisTimerMem[numTim].ENABLE;
+    332          }//getTimerENABLE(int numTim)
+    333          
+    334          void setTimerENABLE(int numTim, int ena) @ "Fast_function"
+    335          {
+    336            //уст разреш таймера
+    337             bazisTimerMem[numTim].ENABLE = ena;
+    338          }//getTimerENABLE(int numTim)
+    339          
+    340          void setTimerPorog(int numTim, int porog) @ "Fast_function"
+    341          {
+    342            bazisTimerMem[numTim].porogCNT = porog;
+    343          }//setTimerPorog(int numTim, int porog)
+    344          
+    345          void setTimerENABLE_WL(int numTim, int ena) @ "Fast_function"
+    346          {
+    347            //уст разреш таймера РЛ
+    348             bazisTimerMem_WL[numTim].ENABLE = ena;
+    349          }//setTimerENABLE_WL(int numTim, int ena)
+    350          
+    351          void setTimerPorog_WL(int numTim, int porog) @ "Fast_function"
+    352          {
+    353            bazisTimerMem_WL[numTim].porogCNT = porog;
+    354          }//setTimerPorog_WL(int numTim, int porog)
+    355          
+    356          int isTimerDelta(int numTim, int delta) @ "Fast_function"
+    357          {
+    358            //проверка счет таймера
+    359             if(bazisTimerMem[numTim].crrCNT>delta) return 1;
+    360             return 0;
+    361          }//getTimerDelta(int numTim, int delta)
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      16   OFunction
+        16   -> FLogTimer
+        16   -> ILogTimer
+        16   -> PLogTimer
+      16   OFunction_WL
+        16   -> FLogTimer_WL
+        16   -> ILogTimer_WL
+        16   -> PLogTimer_WL
+       0   PLogTimer
+       4   PLogTimerRES
+       0   PLogTimer_WL
+       0   getTimerBUSY
+       0   getTimerCrr
+       0   getTimerENABLE
+       0   getTimerFINISH
+       0   getTimerPorog
+       8   hstimer_user_interrupt
+       0   initLogTimer
+       0   initLogTimer_WL
+       8   initTimers
+         8   -> __aeabi_memclr4
+       8   initTimers_WL
+         8   -> __aeabi_memclr4
+       0   isTimerDelta
+       0   setTimerENABLE
+       0   setTimerENABLE_WL
+       0   setTimerPorog
+       0   setTimerPorog_WL
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable17
+       4  ??DataTable17_1
+       4  ??DataTable17_2
+       4  ??DataTable17_3
+       4  ??DataTable17_4
+       4  ??DataTable17_5
+       4  ??DataTable17_6
+       4  ??DataTable17_7
+       4  ??DataTable17_8
+       4  ??DataTable27
+       4  ??DataTable27_1
+       4  ??DataTable27_2
+      60  OFunction
+      60  OFunction_WL
+     112  PLogTimer
+     132  PLogTimerRES
+     108  PLogTimer_WL
+    8400  bazisTimerMem
+    4004  bazisTimerMem_WL
+          logMassTimer_WL
+          elTrgOldTimer_WL
+          elTrgOutTimer_WL
+          ddvIncrementor
+    2400  elTrgOldTimer
+          elTrgOutTimer
+      20  getTimerBUSY
+      20  getTimerCrr
+      20  getTimerENABLE
+      20  getTimerFINISH
+      20  getTimerPorog
+       4  globalTimerReset
+     368  hstimer_user_interrupt
+      40  initLogTimer
+      36  initLogTimer_WL
+      76  initTimers
+      72  initTimers_WL
+      32  isTimerDelta
+    1200  logMassTimer
+      20  setTimerENABLE
+      20  setTimerENABLE_WL
+      20  setTimerPorog
+      20  setTimerPorog_WL
+       4  timerEnableWL
+
+ 
+ 16 008 bytes in section .bss
+      4 bytes in section .data
+     88 bytes in section .text
+  1 236 bytes in section Fast_function
+ 
+  1 324 bytes of CODE memory
+ 16 012 bytes of DATA memory
+
+Errors: none
+Warnings: none

@@ -1,0 +1,1395 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        12/Oct/2015  11:05:08
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\virtualMenu\systemMenu.c
+#    Command line =  
+#        "D:\IAR projects\HR1_0100_00_I720_new2\virtualMenu\systemMenu.c" -D
+#        _STATIC_MEMORY_BOOT -lcN "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\List\" -o "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "C:\Program Files\IAR Systems\Embedded
+#        Workbench 7.40\arm\INC\c\DLib_Config_Normal.h" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\Igor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\component\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\" --cpu_mode arm -On
+#        --use_c++_inline
+#    List file    =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\List\systemMenu.lst
+#    Object file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\Obj\systemMenu.o
+#
+###############################################################################
+
+D:\IAR projects\HR1_0100_00_I720_new2\virtualMenu\systemMenu.c
+      1          /*
+      2          #include <vcl.h>
+      3          #include <strstrea.h>
+      4          #include <math.h>
+      5          #include <mem.h>
+      6          #include <fstream.h>
+      7          #include <strstrea.h>
+      8          #include <iomanip.h>
+      9          #pragma hdrstop
+     10          
+     11          #include "vmenuDis.h"
+     12          */
+     13          #include <stdio.h>
+     14          #include <string.h>
+     15          
+     16          #include "psuperVisor\supermanager.h"
+     17          
+     18          #include "bazisdef.h"
+     19          #include "component\componentdef.h"
+     20          #include "virtualMenu\systemmenudef.h"
+     21          
+     22          #include "virtualMenu\textstreamfnc.h"
+     23          #include "virtualMenu\systemmenufnc.h"
+     24          #include "virtualMenu\wideLogManagerfnc.h"
+     25          #include "virtualMenu\rangmanagerfnc.h"
+     26          #include "psuperVisor\psvisor_helpfnc.h"
+     27          #include "virtualMenu\ustmanagerfnc.h"
+     28          
+     29          #include "virtualMenu\viewMenuList.h"
+     30          #include "virtualMenu\viewMenuSub.h"
+     31          #include "virtualMenu\viewMenuWideLog.h"
+     32          #include "virtualMenu\viewMenuRang.h"
+     33          #include "virtualMenu\viewMenuCnf.h"
+     34          #include "virtualMenu\viewMenuReg.h"
+     35          #include "psuperVisor\psupervisor.h"
+     36          #include "virtualMenu\viewMenuTip.h"
+     37          
+     38          #include "..\bazis.h"
+     39          
+     40          #include "toSpeedOptim.h"
+     41          
+     42          extern char addComp[];
+     43          extern COMPONENT_OBJ  cnfCOMPONENT[];
+     44          extern COMPONENT_OBJ  cnfCOMPONENT_WL[];
+     45          
+     46          extern char deleteComp[];
+     47          extern char deleteComp_WL[];
+     48          extern COMPONENT_OBJ rpzcomponent_obj;//обект компонента для репозитария
+     49          
+     50          extern LineMenuItem sub_menu_dv[];
+     51          extern LineMenuItem sub_menu_rele[];
+     52          extern LineMenuItem sub_menu_logw[];
+     53          extern LineMenuItem sub_menu_le[];
+     54          
+     55          extern LineMenuItem sub_menu_cnf[];
+     56          extern LineMenuItem sub_menu_cnfwl[];
+     57          extern LineMenuItem sub_menu_tmp[];
+     58          extern UNS_32 pRDIScmdMaska[];//регистрацияДИС
+     59          extern UNS_32 pAPVcmdMaska[];//APV
+     60          extern UNS_32 pUROVcmdMaska[];//UROV
+     61          //extern UNS_32 pP1OFcmdMaska[];//P1OF
+     62          //extern UNS_32 pP2OFcmdMaska[];//P2OF
+     63          //extern UNS_32 pP3OFcmdMaska[];//P3OF
+     64          
+     65          extern UNS_32 selectorDVLow;//селекция ДВ активный-неактивный для мл 16 DV
+     66          extern UNS_32 selectorDVMidd;//селекция ДВ активный-неактивный для cp 16 DV
+     67          extern UNS_32 selectorDVHi;//селекция ДВ активный-неактивный для ct 16 DV
+     68          extern UNS_32 rele_bdvv1;//селекция реле
+     69          
+     70          extern UNS_32 selectorUVVLow;//селекция UVV активный-неактивный для мл 16 UVV
+     71          extern UNS_32 selectorUVVMidd;//селекция UVV активный-неактивный для cp 16 UVV
+     72          extern UNS_32 selectorUVVHi;//селекция UVV активный-неактивный для ct 16 UVV
+     73          
+     74          typedef void (* pFunction());//указатель на ф-цию
+     75          
+     76          MENU_CONTEXT menu_context;
+     77          
+     78          extern char stringList[48][32];//массив строк для просмотра
+     79          
+     80          void ViewDiskrMenu(short typeWin)
+     81          {
+     82          //вывести страницу
+     83          //типажи
+     84            switch(typeWin)
+     85            {
+     86            case typeMenuReg:
+     87            case typeMenuList:
+     88            case typeMenuEditRang:
+     89            case typeMenuEditWL:
+     90              ViewDiskrMenuList();//вывести страницу List
+     91              break;
+     92            case typeMenuViewLE:
+     93            case typeMenuViewRangDV:
+     94            case typeMenuViewRangRele:
+     95            case typeMenuViewRangCDI:
+     96            case typeMenuViewActual:
+     97            case typeMenuViewActualDV:
+     98            case typeMenuViewActualRele:
+     99            case typeMenuViewRDISMaska:
+    100            case typeMenuViewAPVMaska://Пуск АПВ
+    101            case typeMenuViewUROVMaska://Пуск УРОВ
+    102            case typeMenuViewP1OFMaska://маска 1 ОФ
+    103            case typeMenuViewP2OFMaska://маска 2 ОФ
+    104            case typeMenuViewP3OFMaska://маска 3 ОФ
+    105            case typeMenuCnf:
+    106            case typeMenuCnfWL:
+    107            case typeMenuSub:
+    108              ViewDiskrMenuSub();//вывести страницу View
+    109              break;
+    110            }//switch
+    111          }//ViewDiskrMenu()
+    112          
+    113          
+    114          void SetCloseButton()
+    115          {
+    116          //close
+    117            if(PNTCRR_SUBMENU(SUBDATA).Line2==NULL) return;//parent sub_menu не существует
+    118          
+    119            //CRR_SUBMENU = 
+    120            SelectorSUBMENU(PNTCRR_SUBMENU(SUBDATA).Line2);//новый текущий submenu
+    121            short typeWin = PNTCRR_SUBMENU(SUBDATA).TypesWin;
+    122            if(typeWin==typeMenuSub)
+    123            {
+    124              CRR_FHOME = &PereinitSub;//указатель на ф-цию HOME
+    125              ResetUpDown();//погасить Up Down
+    126            }//if
+    127          
+    128            //CRR_TEXTSTREAM = 
+    129            SelectorTEXTCONTROL(PNTCRR_SUBMENU(SUBDATA).Line1);
+    130            PNTCRR_TEXTSTREAM->PntStringViewer =0;//указател строки
+    131          
+    132            ShowTitleSubmenu_crr();//заголовок текущего Submenu
+    133            ViewDiskrMenu(typeWin);//вывести окно отображения
+    134          
+    135            if(typeWin!=typeMenuList) LanderPStr();//размещение указателя строки
+    136            else ListPStr();//размещение указателя строки
+    137          }//SetCloseButton()
+    138          
+    139          void ClickOpenButton()
+    140          {
+    141          //открыть меню
+    142            SelectorCRRLIGHTLINE();//найти подсвеченную строку текущего текст потока
+    143            //текущий linemenu
+    144            LineMenuItem  crr_linemenu = PNTCRR_SUBMENU(
+    145                                           LIGHTLINEMENU +1+SUBDATA
+    146                                         );
+    147            if(crr_linemenu.Line2==NULL) return; //следующ меню нет
+    148          
+    149            //CRR_SUBMENU = 
+    150            SelectorSUBMENU(crr_linemenu.Line2);//новый текущий submenu
+    151          
+    152            //флаги типажа
+    153            short typeWin = crr_linemenu.TypesWin;
+    154            if(!(typeWin==typeMenuProg))// || typeWin==typeMenuPassW))
+    155            {
+    156              PNTCRR_SUBMENU(SUBDATA).TypesWin = typeWin;//parent_type
+    157            }//if
+    158          
+    159            switch(typeWin)
+    160            {
+    161            case typeMenuViewLE:
+    162              OpenViewLE();//открыть ViewLE
+    163              break;
+    164            case typeMenuViewActual:
+    165              OpenMenuViewActual();//открыть меню Текущие
+    166              ResetPStr();
+    167              LanderUpDown();//wkl Up Down
+    168              break;
+    169            case typeMenuViewActualDV:
+    170              OpenMenuViewActualDV();//открыть меню Текущие DV
+    171              ResetPStr();
+    172              LanderUpDown();//wkl Up Down
+    173              break;
+    174            case typeMenuViewActualRele:
+    175              OpenMenuViewActualRele();//открыть меню Текущие Rele
+    176              ResetPStr();
+    177              LanderUpDown();//wkl Up Down
+    178              break;
+    179            case typeMenuViewRDISMaska:
+    180              OpenMenuViewRDIS();//открыть меню RDIS
+    181              LanderUpDown();//wkl Up Down
+    182              break;
+    183            case typeMenuViewAPVMaska://Пуск АПВ
+    184              OpenMenuViewAPV();//открыть меню APV
+    185              LanderUpDown();//wkl Up Down
+    186              break;
+    187            case typeMenuViewUROVMaska://Пуск УРОВ
+    188              OpenMenuViewUROV();//открыть меню UROV
+    189              LanderUpDown();//wkl Up Down
+    190              break;
+    191            case typeMenuViewP1OFMaska://маска 1 ОФ
+    192              OpenMenuViewP1OF();//открыть меню P1OF
+    193              LanderUpDown();//wkl Up Down
+    194              break;
+    195            case typeMenuViewP2OFMaska://маска 2 ОФ
+    196              OpenMenuViewP2OF();//открыть меню P2OF
+    197              LanderUpDown();//wkl Up Down
+    198              break;
+    199            case typeMenuViewP3OFMaska://маска 3 ОФ
+    200              OpenMenuViewP3OF();//открыть меню P3OF
+    201              LanderUpDown();//wkl Up Down
+    202              break;
+    203            case typeMenuViewRangDV:
+    204              OpenMenuViewRangDV();//открыть меню ViewRang
+    205              break;
+    206            case typeMenuViewRangRele:
+    207              OpenMenuViewRangRele();//открыть меню ViewRang
+    208              break;
+    209            case typeMenuViewRangCDI:
+    210              OpenMenuViewRangCDI();//открыть меню ViewRang
+    211              break;
+    212            case typeMenuCnf:
+    213              OpenMenuCnf();//открыть меню cnf
+    214              break;
+    215            case typeMenuCnfWL:
+    216              OpenMenuCnfWL();//открыть меню cnf РЛ
+    217              break;
+    218            case typeMenuReg:
+    219              OpenMenuReg();//открыть меню reg
+    220              ResetPStr();
+    221              LanderUpDown();//wkl Up Down
+    222              break;
+    223            case typeMenuProg:  //открыть меню prog
+    224              TxtStreamCorrect(CRR_TEXTSTREAM);//коррекция текущий control
+    225              (*(pFunction *)CRR_SUBMENU)();//переход на программу ф-ции
+    226              break;
+    227            case typeMenuSub:
+    228              OpenMenuSub();//открыть меню Sub
+    229              break;
+    230            }//switch
+    231          
+    232            ShowTitleSubmenu_crr();//заголовок текущего Submenu
+    233          }//ClickOpenButton()
+    234          
+    235          void JumpAndOpen(short step)
+    236          {
+    237          //перейти и открыть
+    238          //типажи
+    239            short typeWin = PNTCRR_SUBMENU(SUBDATA).TypesWin;//текущий submenu
+    240            switch(typeWin)
+    241            {
+    242            case typeMenuEditRang:
+    243              PNTCRR_TEXTSTREAM->PntStringViewer =step/2;//указател строки
+    244              ClickProcessEditRang();//начать редактирование ранжир
+    245              return;
+    246            case typeMenuViewLE:
+    247              PNTCRR_TEXTSTREAM->PntStringViewer =step;//указател строки
+    248              ClickOpenEditWL(MngWLGetLEWLtoEdit_PRM(LIGHTRANGUVV));//открыть редактирование РЛ
+    249              return;
+    250            case typeMenuEditWL:
+    251              PNTCRR_TEXTSTREAM->PntStringViewer =step/2;//указател строки
+    252              ClickProcessEditWL();//начать редактирование ранжир
+    253              return;
+    254            case typeMenuViewRangDV:
+    255            case typeMenuViewRangRele:
+    256            case typeMenuViewRangCDI:
+    257              PNTCRR_TEXTSTREAM->PntStringViewer =step;//указател строки
+    258              PassWord(OpenEditRangUVV);
+    259              return;
+    260          
+    261            case typeMenuViewRDISMaska:
+    262              PNTCRR_TEXTSTREAM->PntStringViewer =step;//указател строки
+    263              ClickOpenEditRang(pRDIScmdMaska);//открыть редактирование РегистрацияДИС
+    264              return;
+    265            case typeMenuViewAPVMaska:
+    266              PNTCRR_TEXTSTREAM->PntStringViewer =step;//указател строки
+    267              ClickOpenEditRang(pAPVcmdMaska);//открыть редактирование APV
+    268              return;
+    269            case typeMenuViewUROVMaska:
+    270              PNTCRR_TEXTSTREAM->PntStringViewer =step;//указател строки
+    271              ClickOpenEditRang(pUROVcmdMaska);//открыть редактирование UROV
+    272              return;
+    273          /*
+    274            case typeMenuViewP1OFMaska:
+    275              PNTCRR_TEXTSTREAM->PntStringViewer =step;//указател строки
+    276              ClickOpenEditRang(pP1OFcmdMaska);//открыть редактирование P1OF
+    277              return;
+    278            case typeMenuViewP2OFMaska:
+    279              PNTCRR_TEXTSTREAM->PntStringViewer =step;//указател строки
+    280              ClickOpenEditRang(pP2OFcmdMaska);//открыть редактирование P2OF
+    281              return;
+    282            case typeMenuViewP3OFMaska:
+    283              PNTCRR_TEXTSTREAM->PntStringViewer =step;//указател строки
+    284              ClickOpenEditRang(pP3OFcmdMaska);//открыть редактирование P3OF
+    285              return;
+    286          */
+    287          
+    288            case typeMenuSub:
+    289            case typeMenuCnf:
+    290            case typeMenuCnfWL:
+    291              PNTCRR_TEXTSTREAM->PntStringViewer =step;//указател строки
+    292              break;
+    293          
+    294            case typeMenuList:
+    295              PNTCRR_TEXTSTREAM->PntStringViewer =step/2;//указател строки
+    296              break;
+    297          
+    298            default:
+    299              return;
+    300            }//switch
+    301            ClickOpenButton();//открыть меню
+    302          }//JumpAndOpen(short step)
+    303          
+    304          void OpenEditRangUVV()
+    305          {
+    306          //режим редактирования ранжир
+    307              ClickOpenEditRang(MngRangGetPointerUVVRANGIRtoEdit(LIGHTRANGUVV));//открыть редактирование ранжир
+    308          }//OpenEditRangUVV()
+    309          
+    310          void ShowTitleSubmenu_crr()
+    311          {
+    312          //заголовок текущего Submenu
+    313          //  char *title = (char *)PNTCRR_SUBMENU(0).Line1;//текущий submenu
+    314          //  FvmenuDis->TitleLabel->Caption = title;
+    315          }//ShowTitleSubmenu_crr()
+    316          
+    317          void MakeEmptyTopSub_menu(void *pstr, short size)
+    318          {
+    319            LineMenuItem *src = (LineMenuItem *)pstr;
+    320          //добавить пустую запись в top sub_menu
+    321            //копировать в тень
+    322            memcpy((void*)getShadowBuf(), (void *)src, size);
+    323          //копировать из тени End
+    324            memcpy(&(src[1+ 1+SUBDATA]),
+    325                   &(((LineMenuItem *)getShadowBuf())[1+ SUBDATA]),
+    326                   size-(3*sizeof(LineMenuItem)));
+    327          }//MakeEmptyTopSub_menu()
+    328          
+    329          void New_name_clon(short kc, char *name)
+    330          {
+    331          //новые имена клонов
+    332          //найти общее к-во клонов
+    333            short dx=0;
+    334            short numClonOF=0;
+    335            while(cnfCOMPONENT[dx].componentEnable)
+    336            {
+    337              if(cnfCOMPONENT[dx].kodC==OF_COMP1)
+    338              {
+    339                numClonOF++;
+    340                cnfCOMPONENT[dx].numClon = numClonOF;
+    341              }//if
+    342              dx++;
+    343            }//while
+    344          
+    345            char str_tmp[50];// = "ОФ";
+    346            char locTxt[20];
+    347            dx=0;
+    348            while(cnfCOMPONENT[dx].componentEnable)
+    349            {
+    350              if(cnfCOMPONENT[dx].kodC==kc)
+    351              {
+    352                strcpy(str_tmp, name);
+    353                sprintf(locTxt, "0%d.", numClonOF);
+    354                strcpy(cnfCOMPONENT[dx].nameComponent, locTxt);
+    355                strcat(cnfCOMPONENT[dx].nameComponent, str_tmp);
+    356                numClonOF--;
+    357              }//if
+    358              dx++;
+    359            }//while
+    360          
+    361          }//New_name_clon()
+    362          
+    363          void New_name_clon_WL(short kc, char *name)
+    364          {
+    365          //новые имена клонов
+    366          //найти общее к-во клонов
+    367            short dx=0;
+    368            short numClonOF=0;
+    369            while(cnfCOMPONENT_WL[dx].componentEnable)
+    370            {
+    371              if(cnfCOMPONENT_WL[dx].kodC==OF_COMP1)
+    372              {
+    373                numClonOF++;
+    374                cnfCOMPONENT_WL[dx].numClon = numClonOF;
+    375              }//if
+    376              dx++;
+    377            }//while
+    378          
+    379            char str_tmp[50];// = "ОФ";
+    380            char locTxt[20];
+    381            dx=0;
+    382            while(cnfCOMPONENT_WL[dx].componentEnable)
+    383            {
+    384              if(cnfCOMPONENT_WL[dx].kodC==kc)
+    385              {
+    386                strcpy(str_tmp, name);
+    387                sprintf(locTxt, "%d.", 100-numClonOF);
+    388                strcpy(cnfCOMPONENT_WL[dx].nameComponent, locTxt);
+    389                strcat(cnfCOMPONENT_WL[dx].nameComponent, str_tmp);
+    390                numClonOF--;
+    391              }//if
+    392              dx++;
+    393            }//while
+    394          
+    395          }//New_name_clon_WL()
+    396          
+    397          void NewClonName()
+    398          {
+    399          //новые имена клонов
+    400            //искать в конфигурации клон компонента
+    401            short i=0;
+    402            short numC=0;
+    403          
+    404            while(cnfCOMPONENT[i].componentEnable) //все клоны из конфиг
+    405            {
+    406              if(cnfCOMPONENT[i].kodC == rpzcomponent_obj.kodC) numC++;
+    407              i++;
+    408            }//while
+    409          
+    410            //номер клона
+    411            char str_tmp[50];
+    412            char locTxt[20];
+    413            strcpy(str_tmp, rpzcomponent_obj.nameComponent);
+    414            sprintf(locTxt, "0%d.", numC+1);
+    415            strcpy(rpzcomponent_obj.nameComponent, locTxt);
+    416            strcat(rpzcomponent_obj.nameComponent, str_tmp);
+    417          }//NewClonName()
+    418          
+    419          void  OpenMenuComponent()
+    420          {
+    421            SelectorCRRLIGHTLINE();//найти подсвеченную строку текущего текст потока
+    422            //получить из номера линии номер клона для cnf
+    423            short tmpCnfLin = LIGHTLINEMENU;
+    424            short nC = 0;
+    425            if(CRR_TEXTSTREAM==&CONTROL_CNF)
+    426            {
+    427              nC = GetFromLinToClonCnf(tmpCnfLin);//для cnf
+    428            }//if
+    429            else
+    430            {
+    431              nC = GetFromLinToClonPkt(tmpCnfLin);//для пакета
+    432            }//if
+    433          
+    434            LIGHTCLON = nC;
+    435          
+    436            if(cnfCOMPONENT[LIGHTCLON].packet == 0 &&
+    437                cnfCOMPONENT[LIGHTCLON].permanent == 0
+    438              )
+    439            {
+    440              //если компонент перманентный то не расширять
+    441              //если компонент пакетный то не расширять
+    442              //расширить меню
+    443              short i=SUBDATA;
+    444              while(//LMtmp[0]
+    445                ((LineMenuItem *)cnfCOMPONENT[LIGHTCLON].sub_menu_component)[i]
+    446                .Line2 != NULL &&
+    447                ((LineMenuItem *)cnfCOMPONENT[LIGHTCLON].sub_menu_component)[i]
+    448                .Line2 != (void *)&DeleteComponent1
+    449              )
+    450              {
+    451                i++;
+    452              }//while
+    453              ((LineMenuItem *)cnfCOMPONENT[LIGHTCLON].sub_menu_component)[i].Line1 = deleteComp;
+    454              ((LineMenuItem *)cnfCOMPONENT[LIGHTCLON].sub_menu_component)[i].Line2 = (void *)&DeleteComponent1;
+    455              ((LineMenuItem *)cnfCOMPONENT[LIGHTCLON].sub_menu_component)[i].TypesWin = typeMenuProg;
+    456          
+    457              ((LineMenuItem *)cnfCOMPONENT[LIGHTCLON].sub_menu_component)[i+1].Line1 = NULL;
+    458              ((LineMenuItem *)cnfCOMPONENT[LIGHTCLON].sub_menu_component)[i+1].Line2 = NULL;
+    459            }//if
+    460          //добавить меню компонента
+    461          
+    462            SelectorSUBMENU(cnfCOMPONENT[LIGHTCLON].sub_menu_component);//текущее субменю
+    463          
+    464            SelectorTEXTCONTROL(&CONTROL1_COMP);//текущий control
+    465            //инит компонентного контроля
+    466            TxtStreamInit(CRR_TEXTSTREAM,   &KadrMenuFormat_sub, CRR_SUBMENU);//инит control и формир кадра
+    467            ViewDiskrMenuSub();//вывести окно отображения
+    468            LanderPStr();//размещение указателя строки
+    469            CRR_FHOME = &PereinitSub;//указатель на ф-цию HOME
+    470          }//OpenMenuComponent()
+    471          
+    472          void  OpenMenuComponent_WL()
+    473          {
+    474            SelectorCRRLIGHTLINE();//найти подсвеченную строку текущего текст потока
+    475            //получить из номера линии номер клона для cnf
+    476            short tmpCnfLin = LIGHTLINEMENU;
+    477            short nC = 0;
+    478          
+    479            nC = GetFromLinToClonCnf_WL(tmpCnfLin);//для cnf РЛ
+    480          
+    481            LIGHTCLON = nC;
+    482          
+    483            if(cnfCOMPONENT_WL[LIGHTCLON].packet == 0 &&
+    484                cnfCOMPONENT_WL[LIGHTCLON].permanent == 0
+    485              )
+    486            {
+    487              //если компонент перманентный то не расширять
+    488              //если компонент пакетный то не расширять
+    489              //расширить меню
+    490              short i=SUBDATA;
+    491              while(//LMtmp[0]
+    492                ((LineMenuItem *)cnfCOMPONENT_WL[LIGHTCLON].sub_menu_component)[i]
+    493                .Line2 != NULL &&
+    494                ((LineMenuItem *)cnfCOMPONENT_WL[LIGHTCLON].sub_menu_component)[i]
+    495                .Line2 != (void *)&DeleteComponent1_WL
+    496              )
+    497              {
+    498                i++;
+    499              }//while
+    500              ((LineMenuItem *)cnfCOMPONENT_WL[LIGHTCLON].sub_menu_component)[i].Line1 = deleteComp_WL;
+    501              ((LineMenuItem *)cnfCOMPONENT_WL[LIGHTCLON].sub_menu_component)[i].Line2 = (void *)&DeleteComponent1_WL;
+    502              ((LineMenuItem *)cnfCOMPONENT_WL[LIGHTCLON].sub_menu_component)[i].TypesWin = typeMenuProg;
+    503          
+    504              ((LineMenuItem *)cnfCOMPONENT_WL[LIGHTCLON].sub_menu_component)[i+1].Line1 = NULL;
+    505              ((LineMenuItem *)cnfCOMPONENT_WL[LIGHTCLON].sub_menu_component)[i+1].Line2 = NULL;
+    506            }//if
+    507          //добавить меню компонента
+    508            SelectorSUBMENU(cnfCOMPONENT_WL[LIGHTCLON].sub_menu_component);//текущее субменю
+    509          
+    510            SelectorTEXTCONTROL(&CONTROLWL_COMP);//текущий control
+    511            //инит компонентного контроля
+    512            TxtStreamInit(CRR_TEXTSTREAM,   &KadrMenuFormat_sub, CRR_SUBMENU);//инит control и формир кадра
+    513          
+    514            //переключить меню комп на CONTROLWL_COMP
+    515            PNTCRR_SUBMENU(SUBDATA).Line1 = CRR_TEXTSTREAM;
+    516          
+    517            LIGHTCLON = -LIGHTCLON-1;//маркер РЛ
+    518          
+    519            ViewDiskrMenuSub();//вывести окно отображения
+    520            LanderPStr();//размещение указателя строки
+    521            CRR_FHOME = &PereinitSub;//указатель на ф-цию HOME
+    522          }//OpenMenuComponent_WL()
+    523          
+    524          void  DeleteComponent1()
+    525          {
+    526            /*
+    527            sub_menu_tmp[SUBDATA].Line2 = &sub_menu_cnf;// parent
+    528            SelectorSUBMENU(sub_menu_tmp);//текущее субменю
+    529          
+    530            SelectorLIGHTLINE(&CONTROL_CNF);
+    531          
+    532            FvmenuDis->Str1Label->Caption = (char *)sub_menu_cnf[LIGHTLINEMENU +1+SUBDATA].Line1;
+    533            FvmenuDis->Str2Label->Caption = "будет удален";
+    534            FvmenuDis->Str3Label->Caption = "Продолжить?";
+    535            FvmenuDis->Str4Label->Caption = "Да   Нет";
+    536          
+    537            ResetAllButton();//погасить все клавиши
+    538          //wkl Up Down
+    539            FvmenuDis->UpButton->Enabled = true;
+    540            FvmenuDis->DownButton->Enabled = true;
+    541            FvmenuDis->UpButton->OnClick   = FvmenuDis->ConfirmDeleteButtonClick;
+    542            FvmenuDis->DownButton->OnClick = FvmenuDis->CloseMButtonClick;
+    543          */
+    544          }//DeleteComponent1()
+    545          
+    546          void  DeleteComponent1_WL()
+    547          {
+    548            /*
+    549            sub_menu_tmp[SUBDATA].Line2 = &sub_menu_cnfwl;// parent
+    550            SelectorSUBMENU(sub_menu_tmp);//текущее субменю
+    551          
+    552            SelectorLIGHTLINE(&CONTROL_CNFWL);
+    553          
+    554            FvmenuDis->Str1Label->Caption = (char *)sub_menu_cnfwl[LIGHTLINEMENU +1+SUBDATA].Line1;
+    555            FvmenuDis->Str2Label->Caption = "будет удален из РЛ";
+    556            FvmenuDis->Str3Label->Caption = "Продолжить?";
+    557            FvmenuDis->Str4Label->Caption = "Да   Нет";
+    558          
+    559            ResetAllButton();//погасить все клавиши
+    560          //wkl Up Down
+    561            FvmenuDis->UpButton->Enabled = true;
+    562            FvmenuDis->DownButton->Enabled = true;
+    563            FvmenuDis->UpButton->OnClick   = FvmenuDis->ConfirmDeleteButtonWLClick;
+    564            FvmenuDis->DownButton->OnClick = FvmenuDis->CloseMButtonClick;
+    565          */
+    566          }//DeleteComponent1_WL()
+    567          
+    568          void  AddCompIzRpz(short numK)
+    569          {
+    570          //добавить компонент из репозитария
+    571            addCOMPONENT(numK);//Добавить компонент с кодом numK в конфигурацию
+    572          
+    573            if( LIGHTISDENIE ||//запрещено
+    574                LIGHTISPACKET);//это пакет
+    575            else
+    576            {
+    577          //инициализировать клон компонента
+    578          //если не пакет
+    579              initCOMPONENT(INITUST_TOPCOMP);
+    580              MakeEmptyTopSub_menu(&(sub_menu_cnf[0]),
+    581                                   MAX_CNFCOMPONENT*sizeof(LineMenuItem));//добавить пустую запись в top sub_menu
+    582          //новый клон в список
+    583              sub_menu_cnf[1+SUBDATA].Line2 = (void *)&OpenMenuComponent; //меню компонента
+    584              sub_menu_cnf[1+SUBDATA].TypesWin = typeMenuProg;
+    585            }//else
+    586          
+    587            PrepareAllCnfComponent();//подготовить все компоненты в конфигурации
+    588          }//AddCompIzRpz()
+    589          
+    590          void ConfirmDeleteButton()
+    591          {
+    592            short size_avait = TxtStreamMaxKadr(&CONTROL_CNF);//макс к-во кадров
+    593            SelectorLIGHTLINE(&CONTROL_CNF);
+    594          
+    595          //копировать в shadow cnf
+    596            short copy_size = (size_avait+2+SUBDATA)*sizeof(LineMenuItem);
+    597            memcpy((void*)getShadowBuf(), sub_menu_cnf, copy_size);
+    598          
+    599          //копировать из тени Begin
+    600            memcpy(sub_menu_cnf, (void*)getShadowBuf(), (LIGHTLINEMENU +1+SUBDATA)*sizeof(LineMenuItem));
+    601          //копировать из тени END
+    602            if((size_avait- LIGHTLINEMENU -1)>0)
+    603              memcpy(&(sub_menu_cnf[LIGHTLINEMENU  +1+SUBDATA]),
+    604                     &(((LineMenuItem *)getShadowBuf())[LIGHTLINEMENU +2+SUBDATA]),
+    605                     (size_avait- LIGHTLINEMENU )*sizeof(LineMenuItem));
+    606          
+    607            short tmpCnfLin = LIGHTLINEMENU;
+    608            short nC = 0;
+    609          
+    610            nC = GetFromLinToClonCnf(tmpCnfLin);//получить из номера линии номер клона для cnf
+    611          //найти к-во клонов для удаления
+    612            short   cntC = cnfCOMPONENT[nC].packet;
+    613            if(cntC<0) cntC = -cntC;
+    614            else cntC=1;
+    615          
+    616            LIGHTCLON = nC;//подсветить клон для удаления
+    617          
+    618            deleteCOMPONENT(cntC);//удалить cntC клонов начиная с подсвеченного клона
+    619          
+    620            PrepareAllCnfComponent();//подготовить все компоненты в конфигурации
+    621          
+    622            SetCloseButton();//close
+    623          }//ConfirmDeleteButton()
+    624          
+    625          void PrepareAllCnfComponent()
+    626          {
+    627          //подготовить все компоненты в конфигурации
+    628            AllComponentUstTimers();//Инит таймеров всех комп и подготовка уставок всех комп
+    629          
+    630            New_name_clon(OF_COMP1, "ОФ");
+    631          
+    632            newsub_menu_cnf_Line1();//новые имена menu_cnf
+    633          
+    634            TxtStreamInit(&CONTROL_CNF,   &KadrMenuFormat_sub, sub_menu_cnf);//инит control и формир кадра
+    635          }//PrepareAllCnfComponent()
+    636          
+    637          void PrepareAllCnfComponent_WL()
+    638          {
+    639          //подготовить все компоненты в конфигурации РЛ
+    640            AllComponentUstTimers_WL();//Инит таймеров всех комп и подготовка уставок всех комп
+    641          
+    642            New_name_clon_WL(OF_COMP1, "ОФ");
+    643          
+    644            newsub_menu_cnfwl_Line1();//новые имена menu_cnfwl
+    645          
+    646            TxtStreamInit(&CONTROL_CNFWL,   &KadrMenuFormat_sub, sub_menu_cnfwl);//инит control и формир кадра
+    647          }//PrepareAllCnfComponent_WL()
+    648          
+    649          void ConfirmDeleteButton_WL()
+    650          {
+    651            short size_avait = TxtStreamMaxKadr(&CONTROL_CNFWL);//макс к-во кадров
+    652          //  LIGHTLINEMENU = TxtStreamIdxKadr(&CONTROL_CNFWL);//индекс тек кадра
+    653            SelectorLIGHTLINE(&CONTROL_CNFWL);
+    654          
+    655          //копировать в shadow cnfwl
+    656            short copy_size = (size_avait+2+SUBDATA)*sizeof(LineMenuItem);
+    657            memcpy((void*)getShadowBuf(), sub_menu_cnfwl, copy_size);
+    658          
+    659          //копировать из тени Begin
+    660            memcpy(sub_menu_cnfwl, (void*)getShadowBuf(), (LIGHTLINEMENU +1+SUBDATA)*sizeof(LineMenuItem));
+    661          //копировать из тени END
+    662            if((size_avait- LIGHTLINEMENU -1)>0)
+    663              memcpy(&(sub_menu_cnfwl[LIGHTLINEMENU  +1+SUBDATA]),
+    664                     &(((LineMenuItem *)getShadowBuf())[LIGHTLINEMENU +2+SUBDATA]),
+    665                     (size_avait- LIGHTLINEMENU )*sizeof(LineMenuItem));
+    666          
+    667            short tmpCnfLin = LIGHTLINEMENU;
+    668            short nC = 0;
+    669          
+    670            nC = GetFromLinToClonCnf_WL(tmpCnfLin);//получить из номера линии номер клона для cnfwl
+    671          //найти к-во клонов для удаления
+    672            short   cntC = cnfCOMPONENT_WL[nC].packet;
+    673            if(cntC<0) cntC = -cntC;
+    674            else cntC=1;
+    675          
+    676            LIGHTCLON = nC;//подсветить клон для удаления
+    677          
+    678            deleteCOMPONENT_WL(cntC);//удалить cntC клонов начиная с подсвеченного клона
+    679            PrepareAllCnfComponent_WL();//подготовить все компоненты в конфигурации РЛ
+    680          
+    681            SetCloseButton();//close
+    682          }//ConfirmDeleteButton_WL()
+    683          
+    684          void UpravlRedactor(char *nameUpr, short nBit, char * (*selectorUprStr)(short, UNS_32))
+    685          {
+    686            /*
+    687          //редактировать уставку управления
+    688            UNS_32 wtmp =  getCurrentMngUSTAVKI();
+    689          
+    690            char *sel = selectorUprStr(nBit, wtmp);
+    691            FvmenuDis->EditUprPanel->Visible = true;
+    692            FvmenuDis->EditLabel->Caption = nameUpr;
+    693            FvmenuDis->EditUprLabel->Caption = nameUpr;
+    694          
+    695            FvmenuDis->Str1Label->Caption = nameUpr;
+    696            FvmenuDis->Str2Label->Caption = sel;
+    697            FvmenuDis->Str3Label->Caption = "";
+    698            FvmenuDis->Str4Label->Caption = "";
+    699          
+    700            FvmenuDis->UprCheck->Checked = (bool)NumBitCheckWord(nBit, &wtmp);//true;
+    701            FvmenuDis->UprCheck->Caption = sel;
+    702          */
+    703          }//UpravlRedactor(char *nameUpr)
+    704          
+    705          void SetPgDownButton(short flg)
+    706          {
+    707          //страница вниз
+    708          //типажи
+    709            /*
+    710            short typeWin = PNTCRR_SUBMENU(SUBDATA).TypesWin;
+    711            PNTCRR_TEXTSTREAM->topStrPnt = TxtStreamPgDownButtonPrepare(CRR_TEXTSTREAM);//подготовка
+    712            ViewDiskrMenu(typeWin);//вывести окно отображения
+    713          
+    714            PNTCRR_TEXTSTREAM->PntStringViewer = 0;//сброс указателя строки
+    715            if(typeWin==typeMenuList)ListPStr();//доступ к уставкам
+    716            if(FvmenuDis->TipPanel->Visible) PgDownTipPanel();
+    717            */
+    718          }//SetPgDownButton(short flg)
+    719          
+    720          void PassWord(void (*menuEdit)())
+    721          {
+    722            //CRR_FPASSWORD = menuEdit;//указатель на ф-цию Ust
+    723            //FvmenuDis->PassPanel->Visible = true;
+    724          }//
+    725          
+    726          void PrepareEditMenu(void *parent)
+    727          {
+    728            ResetAllButton();//погасить все клавиши
+    729          
+    730            SelectorSUBMENU(sub_menu_tmp);//текущее субменю
+    731          
+    732            sub_menu_tmp[SUBDATA].Line2 = parent;
+    733          }//PrepareEditMenu(void *parent)
+    734          
+    735          void ViewToEditUst(int (*menuEditUst)())
+    736          {
+    737            /*
+    738            int ust = menuEditUst();
+    739            char locTxt[50];
+    740            sprintf(locTxt, "%d", ust);
+    741            FvmenuDis->EditEdit->Text = locTxt;
+    742            */
+    743          }//ViewToEditUst(int (*menuEditUst)())
+    744          
+    745          
+    746          void ViewerEditorUst(void *text)
+    747          {
+    748            /*
+    749          //редактировать уставку
+    750            CRR_SUBMENU = sub_menu_tmp;//текущее субменю
+    751          
+    752            FvmenuDis->Str1Label->Caption = "Уставка";
+    753            FvmenuDis->Str2Label->Caption =
+    754              (char *)text;
+    755            FvmenuDis->Str3Label->Caption = "редактирована";
+    756            FvmenuDis->Str4Label->Caption = "";
+    757          
+    758            ResetAllButton();//погасить все клавиши
+    759            FvmenuDis->EditPanel->Visible = true;
+    760            FvmenuDis->EditUprPanel->Visible = false;
+    761            FvmenuDis->EditLabel->Caption =
+    762              (char *)text;
+    763          
+    764            LIGHTMNGUOFFSET = LIGHTLINEMENU;
+    765          */
+    766          }//ViewerEditUst(void *text)
+    767          
+    768          void SystemEditUst(void *sub_menu)
+    769          {
+    770            /*
+    771            short linemenu = LIGHTLINEMENU;
+    772            void *text = ((LineMenuItem *)sub_menu)[linemenu +1+SUBDATA].Line1;
+    773            LIGHTMNGUOFFSET = linemenu;//LIGHTLINEMENU;//offset;
+    774            int ust = getCurrentMngUSTAVKI();
+    775            char locTxt[50];
+    776            sprintf(locTxt, "%d", ust);
+    777            FvmenuDis->EditEdit->Text = locTxt;
+    778          
+    779            FvmenuDis->Str1Label->Caption = "Уставка";
+    780            FvmenuDis->Str2Label->Caption =
+    781              (char *)text;
+    782            FvmenuDis->Str3Label->Caption = "редактирована";
+    783            FvmenuDis->Str4Label->Caption = "";
+    784          
+    785            ResetAllButton();//погасить все клавиши
+    786            FvmenuDis->EditPanel->Visible = true;
+    787            FvmenuDis->EditLabel->Caption =
+    788              (char *)text;
+    789            */
+    790          }//SystemEditUst(void *text, int offset)
+    791          
+    792          void AllComponentUstTimers()
+    793          {
+    794          //Инит таймеров всех комп и подготовка уставок всех комп
+    795            INITtimersCOMPONENT();//Инициализация таймеров всех компонентов из конфиг
+    796          
+    797            PREPAREustCOMPONENT(INITUST_ALLCOMP);//подготовка уставок всех комп
+    798          }//AllComponentUstTimers()
+    799          
+    800          void AllComponentUstTimers_WL()
+    801          {
+    802          //Инит таймеров всех комп и подготовка уставок всех комп
+    803            INITtimersCOMPONENT_WL();//Инициализация таймеров всех компонентов из конфиг РЛ
+    804          
+    805            PREPAREustCOMPONENT_WL(INITUST_ALLCOMP);//подготовка уставок всех комп РЛ
+    806          }//AllComponentUstTimers()
+    807          
+    808          void DiskrRegList()
+    809          {
+    810          //первые 50 строк дискр регистратора
+    811            TxtStreamInit(&CONTROL_STR, &KadrMenuFormat_reg, NULL);//инит управл структ и формир кадра
+    812            Load2String(46, "Дискр рег");//первые 48 строк по 2 строки
+    813          }//DiskrRegList()
+    814          
+    815          void Load1String(int maxStr, char *title)
+    816          {
+    817          //первые maxStr строк по 1 строки
+    818           VIEW_STRUCT view_struct;
+    819            //обнулить все
+    820            memset((char*)stringList,   0, sizeof(stringList));
+    821            memset((char*)&view_struct,   0, sizeof(VIEW_STRUCT));
+    822          
+    823            strcpy( stringList[0], title);
+    824            strcpy( stringList[1], "-------------");
+    825          
+    826            int cntStr = 2;//к-во заполненных строк
+    827            for(; cntStr<maxStr; ){
+    828            View1StrWin(&view_struct);//4-х строчное окно просмотра по 1 строки
+    829            if(memcmp((char *)(&view_struct.stringWinOld),
+    830                      (char *)(&view_struct.stringWin),
+    831                      sizeof(WIN_STRUCT))!=0){
+    832            //окна разные
+    833            for(int i=0; i<4; i++)
+    834                strcpy(stringList[cntStr +i],
+    835                       view_struct.stringWin.Win[i]);
+    836            cntStr += 4;
+    837            }//if
+    838            else break;//окна одинаковые
+    839            memcpy((char *)(&view_struct.stringWinOld),
+    840                   (char *)(&view_struct.stringWin),
+    841                   sizeof(WIN_STRUCT));
+    842            TxtStreamPgDownButtonPrepare(&CONTROL_STR);//подготовка
+    843            }//for
+    844          }//Load1String(int maxStr)
+    845          
+    846          void Load2String(int maxStr, char *title)
+    847          {
+    848          //первые maxStr строк по 2 строки
+    849            VIEW_STRUCT view_struct;
+    850            //обнулить все
+    851            memset((char*)stringList,   0, sizeof(stringList));
+    852            memset((char*)&view_struct,   0, sizeof(VIEW_STRUCT));
+    853            strcpy( stringList[0], title);
+    854            strcpy( stringList[1], "-------------");
+    855          
+    856            int cntStr = 2;//к-во заполненных строк
+    857            for(; cntStr<maxStr; ){
+    858            View2StrWin(&view_struct);//4-х строчное окно просмотра по 2 строки
+    859            if(memcmp( (char *)(&view_struct.stringWinOld),
+    860                       (char *)(&view_struct.stringWin),
+    861                      sizeof(WIN_STRUCT))!=0){
+    862            //окна разные
+    863            for(int i=0; i<4; i++)
+    864                strcpy( stringList[cntStr +i],
+    865                        view_struct.stringWin.Win[i]);
+    866            cntStr += 4;
+    867            }//if
+    868            else break;//окна одинаковые
+    869            memcpy((char *)(&view_struct.stringWinOld),
+    870                   (char *)(&view_struct.stringWin),
+    871                   sizeof(WIN_STRUCT));
+    872            TxtStreamPgDownButtonPrepare(&CONTROL_STR);//подготовка
+    873            }//for
+    874          }//Load2String(int maxStr)
+    875          
+    876          void View2StrWin(void *vs)
+    877          {
+    878          //окно просмотра по 2 строки
+    879            VIEW_STRUCT *view_struct = (VIEW_STRUCT *)vs;
+    880            memset((char *)&(view_struct->stringWin), 0,
+    881                   sizeof(WIN_STRUCT));
+    882            WorkVariantChar workVariantCharLoc;//буфер кадра
+    883          
+    884            int tmp = TxtStreamIteratorBegin((void *)&workVariantCharLoc, &CONTROL_STR);//движение вниз
+    885          
+    886            if(tmp==-1) //файла нет или пустой
+    887            {
+    888              strcpy(view_struct->stringWin.Win[0], "ПУСТО");
+    889              return ;
+    890            }//if
+    891          
+    892            if(tmp==0) //достигнут конец файла
+    893            {
+    894              return ;
+    895            }//if
+    896          
+    897            //показать результат
+    898              strcpy(view_struct->stringWin.Win[0],
+    899                     workVariantCharLoc.TwoString[0]);
+    900              strcpy(view_struct->stringWin.Win[1],
+    901                     workVariantCharLoc.TwoString[1]);
+    902          
+    903            if(TxtStreamIteratorMidle(&CONTROL_STR)==0) //движение вниз
+    904            {
+    905              //достигнут конец файла
+    906              PNTCONTROL_STR->StpStringViewer = 0;//stp указател строки
+    907              return ;
+    908            }//if
+    909            //показать результат
+    910              strcpy(view_struct->stringWin.Win[2],
+    911                     workVariantCharLoc.TwoString[0]);
+    912              strcpy(view_struct->stringWin.Win[3],
+    913                     workVariantCharLoc.TwoString[1]);
+    914          
+    915            PNTCONTROL_STR->StpStringViewer = 1;//stp указател строки
+    916          
+    917            TxtStreamIteratorEnd(&CONTROL_STR);//конец страницы
+    918          
+    919          }//View2StrWin()
+    920          
+    921          void ActualRegList()
+    922          {
+    923          //первые 50 строк текущих
+    924            TxtStreamInit(&CONTROL_STR, &KadrMenuFormat_viewActual, NULL);//инит управл структ и формир кадра
+    925            Load1String(46, "Текущие");//первые 48 строк по 1 строки
+    926          }//ActualRegList()
+    927          
+    928          void ActualDVList()
+    929          {
+    930          //первые 50 строк текущих
+    931           selectorUVVLow  = selectorDVLow;//селекция UVV активный-неактивный для мл 16 UVV
+    932           selectorUVVMidd = selectorDVMidd;//селекция UVV активный-неактивный для cp 16 UVV
+    933           selectorUVVHi   = selectorDVHi;//селекция UVV активный-неактивный для ct 16 UVV
+    934            TxtStreamInit(&CONTROL_STR, &KadrMenuFormat_viewActualDV, NULL);//инит управл структ и формир кадра
+    935            Load1String(46, "Текущие ДВ");//первые 48 строк по 1 строки
+    936          }//ActualDVList()
+    937          
+    938          void ActualReleList()
+    939          {
+    940          //первые 50 строк текущих
+    941           selectorUVVLow  = rele_bdvv1;//селекция UVV активный-неактивный для мл 16 UVV
+    942           selectorUVVMidd = 0;//селекция UVV активный-неактивный для cp 16 UVV
+    943           selectorUVVHi   = 0;//селекция UVV активный-неактивный для ct 16 UVV
+    944            TxtStreamInit(&CONTROL_STR, &KadrMenuFormat_viewActualRele, NULL);//инит управл структ и формир кадра
+    945            Load1String(46, "Текущие Реле");//первые 48 строк по 1 строки
+    946          }//ActualReleList()
+    947          
+    948          void View1StrWin(void *vs)
+    949          {
+    950          //окно просмотра по 1 строки
+    951            VIEW_STRUCT *view_struct = (VIEW_STRUCT *)vs;
+    952            memset((char *)&(view_struct->stringWin), 0,
+    953                   sizeof(WIN_STRUCT));
+    954            WorkVariantChar workVariantCharLoc;//буфер кадра
+    955          
+    956            int tmp = TxtStreamIteratorBegin((void *)&workVariantCharLoc, &CONTROL_STR);//движение вниз
+    957          
+    958            if(tmp==-1) //файла нет или пустой
+    959            {
+    960              strcpy(view_struct->stringWin.Win[0], "ПУСТО");
+    961              return ;
+    962            }//if
+    963          
+    964            if(tmp==0) //достигнут конец файла
+    965            {
+    966              return ;
+    967            }//if
+    968            //показать результат
+    969              strcpy(view_struct->stringWin.Win[0],
+    970                     workVariantCharLoc.TwoString[0]);
+    971          
+    972            if(TxtStreamIteratorMidle(&CONTROL_STR)==0) //движение вниз
+    973            {
+    974              //достигнут конец файла
+    975              PNTCONTROL_STR->StpStringViewer = 0;//stp указател строки
+    976              return ;
+    977            }//if
+    978            //показать результат
+    979              strcpy(view_struct->stringWin.Win[1],
+    980                     workVariantCharLoc.TwoString[0]);
+    981          
+    982            if(TxtStreamIteratorMidle(&CONTROL_STR)==0) //движение вниз
+    983            {
+    984              //достигнут конец файла
+    985              PNTCONTROL_STR->StpStringViewer = 1;//stp указател строки
+    986              return ;
+    987            }//if
+    988            //показать результат
+    989              strcpy(view_struct->stringWin.Win[2],
+    990                     workVariantCharLoc.TwoString[0]);
+    991          
+    992            if(TxtStreamIteratorMidle(&CONTROL_STR)==0)
+    993            {
+    994              //достигнут конец файла
+    995              PNTCONTROL_STR->StpStringViewer = 2;//stp указател строки
+    996              return ;
+    997            }//if
+    998            //показать результат
+    999              strcpy(view_struct->stringWin.Win[3],
+   1000                     workVariantCharLoc.TwoString[0]);
+   1001          
+   1002            TxtStreamIteratorEnd(&CONTROL_STR);//конец страницы
+   1003          
+   1004            PNTCONTROL_STR->StpStringViewer = 3;//stp указател строки
+   1005          
+   1006          }//View1StrWin()
+   1007          
+   1008          void SelectorMNGBAZA(short baza)
+   1009          {
+   1010          //установка базы уставок
+   1011            LIGHTMNGUBAZA = baza;
+   1012            LIGHTMNGUOFFSET = 0;
+   1013          }//SelectorMNGBAZA(short baza)
+   1014          
+   1015          void SelectorLIGHTLINE(void *txtstrm)
+   1016          {
+   1017          //найти подсвеченную строку
+   1018            LIGHTLINEMENU = TxtStreamIdxKadr(txtstrm);
+   1019          }//SelectorLIGHTLINE()
+   1020          
+   1021          void SelectorCRRLIGHTLINE()
+   1022          {
+   1023          //найти подсвеченную строку текущего текст потока
+   1024            SelectorLIGHTLINE(CRR_TEXTSTREAM);//найти подсвеченную строку текущего текст потока
+   1025          }//SelectorCRRLIGHTLINE()
+   1026          
+   1027          void SelectorSUBMENU(void *sub_menu)
+   1028          {
+   1029          //уcтановить текущее субменю
+   1030            CRR_SUBMENU = sub_menu;//текущее субменю
+   1031          }//SelectorSUBMENU(void *sub_menu)
+   1032          
+   1033          void SelectorTEXTCONTROL(void *control)
+   1034          {
+   1035          //установить текущую ссылку на текстовый поток
+   1036           CRR_TEXTSTREAM = control;
+   1037          }//SelectorTEXTSTREAM(void *control)
+   1038          
+   1039          void SelectorFHOME(void (*pFncGlobal)(short))
+   1040          {
+   1041          //указатель на ф-цию HOME
+   1042          //  CRR_FHOME = &PereinitUstListCompAPV;//указатель на ф-цию HOME
+   1043            CRR_FHOME = pFncGlobal;//указатель на ф-цию HOME
+   1044          }//SelectorFHOME(void (*pFncGlobal)(short))
+   1045          
+   1046          void InitFHOME(short flag)
+   1047          {
+   1048          //переиниц
+   1049            CRR_FHOME(flag);//вызвать ф-цию HOME
+   1050          }//InitFHOME(short flag)
+   1051          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   ActualDVList
+         8   -> Load1String
+         8   -> TxtStreamInit
+       8   ActualRegList
+         8   -> Load1String
+         8   -> TxtStreamInit
+       8   ActualReleList
+         8   -> Load1String
+         8   -> TxtStreamInit
+       8   AddCompIzRpz
+         8   -> MakeEmptyTopSub_menu
+         8   -> PrepareAllCnfComponent
+         8   -> addCOMPONENT
+         8   -> initCOMPONENT
+       8   AllComponentUstTimers
+         8   -> INITtimersCOMPONENT
+         8   -> PREPAREustCOMPONENT
+       8   AllComponentUstTimers_WL
+         8   -> INITtimersCOMPONENT_WL
+         8   -> PREPAREustCOMPONENT_WL
+      24   ClickOpenButton
+        24   -- Indirect call
+        24   -> LanderUpDown
+        24   -> OpenMenuCnf
+        24   -> OpenMenuCnfWL
+        24   -> OpenMenuReg
+        24   -> OpenMenuSub
+        24   -> OpenMenuViewAPV
+        24   -> OpenMenuViewActual
+        24   -> OpenMenuViewActualDV
+        24   -> OpenMenuViewActualRele
+        24   -> OpenMenuViewP1OF
+        24   -> OpenMenuViewP2OF
+        24   -> OpenMenuViewP3OF
+        24   -> OpenMenuViewRDIS
+        24   -> OpenMenuViewRangCDI
+        24   -> OpenMenuViewRangDV
+        24   -> OpenMenuViewRangRele
+        24   -> OpenMenuViewUROV
+        24   -> OpenViewLE
+        24   -> ResetPStr
+        24   -> SelectorCRRLIGHTLINE
+        24   -> SelectorSUBMENU
+        24   -> ShowTitleSubmenu_crr
+        24   -> TxtStreamCorrect
+      32   ConfirmDeleteButton
+        32   -> GetFromLinToClonCnf
+        32   -> PrepareAllCnfComponent
+        32   -> SelectorLIGHTLINE
+        32   -> SetCloseButton
+        32   -> TxtStreamMaxKadr
+        32   -> __aeabi_memcpy
+        32   -> deleteCOMPONENT
+        32   -> getShadowBuf
+      32   ConfirmDeleteButton_WL
+        32   -> GetFromLinToClonCnf_WL
+        32   -> PrepareAllCnfComponent_WL
+        32   -> SelectorLIGHTLINE
+        32   -> SetCloseButton
+        32   -> TxtStreamMaxKadr
+        32   -> __aeabi_memcpy
+        32   -> deleteCOMPONENT_WL
+        32   -> getShadowBuf
+       0   DeleteComponent1
+       0   DeleteComponent1_WL
+       8   DiskrRegList
+         8   -> Load2String
+         8   -> TxtStreamInit
+       8   InitFHOME
+         8   -- Indirect call
+      16   JumpAndOpen
+        16   -> ClickOpenButton
+        16   -> ClickOpenEditRang
+        16   -> ClickOpenEditWL
+        16   -> ClickProcessEditRang
+        16   -> ClickProcessEditWL
+        16   -> MngWLGetLEWLtoEdit_PRM
+        16   -> PassWord
+        16 __aeabi_idiv
+     288   Load1String
+       288   -> TxtStreamPgDownButtonPrepare
+       288   -> View1StrWin
+       288   -> __aeabi_memcpy
+       288   -> __aeabi_memset
+       288   -> memcmp
+       288   -> strcpy
+     288   Load2String
+       288   -> TxtStreamPgDownButtonPrepare
+       288   -> View2StrWin
+       288   -> __aeabi_memcpy
+       288   -> __aeabi_memset
+       288   -> memcmp
+       288   -> strcpy
+      32   MakeEmptyTopSub_menu
+        32   -> __aeabi_memcpy
+        32   -> getShadowBuf
+      88   NewClonName
+        88   -> sprintf
+        88   -> strcat
+        88   -> strcpy
+      96   New_name_clon
+        96   -> sprintf
+        96   -> strcat
+        96   -> strcpy
+      96   New_name_clon_WL
+        96   -> sprintf
+        96   -> strcat
+        96   -> strcpy
+       8   OpenEditRangUVV
+         8   -> ClickOpenEditRang
+         8   -> MngRangGetPointerUVVRANGIRtoEdit
+      16   OpenMenuComponent
+        16   -> GetFromLinToClonCnf
+        16   -> GetFromLinToClonPkt
+        16   -> LanderPStr
+        16   -> SelectorCRRLIGHTLINE
+        16   -> SelectorSUBMENU
+        16   -> SelectorTEXTCONTROL
+        16   -> TxtStreamInit
+        16   -> ViewDiskrMenuSub
+      16   OpenMenuComponent_WL
+        16   -> GetFromLinToClonCnf_WL
+        16   -> LanderPStr
+        16   -> SelectorCRRLIGHTLINE
+        16   -> SelectorSUBMENU
+        16   -> SelectorTEXTCONTROL
+        16   -> TxtStreamInit
+        16   -> ViewDiskrMenuSub
+       0   PassWord
+       8   PrepareAllCnfComponent
+         8   -> AllComponentUstTimers
+         8   -> New_name_clon
+         8   -> TxtStreamInit
+         8   -> newsub_menu_cnf_Line1
+       8   PrepareAllCnfComponent_WL
+         8   -> AllComponentUstTimers_WL
+         8   -> New_name_clon_WL
+         8   -> TxtStreamInit
+         8   -> newsub_menu_cnfwl_Line1
+       8   PrepareEditMenu
+         8   -> ResetAllButton
+         8   -> SelectorSUBMENU
+       8   SelectorCRRLIGHTLINE
+         8   -> SelectorLIGHTLINE
+       0   SelectorFHOME
+       8   SelectorLIGHTLINE
+         8   -> TxtStreamIdxKadr
+       0   SelectorMNGBAZA
+       0   SelectorSUBMENU
+       0   SelectorTEXTCONTROL
+       8   SetCloseButton
+         8   -> LanderPStr
+         8   -> ListPStr
+         8   -> ResetUpDown
+         8   -> SelectorSUBMENU
+         8   -> SelectorTEXTCONTROL
+         8   -> ShowTitleSubmenu_crr
+         8   -> ViewDiskrMenu
+       0   SetPgDownButton
+       0   ShowTitleSubmenu_crr
+       0   SystemEditUst
+       0   UpravlRedactor
+     128   View1StrWin
+       128   -> TxtStreamIteratorBegin
+       128   -> TxtStreamIteratorEnd
+       128   -> TxtStreamIteratorMidle
+       128   -> __aeabi_memset
+       128   -> strcpy
+     128   View2StrWin
+       128   -> TxtStreamIteratorBegin
+       128   -> TxtStreamIteratorEnd
+       128   -> TxtStreamIteratorMidle
+       128   -> __aeabi_memset
+       128   -> strcpy
+       8   ViewDiskrMenu
+         8   -> ViewDiskrMenuList
+         8   -> ViewDiskrMenuSub
+       0   ViewToEditUst
+       0   ViewerEditorUst
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable12
+       4  ??DataTable12_1
+       4  ??DataTable15
+       4  ??DataTable15_1
+       4  ??DataTable15_2
+       4  ??DataTable15_3
+       4  ??DataTable15_4
+       4  ??DataTable17
+       4  ??DataTable17_1
+       4  ??DataTable21
+       4  ??DataTable21_1
+       4  ??DataTable23
+       4  ??DataTable28
+       4  ??DataTable29
+       4  ??DataTable29_1
+       4  ??DataTable29_10
+       4  ??DataTable29_11
+       4  ??DataTable29_12
+       4  ??DataTable29_13
+       4  ??DataTable29_14
+       4  ??DataTable29_15
+       4  ??DataTable29_16
+       4  ??DataTable29_17
+       4  ??DataTable29_18
+       4  ??DataTable29_19
+       4  ??DataTable29_2
+       4  ??DataTable29_20
+       4  ??DataTable29_21
+       4  ??DataTable29_22
+       4  ??DataTable29_23
+       4  ??DataTable29_24
+       4  ??DataTable29_25
+       4  ??DataTable29_26
+       4  ??DataTable29_27
+       4  ??DataTable29_28
+       4  ??DataTable29_29
+       4  ??DataTable29_3
+       4  ??DataTable29_30
+       4  ??DataTable29_31
+       4  ??DataTable29_32
+       4  ??DataTable29_33
+       4  ??DataTable29_4
+       4  ??DataTable29_5
+       4  ??DataTable29_6
+       4  ??DataTable29_7
+       4  ??DataTable29_8
+       4  ??DataTable29_9
+       4  ??DataTable6
+       8  ?_0
+       4  ?_1
+       4  ?_2
+      12  ?_3
+      16  ?_4
+       8  ?_5
+       8  ?_6
+      12  ?_7
+      16  ?_8
+      84  ActualDVList
+      36  ActualRegList
+      76  ActualReleList
+     108  AddCompIzRpz
+      20  AllComponentUstTimers
+      20  AllComponentUstTimers_WL
+     396  ClickOpenButton
+     408  ConfirmDeleteButton
+     408  ConfirmDeleteButton_WL
+       4  DeleteComponent1
+       4  DeleteComponent1_WL
+      36  DiskrRegList
+      36  InitFHOME
+     344  JumpAndOpen
+     244  Load1String
+     244  Load2String
+      96  MakeEmptyTopSub_menu
+     176  NewClonName
+     344  New_name_clon
+     348  New_name_clon_WL
+      24  OpenEditRangUVV
+     620  OpenMenuComponent
+     620  OpenMenuComponent_WL
+       4  PassWord
+      44  PrepareAllCnfComponent
+      44  PrepareAllCnfComponent_WL
+      32  PrepareEditMenu
+      20  SelectorCRRLIGHTLINE
+      12  SelectorFHOME
+      28  SelectorLIGHTLINE
+      24  SelectorMNGBAZA
+      12  SelectorSUBMENU
+      12  SelectorTEXTCONTROL
+     176  SetCloseButton
+       4  SetPgDownButton
+       4  ShowTitleSubmenu_crr
+       4  SystemEditUst
+       4  UpravlRedactor
+     260  View1StrWin
+     196  View2StrWin
+      76  ViewDiskrMenu
+       4  ViewToEditUst
+       4  ViewerEditorUst
+     628  menu_context
+
+ 
+   628 bytes in section .bss
+    88 bytes in section .rodata
+ 5 852 bytes in section .text
+ 
+ 5 852 bytes of CODE  memory
+    88 bytes of CONST memory
+   628 bytes of DATA  memory
+
+Errors: none
+Warnings: none

@@ -1,0 +1,214 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  14:32:26
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\SettingIci\getINTERFACE.c
+#    Command line =  
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\SettingIci\getINTERFACE.c" -lcN
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\" -o "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "D:\Program Files\IAR Systems\Embedded
+#        Workbench 7.2\arm\INC\c\DLib_Config_Normal.h" -I "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\" --interwork
+#        --cpu_mode arm -On --use_c++_inline
+#    List file    =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\getINTERFACE.lst
+#    Object file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\getINTERFACE.o
+#
+###############################################################################
+
+D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\SettingIci\getINTERFACE.c
+      1          #include <stdio.h>
+      2          #include <string.h>
+      3          
+      4          #include "bazisdef.h"
+      5          #include "getINTERFACE.h"
+      6          
+      7          extern int  isTimeSection;//критическая секция с двойным доступом
+      8          extern UNS_32 selectorDVLow;//селекция ДВ активный-неактивный для мл 16 DV
+      9          extern UNS_32 selectorDVMidd;//селекция ДВ активный-неактивный для cp 16 DV
+     10          extern UNS_32 rele_bdvv1;//селекция реле
+     11          extern UNS_32 cdi_bdvv1;//селекция CDI
+     12          extern UNS_32 buffInStateINTERFACE;//INTERFACE  In
+     13          extern UNS_32 buffOutStateINTERFACE;//INTERFACE Out
+     14          extern UNS_32 buffLedStateINTERFACE;//INTERFACE Led
+     15          extern UNS_32 buffTrgOutStateINTERFACE;//INTERFACE Trg Out
+     16          extern UNS_32 buffTrgLedStateINTERFACE;//INTERFACE Trg Led
+     17          extern int ReleTrigger;//тригг реле
+     18          extern int CDITrigger;//тригг СДИ
+     19          extern UNS_32 buffGruppaUstINTERFACE;//группа уставок
+     20          extern UNS_32 GruppaUst;//группа уставок
+     21          //ком массив RT INTERFACE
+     22          extern UNS_32 buffCmdStateINTERFACE[];//INTERFACE CmdState
+     23          extern UNS_32 dataCmdStateINTERFACE[];//INTERFACE CmdState
+     24          extern UNS_32 dataTrgCmdStateINTERFACE[];//INTERFACE CmdState
+     25          extern UNS_32 buffTrgCmdStateINTERFACE[];//INTERFACE CmdState
+     26          
+     27          long GetCmdState(void *pData) @ "Fast_function"
+     28          {
+     29           if(isTimeSection)//критическая секция с двойным доступом
+     30          	  memcpy(pData, (void*)buffCmdStateINTERFACE, 24);
+     31           else     memcpy(pData, (void*)dataCmdStateINTERFACE, 24);
+     32            return 3;
+     33          }//GetCmdState(void *pData)
+     34          
+     35          long GetTrgCmdState(void *pData) @ "Fast_function"
+     36          {
+     37           if(isTimeSection)//критическая секция с двойным доступом
+     38          	  memcpy(pData, (void*)buffTrgCmdStateINTERFACE, 24);
+     39           else     memcpy(pData, (void*)dataTrgCmdStateINTERFACE, 24);
+     40            return 3;
+     41          }//GetTrgCmdState(void *pData)
+     42          
+     43          long GetInState(void *pvIn) @ "Fast_function"
+     44          {
+     45           if(isTimeSection)//критическая секция с двойным доступом
+     46          	  memcpy(pvIn, (void*)&buffInStateINTERFACE, 4);
+     47           else {
+     48                   UNS_32 dataInStateINTERFACE = selectorDVLow + selectorDVMidd*65536;
+     49          	  memcpy(pvIn, (void*)&dataInStateINTERFACE, 4);
+     50                }
+     51            return 3;
+     52          }//GetInState(void *pvIn)
+     53          
+     54          long GetOutState(void *pvOut) @ "Fast_function"
+     55          {
+     56           if(isTimeSection)//критическая секция с двойным доступом
+     57          	  memcpy(pvOut, (void*)&buffOutStateINTERFACE, 4);
+     58           else {
+     59          	  memcpy(pvOut, (void*)&rele_bdvv1, 4);
+     60                }
+     61            return 3;
+     62          }//GetOutState(void *pvOut)
+     63          
+     64          long GetLedState(void *pvLed) @ "Fast_function"
+     65          {
+     66           if(isTimeSection)//критическая секция с двойным доступом
+     67          	  memcpy(pvLed, (void*)&buffLedStateINTERFACE, 4);
+     68           else {
+     69          	  memcpy(pvLed, (void*)&cdi_bdvv1, 4);
+     70                }
+     71            return 3;
+     72          }//GetLedState(void *pvLed)
+     73          
+     74          long GetTrgOutState(void *pvOut) @ "Fast_function"
+     75          {
+     76           if(isTimeSection)//критическая секция с двойным доступом
+     77          	  memcpy(pvOut, (void*)&buffTrgOutStateINTERFACE, 4);
+     78           else {
+     79          	  memcpy(pvOut, (void*)&ReleTrigger, 4);
+     80                }
+     81            return 3;
+     82          }//GetTrgOutState(void *pvOut)
+     83          
+     84          long GetTrgLedState(void *pvLed) @ "Fast_function"
+     85          {
+     86           if(isTimeSection)//критическая секция с двойным доступом
+     87          	  memcpy(pvLed, (void*)&buffTrgLedStateINTERFACE, 4);
+     88           else {
+     89          	  memcpy(pvLed, (void*)&CDITrigger, 4);
+     90                }
+     91            return 3;
+     92          }//GetTrgLedState(void *pvLed)
+     93          long GetCurrSelectorPckpStpmStore(void *pvGust) @ "Fast_function"
+     94          {
+     95          //~~~     функция  чтения                                                      ~~~~~
+     96          //~~~     текущей группы уставок                                               ~~~~~
+     97           if(isTimeSection)//критическая секция с двойным доступом
+     98          	  memcpy(pvGust, (void*)&buffGruppaUstINTERFACE, 1);
+     99           else {
+    100          	  memcpy(pvGust, (void*)&GruppaUst, 1);
+    101                }
+    102            return 3;
+    103          }
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      16   GetCmdState
+        16   -> __aeabi_memcpy
+      16   GetCurrSelectorPckpStpmStore
+        16   -> __aeabi_memcpy
+      24   GetInState
+        24   -> __aeabi_memcpy
+      16   GetLedState
+        16   -> __aeabi_memcpy
+      16   GetOutState
+        16   -> __aeabi_memcpy
+      16   GetTrgCmdState
+        16   -> __aeabi_memcpy
+      16   GetTrgLedState
+        16   -> __aeabi_memcpy
+      16   GetTrgOutState
+        16   -> __aeabi_memcpy
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable7
+       4  ??DataTable7_1
+       4  ??DataTable7_10
+       4  ??DataTable7_11
+       4  ??DataTable7_12
+       4  ??DataTable7_13
+       4  ??DataTable7_14
+       4  ??DataTable7_15
+       4  ??DataTable7_16
+       4  ??DataTable7_17
+       4  ??DataTable7_2
+       4  ??DataTable7_3
+       4  ??DataTable7_4
+       4  ??DataTable7_5
+       4  ??DataTable7_6
+       4  ??DataTable7_7
+       4  ??DataTable7_8
+       4  ??DataTable7_9
+      84  GetCmdState
+      84  GetCurrSelectorPckpStpmStore
+     116  GetInState
+      84  GetLedState
+      84  GetOutState
+      84  GetTrgCmdState
+      84  GetTrgLedState
+      84  GetTrgOutState
+
+ 
+ 776 bytes in section Fast_function
+ 
+ 776 bytes of CODE memory
+
+Errors: none
+Warnings: none

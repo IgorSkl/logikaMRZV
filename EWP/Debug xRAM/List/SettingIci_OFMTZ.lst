@@ -1,0 +1,270 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  17:17:41
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\SettingIci\SettingIci_OFMTZ.c
+#    Command line =  
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\SettingIci\SettingIci_OFMTZ.c"
+#        -lcN "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\List\" -o
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\" --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=ARM926EJ-S -e --fpu=VFP9-S --dlib_config "D:\Program Files\IAR
+#        Systems\Embedded Workbench 7.2\arm\INC\c\DLib_Config_Normal.h" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\" --interwork
+#        --cpu_mode arm -On --use_c++_inline
+#    List file    =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\SettingIci_OFMTZ.lst
+#    Object file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\SettingIci_OFMTZ.o
+#
+###############################################################################
+
+D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\SettingIci\SettingIci_OFMTZ.c
+      1          #include "lpc_types.h"
+      2          #include "lpc_irq_fiq.h"
+      3          #include "lpc_arm922t_cp15_driver.h"
+      4          
+      5          #include "lpc32xx_hstimer.h"
+      6          #include "lpc32xx_ssp.h"
+      7          #include "lpc32xx_gpio.h"
+      8          
+      9          #include "lpc32xx_intc_driver.h"
+     10          #include "lpc32xx_clkpwr_driver.h"
+     11          
+     12          #include "arm926ej_cp15_drv.h"
+     13          #include "ttbl.h"
+     14          
+     15          #include <stdio.h>
+     16          #include <string.h>
+     17          
+     18          #include "psuperVisor\supermanager.h"
+     19          
+     20          #include "component\componentdef.h"
+     21          #include "psuperVisor\psvisor_helpdef.h"
+     22          
+     23          #include "psuperVisor\psvisor_helpfnc.h"
+     24          #include "virtualMenu\rangmanagerfnc.h"
+     25          #include "virtualmenu\systemmenufnc.h"
+     26          #include "SettingIci\SettingIci.h"
+     27          
+     28          #include "toSpeedOptim.h"
+     29          #include "toSpeedDIS.h"
+     30          
+     31          #include "header.h"
+     32          #include "ici_r_ef.h"
+     33          
+     34          #define _HIDE_COMPONENT
+     35          #include "MTZ1Component.c"
+     36          #include "MTZ2Component.c"
+     37          
+     38          extern char chProtectTableComeIn;
+     39          extern char chResultCallGetMeasPrt;
+     40          //extern tic long lDemo_IA,lDemo_IB,lDemo_IC;
+     41          extern  long lMtz1,lMtz1Tmr,lSt1,lSt2, lst3, lst4;
+     42          extern __MEASUREMENT_TO_PROTECTION TestMeasProtection;
+     43          
+     44          void  SettingIci_OFMTZ(int typFUNC, int FlagMaska, int numOF)
+     45          {
+     46          //отранж МТЗ на Реле
+     47          //int numRele = nRele - RELE1_SM;//нормировка
+     48          //  int typRang
+     49          puskOFfunction *pntPuskOF;
+     50          
+     51            int typRang = PUSK1OF_SM;
+     52            if(typFUNC==0){//OF
+     53            typRang = typRang - numOF*3 - FlagMaska;
+     54          
+     55            switch(FlagMaska){
+     56             case 0://PLUS
+     57              pntPuskOF = &puskOFotZPLUS;
+     58             break;
+     59             case 1://MINUS
+     60              pntPuskOF = &puskOFotZMINUS;
+     61             break;
+     62             case 2://BLK
+     63              pntPuskOF = &puskOFotZBLK;
+     64             break;
+     65            }//switch
+     66            }//if(typFUNC==0)
+     67            if(typFUNC==1){//OT
+     68            typRang = PUSK1OT1_SM;
+     69            typRang = typRang - numOF*4 - FlagMaska;
+     70          
+     71            switch(FlagMaska){
+     72             case 0://PLUS Set
+     73              pntPuskOF = &puskSetOTotZPLUS;
+     74             break;
+     75             case 1://PLUS Rst
+     76              pntPuskOF = &puskRstOTotZPLUS;
+     77             break;
+     78             case 2://MINUS Set
+     79              pntPuskOF = &puskSetOTotZMINUS;
+     80             break;
+     81             case 3://MINUS Rst
+     82              pntPuskOF = &puskRstOTotZMINUS;
+     83             break;
+     84            }//switch
+     85            }//if(typFUNC==0)
+     86          
+     87          // Блокировка МТЗ1
+     88            lSt1 = pntPuskOF(BLOCK_MCP1_DI_OEPRF_ONB, numOF);
+     89             if(lSt1)   SetCmdToUVV(MTZ_COMP1,  1, IOCMD1_MTZ1, typRang);//работа с OF OT
+     90          // Блокировка МТЗ2
+     91            lSt1 = pntPuskOF(BLOCK_MCP2_DI_OEPRF_ONB, numOF);
+     92              if(lSt1)  SetCmdToUVV(MTZ_COMP1,  2, IOCMD1_MTZ2to5, typRang);//работа с OF OT
+     93          // Блокировка МТЗ3
+     94            lSt1 = pntPuskOF(BLOCK_MCP3_DI_OEPRF_ONB, numOF);
+     95              if(lSt1)  SetCmdToUVV(MTZ_COMP1,  3, IOCMD1_MTZ2to5, typRang);//работа с OF OT
+     96          // Блокировка МТЗ4
+     97            lSt1 = pntPuskOF(BLOCK_MCP4_DI_OEPRF_ONB, numOF);
+     98              if(lSt1)  SetCmdToUVV(MTZ_COMP1,  4, IOCMD1_MTZ2to5, typRang);//работа с OF OT
+     99          // Блокировка МТЗ5
+    100            lSt1 = pntPuskOF(BLOCK_MCP5_DI_OEPRF_ONB, numOF);
+    101              if(lSt1)  SetCmdToUVV(MTZ_COMP1,  5, IOCMD1_MTZ2to5, typRang);//работа с OF OT
+    102          
+    103          //Оперативное ускорение МТЗ2
+    104            lSt1 = pntPuskOF(ACCLT_MCP2_DI_OEPRF_ONB, numOF);
+    105             if(lSt1)   SetCmdToUVV(MTZ_COMP1,  2, IOCMD3_MTZ2to5, typRang);//работа с OF OT
+    106          //Оперативное ускорение МТЗ3
+    107            lSt1 = pntPuskOF(ACCLT_MCP3_DI_OEPRF_ONB, numOF);
+    108             if(lSt1)   SetCmdToUVV(MTZ_COMP1,  3, IOCMD3_MTZ2to5, typRang);//работа с OF OT
+    109          //Оперативное ускорение МТЗ4
+    110            lSt1 = pntPuskOF(ACCLT_MCP4_DI_OEPRF_ONB, numOF);
+    111             if(lSt1)   SetCmdToUVV(MTZ_COMP1,  4, IOCMD3_MTZ2to5, typRang);//работа с OF OT
+    112          //Оперативное ускорение МТЗ5
+    113            lSt1 = pntPuskOF(ACCLT_MCP5_DI_OEPRF_ONB, numOF);
+    114             if(lSt1)   SetCmdToUVV(MTZ_COMP1,  5, IOCMD3_MTZ2to5, typRang);//работа с OF OT
+    115          
+    116          // ПО МТЗ1
+    117            lSt1 = pntPuskOF(STPDEV_MCP1_BORING_OEPRF_ONB, numOF);
+    118             if(lSt1)   SetCmdToUVV(MTZ_COMP1,  1, IOCMD2_MTZ1, typRang);//работа с OF OT
+    119          // ПО МТЗ1 ВПД
+    120            lSt1 = pntPuskOF(STPDEV_MCP1_STAIGHT_OEPRF_ONB, numOF);
+    121             if(lSt1)   SetCmdToUVV(MTZ_COMP1,  1, IOCMD3_MTZ1, typRang);//работа с OF OT
+    122          // ПО МТЗ1 НЗД
+    123            lSt1 = pntPuskOF(STPDEV_MCP1_BACK_OEPRF_ONB, numOF);
+    124             if(lSt1)   SetCmdToUVV(MTZ_COMP1,  1, IOCMD4_MTZ1, typRang);//работа с OF OT
+    125          // ПО МТЗ1 ПН
+    126            lSt1 = pntPuskOF(STPDEV_MCP1_VLT_OEPRF_ONB, numOF);
+    127             if(lSt1)   SetCmdToUVV(MTZ_COMP1,  1, IOCMD5_MTZ1, typRang);//работа с OF OT
+    128          // сраб МТЗ1
+    129            lSt1 = pntPuskOF(MCP1_OEPRF_ONB, numOF);
+    130             if(lSt1)   SetCmdToUVV(MTZ_COMP1,  1, IOCMD6_MTZ1, typRang);//работа с OF OT
+    131          
+    132          // ПО МТЗ2
+    133            lSt1 = pntPuskOF(STPDEV_MCP2_BORING_OEPRF_ONB, numOF);
+    134             if(lSt1)   SetCmdToUVV(MTZ_COMP1,  2, IOCMD4_MTZ2to5, typRang);//работа с OF OT
+    135          // ПО МТЗ2 ВПД
+    136            lSt1 = pntPuskOF(STPDEV_MCP2_STAIGHT_OEPRF_ONB, numOF);
+    137             if(lSt1)   SetCmdToUVV(MTZ_COMP1,  2, IOCMD5_MTZ2to5, typRang);//работа с OF OT
+    138          // ПО МТЗ2 НЗД
+    139            lSt1 = pntPuskOF(STPDEV_MCP2_BACK_OEPRF_ONB, numOF);
+    140             if(lSt1)   SetCmdToUVV(MTZ_COMP1,  2, IOCMD6_MTZ2to5, typRang);//работа с OF OT
+    141          // ПО МТЗ2 ПН
+    142            lSt1 = pntPuskOF(STPDEV_MCP2_VLT_OEPRF_ONB, numOF);
+    143             if(lSt1)   SetCmdToUVV(MTZ_COMP1,  2, IOCMD7_MTZ2to5, typRang);//работа с OF OT
+    144          // сраб МТЗ2
+    145            lSt1 = pntPuskOF(MCP2_OEPRF_ONB, numOF);
+    146              if(lSt1)  SetCmdToUVV(MTZ_COMP1,  2, IOCMD8_MTZ2to5, typRang);//работа с OF OT
+    147          
+    148          // ПО МТЗ3
+    149            lSt1 = pntPuskOF(STPDEV_MCP3_BORING_OEPRF_ONB, numOF);
+    150              if(lSt1)  SetCmdToUVV(MTZ_COMP1,  3, IOCMD4_MTZ2to5, typRang);//работа с OF OT
+    151          // ПО МТЗ3 ВПД
+    152            lSt1 = pntPuskOF(STPDEV_MCP3_STAIGHT_OEPRF_ONB, numOF);
+    153              if(lSt1)  SetCmdToUVV(MTZ_COMP1,  3, IOCMD5_MTZ2to5, typRang);//работа с OF OT
+    154          // ПО МТЗ3 НЗД
+    155            lSt1 = pntPuskOF(STPDEV_MCP3_BACK_OEPRF_ONB, numOF);
+    156             if(lSt1)   SetCmdToUVV(MTZ_COMP1,  3, IOCMD6_MTZ2to5, typRang);//работа с OF OT
+    157          // ПО МТЗ3 ПН
+    158            lSt1 = pntPuskOF(STPDEV_MCP3_VLT_OEPRF_ONB, numOF);
+    159              if(lSt1)  SetCmdToUVV(MTZ_COMP1,  3, IOCMD7_MTZ2to5, typRang);//работа с OF OT
+    160          // сраб МТЗ3
+    161            lSt1 = pntPuskOF(MCP3_OEPRF_ONB, numOF);
+    162             if(lSt1)   SetCmdToUVV(MTZ_COMP1,  3, IOCMD8_MTZ2to5, typRang);//работа с OF OT
+    163          
+    164          // ПО МТЗ4
+    165            lSt1 = pntPuskOF(STPDEV_MCP4_BORING_OEPRF_ONB, numOF);
+    166             if(lSt1)   SetCmdToUVV(MTZ_COMP1,  4, IOCMD4_MTZ2to5, typRang);//работа с OF OT
+    167          // ПО МТЗ4 ВПД
+    168            lSt1 = pntPuskOF(STPDEV_MCP4_STAIGHT_OEPRF_ONB, numOF);
+    169             if(lSt1)   SetCmdToUVV(MTZ_COMP1,  4, IOCMD5_MTZ2to5, typRang);//работа с OF OT
+    170          // ПО МТЗ4 НЗД
+    171            lSt1 = pntPuskOF(STPDEV_MCP4_BACK_OEPRF_ONB, numOF);
+    172             if(lSt1)   SetCmdToUVV(MTZ_COMP1,  4, IOCMD6_MTZ2to5, typRang);//работа с OF OT
+    173          // ПО МТЗ4 ПН
+    174            lSt1 = pntPuskOF(STPDEV_MCP4_VLT_OEPRF_ONB, numOF);
+    175              if(lSt1)  SetCmdToUVV(MTZ_COMP1,  4, IOCMD7_MTZ2to5, typRang);//работа с OF OT
+    176          // сраб МТЗ4
+    177            lSt1 = pntPuskOF(MCP4_OEPRF_ONB, numOF);
+    178              if(lSt1)  SetCmdToUVV(MTZ_COMP1,  4, IOCMD8_MTZ2to5, typRang);//работа с OF OT
+    179          
+    180          // ПО МТЗ5
+    181            lSt1 = pntPuskOF(STPDEV_MCP5_BORING_OEPRF_ONB, numOF);
+    182             if(lSt1)   SetCmdToUVV(MTZ_COMP1,  5, IOCMD4_MTZ2to5, typRang);//работа с OF OT
+    183          // ПО МТЗ5 ВПД
+    184            lSt1 = pntPuskOF(STPDEV_MCP5_STAIGHT_OEPRF_ONB, numOF);
+    185              if(lSt1)  SetCmdToUVV(MTZ_COMP1,  5, IOCMD5_MTZ2to5, typRang);//работа с OF OT
+    186          // ПО МТЗ5 НЗД
+    187            lSt1 = pntPuskOF(STPDEV_MCP5_BACK_OEPRF_ONB, numOF);
+    188              if(lSt1)  SetCmdToUVV(MTZ_COMP1,  5, IOCMD6_MTZ2to5, typRang);//работа с OF OT
+    189          // ПО МТЗ5 ПН
+    190            lSt1 = pntPuskOF(STPDEV_MCP5_VLT_OEPRF_ONB, numOF);
+    191             if(lSt1)   SetCmdToUVV(MTZ_COMP1,  5, IOCMD7_MTZ2to5, typRang);//работа с OF OT
+    192          // сраб МТЗ5
+    193            lSt1 = pntPuskOF(MCP5_OEPRF_ONB, numOF);
+    194             if(lSt1)   SetCmdToUVV(MTZ_COMP1,  5, IOCMD8_MTZ2to5, typRang);//работа с OF OT
+    195          }//SettingIci_RangirMTZ2Rele(int nRele)
+    196          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      24   SettingIci_OFMTZ
+        24   -- Indirect call
+        24   -> SetCmdToUVV
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+    2404  SettingIci_OFMTZ
+
+ 
+ 2 404 bytes in section .text
+ 
+ 2 404 bytes of CODE memory
+
+Errors: none
+Warnings: none

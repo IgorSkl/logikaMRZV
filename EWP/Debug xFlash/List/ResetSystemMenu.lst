@@ -1,0 +1,741 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        12/Oct/2015  11:05:04
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\virtualMenu\ResetSystemMenu.c
+#    Command line =  
+#        "D:\IAR projects\HR1_0100_00_I720_new2\virtualMenu\ResetSystemMenu.c"
+#        -D _STATIC_MEMORY_BOOT -lcN "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\List\" -o "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "C:\Program Files\IAR Systems\Embedded
+#        Workbench 7.40\arm\INC\c\DLib_Config_Normal.h" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\Igor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\component\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\" --cpu_mode arm -On
+#        --use_c++_inline
+#    List file    =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\List\ResetSystemMenu.lst
+#    Object file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\Obj\ResetSystemMenu.o
+#
+###############################################################################
+
+D:\IAR projects\HR1_0100_00_I720_new2\virtualMenu\ResetSystemMenu.c
+      1          /*
+      2          #include <vcl.h>
+      3          #include <strstrea.h>
+      4          #include <math.h>
+      5          #include <mem.h>
+      6          #include <fstream.h>
+      7          #include <strstrea.h>
+      8          #include <iomanip.h>
+      9          #pragma hdrstop
+     10          */
+     11          
+     12          #include <stdio.h>
+     13          #include <string.h>
+     14          
+     15          #include "psuperVisor\supermanager.h"
+     16          
+     17          #include "bazisdef.h"
+     18          #include "component\componentdef.h"
+     19          #include "psuperVisor\psvisor_helpdef.h"
+     20          #include "virtualMenu\systemmenudef.h"
+     21          #include "virtualMenu\ustmanagerdef.h"
+     22          
+     23          #include "logictimers\logictimersfnc.h"
+     24          #include "virtualMenu\systemmenufnc.h"
+     25          #include "virtualMenu\rangmanagerfnc.h"
+     26          #include "virtualMenu\textstreamfnc.h"
+     27          #include "virtualMenu\ustmanagerfnc.h"
+     28          #include "psuperVisor\psvisor_helpfnc.h"
+     29          
+     30          #include "virtualMenu\viewMenuWideLog.h"
+     31          #include "virtualMenu\viewMenuCnf.h"
+     32          #include "virtualMenu\viewMenuSub.h"
+     33          
+     34          #include "psupervisor\psupervisor.h"
+     35          
+     36          #include "virtualMenu\repozitfnc.h"
+     37          
+     38          #include "toSpeedOptim.h"
+     39          
+     40          #include "..\bazis.h"
+     41          
+     42          #define _HIDE_COMPONENT
+     43          
+     44          #include "APVComponent.c"
+     45          #include "UMMComponent.c"
+     46          #include "DZ1Component.c"
+     47          #include "DZ2Component.c"
+     48          
+     49          #include "MTZ1Component.c"
+     50          #include "MTZ2Component.c"
+     51          
+     52          #include "NZOP1Component.c"
+     53          
+     54          #include "OFComponent.c"
+     55          
+     56          #include "PRM1Component.c"
+     57          
+     58          #include "TZNP1Component.c"
+     59          
+     60          #include "UROVComponent.c"
+     61          
+     62          
+     63          extern LineMenuItem sub_menu_main[];
+     64          extern LineMenuItem sub_menu_cntr[];
+     65          extern char addComp[];
+     66          extern LineMenuItem sub_menu_dv[];
+     67          extern LineMenuItem sub_menu_rele[];
+     68          extern LineMenuItem sub_menu_cdi[];
+     69          extern LineMenuItem sub_menu_le[];
+     70          extern LineMenuItem sub_menu_cnf[];
+     71          extern LineMenuItem sub_menu_widel[];
+     72          extern COMPONENT_OBJ  cnfCOMPONENT[];
+     73          extern int  spvUSTAVKI[];//текущие уставки супервизора
+     74          
+     75          extern LineMenuItem sub_menu_comp_WL[];
+     76          
+     77          extern int  offsetIOCmdOF;//смещение для IO OF
+     78          extern int  offsetIOCmdPF;//смещение для IO PF
+     79          extern int  offsetIOCmdOF_loc;//смещение для IO OF
+     80          extern int  offsetIOCmdPF_loc;//смещение для IO PF
+     81          extern int  offsetUstMngPRM1;//смещение на уставки PRM1
+     82          
+     83          char *bitStringUNI[20];
+     84          
+     85          LineMenuItem sub_menu_cnfwl[MAX_WLCOMPONENT+3] =
+     86          {
+     87            { "Конфигурация РЛ", NULL},//title
+     88            { &CONTROL_CNFWL, sub_menu_comp_WL},//control_item, parent
+     89            { addComp, (void *)&RpzComponentWL, typeMenuProg},
+     90            { NULL, NULL}
+     91          };
+     92          
+     93          //меню конфигурации
+     94          LineMenuItem sub_menu_cnf[MAX_CNFCOMPONENT+3] =
+     95          {
+     96            { "Конфигурация", NULL},//title
+     97            { &CONTROL_CNF, sub_menu_main},//control_item, parent
+     98            { addComp, (void *)&RpzComponent, typeMenuProg},
+     99            { NULL, NULL}
+    100          };
+    101          
+    102          //дискретный регистратор
+    103          LineMenuItem sub_menu_reg[] =
+    104          {
+    105            { "Дискретный регистратор", NULL},//title
+    106            { &CONTROL_DIS, sub_menu_main}//control_item, parent
+    107          };
+    108          
+    109          //Текущие
+    110          LineMenuItem sub_menu_act[] =
+    111          {
+    112            { "Текущие", NULL},//title
+    113            { &CONTROL_ACT, sub_menu_main}//control_item, parent
+    114          };
+    115          
+    116          //РегистрацияДИС
+    117          LineMenuItem sub_menu_rdis[] =
+    118          {
+    119            { "РегистрацияДИС", NULL},//title
+    120            { &CONTROL_RDIS, sub_menu_main}//control_item, parent
+    121          };
+    122          
+    123          //APV
+    124          LineMenuItem sub_menu_apv[] =
+    125          {
+    126            { "Пуск АПВ", NULL},//title
+    127            { &CONTROL_APV, sub_menu_main}//control_item, parent
+    128          };
+    129          
+    130          LineMenuItem sub_menu_urov[] =
+    131          {
+    132            { "Пуск УРОВ", NULL},//title
+    133            { &CONTROL_UROV, sub_menu_main}//control_item, parent
+    134          };
+    135          
+    136          LineMenuItem sub_menu_p1of[] =
+    137          {
+    138            { "Пуск 1 ОФ", NULL},//title
+    139            { &CONTROL_P1OF, sub_menu_main}//control_item, parent
+    140          };
+    141          
+    142          LineMenuItem sub_menu_p2of[] =
+    143          {
+    144            { "Пуск 2 ОФ", NULL},//title
+    145            { &CONTROL_P2OF, sub_menu_main}//control_item, parent
+    146          };
+    147          
+    148          LineMenuItem sub_menu_p3of[] =
+    149          {
+    150            { "Пуск 3 ОФ", NULL},//title
+    151            { &CONTROL_P1OF, sub_menu_main}//control_item, parent
+    152          };
+    153          
+    154          char titleRang[10] = "";
+    155          //ДВ
+    156          LineMenuItem sub_menu_viewDV[] =
+    157          {
+    158            { titleRang, NULL},//title
+    159            { &CONTROL_VRNG, sub_menu_dv}//control_item, parent
+    160          };
+    161          
+    162          //Rele
+    163          LineMenuItem sub_menu_viewRele[] =
+    164          {
+    165            { titleRang, NULL},//title
+    166            { &CONTROL_VRNG, sub_menu_rele}//control_item, parent
+    167          };
+    168          
+    169          LineMenuItem sub_menu_viewCDI[] =
+    170          {
+    171            { titleRang, NULL},//title
+    172            { &CONTROL_VRNG, sub_menu_cdi}//control_item, parent
+    173          };
+    174          
+    175          LineMenuItem sub_menu_tmp[] =
+    176          {
+    177            { "Сообщение", NULL},//title
+    178            { NULL, NULL},//control_item, parent
+    179          };
+    180          
+    181          LineMenuItem sub_menu_dv[] =
+    182          {
+    183            { "Дискр Входы", NULL},//title
+    184            { &CONTROL_DV, sub_menu_cntr},//control_item, parent
+    185          /*
+    186            { "ДВ1", sub_menu_viewDV, typeMenuViewRangDV},
+    187            { "ДВ2", sub_menu_viewDV, typeMenuViewRangDV},
+    188            { "ДВ3", sub_menu_viewDV, typeMenuViewRangDV},
+    189            { "ДВ4", sub_menu_viewDV, typeMenuViewRangDV},
+    190            { "ДВ5", sub_menu_viewDV, typeMenuViewRangDV},
+    191            { "ДВ6", sub_menu_viewDV, typeMenuViewRangDV},
+    192            { "ДВ7", sub_menu_viewDV, typeMenuViewRangDV},
+    193            { "ДВ8", sub_menu_viewDV, typeMenuViewRangDV},
+    194            { "ДВ9", sub_menu_viewDV, typeMenuViewRangDV},
+    195            { "ДВ10", sub_menu_viewDV, typeMenuViewRangDV},
+    196            { "ДВ11", sub_menu_viewDV, typeMenuViewRangDV},
+    197            { "ДВ12", sub_menu_viewDV, typeMenuViewRangDV},
+    198            { "ДВ13", sub_menu_viewDV, typeMenuViewRangDV},
+    199            { "ДВ14", sub_menu_viewDV, typeMenuViewRangDV},
+    200            { "ДВ15", sub_menu_viewDV, typeMenuViewRangDV},
+    201            { "ДВ16", sub_menu_viewDV, typeMenuViewRangDV},
+    202            { "ДВ17", sub_menu_viewDV, typeMenuViewRangDV},
+    203            { "ДВ18", sub_menu_viewDV, typeMenuViewRangDV},
+    204            { "ДВ19", sub_menu_viewDV, typeMenuViewRangDV},
+    205            { "ДВ20", sub_menu_viewDV, typeMenuViewRangDV},
+    206            { "ДВ21", sub_menu_viewDV, typeMenuViewRangDV},
+    207            { "ДВ22", sub_menu_viewDV, typeMenuViewRangDV},
+    208            { "ДВ23", sub_menu_viewDV, typeMenuViewRangDV},
+    209            { "ДВ24", sub_menu_viewDV, typeMenuViewRangDV},
+    210            { "ДВ25", sub_menu_viewDV, typeMenuViewRangDV},
+    211            { "ДВ26", sub_menu_viewDV, typeMenuViewRangDV},
+    212            { "ДВ27", sub_menu_viewDV, typeMenuViewRangDV},
+    213            { "ДВ28", sub_menu_viewDV, typeMenuViewRangDV},
+    214            { "ДВ29", sub_menu_viewDV, typeMenuViewRangDV},
+    215            { "ДВ30", sub_menu_viewDV, typeMenuViewRangDV},
+    216            { "ДВ31", sub_menu_viewDV, typeMenuViewRangDV},
+    217            { "ДВ32", sub_menu_viewDV, typeMenuViewRangDV},
+    218            { "ДВ33", sub_menu_viewDV, typeMenuViewRangDV},
+    219            { "ДВ34", sub_menu_viewDV, typeMenuViewRangDV},
+    220            { "ДВ35", sub_menu_viewDV, typeMenuViewRangDV},
+    221            { "ДВ36", sub_menu_viewDV, typeMenuViewRangDV},
+    222          */
+    223            { NULL, NULL}
+    224          
+    225          };
+    226          
+    227          LineMenuItem sub_menu_rele[] =
+    228          {
+    229            { "Выходы реле", NULL},//title
+    230            { &CONTROL_RELE, sub_menu_cntr},//control_item, parent
+    231          /*
+    232            { "Р01", sub_menu_viewRele, typeMenuViewRangRele},
+    233            { "Р02", sub_menu_viewRele, typeMenuViewRangRele},
+    234            { "Р03", sub_menu_viewRele, typeMenuViewRangRele},
+    235            { "Р04", sub_menu_viewRele, typeMenuViewRangRele},
+    236            { "Р05", sub_menu_viewRele, typeMenuViewRangRele},
+    237            { "Р06", sub_menu_viewRele, typeMenuViewRangRele},
+    238            { "Р07", sub_menu_viewRele, typeMenuViewRangRele},
+    239            { "Р08", sub_menu_viewRele, typeMenuViewRangRele},
+    240            { "Р09", sub_menu_viewRele, typeMenuViewRangRele},
+    241            { "Р10", sub_menu_viewRele, typeMenuViewRangRele},
+    242            { "Р11", sub_menu_viewRele, typeMenuViewRangRele},
+    243            { "Р12", sub_menu_viewRele, typeMenuViewRangRele},
+    244            { "Р13", sub_menu_viewRele, typeMenuViewRangRele},
+    245            { "Р14", sub_menu_viewRele, typeMenuViewRangRele},
+    246            { "Р15", sub_menu_viewRele, typeMenuViewRangRele},
+    247            { "Р16", sub_menu_viewRele, typeMenuViewRangRele},
+    248          */
+    249            { NULL, NULL}
+    250          
+    251          };
+    252          
+    253          LineMenuItem sub_menu_cdi[] =
+    254          {
+    255            { "Светоиндикаторы", NULL},//title
+    256            { &CONTROL_CDI, sub_menu_cntr},//control_item, parent
+    257          /*
+    258            { "СДИ01", sub_menu_viewCDI, typeMenuViewRangCDI},
+    259            { "СДИ02", sub_menu_viewCDI, typeMenuViewRangCDI},
+    260            { "СДИ03", sub_menu_viewCDI, typeMenuViewRangCDI},
+    261            { "СДИ04", sub_menu_viewCDI, typeMenuViewRangCDI},
+    262            { "СДИ05", sub_menu_viewCDI, typeMenuViewRangCDI},
+    263            { "СДИ06", sub_menu_viewCDI, typeMenuViewRangCDI},
+    264            { "СДИ07", sub_menu_viewCDI, typeMenuViewRangCDI},
+    265            { "СДИ08", sub_menu_viewCDI, typeMenuViewRangCDI},
+    266            { "СДИ09", sub_menu_viewCDI, typeMenuViewRangCDI},
+    267            { "СДИ10", sub_menu_viewCDI, typeMenuViewRangCDI},
+    268            { "СДИ11", sub_menu_viewCDI, typeMenuViewRangCDI},
+    269            { "СДИ12", sub_menu_viewCDI, typeMenuViewRangCDI},
+    270            { "СДИ13", sub_menu_viewCDI, typeMenuViewRangCDI},
+    271            { "СДИ14", sub_menu_viewCDI, typeMenuViewRangCDI},
+    272          */
+    273            { NULL, NULL}
+    274          
+    275          };
+    276          
+    277          LineMenuItem sub_menu_cntr[] =
+    278          {
+    279            { "Настройка", NULL},//title
+    280            { &CONTROL_CNTR, sub_menu_main},//control_item, parent
+    281            { "Дискр входы",     sub_menu_dv,    typeMenuSub},
+    282            { "Выходы реле",     sub_menu_rele,  typeMenuSub},
+    283            { "Светоиндикаторы", sub_menu_cdi,   typeMenuSub},
+    284            { NULL, NULL}
+    285          
+    286          };
+    287          
+    288          //главное меню
+    289          LineMenuItem sub_menu_main[] =
+    290          {
+    291            { "Главное меню", NULL},//title
+    292            { &CONTROL_MAIN, NULL},//control_item, parent
+    293            { "Настройка",         sub_menu_cntr, typeMenuSub},
+    294            { "Конфигурация",      sub_menu_cnf,  typeMenuCnf},//конфигурация
+    295            { "РегистрацияДИС",    sub_menu_rdis, typeMenuViewRDISMaska},//РегистрацияДИС
+    296            { "Пуск АПВ",          sub_menu_apv,   typeMenuViewAPVMaska},//Пуск АПВ
+    297            { "Пуск УРОВ",         sub_menu_urov,  typeMenuViewUROVMaska},//Пуск УРОВ
+    298            { "P1 ОФ",             sub_menu_p1of,  typeMenuViewP1OFMaska},//маска 1 ОФ
+    299            { "P2 ОФ",             sub_menu_p2of,  typeMenuViewP2OFMaska},//маска 2 ОФ
+    300            { "P3 ОФ",             sub_menu_p3of,  typeMenuViewP3OFMaska},//маска 3 ОФ
+    301            { "Дискр регистратор", sub_menu_reg,  typeMenuReg},//дискр рег
+    302            { "Текущие",           sub_menu_act,  typeMenuViewActual},
+    303            { NULL, NULL}
+    304          
+    305          };
+    306          
+    307          //редактор ранжир
+    308          LineMenuItem sub_menu_editrng[] =
+    309          {
+    310            { "Редактор ранж", NULL},//title
+    311            { NULL, NULL, typeMenuEditRang}//control_item, parent
+    312          };
+    313          
+    314          //редактор расшир логики
+    315          LineMenuItem sub_menu_editwl[] =
+    316          {
+    317            { "Редактор РЛ", NULL},//title
+    318            { NULL, NULL, typeMenuEditWL}//control_item, parent
+    319          };
+    320          
+    321          void ResetSystemMenu()
+    322          {
+    323            bitStringUNI[UNIUPR_WKL]    = "ВКЛ";
+    324            bitStringUNI[UNIUPR_OTKL]   = "ОТКЛ";
+    325            bitStringUNI[UNIUPR_WPERED] = "ВПЕРЕД";
+    326            bitStringUNI[UNIUPR_NAZAD]  = "НАЗАД";
+    327            bitStringUNI[UNIUPR_PROSTAJA] = "ПРОСТАЯ";
+    328            bitStringUNI[UNIUPR_NAPRAVL]  = "НАПРАВЛ";
+    329            bitStringUNI[UNIUPR_INVERS]   = "ИНВЕРСНЫЙ";
+    330            bitStringUNI[UNIUPR_PRM]      = "ПРЯМОЙ";
+    331            bitStringUNI[UNIUPR_NORM]     = "НОРМАЛЬНЫЙ";
+    332            bitStringUNI[UNIUPR_TRIG]     = "ТРИГГ";
+    333            bitStringUNI[UNIUPR_OBRAT]    = "ОБРАТНАЯ";
+    334            bitStringUNI[UNIUPR_PRJAM]    = "ПРЯМАЯ";
+    335            bitStringUNI[UNIUPR_ILI]      = "ИЛИ";
+    336            bitStringUNI[UNIUPR_I]        = "И";
+    337            bitStringUNI[UNIUPR_LIN]      = "ЛИНЕЙНЫЕ";
+    338            bitStringUNI[UNIUPR_FAZ]      = "ФАЗНЫЕ";
+    339          
+    340          //сброс системного меню
+    341            ResetConfig();//обнулить конфигурацию
+    342          
+    343            TxtStreamInit(&CONTROL_MAIN, &KadrMenuFormat_sub, sub_menu_main);//инит control и формир кадра
+    344          
+    345            CRR_SUBMENU = sub_menu_main;//текущий submenu
+    346            //типажи
+    347            sub_menu_main[SUBDATA].TypesWin = typeMenuSub;
+    348          
+    349            CRR_TEXTSTREAM = &CONTROL_MAIN;//текущий control
+    350          
+    351            TxtStreamInit(&CONTROL_CNTR,      &KadrMenuFormat_sub, sub_menu_cntr);//инит control и формир кадра
+    352            TxtStreamInit(&CONTROL_DV,        &KadrMenuFormat_sub, sub_menu_dv);//инит control и формир кадра
+    353            TxtStreamInit(&CONTROL_RELE,      &KadrMenuFormat_sub, sub_menu_rele);//инит control и формир кадра
+    354            TxtStreamInit(&CONTROL_CDI,       &KadrMenuFormat_sub, sub_menu_cdi);//инит control и формир кадра
+    355            TxtStreamInit(&CONTROL_WDL,       &KadrMenuFormat_sub, sub_menu_widel);//инит control и формир кадра
+    356          
+    357            ViewDiskrMenu(typeMenuSub);//вывести окно отображения
+    358          
+    359          //  CRR_FHOME = &PereinitSub;//указатель на ф-цию HOME
+    360            SelectorFHOME(&PereinitSub);//указатель на ф-цию HOME
+    361          
+    362            LanderPStr();//размещение указателя строки
+    363            ResetUpDown();//погасить Up Down
+    364            ShowTitleSubmenu_crr();//заголовок текущего Submenu
+    365          
+    366            AddCompIzRpz(PRM1_COMP1);//добавить компонент из репозитария
+    367          
+    368          
+    369           SetCmdToUVV(PRM1_COMP1,  1, IOCMD6_PRM1, RELE2_SM);//отранж TEST PRM1 на P2
+    370          
+    371          
+    372            AddCompIzRpz(PF_COMP1);//добавить компонент из репозитария
+    373            AddCompIzRpz(OF_COMP1);//добавить компонент из репозитария
+    374            
+    375            AddCompIzRpz(UMM_COMP1);//добавить компонент из репозитария
+    376            AddCompIzRpz(UROV_COMP1);//добавить компонент из репозитария
+    377            AddCompIzRpz(APV_COMP1);//добавить компонент из репозитария
+    378          
+    379            AddCompIzRpz(NZOP_COMP1);//добавить компонент из репозитария
+    380            AddCompIzRpz(TZNP_COMP1);//добавить компонент из репозитария
+    381            AddCompIzRpz(DZ_COMP1);//добавить компонент из репозитария
+    382            AddCompIzRpz(MTZ_COMP1);//добавить компонент из репозитария
+    383          
+    384            AddCompIzRpz(WL_COMP1);//добавить компонент из репозитария
+    385          
+    386            offsetIOCmdOF = offsetIOCmdOF_loc;//cмещение для IO
+    387            offsetIOCmdPF = offsetIOCmdPF_loc;//смещение для IO
+    388          
+    389            AddCompIzRpz_WL(OF_COMP1);//добавить компонент из репозитария в РЛ
+    390            AddCompIzRpz_WL(PF_COMP1);//добавить компонент из репозитария в РЛ
+    391          
+    392          
+    393            SetCmdToUVV(PRM1_COMP1,  1, IOCMD1_PRM1, DV1_SM);//отранж CMD_POL_VV на ДВ1
+    394          
+    395          //--------MTZ1-------------------
+    396            SetCmdToUVV(MTZ_COMP1,  1, IOCMD6_MTZ1, RELE6_SM);//отранж MTZ1 на P6
+    397            SetCmdToUVV(MTZ_COMP1,  1, IOCMD6_MTZ1, RELE1_SM);//отранж MTZ1 на P6
+    398          //----------------------------------------------------------
+    399          //--------MTZ2-------------------
+    400            SetCmdToUVV(MTZ_COMP1,  2, IOCMD8_MTZ2to5, RELE6_SM);//отранж MTZ2 на P6
+    401          //----------------------------------------------------------
+    402          //--------MTZ3-------------------
+    403            SetCmdToUVV(MTZ_COMP1,  3, IOCMD8_MTZ2to5, RELE6_SM);//отранж MTZ3 на P6
+    404          //----------------------------------------------------------
+    405          //--------MTZ4-------------------
+    406            SetCmdToUVV(MTZ_COMP1,  4, IOCMD8_MTZ2to5, RELE6_SM);//отранж MTZ4 на P6
+    407          //----------------------------------------------------------
+    408          //--------MTZ5-------------------
+    409            SetCmdToUVV(MTZ_COMP1,  5, IOCMD8_MTZ2to5, RELE6_SM);//отранж MTZ5 на P6
+    410          //----------------------------------------------------------
+    411          
+    412            SetCmdToUVV(MTZ_COMP1,  2, IOCMD3_MTZ2to5, DV3_SM);//отранж Операт ускор MTZ2 на ДВ3
+    413            SetCmdToUVV(MTZ_COMP1,  3, IOCMD3_MTZ2to5, DV3_SM);//отранж Операт ускор MTZ3 на ДВ3
+    414            SetCmdToUVV(MTZ_COMP1,  4, IOCMD3_MTZ2to5, DV3_SM);//отранж Операт ускор MTZ4 на ДВ3
+    415            SetCmdToUVV(MTZ_COMP1,  5, IOCMD3_MTZ2to5, DV3_SM);//отранж Операт ускор MTZ5 на ДВ3
+    416          
+    417          //--------UMM-------------------
+    418                  //UMAX1
+    419            SetCmdToUVV(UMM_COMP1,  1, IOCMD6_UMM, RELE6_SM);//отранж HA P6
+    420                  //UMAX2
+    421            SetCmdToUVV(UMM_COMP1,  1, IOCMD8_UMM, RELE6_SM);//отранж HA P6
+    422                  // UMIN1
+    423            SetCmdToUVV(UMM_COMP1,  1, IOCMD10_UMM, RELE6_SM);//отранж HA P6
+    424                  // UMIN2
+    425            SetCmdToUVV(UMM_COMP1,  1, IOCMD12_UMM, RELE6_SM);//отранж HA P6
+    426          
+    427              //PUSK_UMM1
+    428            SetCmdToUVV(UMM_COMP1,  1, IOCMDPUSK1_UMM, DV1_SM);//отранж Пуск UMIN1 на ДВ1
+    429              //PUSK_UMM2
+    430            SetCmdToUVV(UMM_COMP1,  1, IOCMDPUSK2_UMM, DV1_SM);//отранж Пуск UMIN2 на ДВ1
+    431              //BLOK_UMIN1
+    432            SetCmdToUVV(UMM_COMP1,  1, IOCMD3_UMM, DV2_SM);//отранж Блок UMIN1 на ДВ2
+    433              //BLOK_UMIN2
+    434            SetCmdToUVV(UMM_COMP1,  1, IOCMD4_UMM, DV2_SM);//отранж Блок UMIN2 на ДВ2
+    435          
+    436          //--------DZ-------------------
+    437                  //DZ1               //Сраб ДЗ1ОФ
+    438            SetCmdToUVV(DZ_COMP1,  1, IOCMD7_DZ1, RELE6_SM);//отранж HA P6
+    439          //  SetCmdToUVV(DZ_COMP1,  4, IOCMD5_DZ2to5MF, RELE1_SM);//отранж 
+    440          
+    441          //--------TZNP-------------------
+    442          //Сраб ТЗНП1
+    443          //CMD_TZNP1to5
+    444            SetCmdToUVV(TZNP_COMP1,  1, IOCMD5_TZNP1to5, RELE6_SM);//отранж HA P6
+    445          //Сраб ТЗНП1 3I0
+    446          //CMD_TZNP1to5_3I0
+    447            SetCmdToUVV(TZNP_COMP1,  1, IOCMD7_TZNP1to5, RELE6_SM);//отранж HA P6
+    448          //Сраб ТЗНП1 3U0
+    449          //CMD_TZNP1to5_3U0
+    450            SetCmdToUVV(TZNP_COMP1,  1, IOCMD9_TZNP1to5, RELE6_SM);//отранж HA P6
+    451          
+    452          //Сраб ТЗНП1
+    453          //CMD_TZNP1to5
+    454            SetCmdToUVV(TZNP_COMP1,  2, IOCMD5_TZNP1to5, RELE6_SM);//отранж HA P6
+    455          //Сраб ТЗНП1 3I0
+    456          //CMD_TZNP1to5_3I0
+    457            SetCmdToUVV(TZNP_COMP1,  2, IOCMD7_TZNP1to5, RELE6_SM);//отранж HA P6
+    458          //Сраб ТЗНП1 3U0
+    459          //CMD_TZNP1to5_3U0
+    460            SetCmdToUVV(TZNP_COMP1,  2, IOCMD9_TZNP1to5, RELE6_SM);//отранж HA P6
+    461          
+    462          //Сраб ТЗНП1
+    463          //CMD_TZNP1to5
+    464            SetCmdToUVV(TZNP_COMP1,  3, IOCMD5_TZNP1to5, RELE6_SM);//отранж HA P6
+    465          //Сраб ТЗНП1 3I0
+    466          //CMD_TZNP1to5_3I0
+    467            SetCmdToUVV(TZNP_COMP1,  3, IOCMD7_TZNP1to5, RELE6_SM);//отранж HA P6
+    468          //Сраб ТЗНП1 3U0
+    469          //CMD_TZNP1to5_3U0
+    470            SetCmdToUVV(TZNP_COMP1,  3, IOCMD9_TZNP1to5, RELE6_SM);//отранж HA P6
+    471          
+    472          //Сраб ТЗНП1
+    473          //CMD_TZNP1to5
+    474            SetCmdToUVV(TZNP_COMP1,  4, IOCMD5_TZNP1to5, RELE6_SM);//отранж HA P6
+    475          //Сраб ТЗНП1 3I0
+    476          //CMD_TZNP1to5_3I0
+    477            SetCmdToUVV(TZNP_COMP1,  4, IOCMD7_TZNP1to5, RELE6_SM);//отранж HA P6
+    478          //Сраб ТЗНП1 3U0
+    479          //CMD_TZNP1to5_3U0
+    480            SetCmdToUVV(TZNP_COMP1,  4, IOCMD9_TZNP1to5, RELE6_SM);//отранж HA P6
+    481          
+    482          //Сраб ТЗНП1
+    483          //CMD_TZNP1to5
+    484            SetCmdToUVV(TZNP_COMP1,  5, IOCMD5_TZNP1to5, RELE6_SM);//отранж HA P6
+    485          //Сраб ТЗНП1 3I0
+    486          //CMD_TZNP1to5_3I0
+    487            SetCmdToUVV(TZNP_COMP1,  5, IOCMD7_TZNP1to5, RELE6_SM);//отранж HA P6
+    488          //Сраб ТЗНП1 3U0
+    489          //CMD_TZNP1to5_3U0
+    490            SetCmdToUVV(TZNP_COMP1,  5, IOCMD9_TZNP1to5, RELE6_SM);//отранж HA P6
+    491          
+    492            //BLOK_TZNP1
+    493            SetCmdToUVV(TZNP_COMP1,  1, IOCMD1_TZNP1to5, DV2_SM);//отранж Блок TZNP1 на ДВ2
+    494            SetCmdToUVV(TZNP_COMP1,  1, IOCMD3_TZNP1to5, DV3_SM);//отранж Операт ускор TZNP1 на ДВ3
+    495            SetCmdToUVV(TZNP_COMP1,  1, IOCMD2_TZNP1to5, DV4_SM);//отранж Блок уск ТЗНП1 на ДВ4
+    496          
+    497            //BLOK_TZNP2
+    498            SetCmdToUVV(TZNP_COMP1,  2, IOCMD1_TZNP1to5, DV2_SM);//отранж Блок TZNP2 на ДВ2
+    499            SetCmdToUVV(TZNP_COMP1,  2, IOCMD3_TZNP1to5, DV3_SM);//отранж Операт ускор TZNP2 на ДВ3
+    500            SetCmdToUVV(TZNP_COMP1,  2, IOCMD2_TZNP1to5, DV4_SM);//отранж Блок уск ТЗНП2 на ДВ4
+    501          
+    502          //--------APV-------------------
+    503                SetCmdToUVV(APV_COMP1,  1, IOCMD2_APV, DV3_SM);//отранж 
+    504          //      SetCmdToUVV(APV_COMP1,  1, IOCMD2_APV, RELE1_SM);//отранж 
+    505          
+    506          //APV1
+    507                SetCmdToUVV(APV_COMP1,  1, IOCMD4_APV, RELE2_SM);//отранж 
+    508          
+    509          //--------REG_DIS-------------------
+    510                SetCmdToUVV(APV_COMP1,  1, IOCMD2_APV, REGDIS_SM);//Пуск АПВ от ДВ
+    511          }//ResetSystemMenu()
+    512          
+    513          int SetUstToClon(short kodC, short numClon, short numUst, int newUst)
+    514          {
+    515          //новая уставка numUst равна newUst компонента kodC с номером клона numClon
+    516            short idxClon = SearchCnfClonToComponent(kodC, numClon);
+    517            if(idxClon<0) return 1;//клон не найден
+    518           
+    519          //записать заданную bazaOffset уставку ust в клон idxC
+    520            int tmp = setClonMngUSTAVKI(idxClon, numUst, newUst);
+    521          //    int  ttttttt1 = PrepareENACmd(8, 31);//MNGUPR_DZ2to5);
+    522            if(tmp==ERROR_UST) return ERROR_UST;//ошибка
+    523            //проверка на подготовку таймеров БО БВ
+    524          //  if((kodC==PRM1_COMP1)&&((numUst==MNGUST_PRM1_BO)||(numUst==MNGUST_PRM1_BV)))
+    525            //      PrepareBOBVtimer();//подготовить таймера Блок ОТКЛ, Блок ВКЛ
+    526            PREPAREustCOMPONENT(idxClon);//СУПЕРВИЗОР  Подготовка уставок spv компонентов из конфиг
+    527            SaveAsBlokUstavki(0);//сохранить тек уст как блок уставок
+    528            return tmp;//успешно
+    529          }//SetUstToClon(short kodC, short numClon, short numUst, int newUst)
+    530          
+    531          void PrepareBOBV()
+    532          {
+    533          //подготовить Блок ОТКЛ, Блок ВКЛ
+    534          extern UNS_32 maskaReleBO, maskaReleBV;
+    535                maskaReleBO = 0;
+    536                maskaReleBV = 0;
+    537              int i=RELE1_SM;
+    538              for(; i<(RELE1_SM+RELE_TOTAL); i++)
+    539              {
+    540                                             //Работа БО
+    541                if(GetCmdUVVFromClon(PRM1_COMP1, 1, IOCMD4_PRM1, i)) break;
+    542              }//for
+    543            if(!(i==(RELE1_SM+RELE_TOTAL))){//break не было
+    544               maskaReleBO = 1<<(i-RELE1_SM);
+    545            }//if
+    546          
+    547              i=RELE1_SM;
+    548              for(; i<(RELE1_SM+RELE_TOTAL); i++)
+    549              {
+    550                                             //Работа БB
+    551                if(GetCmdUVVFromClon(PRM1_COMP1, 1, IOCMD5_PRM1, i)) break;
+    552              }//for
+    553            if(!(i==(RELE1_SM+RELE_TOTAL))){//break не было
+    554               maskaReleBV = 1<<(i-RELE1_SM);
+    555            }//if
+    556          }//PrepareBOBV()
+    557          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   PrepareBOBV
+         8   -> GetCmdUVVFromClon
+       8   ResetSystemMenu
+         8   -> AddCompIzRpz
+         8   -> AddCompIzRpz_WL
+         8   -> LanderPStr
+         8   -> ResetConfig
+         8   -> ResetUpDown
+         8   -> SelectorFHOME
+         8   -> SetCmdToUVV
+         8   -> ShowTitleSubmenu_crr
+         8   -> TxtStreamInit
+         8   -> ViewDiskrMenu
+      32   SetUstToClon
+        32   -> PREPAREustCOMPONENT
+        32   -> SaveAsBlokUstavki
+        32   -> SearchCnfClonToComponent
+        32   -> setClonMngUSTAVKI
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable2
+       4  ??DataTable2_1
+       4  ??DataTable2_10
+       4  ??DataTable2_11
+       4  ??DataTable2_12
+       4  ??DataTable2_13
+       4  ??DataTable2_14
+       4  ??DataTable2_15
+       4  ??DataTable2_16
+       4  ??DataTable2_17
+       4  ??DataTable2_18
+       4  ??DataTable2_19
+       4  ??DataTable2_2
+       4  ??DataTable2_20
+       4  ??DataTable2_21
+       4  ??DataTable2_22
+       4  ??DataTable2_23
+       4  ??DataTable2_24
+       4  ??DataTable2_25
+       4  ??DataTable2_26
+       4  ??DataTable2_27
+       4  ??DataTable2_28
+       4  ??DataTable2_29
+       4  ??DataTable2_3
+       4  ??DataTable2_30
+       4  ??DataTable2_31
+       4  ??DataTable2_32
+       4  ??DataTable2_33
+       4  ??DataTable2_34
+       4  ??DataTable2_35
+       4  ??DataTable2_4
+       4  ??DataTable2_5
+       4  ??DataTable2_6
+       4  ??DataTable2_7
+       4  ??DataTable2_8
+       4  ??DataTable2_9
+      16  ?_0
+      16  ?_1
+      12  ?_10
+      12  ?_11
+      12  ?_12
+      16  ?_13
+      12  ?_14
+      12  ?_15
+      16  ?_16
+       8  ?_17
+       8  ?_18
+       8  ?_19
+      24  ?_2
+      20  ?_20
+      16  ?_21
+      12  ?_22
+       4  ?_23
+       8  ?_24
+       8  ?_25
+       8  ?_26
+       8  ?_27
+       8  ?_28
+      12  ?_29
+       8  ?_3
+       8  ?_30
+      12  ?_31
+       8  ?_32
+      12  ?_33
+       8  ?_34
+       4  ?_35
+       2  ?_36
+      12  ?_37
+       8  ?_38
+      16  ?_4
+      12  ?_5
+      12  ?_6
+      12  ?_7
+      12  ?_8
+      12  ?_9
+     212  PrepareBOBV
+    1416  ResetSystemMenu
+     168  SetUstToClon
+      80  bitStringUNI
+      24  sub_menu_act
+      24  sub_menu_apv
+      36  sub_menu_cdi
+     636  sub_menu_cnf
+     156  sub_menu_cnfwl
+      72  sub_menu_cntr
+      36  sub_menu_dv
+      24  sub_menu_editrng
+      24  sub_menu_editwl
+     156  sub_menu_main
+      24  sub_menu_p1of
+      24  sub_menu_p2of
+      24  sub_menu_p3of
+      24  sub_menu_rdis
+      24  sub_menu_reg
+      36  sub_menu_rele
+      24  sub_menu_tmp
+      24  sub_menu_urov
+      24  sub_menu_viewCDI
+      24  sub_menu_viewDV
+      24  sub_menu_viewRele
+      12  titleRang
+
+ 
+    92 bytes in section .bss
+ 1 464 bytes in section .data
+   434 bytes in section .rodata
+ 1 940 bytes in section .text
+ 
+ 1 940 bytes of CODE  memory
+   434 bytes of CONST memory
+ 1 556 bytes of DATA  memory
+
+Errors: none
+Warnings: none

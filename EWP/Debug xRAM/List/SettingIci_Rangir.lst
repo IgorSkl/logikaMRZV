@@ -1,0 +1,354 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  17:17:43
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\SettingIci\SettingIci_Rangir.c
+#    Command line =  
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\SettingIci\SettingIci_Rangir.c"
+#        -lcN "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\List\" -o
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\" --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=ARM926EJ-S -e --fpu=VFP9-S --dlib_config "D:\Program Files\IAR
+#        Systems\Embedded Workbench 7.2\arm\INC\c\DLib_Config_Normal.h" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\" --interwork
+#        --cpu_mode arm -On --use_c++_inline
+#    List file    =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\SettingIci_Rangir.lst
+#    Object file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\SettingIci_Rangir.o
+#
+###############################################################################
+
+D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\SettingIci\SettingIci_Rangir.c
+      1          #include "lpc_types.h"
+      2          #include "lpc_irq_fiq.h"
+      3          #include "lpc_arm922t_cp15_driver.h"
+      4          
+      5          #include "lpc32xx_hstimer.h"
+      6          #include "lpc32xx_ssp.h"
+      7          #include "lpc32xx_gpio.h"
+      8          
+      9          #include "lpc32xx_intc_driver.h"
+     10          #include "lpc32xx_clkpwr_driver.h"
+     11          
+     12          #include "arm926ej_cp15_drv.h"
+     13          #include "ttbl.h"
+     14          
+     15          #include <stdio.h>
+     16          #include <string.h>
+     17          
+     18          #include "psuperVisor\supermanager.h"
+     19          
+     20          #include "component\componentdef.h"
+     21          #include "psuperVisor\psvisor_helpdef.h"
+     22          
+     23          #include "psuperVisor\psvisor_helpfnc.h"
+     24          #include "virtualMenu\rangmanagerfnc.h"
+     25          #include "virtualmenu\systemmenufnc.h"
+     26          #include "SettingIci\SettingIci.h"
+     27          
+     28          #include "toSpeedOptim.h"
+     29          #include "toSpeedDIS.h"
+     30          
+     31          #include "header.h"
+     32          #include "ici_r_ef.h"
+     33          
+     34          //#define _HIDE_COMPONENT
+     35          //#include "PRM1Component.c"
+     36          
+     37          extern char chProtectTableComeIn;
+     38          extern char chResultCallGetMeasPrt;
+     39          extern  long lMtz1,lMtz1Tmr,lSt1,lSt2, lst3, lst4;
+     40          extern __MEASUREMENT_TO_PROTECTION TestMeasProtection;
+     41          
+     42          void  SettingIci_Rangir()
+     43          {
+     44          //установки ICI Ранжирования
+     45             ClearArrayRANGIR();//очистить все ранжир
+     46          
+     47          //-----------MTZ--------------------
+     48             SettingIci_RangirMTZ2DV(DV1_SM);//отранж МТЗ на ДВ1
+     49             SettingIci_RangirMTZ2DV(DV2_SM);//отранж МТЗ на ДВ2
+     50             SettingIci_RangirMTZ2DV(DV3_SM);//отранж МТЗ на ДВ3
+     51             SettingIci_RangirMTZ2DV(DV4_SM);//отранж МТЗ на ДВ4
+     52             SettingIci_RangirMTZ2DV(DV5_SM);//отранж МТЗ на ДВ5
+     53             SettingIci_RangirMTZ2DV(DV6_SM);//отранж МТЗ на ДВ6
+     54          
+     55             SettingIci_RangirMTZ2Rele(RELE1_SM);//отранж МТЗ на Реле1
+     56             SettingIci_RangirMTZ2Rele(RELE2_SM);//отранж МТЗ на Реле2
+     57             SettingIci_RangirMTZ2Rele(RELE3_SM);//отранж МТЗ на Реле3
+     58             SettingIci_RangirMTZ2Rele(RELE4_SM);//отранж МТЗ на Реле4
+     59             SettingIci_RangirMTZ2Rele(RELE5_SM);//отранж МТЗ на Реле5
+     60             SettingIci_RangirMTZ2Rele(RELE6_SM);//отранж МТЗ на Реле6
+     61          
+     62             SettingIci_RangirMTZ2Led(CDI1_SM);//отранж МТЗ на СДИ1
+     63             SettingIci_RangirMTZ2Led(CDI2_SM);//отранж МТЗ на СДИ2
+     64             SettingIci_RangirMTZ2Led(CDI3_SM);//отранж МТЗ на СДИ3
+     65             SettingIci_RangirMTZ2Led(CDI4_SM);//отранж МТЗ на СДИ4
+     66             SettingIci_RangirMTZ2Led(CDI5_SM);//отранж МТЗ на СДИ5
+     67             SettingIci_RangirMTZ2Led(CDI6_SM);//отранж МТЗ на СДИ6
+     68             
+     69          //  /*
+     70          
+     71          //-----------UMM--------------------
+     72             SettingIci_RangirUMM2DV(DV1_SM);//отранж UMM на ДВ1
+     73             SettingIci_RangirUMM2DV(DV2_SM);//отранж UMM на ДВ2
+     74             SettingIci_RangirUMM2DV(DV3_SM);//отранж UMM на ДВ3
+     75             SettingIci_RangirUMM2DV(DV4_SM);//отранж UMM на ДВ4
+     76             SettingIci_RangirUMM2DV(DV5_SM);//отранж UMM на ДВ5
+     77             SettingIci_RangirUMM2DV(DV6_SM);//отранж UMM на ДВ6
+     78          
+     79             SettingIci_RangirUMM2Rele(RELE1_SM);//отранж UMM на Реле1
+     80             SettingIci_RangirUMM2Rele(RELE2_SM);//отранж UMM на Реле2
+     81             SettingIci_RangirUMM2Rele(RELE3_SM);//отранж UMM на Реле3
+     82             SettingIci_RangirUMM2Rele(RELE4_SM);//отранж UMM на Реле4
+     83             SettingIci_RangirUMM2Rele(RELE5_SM);//отранж UMM на Реле5
+     84             SettingIci_RangirUMM2Rele(RELE6_SM);//отранж UMM на Реле6
+     85          
+     86             SettingIci_RangirUMM2Led(CDI1_SM);//отранж UMM на СДИ1
+     87             SettingIci_RangirUMM2Led(CDI2_SM);//отранж UMM на СДИ2
+     88             SettingIci_RangirUMM2Led(CDI3_SM);//отранж UMM на СДИ3
+     89             SettingIci_RangirUMM2Led(CDI4_SM);//отранж UMM на СДИ4
+     90             SettingIci_RangirUMM2Led(CDI5_SM);//отранж UMM на СДИ5
+     91             SettingIci_RangirUMM2Led(CDI6_SM);//отранж UMM на СДИ6
+     92          //*/
+     93          
+     94          //-----------TZNP--------------------
+     95             SettingIci_RangirTZNP2DV(DV1_SM);//отранж TZNP на ДВ1
+     96             SettingIci_RangirTZNP2DV(DV2_SM);//отранж TZNP на ДВ2
+     97             SettingIci_RangirTZNP2DV(DV3_SM);//отранж TZNP на ДВ3
+     98             SettingIci_RangirTZNP2DV(DV4_SM);//отранж TZNP на ДВ4
+     99             SettingIci_RangirTZNP2DV(DV5_SM);//отранж TZNP на ДВ5
+    100             SettingIci_RangirTZNP2DV(DV6_SM);//отранж TZNP на ДВ6
+    101          
+    102             SettingIci_RangirTZNP2Rele(RELE1_SM);//отранж TZNP на Реле1
+    103             SettingIci_RangirTZNP2Rele(RELE2_SM);//отранж TZNP на Реле2
+    104             SettingIci_RangirTZNP2Rele(RELE3_SM);//отранж TZNP на Реле3
+    105             SettingIci_RangirTZNP2Rele(RELE4_SM);//отранж TZNP на Реле4
+    106             SettingIci_RangirTZNP2Rele(RELE5_SM);//отранж TZNP на Реле5
+    107             SettingIci_RangirTZNP2Rele(RELE6_SM);//отранж TZNP на Реле6
+    108          
+    109          //-----------DZ--------------------
+    110             SettingIci_RangirDZToDV(DV1_SM);//отранж DZ на ДВ1
+    111             SettingIci_RangirDZToDV(DV2_SM);//отранж DZ на ДВ2
+    112             SettingIci_RangirDZToDV(DV3_SM);//отранж DZ на ДВ3
+    113             SettingIci_RangirDZToDV(DV4_SM);//отранж DZ на ДВ4
+    114             SettingIci_RangirDZToDV(DV5_SM);//отранж DZ на ДВ5
+    115             SettingIci_RangirDZToDV(DV6_SM);//отранж DZ на ДВ6
+    116          
+    117             SettingIci_RangirDZToRele(RELE1_SM);//отранж DZ на Реле1
+    118             SettingIci_RangirDZToRele(RELE2_SM);//отранж DZ на Реле2
+    119             SettingIci_RangirDZToRele(RELE3_SM);//отранж DZ на Реле3
+    120             SettingIci_RangirDZToRele(RELE4_SM);//отранж DZ на Реле4
+    121             SettingIci_RangirDZToRele(RELE5_SM);//отранж DZ на Реле5
+    122             SettingIci_RangirDZToRele(RELE6_SM);//отранж DZ на Реле6
+    123          
+    124          //-----------PRM1--------------------
+    125             SettingIci_RangirPRM1ToDV(DV1_SM);//отранж PRM на ДВ1
+    126             SettingIci_RangirPRM1ToDV(DV2_SM);//отранж PRM на ДВ2
+    127             SettingIci_RangirPRM1ToDV(DV3_SM);//отранж PRM на ДВ3
+    128             SettingIci_RangirPRM1ToDV(DV4_SM);//отранж PRM на ДВ4
+    129             SettingIci_RangirPRM1ToDV(DV5_SM);//отранж PRM на ДВ5
+    130             SettingIci_RangirPRM1ToDV(DV6_SM);//отранж PRM на ДВ6
+    131          
+    132             SettingIci_RangirPRM1ToRele(RELE1_SM);
+    133             SettingIci_RangirPRM1ToRele(RELE2_SM);
+    134             SettingIci_RangirPRM1ToRele(RELE3_SM);
+    135             SettingIci_RangirPRM1ToRele(RELE4_SM);
+    136             SettingIci_RangirPRM1ToRele(RELE5_SM);
+    137             SettingIci_RangirPRM1ToRele(RELE6_SM);
+    138          
+    139          //-----------NZOP--------------------
+    140             SettingIci_RangirNZOPToDV(DV1_SM);//отранж NZOP на ДВ1
+    141             SettingIci_RangirNZOPToDV(DV2_SM);//отранж NZOP на ДВ2
+    142             SettingIci_RangirNZOPToDV(DV3_SM);//отранж NZOP на ДВ3
+    143             SettingIci_RangirNZOPToDV(DV4_SM);//отранж NZOP на ДВ4
+    144             SettingIci_RangirNZOPToDV(DV5_SM);//отранж NZOP на ДВ5
+    145             SettingIci_RangirNZOPToDV(DV6_SM);//отранж NZOP на ДВ6
+    146          
+    147             SettingIci_RangirNZOPToRele(RELE1_SM);
+    148             SettingIci_RangirNZOPToRele(RELE2_SM);
+    149             SettingIci_RangirNZOPToRele(RELE3_SM);
+    150             SettingIci_RangirNZOPToRele(RELE4_SM);
+    151             SettingIci_RangirNZOPToRele(RELE5_SM);
+    152             SettingIci_RangirNZOPToRele(RELE6_SM);
+    153          
+    154          //-----------APV--------------------
+    155             SettingIci_RangirAPVToDV(DV1_SM);
+    156             SettingIci_RangirAPVToDV(DV2_SM);
+    157             SettingIci_RangirAPVToDV(DV3_SM);
+    158             SettingIci_RangirAPVToDV(DV4_SM);
+    159             SettingIci_RangirAPVToDV(DV5_SM);
+    160             SettingIci_RangirAPVToDV(DV6_SM);
+    161             SettingIci_RangirAPVToDV(DV7_SM);
+    162             SettingIci_RangirAPVToDV(DV8_SM);
+    163          
+    164             SettingIci_RangirAPVToRele(RELE1_SM);
+    165             SettingIci_RangirAPVToRele(RELE2_SM);
+    166             SettingIci_RangirAPVToRele(RELE3_SM);
+    167             SettingIci_RangirAPVToRele(RELE4_SM);
+    168             SettingIci_RangirAPVToRele(RELE5_SM);
+    169             SettingIci_RangirAPVToRele(RELE6_SM);
+    170          //void SettingIci_RangirAPVToLed(int nLed);
+    171          
+    172          //-----------UROV--------------------
+    173             SettingIci_RangirUROVToDV(DV1_SM);
+    174             SettingIci_RangirUROVToDV(DV2_SM);
+    175             SettingIci_RangirUROVToDV(DV3_SM);
+    176             SettingIci_RangirUROVToDV(DV4_SM);
+    177             SettingIci_RangirUROVToDV(DV5_SM);
+    178             SettingIci_RangirUROVToDV(DV6_SM);
+    179          
+    180             SettingIci_RangirUROVToRele(RELE1_SM);
+    181             SettingIci_RangirUROVToRele(RELE2_SM);
+    182             SettingIci_RangirUROVToRele(RELE3_SM);
+    183             SettingIci_RangirUROVToRele(RELE4_SM);
+    184             SettingIci_RangirUROVToRele(RELE5_SM);
+    185             SettingIci_RangirUROVToRele(RELE6_SM);
+    186          //void SettingIci_RangirUROVToLed(int nLed);
+    187          
+    188          //-----------OF--------------------
+    189             SettingIci_RangirOFToDV(DV1_SM);
+    190             SettingIci_RangirOFToDV(DV2_SM);
+    191             SettingIci_RangirOFToDV(DV3_SM);
+    192             SettingIci_RangirOFToDV(DV4_SM);
+    193             SettingIci_RangirOFToDV(DV5_SM);
+    194             SettingIci_RangirOFToDV(DV6_SM);
+    195          
+    196             SettingIci_RangirOFToRele(RELE1_SM);
+    197             SettingIci_RangirOFToRele(RELE2_SM);
+    198             SettingIci_RangirOFToRele(RELE3_SM);
+    199             SettingIci_RangirOFToRele(RELE4_SM);
+    200             SettingIci_RangirOFToRele(RELE5_SM);
+    201             SettingIci_RangirOFToRele(RELE6_SM);
+    202          
+    203          }//SettingIci_Rangir()
+    204          
+    205          int isActivCmdDV(int numCmd, int numDV)
+    206          {
+    207          //проверка активности команды на ДВ
+    208           //найти байт
+    209           int numByte = numCmd/8;
+    210           //найти бит
+    211           int numBit  = numCmd%8;
+    212           int rData = brCfgTbl.uc_ar_di_rank_cfg[numDV*AMOUNT_BYTE_FOR_IEPRF +numByte];
+    213           //найти маску
+    214           int Maska = 1<<numBit;
+    215           //найти активность
+    216           if(rData&Maska) return 1;
+    217           return 0;
+    218          }//isActivCmdDV(int numCmd, int numDV)
+    219          
+    220          int isActivCmdRele(int numCmd, int numRele)
+    221          {
+    222          //проверка активности команды на Реле
+    223           //найти байт
+    224           int numByte = numCmd/8;
+    225           //найти бит
+    226           int numBit  = numCmd%8;
+    227           int rData = brCfgTbl.uc_ar_do_rank_cfg[numRele*AMOUNT_BYTE_FOR_OEPRF +numByte];
+    228           //найти маску
+    229           int Maska = 1<<numBit;
+    230           //найти активность
+    231           if(rData&Maska) return 1;
+    232           return 0;
+    233          }//isActivCmdRele(int numCmd, int numRele)
+    234          
+    235          int isActivCmdLed(int numCmd, int numLed)
+    236          {
+    237          //проверка активности команды на СДИ
+    238           //найти байт
+    239           int numByte = numCmd/8;
+    240           //найти бит
+    241           int numBit  = numCmd%8;
+    242           int rData = brCfgTbl.uc_ar_led_rank_cfg[numLed*AMOUNT_BYTE_FOR_OEPRF +numByte];
+    243           //найти маску
+    244           int Maska = 1<<numBit;
+    245           //найти активность
+    246           if(rData&Maska) return 1;
+    247           return 0;
+    248          }//isActivCmdLed(int numCmd, int numLed)
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   SettingIci_Rangir
+         8   -> ClearArrayRANGIR
+         8   -> SettingIci_RangirAPVToDV
+         8   -> SettingIci_RangirAPVToRele
+         8   -> SettingIci_RangirDZToDV
+         8   -> SettingIci_RangirDZToRele
+         8   -> SettingIci_RangirMTZ2DV
+         8   -> SettingIci_RangirMTZ2Led
+         8   -> SettingIci_RangirMTZ2Rele
+         8   -> SettingIci_RangirNZOPToDV
+         8   -> SettingIci_RangirNZOPToRele
+         8   -> SettingIci_RangirOFToDV
+         8   -> SettingIci_RangirOFToRele
+         8   -> SettingIci_RangirPRM1ToDV
+         8   -> SettingIci_RangirPRM1ToRele
+         8   -> SettingIci_RangirTZNP2DV
+         8   -> SettingIci_RangirTZNP2Rele
+         8   -> SettingIci_RangirUMM2DV
+         8   -> SettingIci_RangirUMM2Led
+         8   -> SettingIci_RangirUMM2Rele
+         8   -> SettingIci_RangirUROVToDV
+         8   -> SettingIci_RangirUROVToRele
+      16   isActivCmdDV
+        16 __aeabi_idiv
+        16 __aeabi_idivmod
+      16   isActivCmdLed
+        16 __aeabi_idiv
+        16 __aeabi_idivmod
+      16   isActivCmdRele
+        16 __aeabi_idiv
+        16 __aeabi_idivmod
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable2
+     988  SettingIci_Rangir
+      92  isActivCmdDV
+      92  isActivCmdLed
+      92  isActivCmdRele
+
+ 
+ 1 268 bytes in section .text
+ 
+ 1 268 bytes of CODE memory
+
+Errors: none
+Warnings: none

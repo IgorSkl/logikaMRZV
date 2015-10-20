@@ -1,0 +1,391 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        12/Oct/2015  11:05:05
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\SettingIci\SettingIci_APV.c
+#    Command line =  
+#        "D:\IAR projects\HR1_0100_00_I720_new2\SettingIci\SettingIci_APV.c" -D
+#        _STATIC_MEMORY_BOOT -lcN "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\List\" -o "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "C:\Program Files\IAR Systems\Embedded
+#        Workbench 7.40\arm\INC\c\DLib_Config_Normal.h" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\Igor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\component\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\" --cpu_mode arm -On
+#        --use_c++_inline
+#    List file    =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\List\SettingIci_APV.lst
+#    Object file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\Obj\SettingIci_APV.o
+#
+###############################################################################
+
+D:\IAR projects\HR1_0100_00_I720_new2\SettingIci\SettingIci_APV.c
+      1          #include "lpc_types.h"
+      2          #include "lpc_irq_fiq.h"
+      3          #include "lpc_arm922t_cp15_driver.h"
+      4          
+      5          #include "lpc32xx_hstimer.h"
+      6          #include "lpc32xx_ssp.h"
+      7          #include "lpc32xx_gpio.h"
+      8          
+      9          #include "lpc32xx_intc_driver.h"
+     10          #include "lpc32xx_clkpwr_driver.h"
+     11          
+     12          #include "arm926ej_cp15_drv.h"
+     13          #include "ttbl.h"
+     14          
+     15          #include <stdio.h>
+     16          #include <string.h>
+     17          
+     18          #include "psuperVisor\supermanager.h"
+     19          
+     20          #include "component\componentdef.h"
+     21          #include "psuperVisor\psvisor_helpdef.h"
+     22          
+     23          #include "psuperVisor\psvisor_helpfnc.h"
+     24          #include "SettingIci\SettingIci.h"
+     25          #include "virtualmenu\systemmenufnc.h"
+     26          #include "virtualMenu\rangmanagerfnc.h"
+     27          
+     28          #include "toSpeedOptim.h"
+     29          #include "toSpeedDIS.h"
+     30          
+     31          #include "header.h"
+     32          #include "ici_r_ef.h"
+     33          
+     34          #define _HIDE_COMPONENT
+     35          #include "APVComponent.c"
+     36          #include "MTZ1Component.c"
+     37          #include "MTZ2Component.c"
+     38          #include "TZNP1Component.c"
+     39          #include "DZ1Component.c"
+     40          #include "DZ2Component.c"
+     41          
+     42          extern char chProtectTableComeIn;
+     43          extern char chResultCallGetMeasPrt;
+     44          //extern tic long lDemo_IA,lDemo_IB,lDemo_IC;
+     45          extern  long lMtz1,lMtz1Tmr,lSt1,lSt2, lst3, lst4;
+     46          extern __MEASUREMENT_TO_PROTECTION TestMeasProtection;
+     47          
+     48          /*
+     49          unsigned int   Rclr_U_ov_range1;
+     50          //.ПО АПВ 1 Контроль наявності уставка по по напряжению Uн шон 40 140 В шаг 0.01
+     51          //.	 уставка по по напряжению
+     52          //.	 1 ед = 1 мB
+     53          unsigned int   Rclr_U_ov_range2;
+     54          //.ПО АПВ 2 контроль відсутності
+     55          //.	 уставка по по напряжению 1  - 20 В 
+     56          //.	 1 ед = 1 мB
+     57          unsigned int   Rclr_U_ov_range3;
+     58          //.ПО АПВ 3 уставка по по напряжению Uн шон 40 140 В шаг 0.01
+     59          //.	 уставка по по напряжению
+     60          //.	 1 ед = 1 мB
+     61          unsigned int   Rclr_U_ov_range4;
+     62          //.ПО АПВ 4 1  - 20 В 
+     63          //.	 
+     64          //.	 1 ед = 1 мB
+     65          
+     66          //syncro1
+     67          unsigned long Rclr_DeltaU;
+     68          //Разница напряжений Шаг 0.01
+     69          //1  - 20 В 
+     70          //syncro2
+     71          unsigned long Rclr_DeltaPhi;
+     72          //угол рассогласования
+     73          //5 до (+-)50 град Шаг 1 град
+     74          
+     75          //Syncro3
+     76          unsigned long Rclr_DeltaPhi_Dt;
+     77          //Скорость скольжения
+     78          //5 - 30 град\с Шаг 0.01
+     79          */
+     80          
+     81          void  SettingIci_APV()
+     82          {
+     83          //PO1 APV
+     84              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrRclrPickup.Rclr_U_ov_range1;
+     85            SetUstToClon(APV_COMP1,  1, MNGUST_PO1_APV, lMtz1);//уставка
+     86          //PO2 APV
+     87              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrRclrPickup.Rclr_U_ov_range2;
+     88            SetUstToClon(APV_COMP1,  1, MNGUST_PO2_APV, lMtz1);//уставка
+     89          //PO3 APV
+     90              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrRclrPickup.Rclr_U_ov_range3;
+     91            SetUstToClon(APV_COMP1,  1, MNGUST_PO3_APV, lMtz1);//уставка
+     92          //PO4 APV
+     93              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrRclrPickup.Rclr_U_ov_range4;
+     94            SetUstToClon(APV_COMP1,  1, MNGUST_PO4_APV, lMtz1);//уставка
+     95          
+     96          //voltage_different APV
+     97              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrRclrPickup.Rclr_DeltaU;
+     98            SetUstToClon(APV_COMP1,  1, MNGUST_POVD_APV, lMtz1);//уставка
+     99          //angle_unbalance APV
+    100              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrRclrPickup.Rclr_DeltaPhi;
+    101            SetUstToClon(APV_COMP1,  1, MNGUST_POAU_APV, lMtz1);//уставка
+    102          //speed_angle APV
+    103              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrRclrPickup.Rclr_DeltaPhi_Dt;
+    104            SetUstToClon(APV_COMP1,  1, MNGUST_POSA_APV, lMtz1);//уставка
+    105          
+    106          //Время 1 цикл АПВ tim2
+    107              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrRclrStageParam.Rclr1_T;
+    108            SetUstToClon(APV_COMP1,  1, MNGVID1_APV, lMtz1Tmr*10);//уставка выдержки 
+    109          
+    110          //Время 2 цикл АПВ tim3
+    111              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrRclrStageParam.Rclr2_T;
+    112            SetUstToClon(APV_COMP1,  1, MNGVID2_APV, lMtz1Tmr*10);//уставка выдержки 
+    113          
+    114          //Время Блокир АПВ tim8
+    115              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrRclrStageParam.Rclr2_T_blk;
+    116            SetUstToClon(APV_COMP1,  1, MNGVID3_APV, lMtz1Tmr*10);//уставка выдержки 
+    117          
+    118          //Время Блокир АПВ1 tim7
+    119              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrRclrStageParam.Rclr1_T_blk;
+    120            SetUstToClon(APV_COMP1,  1, MNGVID4_APV, lMtz1Tmr*10);//уставка выдержки 
+    121          
+    122          //Время Блокир АПВ от ВВ tim1
+    123              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrRclrStageParam.Rclr_T_blk_HSW;
+    124            SetUstToClon(APV_COMP1,  1, MNGVID5_APV, lMtz1Tmr*10);//уставка выдержки 
+    125          
+    126          //Время внеш запрета АПВ tim6
+    127              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrRclrStageParam.Rclr_T_forbid;
+    128            SetUstToClon(APV_COMP1,  1, MNGVID6_APV, lMtz1Tmr*10);//уставка выдержки 
+    129          
+    130          //Время ож напр АПВ1 tim9
+    131              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrRclrStageParam.Rclr1_T_wait_U;
+    132            SetUstToClon(APV_COMP1,  1, MNGVID7_APV, lMtz1Tmr*10);//уставка выдержки 
+    133          
+    134          //Время ож син  АПВ1 tim10
+    135              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrRclrStageParam.Rclr1_T_wait_sycro;
+    136            SetUstToClon(APV_COMP1,  1, MNGVID8_APV, lMtz1Tmr*10);//уставка выдержки 
+    137          
+    138          //Время ож напр АПВ2 tim11
+    139              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrRclrStageParam.Rclr2_T_wait_U;
+    140            SetUstToClon(APV_COMP1,  1, MNGVID9_APV, lMtz1Tmr*10);//уставка выдержки 
+    141          
+    142          //Время ож син  АПВ2 tim12
+    143              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrRclrStageParam.Rclr2_T_wait_syncro;
+    144            SetUstToClon(APV_COMP1,  1, MNGVID10_APV, lMtz1Tmr*10);//уставка выдержки 
+    145          
+    146            int uprAPV=0;
+    147            //меню  Состояние APV
+    148          //.	Состояние
+    149          //.	1 -вкл
+    150          //.	0 - выкл
+    151              lSt1 = brCfgTbl.ownrRclrMng.state_Rclr;
+    152            if(lSt1>0) uprAPV |= 32; //APV WKL
+    153            else  uprAPV &= ~32; //APV OTKL 
+    154          
+    155            //меню  Состояние APV2
+    156          //.	Состояние
+    157          //.	1 -вкл
+    158          //.	0 - выкл
+    159              lSt1 = brCfgTbl.ownrRclrMng.state_Rclr2;
+    160            if(lSt1>0) uprAPV |= 64; //APV WKL
+    161            else  uprAPV &= ~64; //APV OTKL 
+    162          
+    163          //Без контроля
+    164              lSt1 = brCfgTbl.ownrRclrMng.select_Mode_Rclr;//Селектор АПВ
+    165            if(lSt1==0) {uprAPV &= ~7;} //uprAPV &= ~2; uprAPV &= ~4;} //APV WKL
+    166          //Нет линии есть шина
+    167            if(lSt1==1) {uprAPV |= 1; uprAPV &= ~6;}// uprAPV &= ~4;} //APV WKL
+    168          //Есть линия нет шины
+    169            if(lSt1==2) {uprAPV |= 2; uprAPV &= ~5;}// uprAPV &= ~4;} //APV WKL
+    170          //Есть линия есть шина Нет синхр
+    171            if(lSt1==3) {uprAPV |= 3; uprAPV &= ~4;} //APV WKL
+    172          //Есть линия есть шина Есть синхр
+    173            if(lSt1==4) {uprAPV |= 4; uprAPV &= ~3;}// uprAPV &= ~2;} //APV WKL
+    174          
+    175          //Faza A
+    176              lSt1 = brCfgTbl.ownrRclrMng.selectPhase;//Селектор фазы
+    177            if(lSt1==0) {uprAPV &= ~(8+16);} //APV WKL
+    178          //Faza B
+    179              lSt1 = brCfgTbl.ownrRclrMng.selectPhase;//Селектор фазы
+    180            if(lSt1==1) {uprAPV |= 8; uprAPV &= ~(16);} //APV WKL
+    181          //Faza C
+    182              lSt1 = brCfgTbl.ownrRclrMng.selectPhase;//Селектор фазы
+    183            if(lSt1==2) {uprAPV |= 16; uprAPV &= ~(8);} //APV WKL
+    184            
+    185            SetUstToClon(APV_COMP1,  1, MNGUPR_APV, uprAPV);//управление APV
+    186          
+    187           extern UNS_32 pAPVcmdMaska[];//определение ЗапускАПВ
+    188          
+    189          //Пуск APV от Защит
+    190            for(int i=0; i<DQUADRO; i++) pAPVcmdMaska[i]=0;//Очистить
+    191          //----------------------------MTZ------------------------------
+    192              lSt1 = puskAPVotZ(MCP1_STP_RCLR_ONB);//Пуск от МТЗ1
+    193            if(lSt1) SetCmdToUVV(MTZ_COMP1,  1, IOCMD6_MTZ1, PUSKAPV_SM);//отранж MTZ1 на APV
+    194              lSt1 = puskAPVotZ(MCP2_STP_RCLR_ONB);//Пуск от МТЗ2
+    195            if(lSt1) SetCmdToUVV(MTZ_COMP1,  2, IOCMD8_MTZ2to5, PUSKAPV_SM);//отранж MTZ2 на APV
+    196              lSt1 = puskAPVotZ(MCP3_STP_RCLR_ONB);//Пуск от МТЗ3
+    197            if(lSt1) SetCmdToUVV(MTZ_COMP1,  3, IOCMD8_MTZ2to5, PUSKAPV_SM);//отранж MTZ3 на APV
+    198              lSt1 = puskAPVotZ(MCP4_STP_RCLR_ONB);//Пуск от МТЗ4
+    199            if(lSt1) SetCmdToUVV(MTZ_COMP1,  4, IOCMD8_MTZ2to5, PUSKAPV_SM);//отранж MTZ4 на APV
+    200              lSt1 = puskAPVotZ(MCP5_STP_RCLR_ONB);//Пуск от МТЗ5
+    201            if(lSt1) SetCmdToUVV(MTZ_COMP1,  5, IOCMD8_MTZ2to5, PUSKAPV_SM);//отранж MTZ5 на APV
+    202          
+    203          //----------------------------TZNP------------------------------
+    204              lSt1 = puskAPVotZ(TZNP1_STP_RCLR_ONB);//Сраб ТЗНП1
+    205            if(lSt1) SetCmdToUVV(TZNP_COMP1,  1, IOCMD5_TZNP1to5, PUSKAPV_SM);//отранж на APV
+    206              lSt1 = puskAPVotZ(TZNP1_3U0_STP_RCLR_ONB);//Сраб ЗНП1(3U0)
+    207            if(lSt1) SetCmdToUVV(TZNP_COMP1,  1, IOCMD9_TZNP1to5, PUSKAPV_SM);//отранж на APV
+    208              lSt1 = puskAPVotZ(TZNP1_3I0_STP_RCLR_ONB);//Сраб ЗНП1(3I0)
+    209            if(lSt1) SetCmdToUVV(TZNP_COMP1,  1, IOCMD7_TZNP1to5, PUSKAPV_SM);//отранж на APV
+    210              lSt1 = puskAPVotZ(TZNP2_STP_RCLR_ONB);//Сраб ТЗНП2
+    211            if(lSt1) SetCmdToUVV(TZNP_COMP1,  2, IOCMD5_TZNP1to5, PUSKAPV_SM);//отранж на APV
+    212              lSt1 = puskAPVotZ(TZNP2_3U0_STP_RCLR_ONB);//Сраб ЗНП2(3U0)
+    213            if(lSt1) SetCmdToUVV(TZNP_COMP1,  2, IOCMD9_TZNP1to5, PUSKAPV_SM);//отранж на APV
+    214              lSt1 = puskAPVotZ(TZNP2_3I0_STP_RCLR_ONB);//Сраб ЗНП2(3I0)
+    215            if(lSt1) SetCmdToUVV(TZNP_COMP1,  2, IOCMD7_TZNP1to5, PUSKAPV_SM);//отранж на APV
+    216              lSt1 = puskAPVotZ(TZNP3_STP_RCLR_ONB);//Сраб ТЗНП3
+    217            if(lSt1) SetCmdToUVV(TZNP_COMP1,  3, IOCMD5_TZNP1to5, PUSKAPV_SM);//отранж на APV
+    218              lSt1 = puskAPVotZ(TZNP3_3U0_STP_RCLR_ONB);//Сраб ЗНП3(3U0)
+    219            if(lSt1) SetCmdToUVV(TZNP_COMP1,  3, IOCMD9_TZNP1to5, PUSKAPV_SM);//отранж на APV
+    220              lSt1 = puskAPVotZ(TZNP3_3I0_STP_RCLR_ONB);//Сраб ЗНП3(3I0)
+    221            if(lSt1) SetCmdToUVV(TZNP_COMP1,  3, IOCMD7_TZNP1to5, PUSKAPV_SM);//отранж на APV
+    222              lSt1 = puskAPVotZ(TZNP4_STP_RCLR_ONB);//Сраб ТЗНП4
+    223            if(lSt1) SetCmdToUVV(TZNP_COMP1,  4, IOCMD5_TZNP1to5, PUSKAPV_SM);//отранж на APV
+    224              lSt1 = puskAPVotZ(TZNP4_3U0_STP_RCLR_ONB);//Сраб ЗНП4(3U0)
+    225            if(lSt1) SetCmdToUVV(TZNP_COMP1,  4, IOCMD9_TZNP1to5, PUSKAPV_SM);//отранж на APV
+    226              lSt1 = puskAPVotZ(TZNP4_3I0_STP_RCLR_ONB);//Сраб ЗНП4(3I0)
+    227            if(lSt1) SetCmdToUVV(TZNP_COMP1,  4, IOCMD7_TZNP1to5, PUSKAPV_SM);//отранж на APV
+    228              lSt1 = puskAPVotZ(TZNP5_STP_RCLR_ONB);//Сраб ТЗНП5
+    229            if(lSt1) SetCmdToUVV(TZNP_COMP1,  5, IOCMD5_TZNP1to5, PUSKAPV_SM);//отранж на APV
+    230              lSt1 = puskAPVotZ(TZNP5_3U0_STP_RCLR_ONB);//Сраб ЗНП5(3U0)
+    231            if(lSt1) SetCmdToUVV(TZNP_COMP1,  5, IOCMD9_TZNP1to5, PUSKAPV_SM);//отранж на APV
+    232              lSt1 = puskAPVotZ(TZNP5_3I0_STP_RCLR_ONB);//Сраб ЗНП5(3I0)
+    233            if(lSt1) SetCmdToUVV(TZNP_COMP1,  5, IOCMD7_TZNP1to5, PUSKAPV_SM);//отранж на APV
+    234          
+    235          //----------------------------DZ------------------------------
+    236              lSt1 = puskAPVotZ(DSTP1_STP_RCLR_ONB);//Сраб ДТЗ1
+    237            if(lSt1) {
+    238                       SetCmdToUVV(DZ_COMP1,  1, IOCMD3_DZ1, PUSKAPV_SM);//отранж на APV
+    239                       SetCmdToUVV(DZ_COMP1,  1, IOCMD7_DZ1, PUSKAPV_SM);//отранж на APV
+    240                     }//if  
+    241              lSt1 = puskAPVotZ(DSTP2_STP_RCLR_ONB);//Сраб ДТЗ2
+    242            if(lSt1) {
+    243                       SetCmdToUVV(DZ_COMP1,  2, IOCMD5_DZ2to5MF, PUSKAPV_SM);//отранж на APV
+    244                       SetCmdToUVV(DZ_COMP1,  2, IOCMD5_DZ2to5OF, PUSKAPV_SM);//отранж на APV
+    245                     }//if  
+    246              lSt1 = puskAPVotZ(DSTP3_STP_RCLR_ONB);//Сраб ДТЗ3
+    247            if(lSt1) {
+    248                       SetCmdToUVV(DZ_COMP1,  3, IOCMD5_DZ2to5MF, PUSKAPV_SM);//отранж на APV
+    249                       SetCmdToUVV(DZ_COMP1,  3, IOCMD5_DZ2to5OF, PUSKAPV_SM);//отранж на APV
+    250                     }//if  
+    251              lSt1 = puskAPVotZ(DSTP4_STP_RCLR_ONB);//Сраб ДТЗ4
+    252            if(lSt1) {
+    253                       SetCmdToUVV(DZ_COMP1,  4, IOCMD5_DZ2to5MF, PUSKAPV_SM);//отранж на APV
+    254                       SetCmdToUVV(DZ_COMP1,  4, IOCMD5_DZ2to5OF, PUSKAPV_SM);//отранж на APV
+    255                     }//if  
+    256              lSt1 = puskAPVotZ(DSTP5_STP_RCLR_ONB);//Сраб ДТЗ5
+    257            if(lSt1) {
+    258                       SetCmdToUVV(DZ_COMP1,  5, IOCMD5_DZ2to5MF, PUSKAPV_SM);//отранж на APV
+    259                       SetCmdToUVV(DZ_COMP1,  5, IOCMD5_DZ2to5OF, PUSKAPV_SM);//отранж на APV
+    260                     }//if  
+    261          
+    262              lSt1 = puskAPVotZ(MCP1_DSTP1_STP_RCLR_ONB);//Сраб МТЗ1 ДТЗ1
+    263            if(lSt1) SetCmdToUVV(DZ_COMP1,  1, IOCMD5_DZ1, PUSKAPV_SM);//отранж на APV
+    264              lSt1 = puskAPVotZ(MCP2_DSTP2_STP_RCLR_ONB);//Сраб МТЗ2 ДТЗ2
+    265            if(lSt1) SetCmdToUVV(DZ_COMP1,  2, IOCMD5_MDZ2to5MF, PUSKAPV_SM);//отранж на APV
+    266              lSt1 = puskAPVotZ(MCP3_DSTP3_STP_RCLR_ONB);//Сраб МТЗ3 ДТЗ3
+    267            if(lSt1) SetCmdToUVV(DZ_COMP1,  3, IOCMD5_MDZ2to5MF, PUSKAPV_SM);//отранж на APV
+    268              lSt1 = puskAPVotZ(MCP4_DSTP4_STP_RCLR_ONB);//Сраб МТЗ4 ДТЗ4
+    269            if(lSt1) SetCmdToUVV(DZ_COMP1,  4, IOCMD5_MDZ2to5MF, PUSKAPV_SM);//отранж на APV
+    270              lSt1 = puskAPVotZ(MCP5_DSTP5_STP_RCLR_ONB);//Сраб МТЗ5 ДТЗ5
+    271            if(lSt1) SetCmdToUVV(DZ_COMP1,  5, IOCMD5_MDZ2to5MF, PUSKAPV_SM);//отранж на APV
+    272          
+    273          }//SettingIci_APV()
+    274          
+    275          int puskAPVotZ(int num)
+    276          {
+    277          //Пуск от Защит
+    278            int rez=0;
+    279              if(brCfgTbl.ownrRclrMng.ar_Rclr_Stp_Cmd_state[num/8]&(1<<(num%8))) rez=1;
+    280            return rez;
+    281          }//puskAPVotZ(int num)
+    282          
+    283          /*
+    284          DSTP1_STP_RCLR_ONB                       ,//Сраб ДТЗ1
+    285          DSTP2_STP_RCLR_ONB                       ,//Сраб ДТЗ2
+    286          DSTP3_STP_RCLR_ONB                       ,//Сраб ДТЗ3
+    287          DSTP4_STP_RCLR_ONB                       ,//Сраб ДТЗ4
+    288          DSTP5_STP_RCLR_ONB                       ,//Сраб ДТЗ5
+    289          
+    290          MCP1_DSTP1_STP_RCLR_ONB                  ,//Сраб МТЗ1 ДТЗ1
+    291          MCP2_DSTP2_STP_RCLR_ONB                  ,//Сраб МТЗ2 ДТЗ2
+    292          MCP3_DSTP3_STP_RCLR_ONB                  ,//Сраб МТЗ3 ДТЗ3
+    293          MCP4_DSTP4_STP_RCLR_ONB                  ,//Сраб МТЗ4 ДТЗ4
+    294          MCP5_DSTP5_STP_RCLR_ONB                  ,//Сраб МТЗ5 ДТЗ5
+    295          
+    296          */
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   SettingIci_APV
+         8   -> SetCmdToUVV
+         8   -> SetUstToClon
+         8   -> puskAPVotZ
+      20   puskAPVotZ
+        20 __aeabi_idiv
+        20 __aeabi_idivmod
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable1
+       4  ??DataTable1_1
+       4  ??DataTable1_10
+       4  ??DataTable1_11
+       4  ??DataTable1_12
+       4  ??DataTable1_13
+       4  ??DataTable1_14
+       4  ??DataTable1_15
+       4  ??DataTable1_16
+       4  ??DataTable1_17
+       4  ??DataTable1_18
+       4  ??DataTable1_19
+       4  ??DataTable1_2
+       4  ??DataTable1_20
+       4  ??DataTable1_21
+       4  ??DataTable1_22
+       4  ??DataTable1_23
+       4  ??DataTable1_24
+       4  ??DataTable1_25
+       4  ??DataTable1_3
+       4  ??DataTable1_4
+       4  ??DataTable1_5
+       4  ??DataTable1_6
+       4  ??DataTable1_7
+       4  ??DataTable1_8
+       4  ??DataTable1_9
+    2824  SettingIci_APV
+      88  puskAPVotZ
+
+ 
+ 3 016 bytes in section .text
+ 
+ 3 016 bytes of CODE memory
+
+Errors: none
+Warnings: none

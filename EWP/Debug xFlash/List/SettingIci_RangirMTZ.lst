@@ -1,0 +1,373 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        12/Oct/2015  11:05:06
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\IAR
+#        projects\HR1_0100_00_I720_new2\SettingIci\SettingIci_RangirMTZ.c
+#    Command line =  
+#        "D:\IAR
+#        projects\HR1_0100_00_I720_new2\SettingIci\SettingIci_RangirMTZ.c" -D
+#        _STATIC_MEMORY_BOOT -lcN "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\List\" -o "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "C:\Program Files\IAR Systems\Embedded
+#        Workbench 7.40\arm\INC\c\DLib_Config_Normal.h" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\Igor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\component\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\" --cpu_mode arm -On
+#        --use_c++_inline
+#    List file    =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\List\SettingIci_RangirMTZ.lst
+#    Object file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\Obj\SettingIci_RangirMTZ.o
+#
+###############################################################################
+
+D:\IAR projects\HR1_0100_00_I720_new2\SettingIci\SettingIci_RangirMTZ.c
+      1          #include "lpc_types.h"
+      2          #include "lpc_irq_fiq.h"
+      3          #include "lpc_arm922t_cp15_driver.h"
+      4          
+      5          #include "lpc32xx_hstimer.h"
+      6          #include "lpc32xx_ssp.h"
+      7          #include "lpc32xx_gpio.h"
+      8          
+      9          #include "lpc32xx_intc_driver.h"
+     10          #include "lpc32xx_clkpwr_driver.h"
+     11          
+     12          #include "arm926ej_cp15_drv.h"
+     13          #include "ttbl.h"
+     14          
+     15          #include <stdio.h>
+     16          #include <string.h>
+     17          
+     18          #include "psuperVisor\supermanager.h"
+     19          
+     20          #include "component\componentdef.h"
+     21          #include "psuperVisor\psvisor_helpdef.h"
+     22          
+     23          #include "psuperVisor\psvisor_helpfnc.h"
+     24          #include "virtualMenu\rangmanagerfnc.h"
+     25          #include "virtualmenu\systemmenufnc.h"
+     26          #include "SettingIci\SettingIci.h"
+     27          
+     28          #include "toSpeedOptim.h"
+     29          #include "toSpeedDIS.h"
+     30          
+     31          #include "header.h"
+     32          #include "ici_r_ef.h"
+     33          
+     34          #define _HIDE_COMPONENT
+     35          #include "MTZ1Component.c"
+     36          #include "MTZ2Component.c"
+     37          
+     38          void SettingIci_RangirMTZ2DV(int nDV)
+     39          {
+     40          //отранж МТЗ на ДВ
+     41          int numDV = nDV - DV1_SM;//нормировка
+     42          // Блокировка МТЗ1
+     43           if(isActivCmdDV(BLOCK_MCP1_DI_IEPRF_ONB, numDV))//проверка активности команды на ДВ
+     44                SetCmdToUVV(MTZ_COMP1,  1, IOCMD1_MTZ1, nDV);//отранж 
+     45          // Блокировка МТЗ2
+     46           if(isActivCmdDV(BLOCK_MCP2_DI_IEPRF_ONB, numDV))//проверка активности команды на ДВ
+     47                SetCmdToUVV(MTZ_COMP1,  2, IOCMD1_MTZ2to5, nDV);//отранж  
+     48          // Блокировка МТЗ3
+     49           if(isActivCmdDV(BLOCK_MCP3_DI_IEPRF_ONB, numDV))//проверка активности команды на ДВ
+     50                SetCmdToUVV(MTZ_COMP1,  3, IOCMD1_MTZ2to5, nDV);//отранж  
+     51          // Блокировка МТЗ4
+     52           if(isActivCmdDV(BLOCK_MCP4_DI_IEPRF_ONB, numDV))//проверка активности команды на ДВ
+     53                SetCmdToUVV(MTZ_COMP1,  4, IOCMD1_MTZ2to5, nDV);//отранж 
+     54          // Блокировка МТЗ5
+     55           if(isActivCmdDV(BLOCK_MCP5_DI_IEPRF_ONB, numDV))//проверка активности команды на ДВ
+     56                SetCmdToUVV(MTZ_COMP1,  5, IOCMD1_MTZ2to5, nDV);//отранж 
+     57          
+     58          //Оперативное ускорение МТЗ2
+     59           if(isActivCmdDV(ACCLT_MCP2_DI_IEPRF_ONB, numDV))//проверка активности команды на ДВ
+     60                SetCmdToUVV(MTZ_COMP1,  2, IOCMD3_MTZ2to5, nDV);//отранж 
+     61          //Оперативное ускорение МТЗ3
+     62           if(isActivCmdDV(ACCLT_MCP3_DI_IEPRF_ONB, numDV))//проверка активности команды на ДВ
+     63                SetCmdToUVV(MTZ_COMP1,  3, IOCMD3_MTZ2to5, nDV);//отранж 
+     64          //Оперативное ускорение МТЗ4
+     65           if(isActivCmdDV(ACCLT_MCP4_DI_IEPRF_ONB, numDV))//проверка активности команды на ДВ
+     66                SetCmdToUVV(MTZ_COMP1,  4, IOCMD3_MTZ2to5, nDV);//отранж 
+     67          //Оперативное ускорение МТЗ5
+     68           if(isActivCmdDV(ACCLT_MCP5_DI_IEPRF_ONB, numDV))//проверка активности команды на ДВ
+     69                SetCmdToUVV(MTZ_COMP1,  5, IOCMD3_MTZ2to5, nDV);//отранж 
+     70          
+     71          }//SettingIci_RangirMTZ2DV()
+     72          
+     73          void SettingIci_RangirMTZ2Rele(int nRele)
+     74          {
+     75          //отранж МТЗ на Реле
+     76          int numRele = nRele - RELE1_SM;//нормировка
+     77          // Блокировка МТЗ1
+     78           if(isActivCmdRele(BLOCK_MCP1_DI_OEPRF_ONB, numRele))//проверка активности команды на Реле
+     79                SetCmdToUVV(MTZ_COMP1,  1, IOCMD1_MTZ1, nRele);//отранж 
+     80          // Блокировка МТЗ2
+     81           if(isActivCmdRele(BLOCK_MCP2_DI_OEPRF_ONB, numRele))//проверка активности команды на Реле
+     82                SetCmdToUVV(MTZ_COMP1,  2, IOCMD1_MTZ2to5, nRele);//отранж  
+     83          // Блокировка МТЗ3
+     84           if(isActivCmdRele(BLOCK_MCP3_DI_OEPRF_ONB, numRele))//проверка активности команды на Реле
+     85                SetCmdToUVV(MTZ_COMP1,  3, IOCMD1_MTZ2to5, nRele);//отранж  
+     86          // Блокировка МТЗ4
+     87           if(isActivCmdRele(BLOCK_MCP4_DI_OEPRF_ONB, numRele))//проверка активности команды на Реле
+     88                SetCmdToUVV(MTZ_COMP1,  4, IOCMD1_MTZ2to5, nRele);//отранж 
+     89          // Блокировка МТЗ5
+     90           if(isActivCmdRele(BLOCK_MCP5_DI_OEPRF_ONB, numRele))//проверка активности команды на Реле
+     91                SetCmdToUVV(MTZ_COMP1,  5, IOCMD1_MTZ2to5, nRele);//отранж 
+     92          
+     93          //Оперативное ускорение МТЗ2
+     94           if(isActivCmdRele(ACCLT_MCP2_DI_OEPRF_ONB, numRele))//проверка активности команды на Реле
+     95                SetCmdToUVV(MTZ_COMP1,  2, IOCMD3_MTZ2to5, nRele);//отранж 
+     96          //Оперативное ускорение МТЗ3
+     97           if(isActivCmdRele(ACCLT_MCP3_DI_OEPRF_ONB, numRele))//проверка активности команды на Реле
+     98                SetCmdToUVV(MTZ_COMP1,  3, IOCMD3_MTZ2to5, nRele);//отранж 
+     99          //Оперативное ускорение МТЗ4
+    100           if(isActivCmdRele(ACCLT_MCP4_DI_OEPRF_ONB, numRele))//проверка активности команды на Реле
+    101                SetCmdToUVV(MTZ_COMP1,  4, IOCMD3_MTZ2to5, nRele);//отранж 
+    102          //Оперативное ускорение МТЗ5
+    103           if(isActivCmdRele(ACCLT_MCP5_DI_OEPRF_ONB, numRele))//проверка активности команды на Реле
+    104                SetCmdToUVV(MTZ_COMP1,  5, IOCMD3_MTZ2to5, nRele);//отранж 
+    105          
+    106          // ПО МТЗ1
+    107           if(isActivCmdRele(STPDEV_MCP1_BORING_OEPRF_ONB, numRele))//проверка активности команды на Реле
+    108                SetCmdToUVV(MTZ_COMP1,  1, IOCMD2_MTZ1, nRele);//отранж 
+    109          // ПО МТЗ1 ВПД
+    110           if(isActivCmdRele(STPDEV_MCP1_STAIGHT_OEPRF_ONB, numRele))//проверка активности команды на Реле
+    111                SetCmdToUVV(MTZ_COMP1,  1, IOCMD3_MTZ1, nRele);//отранж 
+    112          // ПО МТЗ1 НЗД
+    113           if(isActivCmdRele(STPDEV_MCP1_BACK_OEPRF_ONB, numRele))//проверка активности команды на Реле
+    114                SetCmdToUVV(MTZ_COMP1,  1, IOCMD4_MTZ1, nRele);//отранж 
+    115          // ПО МТЗ1 ПН
+    116           if(isActivCmdRele(STPDEV_MCP1_VLT_OEPRF_ONB, numRele))//проверка активности команды на Реле
+    117                SetCmdToUVV(MTZ_COMP1,  1, IOCMD5_MTZ1, nRele);//отранж 
+    118          // сраб МТЗ1
+    119           if(isActivCmdRele(MCP1_OEPRF_ONB, numRele))//проверка активности команды на Реле
+    120                SetCmdToUVV(MTZ_COMP1,  1, IOCMD6_MTZ1, nRele);//отранж 
+    121          
+    122          // ПО МТЗ2
+    123           if(isActivCmdRele(STPDEV_MCP2_BORING_OEPRF_ONB, numRele))//проверка активности команды на Реле
+    124                SetCmdToUVV(MTZ_COMP1,  2, IOCMD4_MTZ2to5, nRele);//отранж 
+    125          // ПО МТЗ2 ВПД
+    126           if(isActivCmdRele(STPDEV_MCP2_STAIGHT_OEPRF_ONB, numRele))//проверка активности команды на Реле
+    127                SetCmdToUVV(MTZ_COMP1,  2, IOCMD5_MTZ2to5, nRele);//отранж 
+    128          // ПО МТЗ2 НЗД
+    129           if(isActivCmdRele(STPDEV_MCP2_BACK_OEPRF_ONB, numRele))//проверка активности команды на Реле
+    130                SetCmdToUVV(MTZ_COMP1,  2, IOCMD6_MTZ2to5, nRele);//отранж 
+    131          // ПО МТЗ2 ПН
+    132           if(isActivCmdRele(STPDEV_MCP2_VLT_OEPRF_ONB, numRele))//проверка активности команды на Реле
+    133                SetCmdToUVV(MTZ_COMP1,  2, IOCMD7_MTZ2to5, nRele);//отранж 
+    134          // сраб МТЗ2
+    135           if(isActivCmdRele(MCP2_OEPRF_ONB, numRele))//проверка активности команды на Реле
+    136                SetCmdToUVV(MTZ_COMP1,  2, IOCMD8_MTZ2to5, nRele);//отранж 
+    137          
+    138          // ПО МТЗ3
+    139           if(isActivCmdRele(STPDEV_MCP3_BORING_OEPRF_ONB, numRele))//проверка активности команды на Реле
+    140                SetCmdToUVV(MTZ_COMP1,  3, IOCMD4_MTZ2to5, nRele);//отранж 
+    141          // ПО МТЗ3 ВПД
+    142           if(isActivCmdRele(STPDEV_MCP3_STAIGHT_OEPRF_ONB, numRele))//проверка активности команды на Реле
+    143                SetCmdToUVV(MTZ_COMP1,  3, IOCMD5_MTZ2to5, nRele);//отранж 
+    144          // ПО МТЗ3 НЗД
+    145           if(isActivCmdRele(STPDEV_MCP3_BACK_OEPRF_ONB, numRele))//проверка активности команды на Реле
+    146                SetCmdToUVV(MTZ_COMP1,  3, IOCMD6_MTZ2to5, nRele);//отранж 
+    147          // ПО МТЗ3 ПН
+    148           if(isActivCmdRele(STPDEV_MCP3_VLT_OEPRF_ONB, numRele))//проверка активности команды на Реле
+    149                SetCmdToUVV(MTZ_COMP1,  3, IOCMD7_MTZ2to5, nRele);//отранж 
+    150          // сраб МТЗ3
+    151           if(isActivCmdRele(MCP3_OEPRF_ONB, numRele))//проверка активности команды на Реле
+    152                SetCmdToUVV(MTZ_COMP1,  3, IOCMD8_MTZ2to5, nRele);//отранж 
+    153          
+    154          // ПО МТЗ4
+    155           if(isActivCmdRele(STPDEV_MCP4_BORING_OEPRF_ONB, numRele))//проверка активности команды на Реле
+    156                SetCmdToUVV(MTZ_COMP1,  4, IOCMD4_MTZ2to5, nRele);//отранж 
+    157          // ПО МТЗ4 ВПД
+    158           if(isActivCmdRele(STPDEV_MCP4_STAIGHT_OEPRF_ONB, numRele))//проверка активности команды на Реле
+    159                SetCmdToUVV(MTZ_COMP1,  4, IOCMD5_MTZ2to5, nRele);//отранж 
+    160          // ПО МТЗ4 НЗД
+    161           if(isActivCmdRele(STPDEV_MCP4_BACK_OEPRF_ONB, numRele))//проверка активности команды на Реле
+    162                SetCmdToUVV(MTZ_COMP1,  4, IOCMD6_MTZ2to5, nRele);//отранж 
+    163          // ПО МТЗ4 ПН
+    164           if(isActivCmdRele(STPDEV_MCP4_VLT_OEPRF_ONB, numRele))//проверка активности команды на Реле
+    165                SetCmdToUVV(MTZ_COMP1,  4, IOCMD7_MTZ2to5, nRele);//отранж 
+    166          // сраб МТЗ4
+    167           if(isActivCmdRele(MCP4_OEPRF_ONB, numRele))//проверка активности команды на Реле
+    168                SetCmdToUVV(MTZ_COMP1,  4, IOCMD8_MTZ2to5, nRele);//отранж 
+    169          
+    170          // ПО МТЗ5
+    171           if(isActivCmdRele(STPDEV_MCP5_BORING_OEPRF_ONB, numRele))//проверка активности команды на Реле
+    172                SetCmdToUVV(MTZ_COMP1,  5, IOCMD4_MTZ2to5, nRele);//отранж 
+    173          // ПО МТЗ5 ВПД
+    174           if(isActivCmdRele(STPDEV_MCP5_STAIGHT_OEPRF_ONB, numRele))//проверка активности команды на Реле
+    175                SetCmdToUVV(MTZ_COMP1,  5, IOCMD5_MTZ2to5, nRele);//отранж 
+    176          // ПО МТЗ5 НЗД
+    177           if(isActivCmdRele(STPDEV_MCP5_BACK_OEPRF_ONB, numRele))//проверка активности команды на Реле
+    178                SetCmdToUVV(MTZ_COMP1,  5, IOCMD6_MTZ2to5, nRele);//отранж 
+    179          // ПО МТЗ5 ПН
+    180           if(isActivCmdRele(STPDEV_MCP5_VLT_OEPRF_ONB, numRele))//проверка активности команды на Реле
+    181                SetCmdToUVV(MTZ_COMP1,  5, IOCMD7_MTZ2to5, nRele);//отранж 
+    182          // сраб МТЗ5
+    183           if(isActivCmdRele(MCP5_OEPRF_ONB, numRele))//проверка активности команды на Реле
+    184                SetCmdToUVV(MTZ_COMP1,  5, IOCMD8_MTZ2to5, nRele);//отранж 
+    185          }//SettingIci_RangirMTZ2Rele(int nRele)
+    186          
+    187          void SettingIci_RangirMTZ2Led(int nLed)
+    188          {
+    189          //отранж МТЗ на СДИ
+    190          int numLed = nLed - CDI1_SM;//нормировка
+    191          // Блокировка МТЗ1
+    192           if(isActivCmdLed(BLOCK_MCP1_DI_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    193                SetCmdToUVV(MTZ_COMP1,  1, IOCMD1_MTZ1, nLed);//отранж 
+    194          // Блокировка МТЗ2
+    195           if(isActivCmdLed(BLOCK_MCP2_DI_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    196                SetCmdToUVV(MTZ_COMP1,  2, IOCMD1_MTZ2to5, nLed);//отранж  
+    197          // Блокировка МТЗ3
+    198           if(isActivCmdLed(BLOCK_MCP3_DI_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    199                SetCmdToUVV(MTZ_COMP1,  3, IOCMD1_MTZ2to5, nLed);//отранж  
+    200          // Блокировка МТЗ4
+    201           if(isActivCmdLed(BLOCK_MCP4_DI_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    202                SetCmdToUVV(MTZ_COMP1,  4, IOCMD1_MTZ2to5, nLed);//отранж 
+    203          // Блокировка МТЗ5
+    204           if(isActivCmdLed(BLOCK_MCP5_DI_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    205                SetCmdToUVV(MTZ_COMP1,  5, IOCMD1_MTZ2to5, nLed);//отранж 
+    206          
+    207          //Оперативное ускорение МТЗ2
+    208           if(isActivCmdLed(ACCLT_MCP2_DI_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    209                SetCmdToUVV(MTZ_COMP1,  2, IOCMD3_MTZ2to5, nLed);//отранж 
+    210          //Оперативное ускорение МТЗ3
+    211           if(isActivCmdLed(ACCLT_MCP3_DI_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    212                SetCmdToUVV(MTZ_COMP1,  3, IOCMD3_MTZ2to5, nLed);//отранж 
+    213          //Оперативное ускорение МТЗ4
+    214           if(isActivCmdLed(ACCLT_MCP4_DI_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    215                SetCmdToUVV(MTZ_COMP1,  4, IOCMD3_MTZ2to5, nLed);//отранж 
+    216          //Оперативное ускорение МТЗ5
+    217           if(isActivCmdLed(ACCLT_MCP5_DI_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    218                SetCmdToUVV(MTZ_COMP1,  5, IOCMD3_MTZ2to5, nLed);//отранж 
+    219          
+    220          // ПО МТЗ1
+    221           if(isActivCmdLed(STPDEV_MCP1_BORING_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    222                SetCmdToUVV(MTZ_COMP1,  1, IOCMD2_MTZ1, nLed);//отранж 
+    223          // ПО МТЗ1 ВПД
+    224           if(isActivCmdLed(STPDEV_MCP1_STAIGHT_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    225                SetCmdToUVV(MTZ_COMP1,  1, IOCMD3_MTZ1, nLed);//отранж 
+    226          // ПО МТЗ1 НЗД
+    227           if(isActivCmdLed(STPDEV_MCP1_BACK_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    228                SetCmdToUVV(MTZ_COMP1,  1, IOCMD4_MTZ1, nLed);//отранж 
+    229          // ПО МТЗ1 ПН
+    230           if(isActivCmdLed(STPDEV_MCP1_VLT_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    231                SetCmdToUVV(MTZ_COMP1,  1, IOCMD5_MTZ1, nLed);//отранж 
+    232          // сраб МТЗ1
+    233           if(isActivCmdLed(MCP1_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    234                SetCmdToUVV(MTZ_COMP1,  1, IOCMD6_MTZ1, nLed);//отранж 
+    235          
+    236          // ПО МТЗ2
+    237           if(isActivCmdLed(STPDEV_MCP2_BORING_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    238                SetCmdToUVV(MTZ_COMP1,  2, IOCMD4_MTZ2to5, nLed);//отранж 
+    239          // ПО МТЗ2 ВПД
+    240           if(isActivCmdLed(STPDEV_MCP2_STAIGHT_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    241                SetCmdToUVV(MTZ_COMP1,  2, IOCMD5_MTZ2to5, nLed);//отранж 
+    242          // ПО МТЗ2 НЗД
+    243           if(isActivCmdLed(STPDEV_MCP2_BACK_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    244                SetCmdToUVV(MTZ_COMP1,  2, IOCMD6_MTZ2to5, nLed);//отранж 
+    245          // ПО МТЗ2 ПН
+    246           if(isActivCmdLed(STPDEV_MCP2_VLT_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    247                SetCmdToUVV(MTZ_COMP1,  2, IOCMD7_MTZ2to5, nLed);//отранж 
+    248          // сраб МТЗ2
+    249           if(isActivCmdLed(MCP2_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    250                SetCmdToUVV(MTZ_COMP1,  2, IOCMD8_MTZ2to5, nLed);//отранж 
+    251          
+    252          // ПО МТЗ3
+    253           if(isActivCmdLed(STPDEV_MCP3_BORING_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    254                SetCmdToUVV(MTZ_COMP1,  3, IOCMD4_MTZ2to5, nLed);//отранж 
+    255          // ПО МТЗ3 ВПД
+    256           if(isActivCmdLed(STPDEV_MCP3_STAIGHT_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    257                SetCmdToUVV(MTZ_COMP1,  3, IOCMD5_MTZ2to5, nLed);//отранж 
+    258          // ПО МТЗ3 НЗД
+    259           if(isActivCmdLed(STPDEV_MCP3_BACK_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    260                SetCmdToUVV(MTZ_COMP1,  3, IOCMD6_MTZ2to5, nLed);//отранж 
+    261          // ПО МТЗ3 ПН
+    262           if(isActivCmdLed(STPDEV_MCP3_VLT_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    263                SetCmdToUVV(MTZ_COMP1,  3, IOCMD7_MTZ2to5, nLed);//отранж 
+    264          // сраб МТЗ3
+    265           if(isActivCmdLed(MCP3_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    266                SetCmdToUVV(MTZ_COMP1,  3, IOCMD8_MTZ2to5, nLed);//отранж 
+    267          
+    268          // ПО МТЗ4
+    269           if(isActivCmdLed(STPDEV_MCP4_BORING_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    270                SetCmdToUVV(MTZ_COMP1,  4, IOCMD4_MTZ2to5, nLed);//отранж 
+    271          // ПО МТЗ4 ВПД
+    272           if(isActivCmdLed(STPDEV_MCP4_STAIGHT_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    273                SetCmdToUVV(MTZ_COMP1,  4, IOCMD5_MTZ2to5, nLed);//отранж 
+    274          // ПО МТЗ4 НЗД
+    275           if(isActivCmdLed(STPDEV_MCP4_BACK_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    276                SetCmdToUVV(MTZ_COMP1,  4, IOCMD6_MTZ2to5, nLed);//отранж 
+    277          // ПО МТЗ4 ПН
+    278           if(isActivCmdLed(STPDEV_MCP4_VLT_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    279                SetCmdToUVV(MTZ_COMP1,  4, IOCMD7_MTZ2to5, nLed);//отранж 
+    280          // сраб МТЗ4
+    281           if(isActivCmdLed(MCP4_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    282                SetCmdToUVV(MTZ_COMP1,  4, IOCMD8_MTZ2to5, nLed);//отранж 
+    283          
+    284          // ПО МТЗ5
+    285           if(isActivCmdLed(STPDEV_MCP5_BORING_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    286                SetCmdToUVV(MTZ_COMP1,  5, IOCMD4_MTZ2to5, nLed);//отранж 
+    287          // ПО МТЗ5 ВПД
+    288           if(isActivCmdLed(STPDEV_MCP5_STAIGHT_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    289                SetCmdToUVV(MTZ_COMP1,  5, IOCMD5_MTZ2to5, nLed);//отранж 
+    290          // ПО МТЗ5 НЗД
+    291           if(isActivCmdLed(STPDEV_MCP5_BACK_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    292                SetCmdToUVV(MTZ_COMP1,  5, IOCMD6_MTZ2to5, nLed);//отранж 
+    293          // ПО МТЗ5 ПН
+    294           if(isActivCmdLed(STPDEV_MCP5_VLT_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    295                SetCmdToUVV(MTZ_COMP1,  5, IOCMD7_MTZ2to5, nLed);//отранж 
+    296          // сраб МТЗ5
+    297           if(isActivCmdLed(MCP5_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    298                SetCmdToUVV(MTZ_COMP1,  5, IOCMD8_MTZ2to5, nLed);//отранж 
+    299          }//SettingIci_RangirMTZ2Led(int nRele)
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      16   SettingIci_RangirMTZ2DV
+        16   -> SetCmdToUVV
+        16   -> isActivCmdDV
+      16   SettingIci_RangirMTZ2Led
+        16   -> SetCmdToUVV
+        16   -> isActivCmdLed
+      16   SettingIci_RangirMTZ2Rele
+        16   -> SetCmdToUVV
+        16   -> isActivCmdRele
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+     448  SettingIci_RangirMTZ2DV
+    1648  SettingIci_RangirMTZ2Led
+    1648  SettingIci_RangirMTZ2Rele
+
+ 
+ 3 744 bytes in section .text
+ 
+ 3 744 bytes of CODE memory
+
+Errors: none
+Warnings: none

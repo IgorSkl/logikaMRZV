@@ -1,0 +1,142 @@
+
+
+//""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+//---   
+void Dma_Int_cb_ssp0(void)   @ "Fast_function";
+//..................................................................................
+//""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+//~~~ Purpose: Read some data from the terminal interface                        ~~~
+//~~~ Processing: Move data from the ring buffer to the passed buffer            ~~~
+//~~~        ~~~
+//~~~        ~~~
+//~~~        ~~~
+//``````````````````````````````````````````````````````````````````````````````````
+//~~~ Returns: Number of bytes actually read                                      ~~
+//~~~                                                                             ~~ 
+//~~~                                                                             ~~
+//~~~          ~~
+//~~~          ~~
+//,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+//""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+//=================================================================================
+//Body func                                                                  
+//=================================================================================
+
+void Dma_Int_cb_ssp0(void)   @ "Fast_function"
+{
+//Detect Source
+
+
+}
+//---------------------------------------------------------------------------------
+
+
+
+//""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+//---   
+void Dma_recv_cb_ssp0(void)   @ "Fast_function";
+//..................................................................................
+//""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+//~~~ Purpose: Read some data from the terminal interface                        ~~~
+//~~~ Processing: Move data from the ring buffer to the passed buffer            ~~~
+//~~~        ~~~
+//~~~        ~~~
+//~~~        ~~~
+//``````````````````````````````````````````````````````````````````````````````````
+//~~~ Returns: Number of bytes actually read                                      ~~
+//~~~                                                                             ~~ 
+//~~~                                                                             ~~
+//~~~          ~~
+//~~~          ~~
+//,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+//""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+//=================================================================================
+//Body func                                                                  
+//=================================================================================
+
+void Dma_recv_cb_ssp0(void)   @ "Fast_function"
+{
+long bread;
+register void *pv;
+  //SSP_REGS_T *psspregs = (SSP_REGS_T *) SSP0;
+   pv = (void*)Dma_get_base();
+  //.bread = Ssp_read(sspdev0,&spi1_rxbuff[spi1_rxfill], toreadmax);
+  //.bread <<= 1;
+  
+  bread = ((DMAC_REGS_T*)pv)->dma_chan[IdxChnl].dest_addr
+  - dma_miso.dest_addr;
+  
+  spi1_rxsize = spi1_rxsize + bread;
+  spi1_rxfill = spi1_rxfill + bread;
+  if (spi1_rxfill >= SIZE_SPI_BUF)
+  {
+    //spi1_rxfill = 0;//Error ??? <- This code won`t be properly worked 
+	//as we don`t control Each word for reception
+	spi1_rxfill -= SIZE_SPI_BUF;//Only for general methodics/.
+  }
+  
+   if ((spi1_rxsize == 512) &&(spi1_rxfill==spi1_rxsize) )//SIZE_LPDU_CNL_SPI
+   {
+	chEntry_Ssp0++;
+	//Try Reinit Dma chanell?
+	
+	}
+  
+
+}
+//---------------------------------------------------------------------------------
+
+//""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+//---   
+void Dma_send_cb_ssp0(void)   @ "Fast_function";
+//..................................................................................
+//""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+//~~~ Purpose: Read some data from the terminal interface                        ~~~
+//~~~ Processing: Move data from the ring buffer to the passed buffer            ~~~
+//~~~        ~~~
+//~~~        ~~~
+//~~~        ~~~
+//``````````````````````````````````````````````````````````````````````````````````
+//~~~ Returns: Number of bytes actually read                                      ~~
+//~~~                                                                             ~~ 
+//~~~                                                                             ~~
+//~~~          ~~
+//~~~          ~~
+//,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+//""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+//=================================================================================
+//Body func                                                                  
+//=================================================================================
+
+void Dma_send_cb_ssp0(void)   @ "Fast_function"
+{
+ register long bwrite; 
+ register void *pv;
+//Detect Source
+pv = (void*)Dma_get_base();
+ bwrite = (((DMAC_REGS_T*)pv)->dma_chan[IDX_DMA_SSP0_MISO].src_addr);
+ bwrite -= dma_mosi.src_addr;
+ bwrite += 2;//Additiona Stop addr
+ if (bwrite>0x200)
+ {
+	 bwrite = 200;//?? Error control
+ }
+  //Data already moved
+  spi1_txsize = spi1_txsize - bwrite;
+  
+  spi1_txget = spi1_txget + bwrite;
+  
+  if (spi1_txget >= SIZE_SPI_BUF)
+  {
+    spi1_txget = 0;
+  }
+  //Disable Channel
+  (((DMAC_REGS_T*)pv)->dma_chan[IDX_DMA_SSP0_MISO].config_ch = 0;
+  //Clear Int
+  ((DMAC_REGS_T*)pv)->int_tc_clear  = (1<<IDX_DMA_SSP0_MISO);
+  ((DMAC_REGS_T*)pv)->int_err_clear = (1<<IDX_DMA_SSP0_MISO);
+  chEntry_Ssp0++;
+  
+}
+//---------------------------------------------------------------------------------
+

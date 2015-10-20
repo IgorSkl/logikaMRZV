@@ -1,0 +1,461 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        12/Oct/2015  11:05:10
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\virtualMenu\ustmanager.c
+#    Command line =  
+#        "D:\IAR projects\HR1_0100_00_I720_new2\virtualMenu\ustmanager.c" -D
+#        _STATIC_MEMORY_BOOT -lcN "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\List\" -o "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "C:\Program Files\IAR Systems\Embedded
+#        Workbench 7.40\arm\INC\c\DLib_Config_Normal.h" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\Igor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\component\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\" --cpu_mode arm -On
+#        --use_c++_inline
+#    List file    =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\List\ustmanager.lst
+#    Object file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\Obj\ustmanager.o
+#
+###############################################################################
+
+D:\IAR projects\HR1_0100_00_I720_new2\virtualMenu\ustmanager.c
+      1          /*
+      2          #include <vcl.h>
+      3          #include <strstrea.h>
+      4          #include <math.h>
+      5          #include <mem.h>
+      6          #include <fstream.h>
+      7          #include <strstrea.h>
+      8          #include <iomanip.h>
+      9          #pragma hdrstop
+     10          
+     11          #include "vmenuDis.h"
+     12          */
+     13          
+     14          #include <stdio.h>
+     15          #include <string.h>
+     16          
+     17          #include "psuperVisor\supermanager.h"
+     18          
+     19          #include "bazisdef.h"
+     20          #include "component\componentdef.h"
+     21          #include "virtualMenu\systemmenudef.h"
+     22          #include "virtualMenu\ustmanagerdef.h"
+     23          
+     24          #include "virtualMenu\ustmanagerfnc.h"
+     25          #include "psuperVisor\psvisor_helpfnc.h"
+     26          
+     27          #include "psuperVisor\psupervisor.h"
+     28          
+     29          #include "..\bazis.h"
+     30          
+     31          #include "toSpeedOptim.h"
+     32          
+     33          void SaveUprPRM1(short numBit);
+     34          void SaveUprMTZ(short ibit);
+     35          void SaveUprAPV(short ibit);
+     36          
+     37          extern COMPONENT_OBJ  cnfCOMPONENT[];
+     38          extern COMPONENT_OBJ  cnfCOMPONENT_WL[];
+     39          
+     40          //временный буфер для EEPROM 
+     41          char  tmp_eeprom[128*64];//MAX_MNGUSTAVKI*4блока *4байта
+     42          //4 блока уставок
+     43          int  blokUSTAVKI[4*MAX_MNGUSTAVKI+1];//плюс CRC для EEPROM
+     44          //текущие уставки
+     45          int  mngUSTAVKI[MAX_MNGUSTAVKI+3];
+     46          //текущие уставки РЛ
+     47          int  mngUSTAVKI_WL[MAX_MNGUSTAVKI_WL+3];
+     48          int  tmpUSTAVKI[100];
+     49          
+     50          /**********************************************
+     51          МЕНЕДЖЕР УСТАВОК
+     52          Удалить уставки
+     53          offsetUstMng - смещение уставки
+     54          cntUstMng - к-во уставок
+     55          **********************************************/
+     56          void MngUstDeleteUSTAVKI(short offsetUstMng, short cntUstMng)
+     57          {
+     58          //удалить уставки из mngUst
+     59            //копировать в тень
+     60            memcpy((void*)getShadowBuf(), mngUSTAVKI, 4*MAX_MNGUSTAVKI);
+     61          //копировать из тени Begin
+     62            if(offsetUstMng>0)
+     63              memcpy(mngUSTAVKI, (void*)getShadowBuf(), 4*offsetUstMng);
+     64          //копировать из тени End
+     65            memcpy(&(mngUSTAVKI[offsetUstMng]),
+     66                   &(((int *)getShadowBuf())[offsetUstMng+cntUstMng]),
+     67                   4*(MAX_MNGUSTAVKI-offsetUstMng-cntUstMng));
+     68          }//MngUstDeleteUSTAVKI(short offsetUstMng, short cntUstMng)
+     69          
+     70          /**********************************************
+     71          МЕНЕДЖЕР УСТАВОК
+     72          Удалить уставки из РЛ
+     73          offsetUstMng - смещение уставки
+     74          cntUstMng - к-во уставок
+     75          **********************************************/
+     76          void MngUstDeleteUSTAVKI_WL(short offsetUstMng, short cntUstMng)
+     77          {
+     78          //удалить уставки из mngUst
+     79            //копировать в тень
+     80            memcpy((void*)getShadowBuf(), mngUSTAVKI_WL, 4*MAX_MNGUSTAVKI_WL);
+     81          //копировать из тени Begin
+     82            if(offsetUstMng>0)
+     83              memcpy(mngUSTAVKI_WL, (void*)getShadowBuf(), 4*offsetUstMng);
+     84          //копировать из тени End
+     85            memcpy(&(mngUSTAVKI_WL[offsetUstMng]),
+     86                   &(((int *)getShadowBuf())[offsetUstMng+cntUstMng]),
+     87                   4*(MAX_MNGUSTAVKI_WL-offsetUstMng-cntUstMng));
+     88          }//MngUstDeleteUSTAVKI_WL(short offsetUstMng, short cntUstMng)
+     89          
+     90          /**********************************************
+     91          МЕНЕДЖЕР УСТАВОК
+     92          Добавить уставки
+     93          cntUstMng - к-во уставок
+     94          **********************************************/
+     95          void MngUstTopAddUSTAVKI(short cntUstMng)
+     96          {
+     97          //добавить уставки на вершину mng
+     98            //копировать в тень
+     99            memcpy((void*)getShadowBuf(), mngUSTAVKI, 4*MAX_MNGUSTAVKI);
+    100            //копировать из тени
+    101            memcpy(&(mngUSTAVKI[cntUstMng]), (void*)getShadowBuf(), 4*(MAX_MNGUSTAVKI-cntUstMng));
+    102            //копировать
+    103            memcpy(mngUSTAVKI, tmpUSTAVKI, 4*cntUstMng);
+    104          }//MngUstTopAddUSTAVKI(short cntUstMng)
+    105          
+    106          /**********************************************
+    107          МЕНЕДЖЕР УСТАВОК
+    108          Добавить уставки РЛ
+    109          cntUstMng - к-во уставок
+    110          **********************************************/
+    111          void MngUstTopAddUSTAVKI_WL(short cntUstMng)
+    112          {
+    113          //добавить уставки на вершину mng WL
+    114            //копировать в тень
+    115            memcpy((void*)getShadowBuf(), mngUSTAVKI_WL, 4*MAX_MNGUSTAVKI_WL);
+    116            //копировать из тени
+    117            memcpy(&(mngUSTAVKI_WL[cntUstMng]), (void*)getShadowBuf(), 4*(MAX_MNGUSTAVKI_WL-cntUstMng));
+    118            //копировать
+    119            memcpy(mngUSTAVKI_WL, tmpUSTAVKI, 4*cntUstMng);
+    120          }//MngUstTopAddUSTAVKI_WL(short cntUstMng)
+    121          
+    122          void SetUPR_COMMON1()
+    123          {
+    124            /*
+    125          //сохр управление
+    126            short ibit = LIGHTLINEMENU;//индекс бита
+    127            switch(cnfCOMPONENT[LIGHTCLON].kodC)
+    128            {
+    129            case PRM1_COMP1:
+    130             SaveUprPRM1(ibit);//персональное сохр upr для PRM1
+    131            break;
+    132          
+    133            case MTZ_COMP1:
+    134             SaveUprMTZ(ibit);//персональное сохр upr для MTZ
+    135            break;
+    136          
+    137            case APV_COMP1:
+    138             SaveUprAPV(ibit);//персональное сохр upr для APV
+    139            break;
+    140          
+    141          //управление остальные
+    142            default:
+    143            {
+    144              UNS_32 tmpU = getCurrentMngUSTAVKI();//текущая уст упр
+    145              if(FvmenuDis->UprCheck->Checked)
+    146              {
+    147                NumBitSettingWord(ibit, &tmpU);//установка бита по его индексу
+    148              }//if(FvmenuDis->UprCheck->Checked)
+    149              else
+    150              {
+    151                NumBitClearingWord(ibit, &tmpU);//сброс бита по его индексу
+    152              }
+    153            setCurrentMngUSTAVKI(tmpU);//новая уст упр
+    154            }//default
+    155            }//switch
+    156          
+    157            if(LIGHTCLON>=0)
+    158              PREPAREustCOMPONENT(LIGHTCLON);//СУПЕРВИЗОР  Подготовка уставок spv компонентов из конфиг
+    159            else
+    160              PREPAREustCOMPONENT_WL(LIGHTCLON);//СУПЕРВИЗОР  Подготовка уставок spv компонентов из конфиг РЛ
+    161          */    
+    162          }//SetUPR_COMMON1()
+    163          
+    164          int AssembleUstButton()
+    165          {
+    166            /*
+    167          //собрать уставку
+    168            int dig = 0;
+    169            sscanf(FvmenuDis->EditEdit->Text.Trim().c_str(), "%d", &dig);
+    170          
+    171            int tmp = setCurrentMngUSTAVKI(dig);
+    172            if(tmp<0) return tmp;//ошибка сборки
+    173          //  if((kodC==PRM1_COMP1)&&((numUst==MNGUST_PRM1_BO)||(numUst==MNGUST_PRM1_BV)))
+    174            //      PrepareBOBVtimer();//подготовить таймера Блок ОТКЛ, Блок ВКЛ
+    175            if(LIGHTCLON>=0)
+    176              PREPAREustCOMPONENT(LIGHTCLON);//СУПЕРВИЗОР  Подготовка уставок spv компонентов из конфиг
+    177            else
+    178              PREPAREustCOMPONENT_WL(LIGHTCLON);//СУПЕРВИЗОР  Подготовка уставок spv компонентов из конфиг РЛ
+    179          */  
+    180            return 0;
+    181          }//AssembleUstButton()
+    182          
+    183          int setCurrentMngUSTAVKI(int ust)
+    184          {
+    185          //записать текущую уставку
+    186          //codec=0-закодировать уставку
+    187            int tmp=0;
+    188            if(LIGHTCLON>=0)
+    189            {
+    190              tmp = cnfCOMPONENT[LIGHTCLON].
+    191                    codecUst(0, LIGHTMNGUBAZA+ LIGHTMNGUOFFSET, ust);
+    192              if(tmp<0) return tmp;//ошибка
+    193              mngUSTAVKI[getOffsetMngUSTAVKI(LIGHTMNGUOFFSET)] = tmp;//уст
+    194            }//if
+    195            else
+    196            {
+    197          //если CLON<0 то это РЛ
+    198              int tmp = cnfCOMPONENT_WL[-LIGHTCLON-1].
+    199                        codecUst(0, LIGHTMNGUBAZA+ LIGHTMNGUOFFSET, ust);
+    200              if(tmp<0) return tmp;//ошибка
+    201              mngUSTAVKI_WL[getOffsetMngUSTAVKI(LIGHTMNGUOFFSET)] = tmp;//уст
+    202            }
+    203            return tmp;//успешно
+    204          }//setCurrentMngUSTAVKI()
+    205          
+    206          int setClonMngUSTAVKI(int idxC, int bazaOffset, int ust)
+    207          {
+    208          //записать заданную bazaOffset уставку ust в клон idxC
+    209          //codec=0-закодировать уставку
+    210            int tmp=0;
+    211            if(LIGHTCLON>=0)
+    212            {
+    213              tmp = cnfCOMPONENT[idxC].//LIGHTCLON].
+    214                    codecUst(0, bazaOffset, ust);
+    215              if(tmp==ERROR_UST) return ERROR_UST;//ошибка
+    216              
+    217          //    int tttt1 = getClonOffsetMngUSTAVKI(idxC, bazaOffset);
+    218              mngUSTAVKI[getClonOffsetMngUSTAVKI(idxC, bazaOffset)] = tmp;//уст
+    219            }//if
+    220            else
+    221            {
+    222          //если CLON<0 то это РЛ
+    223              int tmp = cnfCOMPONENT_WL[-idxC-1].
+    224                        codecUst(0, bazaOffset, ust);
+    225              if(tmp<0) return tmp;//ошибка
+    226              mngUSTAVKI_WL[getClonOffsetMngUSTAVKI(idxC, bazaOffset)] = tmp;//уст
+    227            }
+    228            return tmp;//успешно
+    229          }//setClonMngUSTAVKI(int idxC, int bazaOffset, int ust)
+    230          
+    231          int getUstOffsetMngUSTAVKI(short offset)
+    232          {
+    233          //если CLON<0 то это РЛ
+    234          //прочитать тек уставку по смещению
+    235          //codec=1-раскодировать уставку
+    236            if(LIGHTCLON>=0)
+    237              return cnfCOMPONENT[LIGHTCLON].
+    238                     codecUst(1, LIGHTMNGUBAZA + LIGHTMNGUOFFSET,
+    239                              mngUSTAVKI[getOffsetMngUSTAVKI(offset)]);
+    240          //РЛ
+    241            return cnfCOMPONENT_WL[-LIGHTCLON-1].
+    242                   codecUst(1, LIGHTMNGUBAZA + LIGHTMNGUOFFSET,
+    243                            mngUSTAVKI_WL[getOffsetMngUSTAVKI(offset)]);
+    244          }//getOffsetMngUSTAVKI(short idx)
+    245          
+    246          UNS_32 getCurrentMngUSTAVKI()
+    247          {
+    248          //прочитать текущую уставку
+    249            return getUstOffsetMngUSTAVKI(LIGHTMNGUOFFSET);
+    250          }//getCurrentMngUSTAVKI()
+    251          
+    252          short getOffsetMngUSTAVKI(short offset)
+    253          {
+    254          //прочитать тек смещение уставки
+    255          //если CLON<0 то это РЛ
+    256            if(LIGHTCLON>=0)
+    257              return cnfCOMPONENT[LIGHTCLON].offsetUstMng +
+    258                     LIGHTMNGUBAZA + offset;
+    259          
+    260          //int tt1 = -LIGHTCLON-1;
+    261            return cnfCOMPONENT_WL[-LIGHTCLON-1].offsetUstMng +
+    262                   LIGHTMNGUBAZA + offset;
+    263          }//getOffsetMngUSTAVKI()
+    264          
+    265          short getClonOffsetMngUSTAVKI(short idxC, short offset)
+    266          {
+    267          //прочитать смещение уставки клона idxC
+    268          //если CLON<0 то это РЛ
+    269            if(idxC>=0)
+    270              return cnfCOMPONENT[idxC].offsetUstMng +
+    271                     //LIGHTMNGUBAZA +
+    272                     offset;
+    273          
+    274            return cnfCOMPONENT_WL[-idxC-1].offsetUstMng +
+    275                   //LIGHTMNGUBAZA +
+    276                   offset;
+    277          }//getClonOffsetMngUSTAVKI(short idxC, short offset)
+    278          
+    279          short getOffsetNativMngUSTAVKI(short idxC, short offsetUpr)
+    280          {
+    281          //прочитать смещение уставки
+    282            return cnfCOMPONENT[idxC].offsetUstMng + offsetUpr;
+    283          }//getOffsetNativMngUSTAVKI(short offset)
+    284          
+    285          int getNativUstMngUSTAVKI(short idxC, short offset)
+    286          {
+    287          //прочитать уставку по индексу клона и смещению
+    288          //если CLON<0 то это РЛ
+    289          //  int ttttttt5 = cnfCOMPONENT[idxC].offsetUstMng + offset;
+    290            if(idxC>=0)
+    291              return  mngUSTAVKI[cnfCOMPONENT[idxC].offsetUstMng + offset];
+    292          
+    293            return  mngUSTAVKI_WL[cnfCOMPONENT_WL[-idxC-1].offsetUstMng + offset];
+    294          }//getNativUstMngUSTAVKI(short idxC, short offset)
+    295          
+    296          int getMngUSTAVKI(short baza, short offset)
+    297          {
+    298              return  mngUSTAVKI[baza + offset];
+    299          }//getMngUSTAVKI(short baza, short offset)
+    300          
+    301          void CopyMngUstavki(int numBlok)
+    302          {
+    303          //копировать тек уставки на numBlok блок
+    304           memcpy(&(blokUSTAVKI[numBlok*MAX_MNGUSTAVKI]), mngUSTAVKI, 4*MAX_MNGUSTAVKI);
+    305          }//CopyMngUstavki(int numBlok)
+    306          
+    307          void CopyEEPROMtoUstavki(int numBlok)
+    308          {
+    309          //копировать данные из EEPROM в текущие уставки
+    310          extern char  tmp_eeprom[];//MAX_MNGUSTAVKI*4блока *4байта
+    311          //numBlok - номер блока уставок
+    312           memcpy(blokUSTAVKI, tmp_eeprom, 4*(4*MAX_MNGUSTAVKI+1));//для 4 блоков уставок и CRC
+    313           memcpy(mngUSTAVKI, &(blokUSTAVKI[numBlok*MAX_MNGUSTAVKI]), MAX_MNGUSTAVKI);
+    314          }//CopyMngUstavki(int numBlok)
+    315          
+    316          void SaveAsBlokUstavki(int numBlok)
+    317          {
+    318          //сохранить тек уст как блок уставок
+    319            CopyMngUstavki(numBlok);//копировать тек уставки на numBlok
+    320            blokUSTAVKI[4*MAX_MNGUSTAVKI] = setCRCMassiv(blokUSTAVKI, 4*MAX_MNGUSTAVKI); //CRC для 4 блоков уставок
+    321          }//SaveAsBlokUstavki(int numBlok)
+    322          
+    323          int getCRCUstavki()
+    324          {
+    325          //получить CRC уставок
+    326            return blokUSTAVKI[4*MAX_MNGUSTAVKI]; //CRC для 4 блоков уставок
+    327          }//getCRCUstavki()
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   AssembleUstButton
+      32   CopyEEPROMtoUstavki
+        32   -> __aeabi_memcpy
+      24   CopyMngUstavki
+        24   -> __aeabi_memcpy
+      24   MngUstDeleteUSTAVKI
+        24   -> __aeabi_memcpy
+        24   -> getShadowBuf
+      24   MngUstDeleteUSTAVKI_WL
+        24   -> __aeabi_memcpy
+        24   -> getShadowBuf
+      40   MngUstTopAddUSTAVKI
+        40   -> __aeabi_memcpy
+        40   -> getShadowBuf
+      40   MngUstTopAddUSTAVKI_WL
+        40   -> __aeabi_memcpy
+        40   -> getShadowBuf
+       8   SaveAsBlokUstavki
+         8   -> CopyMngUstavki
+         8   -> setCRCMassiv
+       0   SetUPR_COMMON1
+       0   getCRCUstavki
+       0   getClonOffsetMngUSTAVKI
+       8   getCurrentMngUSTAVKI
+         8   -> getUstOffsetMngUSTAVKI
+       0   getMngUSTAVKI
+       0   getNativUstMngUSTAVKI
+       0   getOffsetMngUSTAVKI
+       0   getOffsetNativMngUSTAVKI
+       8   getUstOffsetMngUSTAVKI
+         8   -- Indirect call
+         8   -> getOffsetMngUSTAVKI
+      24   setClonMngUSTAVKI
+        24   -- Indirect call
+        24   -> getClonOffsetMngUSTAVKI
+      16   setCurrentMngUSTAVKI
+        16   -- Indirect call
+        16   -> getOffsetMngUSTAVKI
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable16
+       4  ??DataTable16_1
+       4  ??DataTable16_2
+       4  ??DataTable16_3
+       4  ??DataTable16_4
+       4  ??DataTable16_5
+       4  ??DataTable16_6
+       4  ??DataTable16_7
+       4  ??DataTable16_8
+       4  ??DataTable16_9
+       8  AssembleUstButton
+      80  CopyEEPROMtoUstavki
+      48  CopyMngUstavki
+     228  MngUstDeleteUSTAVKI
+     228  MngUstDeleteUSTAVKI_WL
+     152  MngUstTopAddUSTAVKI
+     152  MngUstTopAddUSTAVKI_WL
+      40  SaveAsBlokUstavki
+       4  SetUPR_COMMON1
+    8004  blokUSTAVKI
+      12  getCRCUstavki
+     104  getClonOffsetMngUSTAVKI
+      20  getCurrentMngUSTAVKI
+      36  getMngUSTAVKI
+     128  getNativUstMngUSTAVKI
+     124  getOffsetMngUSTAVKI
+      40  getOffsetNativMngUSTAVKI
+     228  getUstOffsetMngUSTAVKI
+    2012  mngUSTAVKI
+     412  mngUSTAVKI_WL
+     256  setClonMngUSTAVKI
+     260  setCurrentMngUSTAVKI
+     400  tmpUSTAVKI
+    8192  tmp_eeprom
+
+ 
+ 19 020 bytes in section .bss
+  2 188 bytes in section .text
+ 
+  2 188 bytes of CODE memory
+ 19 020 bytes of DATA memory
+
+Errors: none
+Warnings: none

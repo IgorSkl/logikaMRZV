@@ -1,0 +1,195 @@
+###############################################################################
+#                                                                             #
+#     IAR Assembler V7.40.2.8542/W32 for ARM 12/Oct/2015  11:04:56            #
+#     Copyright 1999-2015 IAR Systems AB.                                     #
+#                                                                             #
+#           Source file   =  D:\IAR projects\HR1_0100_00_I720_new2\LIB\source\partial_vfp.s#
+#           List file     =  D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\List\partial_vfp.lst#
+#           Object file   =  D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\Obj\partial_vfp.o#
+#           Command line  =  D:\IAR projects\HR1_0100_00_I720_new2\LIB\source\partial_vfp.s #
+#                            -OD:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\Obj\ #
+#                            -s+ -M<> -w+ -r -DICODE_IRAM_DEF                 #
+#                            -LD:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\List\ #
+#                            -t8 --cpu ARM926EJ-S --fpu VFP9-S                #
+#                                                                             #
+###############################################################################
+
+    1                           
+    2                           ; Implementation of AEABI functions using a
+                                 partial VFP state (using D0 and D1)
+    3                           
+    4                               PUBLIC save_partial_VFP_state
+    5                               PUBLIC restore_partial_VFP_state
+    6                           
+    7                               SECTION .text:CODE
+    8                               ARM
+    9                               ; Save D0, D1 and FPSCR in area pointed to
+                                 by R0
+   10                           save_partial_VFP_state:
+   11    00000000 101AF1EE          VMRS     R1,FPSCR
+   12    00000004 040B80EC          VSTM     R0,{D0,D1}
+   13    00000008 101080E5          STR      R1,[R0,#16] ; after D0 and
+                                                          D1
+   14    0000000C 1EFF2FE1          BX       LR
+   15                           
+   16                               SECTION .text:CODE
+   17                               ARM
+   18                               ; Restore D0, D1 and FPSCR from area
+                                 pointed to by R0
+   19                           restore_partial_VFP_state:
+   20    00000000 101090E5          LDR      R1,[R0,#16] ; after D0 and
+                                                          D1
+   21    00000004 040B90EC          VLDM     R0,{D0,D1}
+   22    00000008 101AE1EE          VMSR     FPSCR,R1
+   23    0000000C 1EFF2FE1          BX       LR
+   24                           
+   25                               ; AEABI routines using only D0 and
+                                 D1.
+   26                               ;
+   27                               ; These are currently the same as those in
+                                 standard libraries,
+   28                               ; but since we rely on only D0 and D1
+                                 being used we better
+   29                               ; override the standard library.
+   30                               ;
+   31                               ; You might want to extend this to include
+                                 all floating point support routines:
+   32                               ; Casts:  __aeabi_d2f, __aeabi_d2iz,
+                                 __aeabi_d2uiz, __aeabi_f2d, __aeabi_f2iz,
+   33                               ;         __aeabi_f2uiz, __aeabi_i2d,
+                                 __aeabi_i2f, __aeabi_ui2d, __aeabi_ui2f
+   34                               ; Float:  __aeabi_fadd, __aeabi_cfrcmple,
+                                 __aeabi_cfcmple, __aeabi_fdiv,
+   35                               ;         __aeabi_fmul, __aeabi_frsub,
+                                 __aeabi_fsub
+   36                               ; Double: __aeabi_dadd, __aeabi_cdcmpeq,
+                                 __aeabi_cdrcmple, __aeabi_cdcmple,
+   37                               ;         __aeabi_ddiv, __aeabi_dmul,
+                                 __aeabi_drsub, __aeabi_dsub
+   38                           
+   39                               PUBLIC __aeabi_ui2d
+   40                               PUBLIC __aeabi_dmul
+   41                               PUBLIC __aeabi_ddiv
+   42                               PUBLIC __aeabi_d2f
+   43                               PUBLIC __aeabi_i2f
+   44                               PUBLIC __aeabi_fmul
+   45                               PUBLIC __aeabi_fsub
+   46                               PUBLIC __aeabi_fadd
+   47                               PUBLIC __aeabi_fdiv
+   48                               PUBLIC __aeabi_ui2f
+   49                               PUBLIC __aeabi_f2iz
+   50                               PUBLIC __aeabi_f2uiz
+   51                           
+   52                               SECTION .text:CODE
+   53                               ARM
+   54                           __aeabi_ui2d:
+   55    00000000 100A00EE          VMOV     S0, R0
+   56    00000004 400BB8EE          VCVT.F64.U32 D0, S0
+   57    00000008 100B51EC          VMOV     R0, R1, D0
+   58    0000000C 1EFF2FE1          BX       LR
+   59                           
+   60                               SECTION .text:CODE
+   61                               ARM
+   62                           __aeabi_dmul:
+   63    00000000 100B41EC          VMOV     D0, R0, R1
+   64    00000004 112B43EC          VMOV     D1, R2, R3
+   65    00000008 010B20EE          VMUL.F64 D0, D0, D1
+   66    0000000C 100B51EC          VMOV     R0, R1, D0
+   67    00000010 1EFF2FE1          BX       LR
+   68                           
+   69                               SECTION .text:CODE
+   70                               ARM
+   71                           __aeabi_ddiv:
+   72    00000000 100B41EC          VMOV     D0, R0, R1
+   73    00000004 112B43EC          VMOV     D1, R2, R3
+   74    00000008 010B80EE          VDIV.F64 D0, D0, D1
+   75    0000000C 100B51EC          VMOV     R0, R1, D0
+   76    00000010 1EFF2FE1          BX       LR
+   77                           
+   78                               SECTION .text:CODE
+   79                               ARM
+   80                           __aeabi_d2f:
+   81    00000000 100B41EC          VMOV     D0, R0, R1
+   82    00000004 C00BB7EE          VCVT.F32.F64 S0, D0
+   83    00000008 100A10EE          VMOV     R0, S0
+   84    0000000C 1EFF2FE1          BX       LR
+   85                           
+   86                               SECTION .text:CODE
+   87                               ARM
+   88                           __aeabi_i2f:
+   89    00000000 100A00EE          VMOV     S0, R0
+   90    00000004 C00AB8EE          VCVT.F32.S32 S0, S0
+   91    00000008 100A10EE          VMOV     R0, S0
+   92    0000000C 1EFF2FE1          BX       LR
+   93                           
+   94                               SECTION .text:CODE
+   95                               ARM
+   96                           __aeabi_fmul:
+   97    00000000 100A00EE          VMOV     S0, R0
+   98    00000004 901A00EE          VMOV     S1, R1
+   99    00000008 200A20EE          VMUL.F32 S0, S0, S1
+  100    0000000C 100A10EE          VMOV     R0, S0
+  101    00000010 1EFF2FE1          BX       LR
+  102                           
+  103                               SECTION .text:CODE
+  104                               ARM
+  105                           __aeabi_fsub:
+  106    00000000 100A00EE          VMOV     S0, R0
+  107    00000004 901A00EE          VMOV     S1, R1
+  108    00000008 600A30EE          VSUB.F32 S0, S0, S1
+  109    0000000C 100A10EE          VMOV     R0, S0
+  110    00000010 1EFF2FE1          BX       LR
+  111                           
+  112                               SECTION .text:CODE
+  113                               ARM
+  114                           __aeabi_fadd:
+  115    00000000 100A00EE          VMOV     S0, R0
+  116    00000004 901A00EE          VMOV     S1, R1
+  117    00000008 200A30EE          VADD.F32 S0, S0, S1
+  118    0000000C 100A10EE          VMOV     R0, S0
+  119    00000010 1EFF2FE1          BX       LR
+  120                           
+  121                               SECTION .text:CODE
+  122                               ARM
+  123                           __aeabi_fdiv:
+  124    00000000 100A00EE          VMOV     S0, R0
+  125    00000004 901A00EE          VMOV     S1, R1
+  126    00000008 200A80EE          VDIV.F32 S0, S0, S1
+  127    0000000C 100A10EE          VMOV     R0, S0
+  128    00000010 1EFF2FE1          BX       LR
+  129                           
+  130                               SECTION .text:CODE
+  131                               ARM
+  132                           __aeabi_ui2f:
+  133    00000000 100A00EE          VMOV         S0, R0
+  134    00000004 400AB8EE          VCVT.F32.U32 S0, S0
+  135    00000008 100A10EE          VMOV         R0, S0
+  136    0000000C 1EFF2FE1          BX           LR
+  137                           
+  138                               SECTION .text:CODE
+  139                               ARM
+  140                           __aeabi_f2iz:
+  141    00000000 100A00EE          VMOV         S0, R0
+  142    00000004 C00ABDEE          VCVT.S32.F32 S0, S0
+  143    00000008 100A10EE          VMOV         R0, S0
+  144    0000000C 1EFF2FE1          BX           LR
+  145                           
+  146                               SECTION .text:CODE
+  147                               ARM
+  148                           __aeabi_f2uiz:
+  149    00000000 100A00EE          VMOV         S0, R0
+  150    00000004 C00ABCEE          VCVT.U32.F32 S0, S0
+  151    00000008 100A10EE          VMOV         R0, S0
+  152    0000000C 1EFF2FE1          BX           LR
+  153                           
+  154                               END
+##############################
+#           CRC:0            #
+#        Errors:   0         #
+#        Warnings: 0         #
+#         Bytes: 248         #
+##############################
+
+
+
+

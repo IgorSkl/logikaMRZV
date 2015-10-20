@@ -1,0 +1,163 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  16:25:08
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\SettingIci\translateI.c
+#    Command line =  
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\SettingIci\translateI.c" -lcN
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\" -o "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\Obj\" --debug
+#        --endian=little --cpu=ARM926EJ-S -e --fpu=VFP9-S --dlib_config
+#        "D:\Program Files\IAR Systems\Embedded Workbench
+#        7.2\arm\INC\c\DLib_Config_Normal.h" -I "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\" --interwork
+#        --cpu_mode arm -Ohs --use_c++_inline
+#    List file    =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\translateI.lst
+#    Object file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\translateI.o
+#
+###############################################################################
+
+D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\SettingIci\translateI.c
+      1          
+      2          #include "header.h"
+      3          #include "ici_r_ef.h"
+      4          
+      5          #include "bazisdef.h"
+      6          #include "toSpeedOptim.h"
+      7          #include "psuperVisor\supermanager.h"
+      8          
+      9          #define _HIDE_COMPONENT
+     10          #include "MTZ1Component.c"
+     11          #include "MTZ2Component.c"
+     12          #include "DZ1Component.c"
+     13          #include "DZ2Component.c"
+     14          #include "TZNP1Component.c"
+     15          #include "NZOP1Component.c"
+     16          #include "UMMComponent.c"
+     17          
+     18          extern int  offsetIOCmdAPV;//смещение для IO APV
+     19          extern int  offsetIOCmdDZ1;//смещение для IO DZ1
+     20          extern int  offsetIOCmdDZ5;//смещение для IO DZ5
+     21          extern int  offsetIOCmdMTZ1;//смещение для IO MTZ1
+     22          extern int  offsetIOCmdMTZ5;//смещение для IO MTZ5
+     23          extern int  offsetIOCmdNZOP2;//смещение для IO NZOP2
+     24          extern int  offsetIOCmdOF;//смещение для IO OF
+     25          extern int  offsetIOCmdPF;//смещение для IO PF
+     26          extern int  offsetIOCmdOF_loc;//смещение для IO OF
+     27          extern int  offsetIOCmdPF_loc;//смещение для IO PF
+     28          extern int  offsetIOCmdPRM1;//смещение для IO PRM1
+     29          extern int  offsetIOCmdTZNP5;//смещение для IO TZNP5
+     30          extern int  offsetIOCmdUMM;//смещение для IO UMM
+     31          extern int  offsetIOCmdUROV;//смещение для IO UROV
+     32          extern int  offsetIOCmdWL;//смещение для IO WL
+     33          //широкий ком массив RT 
+     34          extern int   WideCmdRTBuffer[];
+     35          
+     36          //ком массив RT INTERFACE
+     37          UNS_32 dataCmdStateINTERFACE[DQUADRO];//INTERFACE CmdState
+     38          UNS_32 dataTrgCmdStateINTERFACE[DQUADRO];//INTERFACE Trg CmdState
+     39          UNS_32 buffTrgCmdStateINTERFACE[DQUADRO];//INTERFACE CmdState
+     40          UNS_32 buffCmdStateINTERFACE[DQUADRO];//INTERFACE CmdState
+     41          UNS_32 buffInStateINTERFACE;//INTERFACE  In
+     42          UNS_32 buffOutStateINTERFACE;//INTERFACE Out
+     43          UNS_32 buffLedStateINTERFACE;//INTERFACE Led
+     44          UNS_32 buffTrgOutStateINTERFACE;//INTERFACE Trg Out
+     45          UNS_32 buffTrgLedStateINTERFACE;//INTERFACE Trg Led
+     46          UNS_32 buffGruppaUstINTERFACE;//группа уставок
+     47          int  isTimeSection;//критическая секция с двойным доступом
+     48          
+     49          void TranslateINTERFACE() @ "Fast_function"
+     50          {
+     51          //широкий ком массив RT INTERFACE
+     52          int   WideCmdStateINTERFACE[SIZE_RANGIRCMD+3];
+     53          //перетранслировать широкий ком массив
+     54          #include "translateI_MTZ.ci" //MTZ
+     55          #include "translateI_DZ.ci" //DZ
+     56          #include "translateI_TZNP.ci" //TZNP
+     57          #include "translateI_NZOP.ci" //NZOP
+     58          #include "translateI_UMM.ci" //UMM
+     59          
+     60          //КОМПРЕССОР МАССИВА
+     61            for (int i=0; i<DQUADRO; i++)
+     62            {
+     63              UNS_32 tmp = 0;
+     64              for (int b=0; b<32; b++)
+     65              {
+     66                if (WideCmdStateINTERFACE[i*32+b])
+     67                {
+     68                  tmp |= 1<<b;
+     69                }
+     70              }//for
+     71              dataCmdStateINTERFACE[i] = tmp;
+     72            }//for
+     73             
+     74            for (int i=0; i<DQUADRO; i++)
+     75            {
+     76               dataTrgCmdStateINTERFACE[i] |= dataCmdStateINTERFACE[i];//INTERFACE Trg CmdState
+     77            }//for
+     78          
+     79          }//void TranslateINTERFACE()
+     80          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+    1312   TranslateINTERFACE
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+    1512  TranslateINTERFACE
+      40  buffCmdStateINTERFACE
+       4  buffGruppaUstINTERFACE
+       4  buffInStateINTERFACE
+       4  buffLedStateINTERFACE
+       4  buffOutStateINTERFACE
+      40  buffTrgCmdStateINTERFACE
+       4  buffTrgLedStateINTERFACE
+       4  buffTrgOutStateINTERFACE
+      80  dataCmdStateINTERFACE
+          dataTrgCmdStateINTERFACE
+       4  isTimeSection
+
+ 
+   188 bytes in section .bss
+ 1 512 bytes in section Fast_function
+ 
+ 1 512 bytes of CODE memory
+   188 bytes of DATA memory
+
+Errors: none
+Warnings: none

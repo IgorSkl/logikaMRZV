@@ -1,0 +1,479 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        12/Oct/2015  11:05:04
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\SettingIci\SettingIci_data.c
+#    Command line =  
+#        "D:\IAR projects\HR1_0100_00_I720_new2\SettingIci\SettingIci_data.c"
+#        -D _STATIC_MEMORY_BOOT -lcN "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\List\" -o "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "C:\Program Files\IAR Systems\Embedded
+#        Workbench 7.40\arm\INC\c\DLib_Config_Normal.h" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\Igor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\component\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\" --cpu_mode arm -On
+#        --use_c++_inline
+#    List file    =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\List\SettingIci_data.lst
+#    Object file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\Obj\SettingIci_data.o
+#
+###############################################################################
+
+D:\IAR projects\HR1_0100_00_I720_new2\SettingIci\SettingIci_data.c
+      1          #include "lpc_types.h"
+      2          /*
+      3          #include "lpc_irq_fiq.h"
+      4          #include "lpc_arm922t_cp15_driver.h"
+      5          
+      6          #include "lpc32xx_hstimer.h"
+      7          #include "lpc32xx_ssp.h"
+      8          #include "lpc32xx_gpio.h"
+      9          
+     10          #include "lpc32xx_intc_driver.h"
+     11          #include "lpc32xx_clkpwr_driver.h"
+     12          
+     13          #include "arm926ej_cp15_drv.h"
+     14          #include "ttbl.h"
+     15          */
+     16          
+     17          #include <stdio.h>
+     18          #include <string.h>
+     19          
+     20          #include "psuperVisor\supermanager.h"
+     21          
+     22          //#include "component\componentdef.h"
+     23          //#include "callbackelement\callbackelementdef.h"
+     24          #include "callbackelement\ustrangEEPROMdef.h"
+     25          #include "psuperVisor\psvisor_helpdef.h"
+     26          //#include "virtualMenu\wideLogManagerdef.h"
+     27          #include "dataEEPROM\dataEEPROMdef.h"
+     28          #include "zonaVRT\zonaVRTdef.h"
+     29          
+     30          //#include "callbackelement\callbackelementfnc.h"
+     31          #include "psuperVisor\psvisor_helpfnc.h"
+     32          #include "virtualMenu\systemmenufnc.h"
+     33          #include "dataEEPROM\dataEEPROM.h"
+     34          #include "SettingIci\SettingIci.h"
+     35          
+     36          //#include "toSpeedOptim.h"
+     37          //#include "toSpeedDIS.h"
+     38          
+     39          #include "header.h"
+     40          #include "ici_r_ef.h"
+     41          
+     42          extern int IndexTIMERS;
+     43          extern int IndexTLog;
+     44          extern int IndexIO;
+     45          extern int IndexENA;
+     46          extern int IndexUstSPV;//индекс уставок в супервизоре
+     47          extern int GlobalLevelI_ABC[];//уровни фазных токов Фурье
+     48          extern int GlobalLevelUL_ABC[];//уровни напр лин
+     49          extern int GlobalLevelUF_ABC[];//уровни напр фаз
+     50          extern int GlobalLevel_3I0;
+     51          extern int GlobalLevel_3U0;
+     52          extern int GlobalLevel_UCM;
+     53          extern int GlobalLevel_ULAPV;
+     54          extern int GlobalLevel_ICM;
+     55          extern int alterEEPROM;//x101;//0;//байты alter ext устaвок и ранжир EEPROM
+     56          extern int eeprom_status;//статусный регистр EEPROM
+     57          
+     58           char chProtectTableComeIn = 0;
+     59           char chResultCallGetMeasPrt = 0;
+     60           long lDemo_IA,lDemo_IB,lDemo_IC;
+     61           long lDemo_UA,lDemo_UB,lDemo_UC;
+     62           long lDemo_ULA,lDemo_ULB,lDemo_ULC;
+     63           long lMtz1,lMtz1Tmr,lSt1,lSt2, lst3, lst4;
+     64           long lDemo_3I0,lDemo_3U0;
+     65          //сектора направл МТЗ
+     66           int sectorMTZ_IA_V, sectorMTZ_IA_N;
+     67           int sectorMTZ_IB_V, sectorMTZ_IB_N;
+     68           int sectorMTZ_IC_V, sectorMTZ_IC_N;
+     69          //сектор направл ТЗНП
+     70           int sectorTZNP1, sectorTZNP2, sectorTZNP3, sectorTZNP4, sectorTZNP5;
+     71          //сектора направл NZOP
+     72           int sectorNZOP1_V, sectorNZOP1_N, sectorNZOP2_V, sectorNZOP2_N;
+     73          //комплексные сопротивления OF DZ1
+     74           INT_64 resistance_fA0X1, resistance_fA0Y1;
+     75           INT_64 resistance_fB0X1, resistance_fB0Y1;
+     76           INT_64 resistance_fC0X1, resistance_fC0Y1;
+     77          //комплексные сопротивления OF DZ12
+     78           INT_64 resistance_fA0X2, resistance_fA0Y2;
+     79           INT_64 resistance_fB0X2, resistance_fB0Y2;
+     80           INT_64 resistance_fC0X2, resistance_fC0Y2;
+     81          //комплексные сопротивления OF DZ3
+     82           INT_64 resistance_fA0X3, resistance_fA0Y3;
+     83           INT_64 resistance_fB0X3, resistance_fB0Y3;
+     84           INT_64 resistance_fC0X3, resistance_fC0Y3;
+     85          //комплексные сопротивления OF DZ4
+     86           INT_64 resistance_fA0X4, resistance_fA0Y4;
+     87           INT_64 resistance_fB0X4, resistance_fB0Y4;
+     88           INT_64 resistance_fC0X4, resistance_fC0Y4;
+     89          //комплексные сопротивления OF DZ5
+     90           INT_64 resistance_fA0X5, resistance_fA0Y5;
+     91           INT_64 resistance_fB0X5, resistance_fB0Y5;
+     92           INT_64 resistance_fC0X5, resistance_fC0Y5;
+     93          //комплексные сопротивления MF DZ
+     94           INT_64 resistance_fAMX, resistance_fAMY;
+     95           INT_64 resistance_fBMX, resistance_fBMY;
+     96           INT_64 resistance_fCMX, resistance_fCMY;
+     97          
+     98          //Синхронизация АПВ 
+     99           int speed_angle_APV;
+    100           int angle_unbalance_APV;
+    101           int voltage_difference_APV;
+    102          
+    103          // INT_64 resistance_fA0X2, resistance_fA0Y2;
+    104          // INT_64 resistance_fA0X3, resistance_fA0Y3;
+    105          // INT_64 resistance_fA0X4, resistance_fA0Y4;
+    106          // INT_64 resistance_fA0X5, resistance_fA0Y5;
+    107          __MEASUREMENT_TO_PROTECTION TestMeasProtection;
+    108          
+    109          void dataAccessICI()
+    110          {
+    111          //доступ к данным ICI
+    112          
+    113          //проверка на новые уставки и загрузка данных измерений
+    114            if (chbrCfgTblState&16)//(1<<BR_CFG_TBL_WR_EPR_BIT))
+    115            {
+    116              chProtectTableComeIn = 1;
+    117              chbrCfgTblState &= 0xEF;//~16);//(1<<BR_CFG_TBL_WR_EPR_BIT);
+    118            //cntToBC++;//к-во обменов с BC
+    119            
+    120              if(!(eeprom_status & (1<<EEPROMUST_BUSY))){
+    121              //если EEPROM не занята  
+    122              SettingIci_Rangir();//ранжирование реле и ДВ
+    123          
+    124              SettingIci_MTZ();//установки ICI МТЗ 
+    125              SettingIci_UMM();//установки ICI UMM
+    126              SettingIci_DZ1();//установки ICI DZ1
+    127              SettingIci_DZ2to5();//установки ICI DZ2to5
+    128              SettingIci_TZNP();//установки ICI TZNP
+    129              SettingIci_PRM1();//установки ICI PRM1
+    130              SettingIci_NZOP();//установки ICI NZOP
+    131              SettingIci_APV();//установки ICI APV
+    132              SettingIci_UROV();//установки ICI UROV
+    133              SettingIci_OF();//установки ICI OF
+    134              //сохранить уставки и ранж в EEPROM
+    135              savePARAMtoEEPROM(alterEEPROM^USTALTER_MASKA);
+    136              }//if
+    137              
+    138          //--------------------------------------------------------------  
+    139            }//if
+    140            chResultCallGetMeasPrt =  GetMeasPrt(&TestMeasProtection); 
+    141            if(chResultCallGetMeasPrt == SUCCESS_EXEC)
+    142            {
+    143              //Data Ready
+    144              lDemo_IA = TestMeasProtection.measurement_bl[INDEX_IA];
+    145              lDemo_IB = TestMeasProtection.measurement_bl[INDEX_IB];
+    146              lDemo_IC = TestMeasProtection.measurement_bl[INDEX_IC];  
+    147          
+    148              GlobalLevelI_ABC[0]  = lDemo_IA;//фазный ток IA
+    149              GlobalLevelI_ABC[1]  = lDemo_IB;//фазный ток IB
+    150              GlobalLevelI_ABC[2]  = lDemo_IC;//фазный ток IC
+    151              
+    152              //напр фазные
+    153              lDemo_UA = TestMeasProtection.measurement_bl[INDEX_UA];
+    154              lDemo_UB = TestMeasProtection.measurement_bl[INDEX_UB];
+    155              lDemo_UC = TestMeasProtection.measurement_bl[INDEX_UC];  
+    156              GlobalLevelUF_ABC[0]  = lDemo_UA;//напр UA
+    157              GlobalLevelUF_ABC[1]  = lDemo_UB;//напр UB
+    158              GlobalLevelUF_ABC[2]  = lDemo_UC;//напр UC
+    159          
+    160              //напр линейные
+    161              lDemo_ULA = TestMeasProtection.linear_voltage[0];
+    162              lDemo_ULB = TestMeasProtection.linear_voltage[1];
+    163              lDemo_ULC = TestMeasProtection.linear_voltage[2];  
+    164              GlobalLevelUL_ABC[0]  = lDemo_ULA;//напр UAB
+    165              GlobalLevelUL_ABC[1]  = lDemo_ULB;//напр UBC
+    166              GlobalLevelUL_ABC[2]  = lDemo_ULC;//напр UCA
+    167          
+    168              //3I0
+    169              lDemo_3I0 = TestMeasProtection.measurement_bl[INDEX_3I0];
+    170              GlobalLevel_3I0 = lDemo_3I0;
+    171              lDemo_3U0 = TestMeasProtection.measurement_bl[INDEX_3U0];
+    172              GlobalLevel_3U0 = lDemo_3U0;
+    173              //I2
+    174              GlobalLevel_ICM = TestMeasProtection.measurement_bl[9];
+    175              GlobalLevel_UCM = TestMeasProtection.measurement_bl[10];
+    176              //ULAPV
+    177              GlobalLevel_ULAPV = TestMeasProtection.measurement_bl[13];
+    178          
+    179          //сектор направл ТЗНП
+    180              sectorTZNP1 = TestMeasProtection.sector_3I0_3U0_1;
+    181              sectorTZNP2 = TestMeasProtection.sector_3I0_3U0_2;
+    182              sectorTZNP3 = TestMeasProtection.sector_3I0_3U0_3;
+    183              sectorTZNP4 = TestMeasProtection.sector_3I0_3U0_4;
+    184              sectorTZNP5 = TestMeasProtection.sector_3I0_3U0_5;
+    185          //сектора направл NZOP
+    186             sectorNZOP1_V =0;
+    187             sectorNZOP1_N =0;
+    188            switch(TestMeasProtection.sector_I2_U2_1)
+    189            {
+    190             case 1:
+    191             sectorNZOP1_V =1;
+    192             sectorNZOP1_N =0;
+    193             break;
+    194             case 2:
+    195             sectorNZOP1_V =0;
+    196             sectorNZOP1_N =1;
+    197             break;
+    198             default:;
+    199            }//switch
+    200             sectorNZOP2_V =0;
+    201             sectorNZOP2_N =0;
+    202            switch(TestMeasProtection.sector_I2_U2_2)
+    203            {
+    204             case 1:
+    205             sectorNZOP2_V =1;
+    206             sectorNZOP2_N =0;
+    207             break;
+    208             case 2:
+    209             sectorNZOP2_V =0;
+    210             sectorNZOP2_N =1;
+    211             break;
+    212             default:;
+    213            }//switch
+    214          
+    215          //комплексные сопротивления ДЗ1 OF
+    216           resistance_fA0X1 = (INT_64)ceil(TestMeasProtection.resistance_f[0]*TO_INTEGER64);
+    217           resistance_fA0Y1 = (INT_64)ceil(TestMeasProtection.resistance_f[1]*TO_INTEGER64);
+    218           resistance_fB0X1 = (INT_64)ceil(TestMeasProtection.resistance_f[10]*TO_INTEGER64);
+    219           resistance_fB0Y1 = (INT_64)ceil(TestMeasProtection.resistance_f[11]*TO_INTEGER64);
+    220           resistance_fC0X1 = (INT_64)ceil(TestMeasProtection.resistance_f[20]*TO_INTEGER64);
+    221           resistance_fC0Y1 = (INT_64)ceil(TestMeasProtection.resistance_f[21]*TO_INTEGER64);
+    222          //комплексные сопротивления ДЗ2 OF
+    223           resistance_fA0X2 = (INT_64)ceil(TestMeasProtection.resistance_f[2]*TO_INTEGER64);
+    224           resistance_fA0Y2 = (INT_64)ceil(TestMeasProtection.resistance_f[3]*TO_INTEGER64);
+    225           resistance_fB0X2 = (INT_64)ceil(TestMeasProtection.resistance_f[12]*TO_INTEGER64);
+    226           resistance_fB0Y2 = (INT_64)ceil(TestMeasProtection.resistance_f[13]*TO_INTEGER64);
+    227           resistance_fC0X2 = (INT_64)ceil(TestMeasProtection.resistance_f[22]*TO_INTEGER64);
+    228           resistance_fC0Y2 = (INT_64)ceil(TestMeasProtection.resistance_f[23]*TO_INTEGER64);
+    229          //комплексные сопротивления ДЗ3 OF
+    230           resistance_fA0X3 = (INT_64)ceil(TestMeasProtection.resistance_f[4]*TO_INTEGER64);
+    231           resistance_fA0Y3 = (INT_64)ceil(TestMeasProtection.resistance_f[5]*TO_INTEGER64);
+    232           resistance_fB0X3 = (INT_64)ceil(TestMeasProtection.resistance_f[14]*TO_INTEGER64);
+    233           resistance_fB0Y3 = (INT_64)ceil(TestMeasProtection.resistance_f[15]*TO_INTEGER64);
+    234           resistance_fC0X3 = (INT_64)ceil(TestMeasProtection.resistance_f[24]*TO_INTEGER64);
+    235           resistance_fC0Y3 = (INT_64)ceil(TestMeasProtection.resistance_f[25]*TO_INTEGER64);
+    236          //комплексные сопротивления ДЗ4 OF
+    237           resistance_fA0X4 = (INT_64)ceil(TestMeasProtection.resistance_f[6]*TO_INTEGER64);
+    238           resistance_fA0Y4 = (INT_64)ceil(TestMeasProtection.resistance_f[7]*TO_INTEGER64);
+    239           resistance_fB0X4 = (INT_64)ceil(TestMeasProtection.resistance_f[16]*TO_INTEGER64);
+    240           resistance_fB0Y4 = (INT_64)ceil(TestMeasProtection.resistance_f[17]*TO_INTEGER64);
+    241           resistance_fC0X4 = (INT_64)ceil(TestMeasProtection.resistance_f[26]*TO_INTEGER64);
+    242           resistance_fC0Y4 = (INT_64)ceil(TestMeasProtection.resistance_f[27]*TO_INTEGER64);
+    243          //комплексные сопротивления ДЗ4 OF
+    244           resistance_fA0X5 = (INT_64)ceil(TestMeasProtection.resistance_f[8]*TO_INTEGER64);
+    245           resistance_fA0Y5 = (INT_64)ceil(TestMeasProtection.resistance_f[9]*TO_INTEGER64);
+    246           resistance_fB0X5 = (INT_64)ceil(TestMeasProtection.resistance_f[18]*TO_INTEGER64);
+    247           resistance_fB0Y5 = (INT_64)ceil(TestMeasProtection.resistance_f[19]*TO_INTEGER64);
+    248           resistance_fC0X5 = (INT_64)ceil(TestMeasProtection.resistance_f[28]*TO_INTEGER64);
+    249           resistance_fC0Y5 = (INT_64)ceil(TestMeasProtection.resistance_f[29]*TO_INTEGER64);
+    250          
+    251           //комплексные сопротивления ДЗ MF
+    252           resistance_fAMX = (INT_64)ceil(TestMeasProtection.resistance_m[0]*TO_INTEGER64);
+    253           resistance_fAMY = (INT_64)ceil(TestMeasProtection.resistance_m[1]*TO_INTEGER64);
+    254           resistance_fBMX = (INT_64)ceil(TestMeasProtection.resistance_m[2]*TO_INTEGER64);
+    255           resistance_fBMY = (INT_64)ceil(TestMeasProtection.resistance_m[3]*TO_INTEGER64);
+    256           resistance_fCMX = (INT_64)ceil(TestMeasProtection.resistance_m[4]*TO_INTEGER64);
+    257           resistance_fCMY = (INT_64)ceil(TestMeasProtection.resistance_m[5]*TO_INTEGER64);
+    258          
+    259          //Синхронизация АПВ
+    260           speed_angle_APV        = TestMeasProtection.speed_angle_change;
+    261           angle_unbalance_APV    = TestMeasProtection.angle_unbalance;
+    262           voltage_difference_APV = TestMeasProtection.voltage_difference;
+    263          
+    264          //сектора направл МТЗ
+    265             sectorMTZ_IA_V =0;
+    266             sectorMTZ_IA_N =0;
+    267            switch(TestMeasProtection.sector_IA_UBC_1)
+    268            {
+    269             case 1:
+    270             sectorMTZ_IA_V =1;
+    271             sectorMTZ_IA_N =0;
+    272             break;
+    273             case 2:
+    274             sectorMTZ_IA_V =0;
+    275             sectorMTZ_IA_N =1;
+    276             break;
+    277             default:;
+    278            }//switch
+    279             sectorMTZ_IB_V =0;
+    280             sectorMTZ_IB_N =0;
+    281            switch(TestMeasProtection.sector_IB_UCA_1)
+    282            {
+    283             case 1:
+    284             sectorMTZ_IB_V =1;
+    285             sectorMTZ_IB_N =0;
+    286             break;
+    287             case 2:
+    288             sectorMTZ_IB_V =0;
+    289             sectorMTZ_IB_N =1;
+    290             break;
+    291             default:;
+    292            }//switch
+    293             sectorMTZ_IC_V =0;
+    294             sectorMTZ_IC_N =0;
+    295            switch(TestMeasProtection.sector_IC_UAB_1)
+    296            {
+    297             case 1:
+    298             sectorMTZ_IC_V =1;
+    299             sectorMTZ_IC_N =0;
+    300             break;
+    301             case 2:
+    302             sectorMTZ_IC_V =0;
+    303             sectorMTZ_IC_N =1;
+    304             break;
+    305             default:;
+    306            }//switch
+    307          
+    308            }//if
+    309            else
+    310            {
+    311              switch(chResultCallGetMeasPrt)
+    312              {
+    313                case ERROR_EXEC:
+    314                 chResultCallGetMeasPrt++;//Error when call Function 
+    315                  break;
+    316                case START_EXEC:
+    317                case STATE_EXEC:  
+    318                 chResultCallGetMeasPrt++;//Data not ready  
+    319                 
+    320                  break;
+    321                default:
+    322                ;
+    323              }
+    324              
+    325            }
+    326          }//dataAccessICI()
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   dataAccessICI
+         8   -> GetMeasPrt
+         8   -> SettingIci_APV
+         8   -> SettingIci_DZ1
+         8   -> SettingIci_DZ2to5
+         8   -> SettingIci_MTZ
+         8   -> SettingIci_NZOP
+         8   -> SettingIci_OF
+         8   -> SettingIci_PRM1
+         8   -> SettingIci_Rangir
+         8   -> SettingIci_TZNP
+         8   -> SettingIci_UMM
+         8   -> SettingIci_UROV
+         8   -> __aeabi_d2lz
+         8   -> ceil
+         8   -> savePARAMtoEEPROM
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+     572  TestMeasProtection
+       4  angle_unbalance_APV
+       1  chProtectTableComeIn
+       1  chResultCallGetMeasPrt
+    3068  dataAccessICI
+       4  lDemo_3I0
+       4  lDemo_3U0
+       4  lDemo_IA
+       4  lDemo_IB
+       4  lDemo_IC
+       4  lDemo_UA
+       4  lDemo_UB
+       4  lDemo_UC
+       4  lDemo_ULA
+       4  lDemo_ULB
+       4  lDemo_ULC
+       4  lMtz1
+       4  lMtz1Tmr
+       4  lSt1
+       4  lSt2
+       4  lst3
+       4  lst4
+       8  resistance_fA0X1
+       8  resistance_fA0X2
+       8  resistance_fA0X3
+       8  resistance_fA0X4
+       8  resistance_fA0X5
+       8  resistance_fA0Y1
+       8  resistance_fA0Y2
+       8  resistance_fA0Y3
+       8  resistance_fA0Y4
+       8  resistance_fA0Y5
+       8  resistance_fAMX
+       8  resistance_fAMY
+       8  resistance_fB0X1
+       8  resistance_fB0X2
+       8  resistance_fB0X3
+       8  resistance_fB0X4
+       8  resistance_fB0X5
+       8  resistance_fB0Y1
+       8  resistance_fB0Y2
+       8  resistance_fB0Y3
+       8  resistance_fB0Y4
+       8  resistance_fB0Y5
+       8  resistance_fBMX
+       8  resistance_fBMY
+       8  resistance_fC0X1
+       8  resistance_fC0X2
+       8  resistance_fC0X3
+       8  resistance_fC0X4
+       8  resistance_fC0X5
+       8  resistance_fC0Y1
+       8  resistance_fC0Y2
+       8  resistance_fC0Y3
+       8  resistance_fC0Y4
+       8  resistance_fC0Y5
+       8  resistance_fCMX
+       8  resistance_fCMY
+       4  sectorMTZ_IA_N
+       4  sectorMTZ_IA_V
+       4  sectorMTZ_IB_N
+       4  sectorMTZ_IB_V
+       4  sectorMTZ_IC_N
+       4  sectorMTZ_IC_V
+       4  sectorNZOP1_N
+       4  sectorNZOP1_V
+       4  sectorNZOP2_N
+       4  sectorNZOP2_V
+       4  sectorTZNP1
+       4  sectorTZNP2
+       4  sectorTZNP3
+       4  sectorTZNP4
+       4  sectorTZNP5
+       4  speed_angle_APV
+       4  voltage_difference_APV
+
+ 
+ 1 002 bytes in section .bss
+ 3 068 bytes in section .text
+ 
+ 3 068 bytes of CODE memory
+ 1 002 bytes of DATA memory
+
+Errors: none
+Warnings: 1

@@ -1,0 +1,582 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  17:17:41
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\SettingIci\SettingIci_OF.c
+#    Command line =  
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\SettingIci\SettingIci_OF.c" -lcN
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\" -o "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "D:\Program Files\IAR Systems\Embedded
+#        Workbench 7.2\arm\INC\c\DLib_Config_Normal.h" -I "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\" --interwork
+#        --cpu_mode arm -On --use_c++_inline
+#    List file    =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\SettingIci_OF.lst
+#    Object file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\SettingIci_OF.o
+#
+###############################################################################
+
+D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\SettingIci\SettingIci_OF.c
+      1          #include "lpc_types.h"
+      2          #include "lpc_irq_fiq.h"
+      3          #include "lpc_arm922t_cp15_driver.h"
+      4          
+      5          #include "lpc32xx_hstimer.h"
+      6          #include "lpc32xx_ssp.h"
+      7          #include "lpc32xx_gpio.h"
+      8          
+      9          #include "lpc32xx_intc_driver.h"
+     10          #include "lpc32xx_clkpwr_driver.h"
+     11          
+     12          #include "arm926ej_cp15_drv.h"
+     13          #include "ttbl.h"
+     14          
+     15          #include <stdio.h>
+     16          #include <string.h>
+     17          
+     18          #include "psuperVisor\supermanager.h"
+     19          
+     20          #include "component\componentdef.h"
+     21          #include "psuperVisor\psvisor_helpdef.h"
+     22          
+     23          #include "psuperVisor\psvisor_helpfnc.h"
+     24          #include "SettingIci\SettingIci.h"
+     25          #include "virtualmenu\systemmenufnc.h"
+     26          #include "virtualMenu\rangmanagerfnc.h"
+     27          
+     28          #include "toSpeedOptim.h"
+     29          #include "toSpeedDIS.h"
+     30          
+     31          #include "header.h"
+     32          #include "ici_r_ef.h"
+     33          
+     34          #define _HIDE_COMPONENT
+     35          #include "OFComponent.c"
+     36          //#include "MTZ1Component.c"
+     37          //#include "MTZ2Component.c"
+     38          //#include "TZNP1Component.c"
+     39          //#include "DZ1Component.c"
+     40          //#include "DZ2Component.c"
+     41          
+     42          extern char chProtectTableComeIn;
+     43          extern char chResultCallGetMeasPrt;
+     44          //extern tic long lDemo_IA,lDemo_IB,lDemo_IC;
+     45          extern  long lMtz1,lMtz1Tmr,lSt1,lSt2, lst3, lst4;
+     46          extern __MEASUREMENT_TO_PROTECTION TestMeasProtection;
+     47          extern MaskaOTAPVUROVOFcmd struct_maskaOTAPVUROVOFcmd;//маски для 16 опред функций UROV APV OT
+     48          
+     49          extern MaskaOTcmd struct_maskaOTcmd;//маски для 8 опред триггеров
+     50          
+     51          //int puskOFotZPLUS();//int num);
+     52          
+     53            puskOFfunction *pntPuskOF;//указатель на ф-цию
+     54          
+     55          
+     56          void  SettingIci_OF()
+     57          {
+     58            memset(&struct_maskaOTAPVUROVOFcmd, 0, sizeof(MaskaOTAPVUROVOFcmd));//стереть старое
+     59            memset(&struct_maskaOTcmd,          0, sizeof(MaskaOTcmd));//стереть старое
+     60          /*
+     61            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OFcmdMaska[i]=0;//Очистить
+     62            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OFcmdMaska[i]=0;//Очистить
+     63            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OFcmdMaska[i]=0;//Очистить
+     64          
+     65            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OF2cmdMaska[i]=0;//Очистить
+     66            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OF2cmdMaska[i]=0;//Очистить
+     67            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OF2cmdMaska[i]=0;//Очистить
+     68          
+     69            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OF3cmdMaska[i]=0;//Очистить
+     70            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OF3cmdMaska[i]=0;//Очистить
+     71            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OF3cmdMaska[i]=0;//Очистить
+     72          
+     73            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OF4cmdMaska[i]=0;//Очистить
+     74            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OF4cmdMaska[i]=0;//Очистить
+     75            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OF4cmdMaska[i]=0;//Очистить
+     76          
+     77            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OF5cmdMaska[i]=0;//Очистить
+     78            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OF5cmdMaska[i]=0;//Очистить
+     79            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OF5cmdMaska[i]=0;//Очистить
+     80          
+     81            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OF6cmdMaska[i]=0;//Очистить
+     82            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OF6cmdMaska[i]=0;//Очистить
+     83            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OF6cmdMaska[i]=0;//Очистить
+     84          
+     85            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OF7cmdMaska[i]=0;//Очистить
+     86            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OF7cmdMaska[i]=0;//Очистить
+     87            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OF7cmdMaska[i]=0;//Очистить
+     88          
+     89            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OF8cmdMaska[i]=0;//Очистить
+     90            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OF8cmdMaska[i]=0;//Очистить
+     91            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OF8cmdMaska[i]=0;//Очистить
+     92          
+     93            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OF9cmdMaska[i]=0;//Очистить
+     94            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OF9cmdMaska[i]=0;//Очистить
+     95            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OF9cmdMaska[i]=0;//Очистить
+     96          
+     97            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OF10cmdMaska[i]=0;//Очистить
+     98            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OF10cmdMaska[i]=0;//Очистить
+     99            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OF10cmdMaska[i]=0;//Очистить
+    100          
+    101            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OF11cmdMaska[i]=0;//Очистить
+    102            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OF11cmdMaska[i]=0;//Очистить
+    103            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OF11cmdMaska[i]=0;//Очистить
+    104          
+    105            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OF12cmdMaska[i]=0;//Очистить
+    106            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OF12cmdMaska[i]=0;//Очистить
+    107            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OF12cmdMaska[i]=0;//Очистить
+    108          
+    109            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OF13cmdMaska[i]=0;//Очистить
+    110            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OF13cmdMaska[i]=0;//Очистить
+    111            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OF13cmdMaska[i]=0;//Очистить
+    112          
+    113            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OF14cmdMaska[i]=0;//Очистить
+    114            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OF14cmdMaska[i]=0;//Очистить
+    115            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OF14cmdMaska[i]=0;//Очистить
+    116          
+    117            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OF15cmdMaska[i]=0;//Очистить
+    118            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OF15cmdMaska[i]=0;//Очистить
+    119            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OF15cmdMaska[i]=0;//Очистить
+    120          
+    121            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OF16cmdMaska[i]=0;//Очистить
+    122            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OF16cmdMaska[i]=0;//Очистить
+    123            for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OF16cmdMaska[i]=0;//Очистить
+    124          */
+    125          
+    126          //OFuncDsc   ownrOFunc;  //Опред. функции
+    127          //unsigned char uch_ar_type_df[NUM_DEF_FUN];
+    128          //Тип Определяемой функции1
+    129          //	1- прямая
+    130          //	2 - инверсная
+    131          
+    132          
+    133          //OF1
+    134              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_time_delay_df[0];
+    135            SetUstToClon(OF_COMP1,  1, MNGPAUSA_OF1, lMtz1Tmr);//выдержка
+    136          //	длительность импульса определяемой функции1
+    137              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_duration_df[0];
+    138            SetUstToClon(OF_COMP1,  1, MNGWORK_OF1, lMtz1Tmr);//выдержка OF1
+    139          
+    140          //OF2
+    141              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_time_delay_df[1];
+    142            SetUstToClon(OF_COMP1,  1, MNGPAUSA_OF2, lMtz1Tmr);//выдержка
+    143          //	длительность импульса определяемой функции1
+    144              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_duration_df[1];
+    145            SetUstToClon(OF_COMP1,  1, MNGWORK_OF2, lMtz1Tmr);//выдержка OF2
+    146          
+    147          //OF3
+    148              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_time_delay_df[2];
+    149            SetUstToClon(OF_COMP1,  1, MNGPAUSA_OF3, lMtz1Tmr);//выдержка
+    150          //	длительность импульса определяемой функции1
+    151              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_duration_df[2];
+    152            SetUstToClon(OF_COMP1,  1, MNGWORK_OF3, lMtz1Tmr);//выдержка OF2
+    153          
+    154          //OF4
+    155              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_time_delay_df[3];
+    156            SetUstToClon(OF_COMP1,  1, MNGPAUSA_OF4, lMtz1Tmr);//выдержка
+    157          //	длительность импульса определяемой функции1
+    158              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_duration_df[3];
+    159            SetUstToClon(OF_COMP1,  1, MNGWORK_OF4, lMtz1Tmr);//выдержка OF2
+    160          
+    161          //OF5
+    162              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_time_delay_df[4];
+    163            SetUstToClon(OF_COMP1,  1, MNGPAUSA_OF5, lMtz1Tmr);//выдержка
+    164          //	длительность импульса определяемой функции1
+    165              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_duration_df[4];
+    166            SetUstToClon(OF_COMP1,  1, MNGWORK_OF5, lMtz1Tmr);//выдержка OF2
+    167          
+    168          //OF6
+    169              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_time_delay_df[5];
+    170            SetUstToClon(OF_COMP1,  1, MNGPAUSA_OF6, lMtz1Tmr);//выдержка
+    171          //	длительность импульса определяемой функции1
+    172              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_duration_df[5];
+    173            SetUstToClon(OF_COMP1,  1, MNGWORK_OF6, lMtz1Tmr);//выдержка OF2
+    174          
+    175          //OF7
+    176              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_time_delay_df[6];
+    177            SetUstToClon(OF_COMP1,  1, MNGPAUSA_OF7, lMtz1Tmr);//выдержка
+    178          //	длительность импульса определяемой функции1
+    179              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_duration_df[6];
+    180            SetUstToClon(OF_COMP1,  1, MNGWORK_OF7, lMtz1Tmr);//выдержка OF2
+    181          
+    182          //OF8
+    183              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_time_delay_df[7];
+    184            SetUstToClon(OF_COMP1,  1, MNGPAUSA_OF8, lMtz1Tmr);//выдержка
+    185          //	длительность импульса определяемой функции1
+    186              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_duration_df[7];
+    187            SetUstToClon(OF_COMP1,  1, MNGWORK_OF8, lMtz1Tmr);//выдержка OF2
+    188          
+    189          //OF9
+    190              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_time_delay_df[8];
+    191            SetUstToClon(OF_COMP1,  1, MNGPAUSA_OF9, lMtz1Tmr);//выдержка
+    192          //	длительность импульса определяемой функции1
+    193              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_duration_df[8];
+    194            SetUstToClon(OF_COMP1,  1, MNGWORK_OF9, lMtz1Tmr);//выдержка OF2
+    195          
+    196          //OF10
+    197              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_time_delay_df[9];
+    198            SetUstToClon(OF_COMP1,  1, MNGPAUSA_OF10, lMtz1Tmr);//выдержка
+    199          //	длительность импульса определяемой функции1
+    200              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_duration_df[9];
+    201            SetUstToClon(OF_COMP1,  1, MNGWORK_OF10, lMtz1Tmr);//выдержка OF2
+    202          
+    203          //OF11
+    204              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_time_delay_df[10];
+    205            SetUstToClon(OF_COMP1,  1, MNGPAUSA_OF11, lMtz1Tmr);//выдержка
+    206          //	длительность импульса определяемой функции1
+    207              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_duration_df[10];
+    208            SetUstToClon(OF_COMP1,  1, MNGWORK_OF11, lMtz1Tmr);//выдержка OF2
+    209          
+    210          //OF12
+    211              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_time_delay_df[11];
+    212            SetUstToClon(OF_COMP1,  1, MNGPAUSA_OF12, lMtz1Tmr);//выдержка
+    213          //	длительность импульса определяемой функции1
+    214              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_duration_df[11];
+    215            SetUstToClon(OF_COMP1,  1, MNGWORK_OF12, lMtz1Tmr);//выдержка OF2
+    216          
+    217          //OF13
+    218              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_time_delay_df[12];
+    219            SetUstToClon(OF_COMP1,  1, MNGPAUSA_OF13, lMtz1Tmr);//выдержка
+    220          //	длительность импульса определяемой функции1
+    221              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_duration_df[12];
+    222            SetUstToClon(OF_COMP1,  1, MNGWORK_OF13, lMtz1Tmr);//выдержка OF2
+    223          
+    224          //OF14
+    225              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_time_delay_df[13];
+    226            SetUstToClon(OF_COMP1,  1, MNGPAUSA_OF14, lMtz1Tmr);//выдержка
+    227          //	длительность импульса определяемой функции1
+    228              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_duration_df[13];
+    229            SetUstToClon(OF_COMP1,  1, MNGWORK_OF14, lMtz1Tmr);//выдержка OF2
+    230          
+    231          //OF15
+    232              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_time_delay_df[14];
+    233            SetUstToClon(OF_COMP1,  1, MNGPAUSA_OF15, lMtz1Tmr);//выдержка
+    234          //	длительность импульса определяемой функции1
+    235              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_duration_df[14];
+    236            SetUstToClon(OF_COMP1,  1, MNGWORK_OF15, lMtz1Tmr);//выдержка OF2
+    237          
+    238          //OF16
+    239              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_time_delay_df[15];
+    240            SetUstToClon(OF_COMP1,  1, MNGPAUSA_OF16, lMtz1Tmr);//выдержка
+    241          //	длительность импульса определяемой функции1
+    242              lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_duration_df[15];
+    243            SetUstToClon(OF_COMP1,  1, MNGWORK_OF16, lMtz1Tmr);//выдержка OF2
+    244          
+    245          
+    246              int uprOF=0;
+    247              lSt1 = brCfgTbl.ownrOFunc.uch_ar_type_df[0];
+    248          //Тип Определяемой функции1
+    249          //	1- прямая
+    250          //	2 - инверсная
+    251            if(lSt1>0) uprOF |= 1; //Обр
+    252            else  uprOF &= ~1; //Прямая
+    253              lSt1 = brCfgTbl.ownrOFunc.uch_ar_type_df[1];
+    254            if(lSt1>0) uprOF |= 2; //Обр
+    255            else  uprOF &= ~2; //Прямая
+    256              lSt1 = brCfgTbl.ownrOFunc.uch_ar_type_df[2];
+    257            if(lSt1>0) uprOF |= 4; //Обр
+    258            else  uprOF &= ~4; //Прямая
+    259              lSt1 = brCfgTbl.ownrOFunc.uch_ar_type_df[3];
+    260            if(lSt1>0) uprOF |= 8; //Обр
+    261            else  uprOF &= ~8; //Прямая
+    262              lSt1 = brCfgTbl.ownrOFunc.uch_ar_type_df[4];
+    263            if(lSt1>0) uprOF |= 16; //Обр
+    264            else  uprOF &= ~16; //Прямая
+    265              lSt1 = brCfgTbl.ownrOFunc.uch_ar_type_df[5];
+    266            if(lSt1>0) uprOF |= 32; //Обр
+    267            else  uprOF &= ~32; //Прямая
+    268              lSt1 = brCfgTbl.ownrOFunc.uch_ar_type_df[6];
+    269            if(lSt1>0) uprOF |= 64; //Обр
+    270            else  uprOF &= ~64; //Прямая
+    271              lSt1 = brCfgTbl.ownrOFunc.uch_ar_type_df[7];
+    272            if(lSt1>0) uprOF |= 128; //Обр
+    273            else  uprOF &= ~128; //Прямая
+    274              lSt1 = brCfgTbl.ownrOFunc.uch_ar_type_df[8];
+    275            if(lSt1>0) uprOF |= 256; //Обр
+    276            else  uprOF &= ~256; //Прямая
+    277              lSt1 = brCfgTbl.ownrOFunc.uch_ar_type_df[9];
+    278            if(lSt1>0) uprOF |= 512; //Обр
+    279            else  uprOF &= ~512; //Прямая
+    280              lSt1 = brCfgTbl.ownrOFunc.uch_ar_type_df[10];
+    281            if(lSt1>0) uprOF |= 1024; //Обр
+    282            else  uprOF &= ~1024; //Прямая
+    283              lSt1 = brCfgTbl.ownrOFunc.uch_ar_type_df[11];
+    284            if(lSt1>0) uprOF |= 2048; //Обр
+    285            else  uprOF &= ~2048; //Прямая
+    286              lSt1 = brCfgTbl.ownrOFunc.uch_ar_type_df[12];
+    287            if(lSt1>0) uprOF |= 4096; //Обр
+    288            else  uprOF &= ~4096; //Прямая
+    289              lSt1 = brCfgTbl.ownrOFunc.uch_ar_type_df[13];
+    290            if(lSt1>0) uprOF |= 8192; //Обр
+    291            else  uprOF &= ~8192; //Прямая
+    292              lSt1 = brCfgTbl.ownrOFunc.uch_ar_type_df[14];
+    293            if(lSt1>0) uprOF |= 8192*2; //Обр
+    294            else  uprOF &= ~(8192*2); //Прямая
+    295              lSt1 = brCfgTbl.ownrOFunc.uch_ar_type_df[15];
+    296            if(lSt1>0) uprOF |= 8192*4; //Обр
+    297            else  uprOF &= ~(8192*4); //Прямая
+    298          
+    299             SetUstToClon(OF_COMP1,  1, MNGUPR_OF, uprOF);//устанвка прямая - обратная ОФ
+    300          
+    301            int FlagMaska = 0;//PLUS
+    302          //команды запуска
+    303            for(int numOF=0; numOF<16; numOF++) puskOFModern(FlagMaska, numOF);
+    304            FlagMaska = 1;//MINUS
+    305          //инверсные команды запуска
+    306            for(int numOF=0; numOF<16; numOF++) puskOFModern(FlagMaska, numOF);
+    307            FlagMaska = 2;//BLK
+    308          //команды блокировки
+    309            for(int numOF=0; numOF<16; numOF++) puskOFModern(FlagMaska, numOF);
+    310          
+    311            FlagMaska = 0;//PLUS Set
+    312          //команды запуска
+    313            for(int numOT=0; numOT<8; numOT++) puskOTModern(FlagMaska, numOT);
+    314            FlagMaska = 1;//PLUS Rst
+    315          //команды запуска
+    316            for(int numOT=0; numOT<8; numOT++) puskOTModern(FlagMaska, numOT);
+    317            FlagMaska = 2;//MINUS Set
+    318          //инверсные команды запуска
+    319            for(int numOT=0; numOT<8; numOT++) puskOTModern(FlagMaska, numOT);
+    320            FlagMaska = 3;//MINUS Rst
+    321          //инверсные команды запуска
+    322            for(int numOT=0; numOT<8; numOT++) puskOTModern(FlagMaska, numOT);
+    323          
+    324          }
+    325          
+    326          void puskOFModern(int FlagMaska, int numOF)
+    327          {
+    328            SettingIci_OFDZ(0, FlagMaska, numOF);
+    329            SettingIci_OFMTZ(0, FlagMaska, numOF);
+    330            SettingIci_OFUMM(0, FlagMaska, numOF);
+    331            SettingIci_OFTZNP(0, FlagMaska, numOF);
+    332          }//puskOFModern(int FlagMaska, int numOF)
+    333          
+    334          void puskOTModern(int FlagMaska, int numOT)
+    335          {
+    336            SettingIci_OFDZ(1, FlagMaska, numOT);
+    337            SettingIci_OFMTZ(1, FlagMaska, numOT);
+    338            SettingIci_OFUMM(1, FlagMaska, numOT);
+    339            SettingIci_OFTZNP(1, FlagMaska, numOT);
+    340          }//puskOFModern(int FlagMaska, int numOF)
+    341          
+    342          int puskOFotZPLUS(int numCmd, int numOF)//AMOUNT_BYTE_FOR_OEPRF
+    343          {
+    344          //Пуск от Защит +
+    345            int rez=0;
+    346              if(brCfgTbl.uc_ar_df1_pl_rank_cfg[(numOF*AMOUNT_BYTE_FOR_OEPRF)+
+    347                                                 numCmd/8]&(1<<(numCmd%8))) rez=1;
+    348            return rez;
+    349          }//puskOFotZPLUS(int num)
+    350          
+    351          int puskOFotZMINUS(int numCmd, int numOF)
+    352          {
+    353          //Пуск от Защит -
+    354            int rez=0;
+    355              if(brCfgTbl.uc_ar_df1_mn_rank_cfg[(numOF*AMOUNT_BYTE_FOR_OEPRF)+
+    356                                                 numCmd/8]&(1<<(numCmd%8))) rez=1;
+    357            return rez;
+    358          }//puskOFotZMINUS(int num)
+    359          
+    360          int puskOFotZBLK(int numCmd, int numOF)
+    361          {
+    362          //Пуск от Защит -
+    363            int rez=0;
+    364              if(brCfgTbl.uc_ar_df1_blk_rank_cfg[(numOF*AMOUNT_BYTE_FOR_OEPRF)+
+    365                                                 numCmd/8]&(1<<(numCmd%8))) rez=1;
+    366            return rez;
+    367          }//puskOFotZBLK(int num)
+    368          
+    369          /*
+    370          unsigned char uc_ar_trg_setPl_rank_cfg[NUM_TRG*AMOUNT_BYTE_FOR_OEPRF];//
+    371          unsigned char uc_ar_trg_setMn_rank_cfg[NUM_TRG*AMOUNT_BYTE_FOR_OEPRF];//
+    372          
+    373          unsigned char uc_ar_trg_rstPl_rank_cfg[NUM_TRG*AMOUNT_BYTE_FOR_OEPRF];//
+    374          unsigned char uc_ar_trg_rstMn_rank_cfg[NUM_TRG*AMOUNT_BYTE_FOR_OEPRF];//
+    375          */
+    376          
+    377          int puskSetOTotZPLUS(int numCmd, int numOT)//AMOUNT_BYTE_FOR_OEPRF
+    378          {
+    379          //Пуск от Защит +
+    380            int rez=0;
+    381              if(brCfgTbl.uc_ar_trg_setPl_rank_cfg[(numOT*AMOUNT_BYTE_FOR_OEPRF)+
+    382                                                 numCmd/8]&(1<<(numCmd%8))) rez=1;
+    383            return rez;
+    384          }//puskSetOTotZPLUS(int num)
+    385          
+    386          int puskSetOTotZMINUS(int numCmd, int numOT)
+    387          {
+    388          //Пуск от Защит -
+    389            int rez=0;
+    390              if(brCfgTbl.uc_ar_trg_setMn_rank_cfg[(numOT*AMOUNT_BYTE_FOR_OEPRF)+
+    391                                                 numCmd/8]&(1<<(numCmd%8))) rez=1;
+    392            return rez;
+    393          }//puskSetOTotZMINUS(int num)
+    394          
+    395          int puskRstOTotZPLUS(int numCmd, int numOT)//AMOUNT_BYTE_FOR_OEPRF
+    396          {
+    397          //Пуск от Защит +
+    398            int rez=0;
+    399              if(brCfgTbl.uc_ar_trg_rstPl_rank_cfg[(numOT*AMOUNT_BYTE_FOR_OEPRF)+
+    400                                                 numCmd/8]&(1<<(numCmd%8))) rez=1;
+    401            return rez;
+    402          }//puskSetOTotZPLUS(int num)
+    403          
+    404          int puskRstOTotZMINUS(int numCmd, int numOT)
+    405          {
+    406          //Пуск от Защит -
+    407            int rez=0;
+    408              if(brCfgTbl.uc_ar_trg_rstMn_rank_cfg[(numOT*AMOUNT_BYTE_FOR_OEPRF)+
+    409                                                 numCmd/8]&(1<<(numCmd%8))) rez=1;
+    410            return rez;
+    411          }//puskSetOTotZMINUS(int num)
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      24   SettingIci_OF
+        24   -> SetUstToClon
+        24   -> __aeabi_memset
+        24   -> puskOFModern
+        24   -> puskOTModern
+      16   puskOFModern
+        16   -> SettingIci_OFDZ
+        16   -> SettingIci_OFMTZ
+        16   -> SettingIci_OFTZNP
+        16   -> SettingIci_OFUMM
+      24   puskOFotZBLK
+        24 __aeabi_idiv
+        24 __aeabi_idivmod
+      24   puskOFotZMINUS
+        24 __aeabi_idiv
+        24 __aeabi_idivmod
+      24   puskOFotZPLUS
+        24 __aeabi_idiv
+        24 __aeabi_idivmod
+      16   puskOTModern
+        16   -> SettingIci_OFDZ
+        16   -> SettingIci_OFMTZ
+        16   -> SettingIci_OFTZNP
+        16   -> SettingIci_OFUMM
+      24   puskRstOTotZMINUS
+        24 __aeabi_idiv
+        24 __aeabi_idivmod
+      24   puskRstOTotZPLUS
+        24 __aeabi_idiv
+        24 __aeabi_idivmod
+      24   puskSetOTotZMINUS
+        24 __aeabi_idiv
+        24 __aeabi_idivmod
+      24   puskSetOTotZPLUS
+        24 __aeabi_idiv
+        24 __aeabi_idivmod
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable7
+       4  ??DataTable7_1
+       4  ??DataTable7_10
+       4  ??DataTable7_11
+       4  ??DataTable7_12
+       4  ??DataTable7_13
+       4  ??DataTable7_14
+       4  ??DataTable7_15
+       4  ??DataTable7_16
+       4  ??DataTable7_17
+       4  ??DataTable7_18
+       4  ??DataTable7_19
+       4  ??DataTable7_2
+       4  ??DataTable7_20
+       4  ??DataTable7_21
+       4  ??DataTable7_22
+       4  ??DataTable7_23
+       4  ??DataTable7_24
+       4  ??DataTable7_25
+       4  ??DataTable7_26
+       4  ??DataTable7_27
+       4  ??DataTable7_28
+       4  ??DataTable7_29
+       4  ??DataTable7_3
+       4  ??DataTable7_30
+       4  ??DataTable7_31
+       4  ??DataTable7_32
+       4  ??DataTable7_33
+       4  ??DataTable7_34
+       4  ??DataTable7_35
+       4  ??DataTable7_36
+       4  ??DataTable7_37
+       4  ??DataTable7_38
+       4  ??DataTable7_39
+       4  ??DataTable7_4
+       4  ??DataTable7_40
+       4  ??DataTable7_41
+       4  ??DataTable7_42
+       4  ??DataTable7_43
+       4  ??DataTable7_44
+       4  ??DataTable7_45
+       4  ??DataTable7_46
+       4  ??DataTable7_47
+       4  ??DataTable7_48
+       4  ??DataTable7_49
+       4  ??DataTable7_5
+       4  ??DataTable7_50
+       4  ??DataTable7_51
+       4  ??DataTable7_52
+       4  ??DataTable7_6
+       4  ??DataTable7_7
+       4  ??DataTable7_8
+       4  ??DataTable7_9
+    2348  SettingIci_OF
+       4  pntPuskOF
+      80  puskOFModern
+      92  puskOFotZBLK
+      92  puskOFotZMINUS
+      92  puskOFotZPLUS
+      80  puskOTModern
+      92  puskRstOTotZMINUS
+      92  puskRstOTotZPLUS
+      92  puskSetOTotZMINUS
+      92  puskSetOTotZPLUS
+
+ 
+     4 bytes in section .bss
+ 3 364 bytes in section .text
+ 
+ 3 364 bytes of CODE memory
+     4 bytes of DATA memory
+
+Errors: none
+Warnings: none

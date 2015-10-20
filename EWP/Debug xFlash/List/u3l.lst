@@ -1,0 +1,338 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        12/Oct/2015  11:05:10
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  D:\IAR projects\HR1_0100_00_I720_new2\ici\u3l.c
+#    Command line =  
+#        "D:\IAR projects\HR1_0100_00_I720_new2\ici\u3l.c" -D
+#        _STATIC_MEMORY_BOOT -lcN "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\List\" -o "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "C:\Program Files\IAR Systems\Embedded
+#        Workbench 7.40\arm\INC\c\DLib_Config_Normal.h" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\Igor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\component\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\" --cpu_mode arm -On
+#        --use_c++_inline
+#    List file    =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\List\u3l.lst
+#    Object file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\Obj\u3l.o
+#
+###############################################################################
+
+D:\IAR projects\HR1_0100_00_I720_new2\ici\u3l.c
+      1          /*------------------------------------------------------------------------------
+      2          * Copyright (c) 2013 - Factory “KyivPrylad”
+      3          * 
+      4          * Permission to use, copy, modify, and distribute this software for any
+      5          * purpose with or without fee is hereby granted, provided that the above
+      6          * copyright notice and this permission notice appear in all copies.
+      7          * 
+      8          * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+      9          * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+     10          * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+     11          * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+     12          * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+     13          * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+     14          * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+     15          * 
+     16          *------------------------------------------------------------------------------
+     17          *
+     18          * Processor       : Lpc_3240
+     19          * File Name       : u3l.c
+     20          * Description     : Functions and Data for Low Level Communication,
+     21                              BO BR
+     22          
+     23          *  Version        : 1.00
+     24          *
+     25          *       +----- (NEW | MODify | ADD | DELete)
+     26          *       |
+     27          *  No   |   When       Who                What
+     28          *-----+---+----------+------------------+--------------------------------------
+     29          * 000  NEW  02/09/13   Markovsky A       Creation
+     30          *----------------------------------------------------------------------------*/
+     31          
+     32          //#include "lpc_types.h"
+     33          //#include "lpc_irq_fiq.h"
+     34          //#include "lpc_arm922t_cp15_driver.h"
+     35          //#include "ea3250_board.h"
+     36          //.#include "lpc32xx_uart_driver.h"
+     37          //.#include "lpc32xx_intc_driver.h"
+     38          //.#include "lpc32xx_timer_driver.h"
+     39          
+     40          
+     41          #include "../LIB/CDL_AV0/lpc/include/lpc_types.h"
+     42          #include "../LIB/CDL_AV0/lpc/include/lpc_irq_fiq.h"
+     43          #include "../LIB/CDL_AV0/lpc/include/lpc_arm922t_cp15_driver.h"
+     44          //
+     45          #include "../LIB/CDL_AV0/csps/lpc32xx/include/lpc32xx_uart_driver.h"
+     46          #include "../LIB/CDL_AV0/csps/lpc32xx/include/lpc32xx_intc_driver.h"
+     47          #include "../LIB/CDL_AV0/csps/lpc32xx/include/lpc32xx_timer_driver.h"
+     48          
+     49          char chI; 
+     50          
+     51           INT_32 uartdev = 0;
+     52          static UNS_8 txbuff [512], rxbuff [512];
+     53          volatile static int txsize, rxsize;
+     54          static int txfill = 0;
+     55          static int rxget  = 0;
+     56          static int txget  = 0;
+     57          static int rxfill = 0;
+     58          void foo(void)
+     59          {
+     60          	txfill = txget = rxfill = rxget = txsize = rxsize = 0;
+     61          
+     62          }
+     63          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+     64          //---   
+     65          void recv_cb(void);
+     66          //..................................................................................
+     67          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+     68          //~~~ Purpose: Read some data from the terminal interface                        ~~~
+     69          //~~~ Processing: Move data from the ring buffer to the passed buffer            ~~~
+     70          //~~~        ~~~
+     71          //~~~        ~~~
+     72          //~~~        ~~~
+     73          //``````````````````````````````````````````````````````````````````````````````````
+     74          //~~~ Returns: Number of bytes actually read                                      ~~
+     75          //~~~                                                                             ~~ 
+     76          //~~~                                                                             ~~
+     77          //~~~          ~~
+     78          //~~~          ~~
+     79          //,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+     80          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+     81          //=================================================================================
+     82          //Body func                                                                  
+     83          //=================================================================================
+     84          void recv_cb(void)
+     85          {
+     86            INT_32 bread, toreadmax = 512 - rxfill;
+     87          
+     88            /* Read data */
+     89            bread = Uart_read(uartdev, &rxbuff[rxfill], toreadmax);
+     90            rxsize = rxsize + bread;
+     91            rxfill = rxfill + bread;
+     92            if (rxfill >= 512)
+     93            {
+     94              rxfill = 0;
+     95            }
+     96          }
+     97          
+     98          //---------------------------------------------------------------------------------
+     99          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    100          //---   
+    101          void send_cb(void);
+    102          //..................................................................................
+    103          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    104          //~~~ Purpose: Read some data from the terminal interface                        ~~~
+    105          //~~~ Processing: Move data from the ring buffer to the passed buffer            ~~~
+    106          //~~~        ~~~
+    107          //~~~        ~~~
+    108          //~~~        ~~~
+    109          //``````````````````````````````````````````````````````````````````````````````````
+    110          //~~~ Returns: Number of bytes actually read                                      ~~
+    111          //~~~                                                                             ~~ 
+    112          //~~~                                                                             ~~
+    113          //~~~          ~~
+    114          //~~~          ~~
+    115          //,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+    116          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    117          //=================================================================================
+    118          //Body func                                                                  
+    119          //=================================================================================
+    120          
+    121          void send_cb(void)
+    122          {
+    123            INT_32 bwrite, tosend = 512 - txget;
+    124          
+    125            if (tosend > txsize)
+    126            {
+    127              tosend = txsize;
+    128            }
+    129          
+    130            /* Write data */
+    131            bwrite = Uart_write(uartdev, &txbuff[txget], tosend);
+    132            txsize = txsize - bwrite;
+    133            txget = txget + bwrite;
+    134            if (txget >= 512)
+    135            {
+    136              txget = 0;
+    137            }
+    138          }
+    139          //---------------------------------------------------------------------------------
+    140          
+    141          //Transmit 60 Byte
+    142          //Receve 60 Biytea
+    143          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    144          //---   
+    145          long outU3(UNS_8 *dat, int bytes);
+    146          //..................................................................................
+    147          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    148          //~~~ Purpose:  Send some data on the terminal interface                         ~~~
+    149          //~~~ Processing: Place data into the TX ring buffer and start UART transmission ~~~
+    150          //~~~        ~~~
+    151          //~~~  dat   : Data to send                                                      ~~~
+    152          //~~~  bytes : Number of bytes to send                                           ~~~
+    153          //``````````````````````````````````````````````````````````````````````````````````
+    154          //~~~ Notes: Will block until all bytes are sent                                  ~~
+    155          //~~~                                                                             ~~ 
+    156          //~~~                                                                             ~~
+    157          //~~~          ~~
+    158          //~~~          ~~
+    159          //,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+    160          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    161          //=================================================================================
+    162          //Body func                                                                  
+    163          //=================================================================================
+    164          
+    165          long outU3(UNS_8 *dat, int bytes)
+    166          {
+    167            while (bytes > 0)
+    168            {
+    169              while ((bytes > 0) && (txsize < 512))
+    170              {
+    171                txbuff[txfill] = *dat;
+    172                txfill++;
+    173                if (txfill >= 512)
+    174                {
+    175                  txfill = 0;
+    176                }
+    177                dat++;
+    178                bytes--;
+    179                int_disable(IRQ_UART_IIR3);
+    180                txsize++;
+    181                int_enable(IRQ_UART_IIR3);
+    182              }
+    183          
+    184              int_disable(IRQ_UART_IIR3);
+    185              //.term_dat_send_cb();
+    186          	send_cb();
+    187              int_enable(IRQ_UART_IIR3);
+    188            }
+    189            return 0;
+    190          }
+    191          //---------------------------------------------------------------------------------
+    192          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    193          //---   
+    194          long inU3(UNS_8 *buff, int bytes);
+    195          //..................................................................................
+    196          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    197          //~~~ Purpose: Read some data from the terminal interface                        ~~~
+    198          //~~~ Processing: Move data from the ring buffer to the passed buffer            ~~~
+    199          //~~~        ~~~
+    200          //~~~        ~~~
+    201          //~~~        ~~~
+    202          //``````````````````````````````````````````````````````````````````````````````````
+    203          //~~~ Returns: Number of bytes actually read                                      ~~
+    204          //~~~                                                                             ~~ 
+    205          //~~~                                                                             ~~
+    206          //~~~          ~~
+    207          //~~~          ~~
+    208          //,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+    209          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    210          //=================================================================================
+    211          //Body func                                                                  
+    212          //=================================================================================
+    213          long inU3(UNS_8 *buff, int bytes)
+    214          {
+    215          
+    216          int bread = 0;
+    217          
+    218            while ((bytes > 0) && (rxsize > 0))
+    219            {
+    220              *buff = rxbuff[rxget];
+    221              buff++;
+    222              rxget++;
+    223              if (rxget >= 512)
+    224              {
+    225                rxget = 0;
+    226              }
+    227              bytes--;
+    228              bread++;
+    229              int_disable(IRQ_UART_IIR3);
+    230              rxsize--;
+    231              int_enable(IRQ_UART_IIR3);
+    232            }
+    233          
+    234            return bread;
+    235          	
+    236          	
+    237          }
+    238          //---------------------------------------------------------------------------------
+    239          
+    240          
+    241          
+    242          
+    243          /* EOF */
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   foo
+      16   inU3
+        16   -> int_disable
+        16   -> int_enable
+      16   outU3
+        16   -> int_disable
+        16   -> int_enable
+        16   -> send_cb
+      16   recv_cb
+        16   -> Uart_read
+      16   send_cb
+        16   -> Uart_write
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable4
+       4  ??DataTable4_1
+       4  ??DataTable4_2
+       4  ??DataTable4_3
+       4  ??DataTable4_4
+       4  ??DataTable4_5
+       4  ??DataTable4_6
+       4  ??DataTable4_7
+       4  ??DataTable4_8
+       1  chI
+      56  foo
+     168  inU3
+     192  outU3
+     124  recv_cb
+     512  rxbuff
+       4  rxfill
+       4  rxget
+       4  rxsize
+     152  send_cb
+     512  txbuff
+       4  txfill
+       4  txget
+       4  txsize
+       4  uartdev
+
+ 
+ 1 053 bytes in section .bss
+   728 bytes in section .text
+ 
+   728 bytes of CODE memory
+ 1 053 bytes of DATA memory
+
+Errors: none
+Warnings: 6

@@ -1,0 +1,1074 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  17:17:49
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\component\TZNP1Component.c
+#    Command line =  
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\component\TZNP1Component.c" -lcN
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\" -o "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "D:\Program Files\IAR Systems\Embedded
+#        Workbench 7.2\arm\INC\c\DLib_Config_Normal.h" -I "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\" --interwork
+#        --cpu_mode arm -On --use_c++_inline
+#    List file    =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\TZNP1Component.lst
+#    Object file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\TZNP1Component.o
+#
+###############################################################################
+
+D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\component\TZNP1Component.c
+      1          #ifndef _HIDE_COMPONENT
+      2          /*
+      3          #include <vcl.h>
+      4          #include <strstrea.h>
+      5          #include <math.h>
+      6          #include <mem.h>
+      7          #include <fstream.h>
+      8          #include <strstrea.h>
+      9          #include <iomanip.h>
+     10          #pragma hdrstop
+     11          
+     12          #include "vmenuDis.h"
+     13          */
+     14          
+     15          #include <stdio.h>
+     16          #include <string.h>
+     17          
+     18          #include "bazisdef.h"
+     19          #include "component\componentdef.h"
+     20          #include "virtualMenu\systemmenudef.h"
+     21          #include "virtualMenu\ustmanagerdef.h"
+     22          #include "psuperVisor\psvisor_helpdef.h"
+     23          
+     24          #include "virtualMenu\textstreamfnc.h"
+     25          #include "virtualMenu\systemmenufnc.h"
+     26          #include "virtualMenu\ustmanagerfnc.h"
+     27          #include "psuperVisor\psvisor_helpfnc.h"
+     28          #include "virtualMenu\rangmanagerfnc.h"
+     29          #include "logictimers\logictimersfnc.h"
+     30          
+     31          #include "virtualMenu\viewMenuList.h"
+     32          
+     33          #include "psupervisor\psupervisor.h"
+     34          
+     35          #include "toSpeedOptim.h"
+     36          
+     37          #include "..\bazis.h"
+     38          
+     39          //код компонентов
+     40          #define KOD_COMPONENT  TZNP_COMP1
+     41          //к-во ступеней
+     42          #define CNT_STUPEN_TZNP  5
+     43          
+     44          #endif // _HIDE_COMPONENT
+     45          
+     46          //РАСПРЕДЕЛЕНИЕ УСТАВОК  в менеджере уставок
+     47          //уставка сработки
+     48          #define MNGUST_TZNP1to5_3I0  0
+     49          #define MNGUST_TZNP1to5_3U0  1
+     50          
+     51          //уставка выдержки
+     52          #define MNGVID_TZNP1to5         2
+     53          #define MNGVID_TZNP1to5_3I0     3
+     54          #define MNGVID_TZNP1to5_3U0     4
+     55          //ускорение
+     56          //Ввод ускор ТЗНП1
+     57          #define MNGVUSK_TZNP1to5        5
+     58          
+     59          //Ускор ТЗНП1 ВВ
+     60          #define MNGUSK_TZNP1to5         6
+     61          //Ускор ТЗНП1 ОУ
+     62          #define MNGUSK_TZNP1to5_OU      7
+     63          //Ускор ТЗНП1 ТУ
+     64          #define MNGUSK_TZNP1to5_TU      8
+     65          
+     66          //Ускор ТЗНП1 3I0 ВВ
+     67          #define MNGUSK_TZNP1to5_3I0     9
+     68          //Ускор ТЗНП1 3I0 ОУ
+     69          #define MNGUSK_TZNP1to5_3I0_OU  10
+     70          //Ускор ТЗНП1 3I0 ТУ
+     71          #define MNGUSK_TZNP1to5_3I0_TU  11
+     72          
+     73          //уставка управления
+     74          #define MNGUPR_TZNP1to5      12
+     75          //к-во уставок в менеджере уставок
+     76          #define MNGUST_TZNP1to5_TOTAL  13
+     77          //#define MNGUST_BOBV_TZNP1to5  MNGUST_TZNP1to5_TOTAL
+     78          
+     79          //РАСПРЕДЕЛЕНИЕ ENA команд
+     80          //Управл ТЗНП1
+     81          #define ENA1_TZNP1to5       0
+     82          //Управл ТЗНП1 3I0
+     83          #define ENA2_TZNP1to5       1
+     84          //Управл ТЗНП1 3U0
+     85          #define ENA3_TZNP1to5       2
+     86          //Направл ТЗНП1
+     87          #define ENA4_TZNP1to5       3
+     88          //Ускор ВВ ТЗНП1
+     89          #define ENA5_TZNP1to5       4
+     90          //Автомат уск ТЗНП1
+     91          #define ENA6_TZNP1to5       5
+     92          //Телеускор ТЗНП1
+     93          #define ENA7_TZNP1to5       6
+     94          //к-во ENA команд
+     95          #define ENACMD_TZNP1to5_TOTAL 7
+     96          
+     97          //РАСПРЕДЕЛЕНИЕ УСТАВОК в супервизоре
+     98          //уставка сработки
+     99          #define SPVSRABUST_TZNP1to5_3I0  0
+    100          #define SPVSRABUST_TZNP1to5_3U0  1
+    101          //уставка возврата
+    102          #define SPVVOZVUST_TZNP1to5_3I0  2
+    103          #define SPVVOZVUST_TZNP1to5_3U0  3
+    104          //уставка SPV выход
+    105          #define SPV_OUT3I0_TZNP1to5      4
+    106          #define SPV_OUT3U0_TZNP1to5      5
+    107          //к-во уставок в супервизоре
+    108          #define SPVUST_TZNP1to5_TOTAL  6
+    109          
+    110          //---------------IO COMMAND------------------
+    111          //РАСПРЕДЕЛЕНИЕ IO КОМАНД ДЛЯ TZNP1to5
+    112          //Стат блок ТЗНП1
+    113          //CMD_TZNP1to5
+    114          #define IOCMD1_TZNP1to5 0
+    115          //Блок уск ТЗНП1
+    116          //CMD_BLOK_USK_TZNP1to5
+    117          #define IOCMD2_TZNP1to5 1
+    118          //Опер уск ТЗНП1
+    119          //CMD_OPER_USK_TZNP1to5
+    120          #define IOCMD3_TZNP1to5 2
+    121          //Сраб ПО ТЗНП1
+    122          //CMD_TZNP1to5_PO1
+    123          #define IOCMD4_TZNP1to5 3
+    124          //Сраб ТЗНП1
+    125          //CMD_TZNP1to5
+    126          #define IOCMD5_TZNP1to5 4
+    127          //Сраб ПО ТЗНП1 3I0
+    128          //CMD_TZNP1to5_PO2
+    129          #define IOCMD6_TZNP1to5 5
+    130          //Сраб ТЗНП1 3I0
+    131          //CMD_TZNP1to5_3I0
+    132          #define IOCMD7_TZNP1to5 6
+    133          //Сраб ПО ТЗНП1 3U0
+    134          //CMD_TZNP1to5_PO3
+    135          #define IOCMD8_TZNP1to5 7
+    136          //Сраб ТЗНП1 3U0
+    137          //CMD_TZNP1to5_3U0
+    138          #define IOCMD9_TZNP1to5 8
+    139          //Теле уск TZNP1to5
+    140          #define IOCMD10_TZNP1to5  9
+    141          //Сектор TZNP1to5 
+    142          #define IOCMD11_TZNP1to5  10
+    143          //к-во IO команд
+    144          #define IOCMD_TZNP1to5_TOTAL    11
+    145          
+    146          //---------------TL COMMAND------------------
+    147          //РАСПРЕДЕЛЕНИЕ TL КОМАНД ДЛЯ TZNP1
+    148          //TZNP1to5_PO1
+    149          #define TLCMD1_TZNP1to5      0
+    150          //TZNP1to5_PO2
+    151          #define TLCMD2_TZNP1to5      1
+    152          //TZNP1to5_PO3
+    153          #define TLCMD3_TZNP1to5      2
+    154          //TZNP1to5_USKOR
+    155          #define TLCMD4_TZNP1to5      3
+    156          //TZNP1to5_3I0_USKOR
+    157          #define TLCMD4_TZNP1to5_3I0  4
+    158          //RES_TZNP1to5
+    159          #define TLCMD6_TZNP1to5      5
+    160          //RES_TZNP1to5_3I0
+    161          #define TLCMD6_TZNP1to5_3I0  6
+    162          
+    163          //ELOLDTRG_USKOR_TZNP1to5_OU
+    164          #define TLCMD7_TZNP1to5      7
+    165          //ELOUTTRG_USKOR_TZNP1to5_OU
+    166          #define TLCMD8_TZNP1to5      8
+    167          
+    168          //ELOLDTRG_USKOR_TZNP1to5_AU
+    169          #define TLCMD9_TZNP1to5      9
+    170          //ELOUTTRG_USKOR_TZNP1to5_AU
+    171          #define TLCMD10_TZNP1to5     10
+    172          
+    173          //ELOLDTRG_USKOR_TZNP1to5_TU
+    174          #define TLCMD11_TZNP1to5     11
+    175          //ELOUTTRG_USKOR_TZNP1to5_TU
+    176          #define TLCMD12_TZNP1to5     12
+    177          
+    178          //ELOLDTRG_USKOR_TZNP1to5_I30_OU
+    179          #define TLCMD7_TZNP1to5_3I0  13
+    180          //ELOUTTRG_USKOR_TZNP1to5_I30_OU
+    181          #define TLCMD8_TZNP1to5_3I0  14
+    182          
+    183          //ELOLDTRG_USKOR_TZNP1to5_I30_AU
+    184          #define TLCMD9_TZNP1to5_3I0  15
+    185          //ELOUTTRG_USKOR_TZNP1to5_I30_AU
+    186          #define TLCMD10_TZNP1to5_3I0 16
+    187          
+    188          //ELOLDTRG_USKOR_TZNP1to5_I30_TU
+    189          #define TLCMD11_TZNP1to5_3I0 17
+    190          //ELOUTTRG_USKOR_TZNP1to5_I30_TU
+    191          #define TLCMD12_TZNP1to5_3I0 18
+    192                                   
+    193          #define TL10_TZNP1TO5        19
+    194          #define TL10_TZNP1TO5_3I0    20
+    195          
+    196          #define TL7_TZNP1TO5         21
+    197          #define TL8_TZNP1TO5         22
+    198          #define TL9_TZNP1TO5         23
+    199          
+    200          #define TL7_TZNP1TO5_3I0     24
+    201          #define TL8_TZNP1TO5_3I0     25
+    202          #define TL9_TZNP1TO5_3I0     26
+    203          
+    204          //AU_MTZ2to5
+    205          #define TLCMD16_TZNP1to5     27
+    206          //TU_MTZ2to5               
+    207          #define TLCMD17_TZNP1to5     28
+    208          //VU_TU_MTZ2to5
+    209          #define TLCMD18_TZNP1to5     29
+    210          
+    211          //OU_TZNP1to5               
+    212          #define TLCMD19_TZNP1to5     30
+    213          
+    214          //к-во TL команд
+    215          #define TLCMD_TZNP1to5_TOTAL     31
+    216          
+    217          //--------------- TIMERS ------------------
+    218          //РАСПРЕДЕЛЕНИЕ ТАЙМЕРОВ ДЛЯ TZNP1
+    219          //таймер TZNP1to5_TIM1
+    220          #define TIMER1_TZNP1to5        0
+    221          //таймер TZNP1to5_TIM2
+    222          #define TIMER2_TZNP1to5        1
+    223          //таймер TZNP1to5_TIM3
+    224          #define TIMER3_TZNP1to5        2
+    225          
+    226          //Ввод ускор ТЗНП1
+    227          #define TIMER_VUSK_TZNP1to5    3
+    228          
+    229          //Ускор ТЗНП1 ВВ
+    230          #define TIMER4_TZNP1to5         4
+    231          //Ускор ТЗНП1 ОУ
+    232          #define TIMER4_TZNP1to5_OU      5
+    233          //Ускор ТЗНП1 ТУ
+    234          #define TIMER4_TZNP1to5_TU      6
+    235          
+    236          //Ускор ТЗНП1 3I0 ВВ
+    237          #define TIMER4_TZNP1to5_3I0     7
+    238          //Ускор ТЗНП1 3I0 ОУ
+    239          #define TIMER4_TZNP1to5_3I0_OU  8
+    240          //Ускор ТЗНП1 3I0 ТУ
+    241          #define TIMER4_TZNP1to5_3I0_TU  9
+    242          
+    243          //таймер BO_TZNP1to5_TIM
+    244          #define TIMER_BO_TZNP1to5       10
+    245          //таймер BO_TZNP1to5_3I0_TIM
+    246          #define TIMER_BO_TZNP1to5_3I0   11
+    247          //таймер BO_TZNP1to5_3U0_TIM
+    248          #define TIMER_BO_TZNP1to5_3U0   12
+    249          //к-во таймеров
+    250          #define TIMERS_TZNP1to5_TOTAL   13
+    251          
+    252          #ifndef _HIDE_COMPONENT
+    253          
+    254          #define _HIDE_COMPONENT
+    255          #include "PRM1Component.c"
+    256          
+    257          extern COMPONENT_OBJ rpzcomponent_obj;//обект компонента для репозитария
+    258          extern int  tmpUSTAVKI[];
+    259          
+    260          extern LineMenuItem sub_menu_TZNP[];
+    261          extern LineMenuItem sub_menu_tmp[];
+    262          extern int  IndexUstSPV;//индекс уставок в супервизоре
+    263          extern int  IndexIO;//индекс IO
+    264          
+    265          extern COMPONENT_OBJ  cnfCOMPONENT[];
+    266          extern int  spvUSTAVKI[];//текущие уставки супервизора
+    267          extern char *bitStringUNI[];
+    268          extern int offsetUstMngPRM1;//смещение на уставки PRM1
+    269          
+    270          void UstListCompTZNP1();
+    271          void ustRedactorCompTZNP1();
+    272          void UstCompTZNP1();
+    273          
+    274          void PereinitVidListCompTZNP1(short flg);
+    275          void VidListCompTZNP1();
+    276          void vidRedactorCompTZNP1();
+    277          void VidCompTZNP1();
+    278          
+    279          void PereinitUprListCompTZNP1(short flg);
+    280          void UprListCompTZNP1();
+    281          void uprRedactorCompTZNP1();
+    282          void UprCompTZNP1();
+    283          short  KadrMenuFormat_upr_compTZNP1(void *workCntr);
+    284          int  initUstTZNP1(char init);
+    285          void  prepareUstTZNP1(short idxC);
+    286          
+    287          short  KadrMenuFormat_TZNP1(void *workCntr);
+    288          
+    289          void EditUstTZNP1();
+    290          void EditVidTZNP1();
+    291          void EditUprTZNP1();
+    292          int codecUstTZNP1(char codec, short offset, int ust);
+    293          char *selectorUprStrTZNP1(short iBit, UNS_32 ustUpr);
+    294          
+    295          short  KadrMenuFormat_ustvidTZNP(void *workCntr);
+    296          void  logicTZNP1to5(int idxC);
+    297          int   isDISactiv_TZNP1to5(int idxC);
+    298          
+    299          void diffTZNP2ToRepozitar();
+    300          void diffTZNP3ToRepozitar();
+    301          void diffTZNP4ToRepozitar();
+    302          void diffTZNP5ToRepozitar();
+    303          TWIN_DIFFERENT twinTZNP1[4];//массив контроля близнецов
+    304          
+    305          int  offsetIOCmdTZNP5;//смещение для IO TZNP5
+    306          
+    307          char TZNP1_TITLE[] = "ТЗНП1";
+    308          
+    309          IONAMESTATUS_COMPONENT ionsTZNP1[IOCMD_TZNP1to5_TOTAL] =
+    310          {
+    311            {
+    312              1,//статус iocmd1
+    313              "Стат блок ТЗНП1"
+    314            },
+    315            {
+    316              1,//статус iocmd2
+    317              "Блок уск ТЗНП1"
+    318            },
+    319            {
+    320              1,//статус iocmd3
+    321              "Опер уск ТЗНП1"
+    322            },
+    323            {
+    324              1,//статус iocmd4
+    325              "Сраб ПО ТЗНП1"
+    326            },
+    327            {
+    328              1,//статус iocmd5
+    329              "Сраб ТЗНП1"
+    330            },
+    331            {
+    332              1,//статус iocmd6
+    333              "Сраб ПО ТЗНП1 3I0"
+    334            },
+    335            {
+    336              1,//статус iocmd7
+    337              "Сраб ТЗНП1 3I0"
+    338            },
+    339            {
+    340              1,//статус iocmd8
+    341              "Сраб ПО ТЗНП1 3U0"
+    342            },
+    343            {
+    344              1,//статус iocmd9
+    345              "Сраб ТЗНП1 3U0"
+    346            },
+    347            {
+    348              1,//статус iocmd10
+    349              "Теле уск ТЗНП1"
+    350            },
+    351            {
+    352              1,//статус iocmd11
+    353              "Сектор ТЗНП1"
+    354            }
+    355          };
+    356          
+    357          LineMenuItem sub_menu_comp_TZNP1[8] =
+    358          {
+    359            { TZNP1_TITLE, NULL},//title
+    360            { &CONTROL1_COMP,  &sub_menu_TZNP, typeMenuSub},//control_item, parent
+    361            { "Уставки ТЗНП1",    (void*)&UstListCompTZNP1, typeMenuProg},
+    362            { "Выдержки ТЗНП1",   (void*)&VidListCompTZNP1, typeMenuProg},
+    363            { "Управление ТЗНП1", (void*)&UprListCompTZNP1, typeMenuProg},
+    364            { NULL, NULL}
+    365          };
+    366          
+    367          LineMenuItem sub_menu_ust_compTZNP1[] =
+    368          {
+    369            { "Уставки ТЗНП1", NULL},//title
+    370            { &CONTROL2_COMP, &sub_menu_comp_TZNP1, typeMenuList},//control_item, parent
+    371            { "Уст ТЗНП1 3I0",    (void*)&UstCompTZNP1, typeMenuProg},
+    372            { "Уст ТЗНП1 3U0",    (void*)&UstCompTZNP1, typeMenuProg},
+    373            { NULL, NULL}
+    374          
+    375          };
+    376          
+    377          LineMenuItem sub_menu_vid_compTZNP1[] =
+    378          {
+    379            { "Выдержки ТЗНП1", NULL},//title
+    380            { &CONTROL2_COMP, &sub_menu_comp_TZNP1, typeMenuList},//control_item, parent
+    381          /*
+    382            { "Выдержка ТЗНП1",         (void*)&VidCompTZNP1, typeMenuProg},
+    383            { "Выдержка ТЗНП1 3I0",     (void*)&VidCompTZNP1, typeMenuProg},
+    384            { "Выдержка ТЗНП1 3U0",     (void*)&VidCompTZNP1, typeMenuProg},
+    385            { "Ввод ускор ТЗНП1",       (void*)&VidCompTZNP1, typeMenuProg},
+    386          
+    387            { "Ускор ТЗНП1 ВВ",         (void*)&VidCompTZNP1, typeMenuProg},
+    388            { "Ускор ТЗНП1 ОУ",         (void*)&VidCompTZNP1, typeMenuProg},
+    389            { "Ускор ТЗНП1 ТУ",         (void*)&VidCompTZNP1, typeMenuProg},
+    390          
+    391            { "Ускор ТЗНП1 3I0 ВВ",     (void*)&VidCompTZNP1, typeMenuProg},
+    392            { "Ускор ТЗНП1 3I0 ОУ",     (void*)&VidCompTZNP1, typeMenuProg},
+    393            { "Ускор ТЗНП1 3I0 ТУ",     (void*)&VidCompTZNP1, typeMenuProg},
+    394          */
+    395            { NULL, NULL}
+    396          
+    397          };
+    398          
+    399          LineMenuItem sub_menu_upr_compTZNP1[] =
+    400          {
+    401            { "Управл ТЗНП1", NULL},//title
+    402            { &CONTROL2_COMP, &sub_menu_comp_TZNP1, typeMenuList},//control_item, parent
+    403            { "Управл ТЗНП1",        (void*)&UprCompTZNP1, typeMenuProg},
+    404            { "Управл ТЗНП1 3I0",    (void*)&UprCompTZNP1, typeMenuProg},
+    405            { "Управл ТЗНП1 3U0",    (void*)&UprCompTZNP1, typeMenuProg},
+    406            { "Направл ТЗНП1",       (void*)&UprCompTZNP1, typeMenuProg},
+    407            { "Ускор ВВ ТЗНП1",      (void*)&UprCompTZNP1, typeMenuProg},
+    408            { "Автомат уск ТЗНП1",   (void*)&UprCompTZNP1, typeMenuProg},
+    409            { "Телеускор ТЗНП1",     (void*)&UprCompTZNP1, typeMenuProg},
+    410            { NULL, NULL}
+    411          
+    412          };
+    413          
+    414          void PereinitUstListCompTZNP1(short flg)
+    415          {
+    416          //переиниц
+    417            //инит компонентного контроля
+    418            TxtStreamInit(&CONTROL2_COMP, &KadrMenuFormat_ustvidTZNP, sub_menu_ust_compTZNP1);//инит control и формир кадра
+    419            if(flg==0)//END
+    420            {
+    421              TxtStreamSetEnd(&CONTROL2_COMP, SIZE_PAGE_VIEW/2);//перейти на END
+    422            }//if
+    423          
+    424            ViewDiskrMenuList();//вывести окно отображения
+    425            ListPStr();//доступ к уставкам
+    426          }//PereinitUstListComp2()
+    427          
+    428          void UstListCompTZNP1()
+    429          {
+    430            SelectorMNGBAZA(0);//установка базу уставок
+    431          
+    432            SelectorSUBMENU(sub_menu_ust_compTZNP1);//уcтановить текущее субменю
+    433          
+    434            SelectorTEXTCONTROL(&CONTROL2_COMP);//текущий control
+    435          
+    436            SelectorFHOME(&PereinitUstListCompTZNP1);//указатель на ф-цию HOME
+    437            InitFHOME(1);//exe ф-цию HOME
+    438          
+    439            LanderUpDown();//wkl Up Down
+    440          }//UstListCompTZNP1()
+    441          
+    442          void UstCompTZNP1()
+    443          {
+    444            SelectorCRRLIGHTLINE();//найти подсвеченную строку текущего текст потока
+    445            PrepareEditMenu(sub_menu_ust_compTZNP1);
+    446            PassWord(EditUstTZNP1);
+    447          }//VidCompTZNP1()
+    448          
+    449          void EditUstTZNP1()
+    450          {
+    451          //редактировать уставку
+    452            SystemEditUst(sub_menu_ust_compTZNP1);//[LIGHTLINEMENU +1+SUBDATA].Line1, LIGHTLINEMENU);
+    453          }//UstCompTZNP1()
+    454          
+    455          short  KadrMenuFormat_ustvidTZNP(void *pstr)
+    456          {
+    457           WorkControl *workCntr = (WorkControl *)pstr;
+    458          //формирователь кадра
+    459            char locTxt[50];
+    460            RESET_COUNTER;//сброс счетчиков
+    461            for(int i=0;; i++)
+    462            {
+    463          //критерий терминатора
+    464              if(((LineMenuItem *)workCntr->userPoint)[i+1+SUBDATA].Line1==NULL)break;
+    465          
+    466              COMPARE_COUNTER
+    467              {
+    468                strcpy((char *)workCntr->twoString, (char *)( ((LineMenuItem *)workCntr->userPoint) )[i+1+SUBDATA].Line1);
+    469                sprintf(locTxt, "   %d", getUstOffsetMngUSTAVKI(i));
+    470                strcpy((char *)workCntr->twoString + sizeof(WorkVariantChar)/2, locTxt);
+    471                return 1;//сравнить счетчики кадров
+    472              }
+    473            }//for
+    474          
+    475            return 1;
+    476          }//KadrMenuFormat_ust_1(WorkControl *workCntr)
+    477          
+    478          //--------------------------------------------------
+    479          
+    480          void PereinitVidListCompTZNP1(short flg)
+    481          {
+    482          //переиниц
+    483            //инит компонентного контроля
+    484            TxtStreamInit(&CONTROL2_COMP, &KadrMenuFormat_ustvidTZNP, sub_menu_vid_compTZNP1);//инит control и формир кадра
+    485            if(flg==0)//END
+    486            {
+    487              TxtStreamSetEnd(&CONTROL2_COMP, SIZE_PAGE_VIEW/2);//перейти на END
+    488            }//if
+    489          
+    490            ViewDiskrMenuList();//вывести окно отображения
+    491            ListPStr();//доступ к уставкам
+    492          }//PereinitUstListComp2()
+    493          
+    494          void VidListCompTZNP1()
+    495          {
+    496            SelectorMNGBAZA(MNGVID_TZNP1to5);//установка базы уставок
+    497          
+    498            SelectorSUBMENU(sub_menu_vid_compTZNP1);//утановить текущее субменю
+    499          
+    500            SelectorTEXTCONTROL(&CONTROL2_COMP);//текущий control
+    501          
+    502            SelectorFHOME(&PereinitVidListCompTZNP1);//указатель на ф-цию HOME
+    503            InitFHOME(1);//exe ф-цию HOME
+    504          
+    505            LanderUpDown();//wkl Up Down
+    506          }//VidListCompTZNP1()
+    507          
+    508          void VidCompTZNP1()
+    509          {
+    510            SelectorCRRLIGHTLINE();//найти подсвеченную строку текущего текст потока
+    511            PrepareEditMenu(sub_menu_vid_compTZNP1);
+    512          //  PassWord(EditVidAPV);
+    513            EditVidTZNP1();
+    514          }//VidCompTZNP1()
+    515          
+    516          void EditVidTZNP1()
+    517          {
+    518          //редактировать уставку
+    519            SystemEditUst(sub_menu_vid_compTZNP1);//[LIGHTLINEMENU +1+SUBDATA].Line1, LIGHTLINEMENU);
+    520          }//
+    521          
+    522          //--------------------------------------------------
+    523          
+    524          void PereinitUprListCompTZNP1(short flg)
+    525          {
+    526          //переиниц
+    527            //инит компонентного контроля
+    528            TxtStreamInit(&CONTROL2_COMP, &KadrMenuFormat_upr_compTZNP1, NULL);//инит control и формир кадра
+    529            if(flg==0)//END
+    530            {
+    531              TxtStreamSetEnd(&CONTROL2_COMP, SIZE_PAGE_VIEW/2);//перейти на END
+    532            }//if
+    533          
+    534            ViewDiskrMenuList();//вывести окно отображения
+    535            ListPStr();//доступ к уставкам
+    536          }//PereinitUstList
+    537          
+    538          void UprListCompTZNP1()
+    539          {
+    540            SelectorMNGBAZA(MNGUPR_TZNP1to5);//установка базы уставок
+    541          
+    542            SelectorSUBMENU(sub_menu_upr_compTZNP1);//утановить текущее субменю
+    543          
+    544            SelectorTEXTCONTROL(&CONTROL2_COMP);//текущий control
+    545          
+    546            SelectorFHOME(&PereinitUprListCompTZNP1);//указатель на ф-цию HOME
+    547            InitFHOME(1);//exe ф-цию HOME
+    548          
+    549            LanderUpDown();//wkl Up Down
+    550          }//VidListCompNZOP1()
+    551          
+    552          void UprCompTZNP1()
+    553          {
+    554            SelectorCRRLIGHTLINE();//найти подсвеченную строку текущего текст потока
+    555            PrepareEditMenu(sub_menu_upr_compTZNP1);
+    556            PassWord(EditUprTZNP1);
+    557          
+    558          }//UprCompTZNP1()
+    559          
+    560          void EditUprTZNP1()
+    561          {
+    562          //редактировать уставку упр
+    563            char *nameUpr = (char *)sub_menu_upr_compTZNP1[LIGHTLINEMENU +1+SUBDATA].Line1;
+    564            UpravlRedactor(nameUpr, LIGHTLINEMENU, &selectorUprStrTZNP1);//редактировать уставку управления
+    565          }//EditUprTZNP1()
+    566          
+    567          short  KadrMenuFormat_upr_compTZNP1(void *pstr)
+    568          {
+    569           WorkControl *workCntr = (WorkControl *)pstr;
+    570          //формирователь кадра
+    571            RESET_COUNTER;//сброс счетчиков
+    572            for(int i=0;; i++)
+    573            {
+    574          //критерий терминатора
+    575              char *nameUpr = (char *)sub_menu_upr_compTZNP1[i+1+SUBDATA].Line1;
+    576              if(nameUpr==NULL) break;
+    577          
+    578              COMPARE_COUNTER
+    579              {
+    580                strcpy((char *)workCntr->twoString, nameUpr);
+    581          
+    582                //отобразить уставку управления в кадре
+    583                strcpy((char *)workCntr->twoString + sizeof(WorkVariantChar)/2,
+    584                selectorUprStrTZNP1(i, getCurrentMngUSTAVKI()));
+    585          
+    586                return 1;//сравнить счетчики кадров
+    587              }
+    588            }//for
+    589          
+    590            return 1;
+    591          }//KadrMenuFormat_upr_compTZNP1(WorkControl *workCntr)
+    592          
+    593          char *selectorUprStrTZNP1(short iBit, UNS_32 ustUpr)
+    594          {
+    595            switch(iBit)
+    596            {
+    597          
+    598            default:;
+    599            }//switch
+    600              if(NumBitCheckWord(iBit, &ustUpr)) return bitStringUNI[UNIUPR_WKL];
+    601              return bitStringUNI[UNIUPR_OTKL];
+    602          }//selectorUprStrTZNP1(short ibit, UNS_32 ustUpr)
+    603          
+    604          int initUstTZNP1(char init)
+    605          {
+    606            //инициал уставок
+    607            if (init)
+    608            {
+    609          //уставка сработки
+    610              tmpUSTAVKI[MNGUST_TZNP1to5_3I0]   = 10;
+    611              tmpUSTAVKI[MNGUST_TZNP1to5_3U0]   = 20;
+    612          //уставка выдержки
+    613              tmpUSTAVKI[MNGVID_TZNP1to5]        = 40;
+    614              tmpUSTAVKI[MNGVID_TZNP1to5_3I0]    = 41;
+    615              tmpUSTAVKI[MNGVID_TZNP1to5_3U0]    = 42;
+    616          //ускорение
+    617          	//Ввод ускор ТЗНП1
+    618              tmpUSTAVKI[MNGVUSK_TZNP1to5]       = 43;
+    619          
+    620          	//Ускор ТЗНП1 ВВ
+    621              tmpUSTAVKI[MNGUSK_TZNP1to5]        = 44;
+    622          	//Ускор ТЗНП1 ОУ
+    623              tmpUSTAVKI[MNGUSK_TZNP1to5_OU]     = 45;
+    624          	//Ускор ТЗНП1 ТУ
+    625              tmpUSTAVKI[MNGUSK_TZNP1to5_TU]     = 46;
+    626          
+    627          	//Ускор ТЗНП1 3I0 ВВ
+    628              tmpUSTAVKI[MNGUSK_TZNP1to5_3I0]    = 47;
+    629          	//Ускор ТЗНП1 3I0 ОУ
+    630              tmpUSTAVKI[MNGUSK_TZNP1to5_3I0_OU] = 48;
+    631          	//Ускор ТЗНП1 3I0 ТУ
+    632              tmpUSTAVKI[MNGUSK_TZNP1to5_3I0_TU] = 49;
+    633          //уставка управления
+    634              tmpUSTAVKI[MNGUPR_TZNP1to5] = 0;
+    635          
+    636            }//if
+    637          
+    638            IndexUstSPV += SPVUST_TZNP1to5_TOTAL;//индекс уставок в супервизоре
+    639            return MNGUST_TZNP1to5_TOTAL;//к-во уставок в менеджере уставок
+    640          }//initUstMTZ1(short mngUst, char init)
+    641          
+    642          void  prepareUstTZNP1(short idxC)
+    643          {
+    644            //подготовка ENA команд для клона
+    645            //копировать ENA из WideENA в ENAcmd
+    646            CopyWideENAToENAcmd(PrepareENACmd(idxC, MNGUPR_TZNP1to5), ENACMD_TZNP1to5_TOTAL);
+    647            //подготовка уставок
+    648            int tmpOffsetUSpv = getOffsetSPVUstCnf(idxC);//смещение уставок внутри супервизора
+    649          
+    650              //уставка SPV сработки 3I0
+    651              int tmp1 = 
+    652              SPV_UST(SPVSRABUST_TZNP1to5_3I0) = codecUstTZNP1(1, MNGUST_TZNP1to5_3I0, getNativUstMngUSTAVKI(idxC, MNGUST_TZNP1to5_3I0));
+    653              //уставка SPV возврата 3I0
+    654              SPV_UST(SPVVOZVUST_TZNP1to5_3I0) = tmp1 - tmp1/20;//5%
+    655          
+    656              //уставка SPV сработки 3U0
+    657              tmp1 = 
+    658              SPV_UST(SPVSRABUST_TZNP1to5_3U0) = codecUstTZNP1(1, MNGUST_TZNP1to5_3U0, getNativUstMngUSTAVKI(idxC, MNGUST_TZNP1to5_3U0));
+    659              //уставка SPV возврата 3U0
+    660              SPV_UST(SPVVOZVUST_TZNP1to5_3U0) = tmp1 - tmp1/20;//5%
+    661          
+    662            short tmpOffsetT    =
+    663              getOffsetTimersCnf(idxC);   //компонент в конфигурации
+    664          
+    665                  //таймер TZNP1to5_TIM1
+    666            setTimerPorog(tmpOffsetT+ TIMER1_TZNP1to5, 
+    667                    codecUstTZNP1(1, MNGVID_TZNP1to5, getNativUstMngUSTAVKI(idxC, MNGVID_TZNP1to5)));
+    668                  //таймер TZNP1to5_TIM2
+    669            setTimerPorog(tmpOffsetT+ TIMER2_TZNP1to5,
+    670                    codecUstTZNP1(1, MNGVID_TZNP1to5_3I0, getNativUstMngUSTAVKI(idxC, MNGVID_TZNP1to5_3I0)));
+    671                   //таймер TZNP1to5_TIM3
+    672            setTimerPorog(tmpOffsetT+ TIMER3_TZNP1to5,
+    673                    codecUstTZNP1(1, MNGVID_TZNP1to5_3U0, getNativUstMngUSTAVKI(idxC, MNGVID_TZNP1to5_3U0)));
+    674          
+    675          //Ввод ускор ТЗНП1
+    676            setTimerPorog(tmpOffsetT+ TIMER_VUSK_TZNP1to5,
+    677                    codecUstTZNP1(1, MNGVUSK_TZNP1to5, getNativUstMngUSTAVKI(idxC, MNGVUSK_TZNP1to5)));
+    678          
+    679          //Ускор ТЗНП1 ВВ
+    680            int tmp =        codecUstTZNP1(1, MNGUSK_TZNP1to5, getNativUstMngUSTAVKI(idxC, MNGUSK_TZNP1to5));
+    681            if(tmp==0) tmp=10;
+    682            setTimerPorog(tmpOffsetT+ TIMER4_TZNP1to5, tmp);
+    683          //Ускор ТЗНП1 ОУ
+    684            tmp =        codecUstTZNP1(1, MNGUSK_TZNP1to5_OU, getNativUstMngUSTAVKI(idxC, MNGUSK_TZNP1to5_OU));
+    685            if(tmp==0) tmp=10;
+    686            setTimerPorog(tmpOffsetT+ TIMER4_TZNP1to5_OU, tmp);
+    687          //Ускор ТЗНП1 ТУ
+    688            tmp =        codecUstTZNP1(1, MNGUSK_TZNP1to5_TU, getNativUstMngUSTAVKI(idxC, MNGUSK_TZNP1to5_TU));
+    689            if(tmp==0) tmp=10;
+    690            setTimerPorog(tmpOffsetT+ TIMER4_TZNP1to5_TU, tmp);
+    691          
+    692          //Ускор ТЗНП1 3I0 ВВ
+    693            tmp =        codecUstTZNP1(1, MNGUSK_TZNP1to5_3I0, getNativUstMngUSTAVKI(idxC, MNGUSK_TZNP1to5_3I0));
+    694            if(tmp==0) tmp=10;
+    695            setTimerPorog(tmpOffsetT+ TIMER4_TZNP1to5_3I0, tmp);
+    696          //Ускор ТЗНП1 3I0 ОУ
+    697            tmp =        codecUstTZNP1(1, MNGUSK_TZNP1to5_3I0_OU, getNativUstMngUSTAVKI(idxC, MNGUSK_TZNP1to5_3I0_OU));
+    698            if(tmp==0) tmp=10;
+    699            setTimerPorog(tmpOffsetT+ TIMER4_TZNP1to5_3I0_OU, tmp);
+    700          //Ускор ТЗНП1 3I0 ТУ
+    701            tmp =        codecUstTZNP1(1, MNGUSK_TZNP1to5_3I0_TU, getNativUstMngUSTAVKI(idxC, MNGUSK_TZNP1to5_3I0_TU));
+    702            if(tmp==0) tmp=10;
+    703            setTimerPorog(tmpOffsetT+ TIMER4_TZNP1to5_3I0_TU, tmp);
+    704          
+    705                   //таймер BO_TZNP1to5_TIM
+    706            setTimerPorog(tmpOffsetT+ TIMER_BO_TZNP1to5, 10);
+    707                //таймер BO_TZNP1to5_3I0_TIM
+    708            setTimerPorog(tmpOffsetT+ TIMER_BO_TZNP1to5_3I0, 10);
+    709                 //таймер BO_TZNP1to5_3U0_TIM
+    710            setTimerPorog(tmpOffsetT+ TIMER_BO_TZNP1to5_3U0, 10);
+    711          }//prepareUstTZNP1(short idxC)
+    712          
+    713          int initIOCmd_TZNP1()
+    714          {
+    715            //инициал IO команд
+    716            offsetIOCmdTZNP5 = IndexIO;//смещение для IO TZNP5
+    717            return commonInitIOCmd(IOCMD_TZNP1to5_TOTAL);
+    718          }
+    719          
+    720          int initTLCmd_TZNP1()
+    721          {
+    722            //инициал TL команд
+    723            return commonInitTLCmd(TLCMD_TZNP1to5_TOTAL);
+    724          }//initTLCmd_TZNP1()
+    725          
+    726          int initENACmd_TZNP1()
+    727          {
+    728            //инициал ENA команд
+    729            return commonInitENACmd(ENACMD_TZNP1to5_TOTAL);
+    730          }//initENACmd_TZNP1()
+    731          
+    732          void initTimersTZNP1(short idxC)
+    733          {
+    734            //запрос и инициал таймеров
+    735            commonInitTimers(TIMERS_TZNP1to5_TOTAL);
+    736          }//initTimersTZNP1()
+    737          
+    738          int codecUstTZNP1(char codec, short offset, int ust)
+    739          //codec=0-кодировать
+    740          //codec=1-раскодировать
+    741          {
+    742            //кодировать-раскодировать уставку
+    743          int grzHI = 0;//верх граница
+    744          int grzLOW= 0;//низ граница
+    745          int step  = 1;//шаг
+    746            switch(offset)
+    747            {
+    748             //уставки
+    749             case MNGUST_TZNP1to5_3I0:
+    750             case MNGUST_TZNP1to5_3U0:
+    751                 grzHI = 1000000;//верх граница
+    752                 grzLOW= 0;//низ граница
+    753                 step  = 1;//шаг
+    754             break;
+    755          
+    756            //выдержки
+    757          //   case MNGUST_BOBV_TZNP1to5://уставка БО БВ
+    758             case MNGVID_TZNP1to5:
+    759             case MNGVID_TZNP1to5_3I0:
+    760             case MNGVID_TZNP1to5_3U0:
+    761             case MNGVUSK_TZNP1to5:
+    762             case MNGUSK_TZNP1to5:
+    763             case MNGUSK_TZNP1to5_OU:
+    764             case MNGUSK_TZNP1to5_TU:
+    765             case MNGUSK_TZNP1to5_3I0:
+    766             case MNGUSK_TZNP1to5_3I0_OU:
+    767             case MNGUSK_TZNP1to5_3I0_TU:
+    768                 grzHI = 2000000;//верх граница
+    769                 grzLOW= 0;//низ граница
+    770                 step  = 1;//шаг
+    771             break;
+    772          
+    773             default:return ust;//уставка управления
+    774            }//switch
+    775          
+    776            if(codec) return ust*step;
+    777          //раскодировать уставку
+    778            if(ust<grzLOW) return ERROR_UST;//-ust;
+    779            if(ust>grzHI)  return ERROR_UST;//-ust;
+    780            return ust/step;
+    781          }//codecUstTZNP1(char *buf, short offset, int ust)
+    782          
+    783          int isDISactiv_TZNP1to5(int idxC)
+    784          {
+    785           //активность Регистратора ДИС
+    786            return 0;//нет активности
+    787          }//isDISactiv_TZNP1to5(int idxC)
+    788          
+    789          char copyTZNP1ToRepozitar(char packet)
+    790          {
+    791            memset(&rpzcomponent_obj, 0, sizeof(COMPONENT_OBJ));//стереть старое
+    792          //копировать компонент в репозитарий
+    793            rpzcomponent_obj.componentEnable = 1;//разрешение компонента
+    794            rpzcomponent_obj.kodC   = KOD_COMPONENT;         //код компонента
+    795            rpzcomponent_obj.packet = 0;    //номер пакетного компонента
+    796            rpzcomponent_obj.permanent = 0; //перманентный компонент
+    797          
+    798            strcpy(rpzcomponent_obj.nameComponent,  TZNP1_TITLE);       //имя компонента
+    799            rpzcomponent_obj.sub_menu_component =  sub_menu_comp_TZNP1;//меню компонента
+    800          
+    801            rpzcomponent_obj.cntClon     = CNT_STUPEN_TZNP;   //max к-во клонов
+    802            rpzcomponent_obj.numClon     = 1;//номер клона
+    803            rpzcomponent_obj.workToSignal = 0; //Работа на сигнал
+    804          
+    805            rpzcomponent_obj.twinControl = &(twinTZNP1[0]);//массив контроля близнецов
+    806            twinTZNP1[0].twin_different = diffTZNP2ToRepozitar;//ф-ция контроля близнецов
+    807            twinTZNP1[1].twin_different = diffTZNP3ToRepozitar;//ф-ция контроля близнецов
+    808            twinTZNP1[2].twin_different = diffTZNP4ToRepozitar;//ф-ция контроля близнецов
+    809            twinTZNP1[3].twin_different = diffTZNP5ToRepozitar;//ф-ция контроля близнецов
+    810          
+    811            rpzcomponent_obj.initUstMng     = initUstTZNP1;    //инициал уставок
+    812            rpzcomponent_obj.prepareUstSpv  = prepareUstTZNP1;//подготовка уставок
+    813            rpzcomponent_obj.initIOCmd      = initIOCmd_TZNP1;      //инициал IO команд
+    814            rpzcomponent_obj.initTLCmd      = initTLCmd_TZNP1;      //инициал TL команд
+    815            rpzcomponent_obj.initENACmd     = initENACmd_TZNP1;     //инициал ENA команд
+    816            rpzcomponent_obj.bo_bvCmd       = NULL; //настройка БО БВ команд
+    817            rpzcomponent_obj.isDISactiv     = isDISactiv_TZNP1to5; //активность Регистратора ДИС
+    818            rpzcomponent_obj.setBOBVtimer   = NULL; //инициал таймеров БО БВ
+    819          
+    820            rpzcomponent_obj.nameStatusIO = ionsTZNP1;          //имена и статус команд IO
+    821            rpzcomponent_obj.initTimers   = initTimersTZNP1;    //запрос и инициал таймеров
+    822            rpzcomponent_obj.logic        = logicTZNP1to5;         //логика компонента
+    823          
+    824            rpzcomponent_obj.codecUst = codecUstTZNP1;   //кодировать-раскодировать уставку
+    825          
+    826            return 0;//не пакетная регистрация
+    827          }//
+    828          
+    829          #endif // _HIDE_COMPONENT
+    830          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   EditUprTZNP1
+         8   -> UpravlRedactor
+       8   EditUstTZNP1
+         8   -> SystemEditUst
+       8   EditVidTZNP1
+         8   -> SystemEditUst
+      24   KadrMenuFormat_upr_compTZNP1
+        24   -> getCurrentMngUSTAVKI
+        24   -> selectorUprStrTZNP1
+        24   -> strcpy
+      72   KadrMenuFormat_ustvidTZNP
+        72   -> getUstOffsetMngUSTAVKI
+        72   -> sprintf
+        72   -> strcpy
+       8   PereinitUprListCompTZNP1
+         8   -> ListPStr
+         8   -> TxtStreamInit
+         8   -> TxtStreamSetEnd
+         8   -> ViewDiskrMenuList
+       8   PereinitUstListCompTZNP1
+         8   -> ListPStr
+         8   -> TxtStreamInit
+         8   -> TxtStreamSetEnd
+         8   -> ViewDiskrMenuList
+       8   PereinitVidListCompTZNP1
+         8   -> ListPStr
+         8   -> TxtStreamInit
+         8   -> TxtStreamSetEnd
+         8   -> ViewDiskrMenuList
+       8   UprCompTZNP1
+         8   -> PassWord
+         8   -> PrepareEditMenu
+         8   -> SelectorCRRLIGHTLINE
+       8   UprListCompTZNP1
+         8   -> InitFHOME
+         8   -> LanderUpDown
+         8   -> SelectorFHOME
+         8   -> SelectorMNGBAZA
+         8   -> SelectorSUBMENU
+         8   -> SelectorTEXTCONTROL
+       8   UstCompTZNP1
+         8   -> PassWord
+         8   -> PrepareEditMenu
+         8   -> SelectorCRRLIGHTLINE
+       8   UstListCompTZNP1
+         8   -> InitFHOME
+         8   -> LanderUpDown
+         8   -> SelectorFHOME
+         8   -> SelectorMNGBAZA
+         8   -> SelectorSUBMENU
+         8   -> SelectorTEXTCONTROL
+       8   VidCompTZNP1
+         8   -> EditVidTZNP1
+         8   -> PrepareEditMenu
+         8   -> SelectorCRRLIGHTLINE
+       8   VidListCompTZNP1
+         8   -> InitFHOME
+         8   -> LanderUpDown
+         8   -> SelectorFHOME
+         8   -> SelectorMNGBAZA
+         8   -> SelectorSUBMENU
+         8   -> SelectorTEXTCONTROL
+      20   codecUstTZNP1
+        20 __aeabi_idiv
+      24   copyTZNP1ToRepozitar
+        24   -> __aeabi_memset
+        24   -> strcpy
+       8   initENACmd_TZNP1
+         8   -> commonInitENACmd
+       8   initIOCmd_TZNP1
+         8   -> commonInitIOCmd
+       8   initTLCmd_TZNP1
+         8   -> commonInitTLCmd
+       8   initTimersTZNP1
+         8   -> commonInitTimers
+       0   initUstTZNP1
+       0   isDISactiv_TZNP1to5
+      24   prepareUstTZNP1
+        24   -> CopyWideENAToENAcmd
+        24   -> PrepareENACmd
+        24   -> codecUstTZNP1
+        24   -> getNativUstMngUSTAVKI
+        24   -> getOffsetSPVUstCnf
+        24   -> getOffsetTimersCnf
+        24   -> setTimerPorog
+        24 __aeabi_idiv
+      16   selectorUprStrTZNP1
+        16   -> NumBitCheckWord
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable19
+       4  ??DataTable19_1
+       4  ??DataTable19_10
+       4  ??DataTable19_11
+       4  ??DataTable19_12
+       4  ??DataTable19_13
+       4  ??DataTable19_14
+       4  ??DataTable19_15
+       4  ??DataTable19_16
+       4  ??DataTable19_17
+       4  ??DataTable19_18
+       4  ??DataTable19_19
+       4  ??DataTable19_2
+       4  ??DataTable19_20
+       4  ??DataTable19_21
+       4  ??DataTable19_22
+       4  ??DataTable19_23
+       4  ??DataTable19_24
+       4  ??DataTable19_25
+       4  ??DataTable19_3
+       4  ??DataTable19_4
+       4  ??DataTable19_5
+       4  ??DataTable19_6
+       4  ??DataTable19_7
+       4  ??DataTable19_8
+       4  ??DataTable19_9
+      16  ?_0
+      16  ?_1
+      16  ?_10
+      16  ?_11
+      16  ?_12
+      20  ?_13
+      16  ?_14
+      16  ?_15
+      16  ?_16
+      20  ?_17
+      20  ?_18
+      16  ?_19
+      16  ?_2
+      16  ?_20
+      20  ?_21
+      16  ?_22
+       8  ?_23
+      16  ?_3
+      12  ?_4
+      20  ?_5
+      16  ?_6
+      20  ?_7
+      16  ?_8
+      16  ?_9
+      52  EditUprTZNP1
+      16  EditUstTZNP1
+      16  EditVidTZNP1
+     160  KadrMenuFormat_upr_compTZNP1
+     188  KadrMenuFormat_ustvidTZNP
+      68  PereinitUprListCompTZNP1
+      68  PereinitUstListCompTZNP1
+      68  PereinitVidListCompTZNP1
+       8  TZNP1_TITLE
+      28  UprCompTZNP1
+      52  UprListCompTZNP1
+      28  UstCompTZNP1
+      52  UstListCompTZNP1
+      24  VidCompTZNP1
+      52  VidListCompTZNP1
+     204  codecUstTZNP1
+     356  copyTZNP1ToRepozitar
+      16  initENACmd_TZNP1
+      32  initIOCmd_TZNP1
+      16  initTLCmd_TZNP1
+      20  initTimersTZNP1
+     204  initUstTZNP1
+      88  ionsTZNP1
+      12  isDISactiv_TZNP1to5
+       4  offsetIOCmdTZNP5
+    1048  prepareUstTZNP1
+      60  selectorUprStrTZNP1
+      96  sub_menu_comp_TZNP1
+     120  sub_menu_upr_compTZNP1
+      60  sub_menu_ust_compTZNP1
+      36  sub_menu_vid_compTZNP1
+      16  twinTZNP1
+
+ 
+    20 bytes in section .bss
+   408 bytes in section .data
+   396 bytes in section .rodata
+ 2 944 bytes in section .text
+ 
+ 2 944 bytes of CODE  memory
+   396 bytes of CONST memory
+   428 bytes of DATA  memory
+
+Errors: none
+Warnings: none

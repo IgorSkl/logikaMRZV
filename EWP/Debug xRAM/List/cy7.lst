@@ -1,0 +1,830 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  14:31:32
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\ici\cy7.c
+#    Command line =  
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\ici\cy7.c"
+#        -lcN "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\List\" -o
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\" --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=ARM926EJ-S -e --fpu=VFP9-S --dlib_config "D:\Program Files\IAR
+#        Systems\Embedded Workbench 7.2\arm\INC\c\DLib_Config_Normal.h" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\" --interwork
+#        --cpu_mode arm -On --use_c++_inline
+#    List file    =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\cy7.lst
+#    Object file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\cy7.o
+#
+###############################################################################
+
+D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\ici\cy7.c
+      1          /*------------------------------------------------------------------------------
+      2          * Created (c) 2013 - Factory “KyivPrylad”
+      3          * 
+      4          * Permission to use, copy, modify, and distribute this software for any
+      5          * purpose with or without fee is hereby granted, provided that the above
+      6          * copyright notice and this permission notice appear in all copies.
+      7          * 
+      8          * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+      9          * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+     10          * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+     11          * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+     12          * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+     13          * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+     14          * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+     15          * 
+     16          *------------------------------------------------------------------------------
+     17          *
+     18          * Processor       : Lpc_3240
+     19          * File Name       : cy7.c
+     20          * Description     : Functions and Data for Low Level Communication,
+     21                              BO BR on CY7C024BV-20AXI
+     22          
+     23          *  Version        : 1.00
+     24          *
+     25          *       +----- (NEW | MODify | ADD | DELete)
+     26          *       |
+     27          *  No   |   When       Who                What
+     28          *-----+---+----------+------------------+--------------------------------------
+     29          * 000  NEW  04/03/14   Markovsky A       Creation
+     30          *----------------------------------------------------------------------------*/
+     31          
+     32          
+     33          //.#include "lpc32xx_chip.h"
+     34          //.#include "phy3250_board.h"
+     35          //.#include "lpc32xx_timer_driver.h"
+     36          //.#include "lpc32xx_intc_driver.h"
+     37          //.#include "lpc32xx_gpio_driver.h"
+     38          //.#include "lpc32xx_clkpwr_driver.h"
+     39          //.#include "lpc32xx_hsuart_driver.h"
+     40          //.#include "lpc32xx_uart.h"
+     41          
+     42          #include <intrinsics.h>
+     43          #include <string.h>
+     44          #include    "lpu.h"
+     45          
+     46          #include "cy7.h"
+     47          
+     48          #include "../LIB/CDL_AV0/lpc/include/lpc_types.h"
+     49          #include "../LIB/CDL_AV0/lpc/include/lpc_irq_fiq.h"
+     50          #include "../LIB/CDL_AV0/lpc/include/lpc_arm922t_cp15_driver.h"
+     51          //
+     52          #include "../LIB/CDL_AV0/csps/lpc32xx/include/lpc32xx_hsuart_driver.h"
+     53          #include "../LIB/CDL_AV0/csps/lpc32xx/include/lpc32xx_intc_driver.h"
+     54          #include "../LIB/CDL_AV0/csps/lpc32xx/include/lpc32xx_timer_driver.h"
+     55          #include "../LIB/CDL_AV0/csps/lpc32xx/include/lpc32xx_dma_driver.h"
+     56          #include "../LIB/CDL_AV0/csps/lpc32xx/include/lpc32xx_gpio_driver.h"
+     57          
+     58          
+     59          extern unsigned char chMemCY7;
+     60          
+     61          #pragma data_alignment=4
+     62          static UNS_8 Cy7_txbuff [SIZE_LPDU_CNL_CY7+4];//,
+     63          #pragma data_alignment=4
+     64          static UNS_8  Cy7_rxbuff [SIZE_LPDU_CNL_CY7+4];//  @ "ICI_NC_BUFFERS";
+     65          volatile  int Cy7_txsize = 0, Cy7_rxsize = 0;
+     66          
+     67           int Cy7_txfill  = 0;
+     68           int Cy7_rxget   = 0; 
+     69           int Cy7_txget   = 0;
+     70           int Cy7_rxfill  = 0;
+     71          
+     72          long ram_semafor_br_1 = 0;
+     73          long ram_semafor_br_2 = 0;
+     74          long cy7_semafor_bm_1 = 0;
+     75          long cy7_semafor_bm_2 = 0;
+     76          
+     77          
+     78          
+     79          
+     80          //  Cy7_rxfill = hs1_txget = hs1_rxfill = 
+     81          //  Cy7_rxget = Cy7_txsize = Cy7_rxsize = 0;
+     82          
+     83          
+     84          
+     85          
+     86          
+     87          
+     88          
+     89          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+     90          //---   
+     91          long outCY7(UNS_8 *dat, int bytes)  @ "Fast_function";
+     92          //..................................................................................
+     93          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+     94          //~~~ Purpose:  Send some data on the terminal interface                         ~~~
+     95          //~~~ Processing: Place data into the TX ring buffer and start UART transmission ~~~
+     96          //~~~        ~~~
+     97          //~~~  dat   : Data to send                                                      ~~~
+     98          //~~~  bytes : Number of bytes to send                                           ~~~
+     99          //``````````````````````````````````````````````````````````````````````````````````
+    100          //~~~ Notes: Will block until all bytes are sent                                  ~~
+    101          //~~~                                                                             ~~ 
+    102          //~~~                                                                             ~~
+    103          //~~~          ~~
+    104          //~~~          ~~
+    105          //,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+    106          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    107          //=================================================================================
+    108          //Body func                                                                  
+    109          //=================================================================================
+    110          
+    111          long outCY7(UNS_8 *dat, int bytes)  @ "Fast_function"
+    112          {
+    113              if (Cy7_txsize>bytes)
+    114            {
+    115          	return 0;//Stop Do Something
+    116            }
+    117          //  disable_irq();
+    118            if ((Cy7_txfill == Cy7_txget)&&(Cy7_txsize==0))
+    119            Cy7_txget = Cy7_txfill = 0;//.!!!
+    120          //  enable_irq();
+    121            
+    122            while (bytes > 0)
+    123            {
+    124              while ((bytes > 0) && (Cy7_txsize < SIZE_LPDU_CNL_CY7+1))
+    125              {
+    126                 Cy7_txbuff [Cy7_txfill] = *dat;
+    127                Cy7_txfill++;
+    128                if (Cy7_rxfill >= SIZE_LPDU_CNL_CY7+1)
+    129                {
+    130                  Cy7_txfill = 0;
+    131                }
+    132                dat++;
+    133                bytes--;
+    134                 //disable_irq();//
+    135                Cy7_txsize++;
+    136                //enable_irq();//
+    137              }
+    138          
+    139              //disable_irq();//
+    140            
+    141          	//hs1_send_cb();Activate Remover
+    142              //enable_irq();//
+    143          	CY7_send_cb();
+    144            }
+    145            return 0;
+    146          }
+    147          //---------------------------------------------------------------------------------
+    148          //extern INT_32 hs1uartdev;
+    149          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    150          //---   
+    151          long inCY7(UNS_8 *buff, int bytes)  @ "Fast_function";
+    152          //..................................................................................
+    153          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    154          //~~~ Purpose: Read some data from the terminal interface                        ~~~
+    155          //~~~ Processing: Move data from the ring buffer to the passed buffer            ~~~
+    156          //~~~        ~~~
+    157          //~~~        ~~~
+    158          //~~~        ~~~
+    159          //``````````````````````````````````````````````````````````````````````````````````
+    160          //~~~ Returns: Number of bytes actually read                                      ~~
+    161          //~~~                                                                             ~~ 
+    162          //~~~                                                                             ~~
+    163          //~~~          ~~
+    164          //~~~          ~~
+    165          //,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+    166          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    167          //=================================================================================
+    168          //Body func                                                                  
+    169          //=================================================================================
+    170          long inCY7 (UNS_8 *buff, int bytes)  @ "Fast_function"
+    171          {
+    172          
+    173          int bread = 0;
+    174          //char *pChCY7InBuf = (char*) ADR_AR_BR
+    175            while ((bytes > 0) && (Cy7_rxsize > 0))
+    176            {
+    177               *buff =Cy7_rxbuff[Cy7_rxget];
+    178              //*buff =  pChCY7InBuf[Cy7_rxget];
+    179              buff++;
+    180              Cy7_rxget++;
+    181              if (Cy7_rxget >= SIZE_LPDU_CNL_CY7)
+    182              {
+    183                Cy7_rxfill -= Cy7_rxget;
+    184          	  Cy7_rxget = 0;
+    185          	  
+    186              }
+    187              bytes--;
+    188              bread++;
+    189               //disable_irq();//
+    190              Cy7_rxsize--;
+    191               //enable_irq();//
+    192            }
+    193            if (Cy7_rxfill == Cy7_rxget)
+    194            {
+    195          	//disable_irq();//
+    196          	Cy7_rxfill = Cy7_rxget = 0;
+    197          	//enable_irq();//
+    198            }
+    199          
+    200            return bread;
+    201          	
+    202          	
+    203          }
+    204          //---------------------------------------------------------------------------------
+    205          
+    206          long LookReadMem(void)  @ "Fast_function"
+    207          {
+    208          register long i;
+    209          register long *pl;
+    210          register unsigned char *pCh;
+    211          struct 
+    212          	{
+    213          		unsigned char uchVl;//,uchRetVl;//,
+    214          		short shErrorRead,shUnEquSem;//chTotErr
+    215          		unsigned long cy7_semafor_bm_1;
+    216          		unsigned long cy7_semafor_bm_2;
+    217          		unsigned long cy7_ctrl_semafor_bm_1;
+    218          		unsigned long cy7_ctrl_semafor_bm_2;
+    219          		
+    220          } sLV;
+    221          
+    222          sLV.shErrorRead = 0; sLV.shUnEquSem = 0;
+    223          //Block of Exchange Need Rewriting Later
+    224          	pl = (long*)ADR_FULLWORD_SEMAFOR_BM_1;
+    225          	sLV.cy7_semafor_bm_1 = pl[0];
+    226          	pl = (long*)ADR_FULLWORD_SEMAFOR_BM_2;
+    227          	sLV.cy7_semafor_bm_2 = pl[0];
+    228          	if(sLV.cy7_semafor_bm_1 == sLV.cy7_semafor_bm_2 )
+    229          	{
+    230          		//Set Busy Mem Info For Another Proc For Reding Operation
+    231          		if (sLV.cy7_semafor_bm_1==0 || sLV.cy7_semafor_bm_2==0)
+    232          		goto ExitLookReadMem;
+    233          		i = sLV.cy7_semafor_bm_1 - cy7_semafor_bm_1;
+    234          		if(i<0) i *= (-1);// !!!!!!!!!!!!!!! Is Allright ???
+    235          		//Now Detect Writing Exist
+    236          		if(i>=1)
+    237          		{
+    238          			pCh = (unsigned char*)ADR_AR_BM;
+    239          			//Copy Operation
+    240          			for (i = 0; i < (SIZE_LPDU_CNL_CY7) ;i++)
+    241          			{
+    242          				//Control State
+    243          				
+    244          				//Cy7_rxbuff[i] = pCh[i];
+    245          				sLV.uchVl =  pCh[i];
+    246          				pl = (long*)ADR_FULLWORD_SEMAFOR_BM_1;
+    247          				sLV.cy7_ctrl_semafor_bm_1 = pl[0];
+    248          				pl = (long*)ADR_FULLWORD_SEMAFOR_BM_2;
+    249          				sLV.cy7_ctrl_semafor_bm_2 = pl[0];
+    250          				//Compare Self
+    251          				if(sLV.cy7_ctrl_semafor_bm_1 != sLV.cy7_ctrl_semafor_bm_2)
+    252          				{
+    253          					sLV.shUnEquSem++;
+    254          					goto ExitLookReadMem;
+    255          				}
+    256          				//Compare Previous
+    257          				if(sLV.cy7_ctrl_semafor_bm_1 != sLV.cy7_semafor_bm_1)
+    258          				{
+    259          					sLV.shUnEquSem++;
+    260          					goto ExitLookReadMem;
+    261          				}
+    262          				if( sLV.uchVl== pCh[i] && sLV.shUnEquSem ==0)
+    263          				Cy7_rxbuff[i] = sLV.uchVl;
+    264          				else 
+    265          				{
+    266          					//Have Conflict!!!
+    267          					sLV. shErrorRead++;
+    268          					goto ExitLookReadMem;
+    269          				}
+    270          			}	
+    271          			
+    272          			//On Moment End Of Read another Proc can change Data Detect It
+    273          			pl = (long*)ADR_FULLWORD_SEMAFOR_BM_1;
+    274          			sLV.cy7_ctrl_semafor_bm_1 = pl[0];
+    275          			pl = (long*)ADR_FULLWORD_SEMAFOR_BM_2;
+    276          			sLV.cy7_ctrl_semafor_bm_2 = pl[0];
+    277          	
+    278          			if( 
+    279          			(sLV.cy7_ctrl_semafor_bm_2 != sLV.cy7_ctrl_semafor_bm_1)
+    280          			||( sLV.cy7_ctrl_semafor_bm_2 != sLV.cy7_semafor_bm_1 )
+    281          			
+    282          			)
+    283          				goto ExitLookReadMem;//Data In Buf Incorrect
+    284          			else
+    285          				{
+    286          				
+    287          				chMemCY7++;
+    288          				Cy7_rxfill  = Cy7_rxsize = i;
+    289          				//Save Semaphors
+    290          				cy7_semafor_bm_1 = sLV.cy7_semafor_bm_1;
+    291          				cy7_semafor_bm_2 = sLV.cy7_semafor_bm_2;
+    292          				return (-1);
+    293          				}
+    294          		
+    295          		}
+    296          		
+    297          	}
+    298          
+    299          
+    300          ExitLookReadMem:
+    301          return (sLV. shErrorRead + sLV.shUnEquSem);//0 - Nothing change (-1) -New Data else Errors
+    302          
+    303          }
+    304          long DetectorActivity(void)  @ "Fast_function"
+    305          { 
+    306          register long i;
+    307          register long *pl;
+    308          //register unsigned char *pCh;
+    309          struct 
+    310          	{
+    311          		unsigned char uchVl;//,uchRetVl;//,
+    312          		short shErrorRead,shUnEquSem;//chTotErr
+    313          		unsigned long cy7_semafor_bm_1;
+    314          		unsigned long cy7_semafor_bm_2;
+    315          //		unsigned long cy7_ctrl_semafor_bm_1;
+    316          //		unsigned long cy7_ctrl_semafor_bm_2;
+    317          		
+    318          } sLV;
+    319          
+    320          sLV.shErrorRead = 0; sLV.shUnEquSem = 0;
+    321          	pl = (long*)ADR_FULLWORD_SEMAFOR_BM_1;
+    322          	sLV.cy7_semafor_bm_1 = pl[0];
+    323          	pl = (long*)ADR_FULLWORD_SEMAFOR_BM_2;
+    324          	sLV.cy7_semafor_bm_2 = pl[0];
+    325          	if(sLV.cy7_semafor_bm_1 == sLV.cy7_semafor_bm_2 )
+    326          	{
+    327          		//Set Busy Mem Info For Another Proc For Reding Operation
+    328          		if (sLV.cy7_semafor_bm_1==0 || sLV.cy7_semafor_bm_2==0)
+    329          		goto ExitDetectorActivity;
+    330          		i = sLV.cy7_semafor_bm_1 - cy7_semafor_bm_1;
+    331          		
+    332          		if(i)
+    333          		{
+    334          			sLV.uchVl = i;
+    335          			i = LookReadMem();
+    336          			//if ( i==(-1))
+    337          			
+    338          			if (i == 0 || i==(-1))
+    339          			return i;
+    340          			else
+    341          			{
+    342          				sLV.shUnEquSem = i;
+    343          				goto ExitDetectorActivity;
+    344          			}	
+    345          		
+    346          		}
+    347          		else
+    348          		{
+    349          			//Return 0;No Change
+    350          			goto ExitDetectorActivity;
+    351          		}
+    352          		
+    353          	
+    354          	}
+    355          	else
+    356          	{
+    357          		sLV. shErrorRead++;
+    358          		goto ExitDetectorActivity;
+    359          	}
+    360          
+    361          	
+    362          	
+    363          
+    364          
+    365          
+    366          ExitDetectorActivity:
+    367          return (sLV. shErrorRead + sLV.shUnEquSem);//0 - Nothing change (-1) -New Data else Errors
+    368          }
+    369          
+    370          //. long ram_semafor_br_1 = 0;
+    371          //. long ram_semafor_br_2 = 0;
+    372          //. long cy7_semafor_bm_1 = 0;
+    373          //. long cy7_semafor_bm_2 = 0;
+    374          
+    375          
+    376          
+    377          void CY7_send_cb(void)  @ "Fast_function"
+    378          {
+    379          INT_32 bwrite, tosend = SIZE_LPDU_CNL_CY7 - Cy7_txget;
+    380          register long i;
+    381          register long *pl;
+    382          register unsigned char *pCh;
+    383          struct 
+    384          	{
+    385          		unsigned char uchVl;//,uchRetVl;//,
+    386          		short shErrorWrite;//,
+    387          		short shCtr;
+    388          
+    389          		unsigned long cy7_semafor_br_1;
+    390          		unsigned long cy7_semafor_br_2;
+    391          		//.unsigned long cy7_ctrl_semafor_bm_1;
+    392          		//.unsigned long cy7_ctrl_semafor_bm_2;
+    393          } sLV;		
+    394          
+    395          sLV.uchVl = sLV.shCtr = sLV.shErrorWrite = 0;
+    396          
+    397          
+    398            //if (tosend >Cy7_txsize)
+    399            //{
+    400            //  //tosend = Cy7_txsize;
+    401            //}
+    402          //  if (tosend == 0)
+    403          //  {
+    404          //    phsuart->regptr->ctrl &= ~HSU_TX_INT_EN;
+    405          //  }
+    406          //  else
+    407          //  {
+    408          //    phsuart->regptr->ctrl |= HSU_TX_INT_EN;
+    409          //  }
+    410          
+    411            /* Write data */
+    412            //bwrite = hs_uart_write( hs1uartdev, &hs1_txbuff[hs1_txget], tosend);//hsuartdev
+    413          	ram_semafor_br_2++;
+    414          	if (ram_semafor_br_2 == 0) ram_semafor_br_2++;
+    415            
+    416          	//pl = (long*)ADR_FULLWORD_SEMAFOR_BR_1;
+    417          	//sLV.cy7_semafor_br_1 = pl[0];
+    418          	pl = (long*)ADR_FULLWORD_SEMAFOR_BR_2;
+    419          	pl[0] = ram_semafor_br_2;
+    420          	sLV.cy7_semafor_br_2 = pl[0];
+    421          	if(ram_semafor_br_2 != sLV.cy7_semafor_br_2 )
+    422          	{
+    423          		//Conflict Wait
+    424          		sLV.shCtr = 0x20;
+    425          		while(sLV.shCtr)
+    426          		sLV.shCtr--;
+    427          		pl[0] = ram_semafor_br_2;
+    428          		pl[0] = ram_semafor_br_2;
+    429          	}
+    430          	pCh = (unsigned char*)ADR_AR_BR;
+    431          	//Copy Operation
+    432          	for (i = 0; i < (SIZE_LPDU_CNL_CY7) ;i++)
+    433          	{
+    434          		
+    435          		pCh[i] = Cy7_txbuff[i];
+    436          		sLV.uchVl = pCh[i];
+    437          		if(sLV.uchVl != Cy7_txbuff[i])
+    438          		{
+    439          			//Conflict
+    440          			sLV.shCtr = 0x20;
+    441          			while(sLV.shCtr)
+    442          			sLV.shCtr--;
+    443          			sLV.uchVl = Cy7_txbuff[i];
+    444          			pCh[i] = sLV.uchVl;
+    445          			pCh[i] = sLV.uchVl;//For Ctrl
+    446          			
+    447          	
+    448          		}
+    449          		
+    450          	}
+    451          	ram_semafor_br_1++;
+    452          	if (ram_semafor_br_1 != ram_semafor_br_2) ram_semafor_br_1 = ram_semafor_br_2;
+    453            
+    454          	
+    455          	pl = (long*)ADR_FULLWORD_SEMAFOR_BR_1;
+    456          	pl[0] = ram_semafor_br_1;
+    457          	sLV.cy7_semafor_br_1 = pl[0];
+    458          	if(ram_semafor_br_1 != sLV.cy7_semafor_br_1 )
+    459          	{
+    460          		//Conflict Wait
+    461          		sLV.shCtr = 0x20;
+    462          		while(sLV.shCtr)
+    463          		sLV.shCtr--;
+    464          		pl[0] = ram_semafor_br_1;
+    465          		pl[0] = ram_semafor_br_1;
+    466          	}
+    467          
+    468          
+    469          	bwrite = i;
+    470            
+    471            
+    472            
+    473            Cy7_txsize = Cy7_txsize - bwrite;
+    474            Cy7_txget  = Cy7_txget + bwrite;
+    475            if (Cy7_txget >= SIZE_LPDU_CNL_CY7+1)
+    476            {
+    477              Cy7_txget = 0;
+    478            }
+    479          
+    480          
+    481          }
+    482          
+    483          //Current  Alg
+    484          //One process Set firs 2 sem
+    485          //Start Write
+    486          //Set second Sem at the End
+    487          //
+    488          //Reader first control state two semaphors
+    489          //if Equ Start Read
+    490          //At the end of Read 
+    491          //
+    492          //
+    493          
+    494          
+    495          /*
+    496          Very Desirable use 4 pins for 2 Area Memory
+    497          2 pins for 1 Area
+    498          1 - Input Control   | // For current Area
+    499          1 - Output Control  | //
+    500          
+    501          1 - Input Control   | // For current Area
+    502          1 - Output Control  | //
+    503          
+    504          
+    505          
+    506          
+    507          */
+    508          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    509          //---   
+    510          long outCY7Br(char *dat, int bytes)  @ "Fast_function";
+    511          //..................................................................................
+    512          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    513          //~~~ Purpose:  Send some data on the terminal interface                         ~~~
+    514          //~~~ Processing: Place data into the TX ring buffer and start UART transmission ~~~
+    515          //~~~        ~~~
+    516          //~~~  dat   : Data to send                                                      ~~~
+    517          //~~~  bytes : Number of bytes to send                                           ~~~
+    518          //``````````````````````````````````````````````````````````````````````````````````
+    519          //~~~ Notes: Will block until all bytes are sent                                  ~~
+    520          //~~~                                                                             ~~ 
+    521          //~~~                                                                             ~~
+    522          //~~~          ~~
+    523          //~~~          ~~
+    524          //,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+    525          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    526          //=================================================================================
+    527          //Body func                                                                  
+    528          //=================================================================================
+    529          
+    530          long outCY7Br(char *dat, int bytes)  @ "Fast_function"
+    531          {
+    532          //register long bsend;
+    533          //Insert Control Collision 
+    534          long i = 0;
+    535          i = GPIO->p0_inp_state;
+    536          	if(i&0xf)
+    537          	{
+    538          		bytes = 0;//cOLLIZION
+    539          	}
+    540          	else
+    541          	{
+    542          	
+    543          GPIO->p0_outp_clr  = 0x30;//0xC
+    544          	GPIO->p0_outp_set = 0x10;
+    545            memcpy((void*)ADR_AR_BR,(const void*)dat,bytes);
+    546           // i = DmaMemCopy((long)Cy7_txbuff,(long)dat,(long )SIZE_LPDU_CNL_CY7);//ADR_AR_BM Cy7_txbuff
+    547            
+    548            do
+    549            {
+    550            i = DMAC->dma_chan[7].config_ch;
+    551            }
+    552            while (i&DMAC_CHAN_ACTIVE);
+    553            //i = DMAC_CHAN_TRANSFER_SIZE();
+    554            //DMAC->dma_chan[7].config_ch &= 0xfff80000; 
+    555            GPIO->p0_outp_set = 0x20;
+    556            GPIO->p0_outp_clr  = 0x30; 
+    557            }
+    558            return bytes;
+    559          }
+    560          //---------------------------------------------------------------------------------
+    561          
+    562          
+    563          
+    564          
+    565          long lP0In = 0;
+    566          long DetectorActivityV1(void)  @ "Fast_function"
+    567          { 
+    568          long i = 0;
+    569          
+    570          	i = GPIO->p0_inp_state;
+    571          	if(i&0xf)
+    572          	{
+    573          		;//cOLLIZION
+    574          	}
+    575          	else
+    576          	{
+    577          		 GPIO->p0_outp_set = 0x10;
+    578          		i = GPIO->p0_inp_state;
+    579          		if(i&0xf)
+    580          		{
+    581          			GPIO->p0_outp_clr  = 0x30;//Collision
+    582          		}
+    583          		else
+    584          		{
+    585          			GPIO->p0_outp_set = 0x20;
+    586          			 memcpy((void*)&hldrM2mLpduUnit.arUch[0],(const void*)ADR_AR_BM,SIZE_LPDU_CNL_CY7 );//ReadData	
+    587          			GPIO->p0_outp_clr  = 0x30;//
+    588          			chMemCY7++;
+    589          		}
+    590          	}
+    591          	
+    592          
+    593          }
+    594          
+    595          void CY7_send_cb1(void)  @ "Fast_function"
+    596          {
+    597          
+    598          
+    599          
+    600          }
+    601          extern long timerWaitReqM2m;
+    602          void CY7_rv_cb(void)  @ "Fast_function"
+    603          {
+    604          register long i;
+    605          register void* pv;
+    606          pv  = (void*)&hldrM2mLpduTRUnit;
+    607          	
+    608          	if(chMemCY7 == 0)// !!!! Control protocol Leyer Collision
+    609          	{
+    610          	
+    611          	GPIO->p0_outp_set = 0x30;
+    612          	 memcpy((void*)&hldrM2mLpduUnit.arUch[0],(const void*)ADR_AR_BM,SIZE_LPDU_CNL_CY7 );//ReadData	
+    613          	// DmaMemCopy( (long)Cy7_rxbuff,ADR_AR_BM,SIZE_LPDU_CNL_CY7);
+    614          	i = ((TRStateLpuM2mDsc*)pv)->lCapicity;
+    615          	i+=2;
+    616          	if (i> SIZE_LPDU_CNL_CY7)
+    617          	i = SIZE_LPDU_CNL_CY7;
+    618          	//Write Data to Bm
+    619          	 memcpy((void*)ADR_AR_BR,(const void*)&(((TRStateLpuM2mDsc*)pv)->arUch[0]),i);
+    620          	i = 0;
+    621          	((TRStateLpuM2mDsc*)pv)->lCapicity = i;
+    622          	((TRStateLpuM2mDsc*)pv)->uchLpuM2mState = i;
+    623          	((TRStateLpuM2mDsc*)pv)->arUch[0] = i;((TRStateLpuM2mDsc*)pv)->arUch[1] = i;
+    624          	timerWaitReqM2m  = 2;
+    625          	GPIO->p0_outp_clr  = 0xf0;//
+    626          	chMemCY7++;
+    627          	}
+    628          
+    629          
+    630          }
+    631          
+    632          
+    633          
+    634          DMAC_REGS_T *Dma_get_base(void);
+    635          
+    636          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    637          //---   
+    638          long DmaMemCopy(long lDst, long lSrc,long lAmt )   @ "Fast_function_no_cache";
+    639          //..................................................................................
+    640          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    641          //~~~ Purpose: Read some data from the terminal interface                        ~~~
+    642          //~~~ Processing: Move data from the ring buffer to the passed buffer            ~~~
+    643          //~~~        ~~~
+    644          //~~~        ~~~
+    645          //~~~        ~~~
+    646          //``````````````````````````````````````````````````````````````````````````````````
+    647          //~~~ Returns: Number of bytes actually read                                      ~~
+    648          //~~~                                                                             ~~ 
+    649          //~~~                                                                             ~~
+    650          //~~~          ~~
+    651          //~~~          ~~
+    652          //,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+    653          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    654          //=================================================================================
+    655          //Body func                                                                  
+    656          //=================================================================================
+    657          
+    658          long DmaMemCopy(long lDst, long lSrc,long lAmt )   @ "Fast_function_no_cache"
+    659          {
+    660          //register long i;
+    661          register long IdxChnl;
+    662          register void *pv;lAmt >>=2;
+    663          //Detect Source
+    664          pv = (void*)Dma_get_base();
+    665          IdxChnl = 7;
+    666          //IdxChnl = lAmt & 0xff; lAmt >>= 8;//Exclude Idx
+    667          //Clear any pending Interrupts on the channel
+    668          ((DMAC_REGS_T*)pv)->int_tc_clear  = (1<<IdxChnl);//Must Later Selector allocate channel
+    669          ((DMAC_REGS_T*)pv)->int_err_clear = (1<<IdxChnl);
+    670          
+    671          ((DMAC_REGS_T*)pv)->dma_chan[IdxChnl].src_addr  = lSrc;
+    672          //((DMAC_CHAN_T*)pInitData)-> src_addr;
+    673          ((DMAC_REGS_T*)pv)->dma_chan[IdxChnl].dest_addr = lDst;//ADR_AR_BR;//
+    674          //((DMAC_CHAN_T*)pInitData)-> dest_addr;
+    675          //((DMAC_REGS_T*)pv)->dma_chan[IdxChnl].lli       = 0;
+    676          //((DMAC_CHAN_T*)pInitData)-> lli;
+    677          ((DMAC_REGS_T*)pv)->dma_chan[IdxChnl].control   = 
+    678          ( DMAC_CHAN_DEST_AUTOINC |//DMAC_CHAN_INT_TC_EN |
+    679                   DMAC_CHAN_SRC_AUTOINC |  //| DMAC_CHAN_DEST_AHB1 | DMAC_CHAN_SRC_AHB1 |
+    680                  DMAC_CHAN_DEST_WIDTH_32 |  //DMAC_CHAN_DEST_WIDTH_16 | //
+    681                   DMAC_CHAN_SRC_WIDTH_32 | DMAC_CHAN_DEST_BURST_4 |
+    682                   DMAC_CHAN_SRC_BURST_4 |
+    683                   DMAC_CHAN_TRANSFER_SIZE(lAmt));
+    684          //((DMAC_CHAN_T*)pInitData)-> control;
+    685          ((DMAC_REGS_T*)pv)->dma_chan[IdxChnl].config_ch = 
+    686          //((DMAC_CHAN_T*)pInitData)-> config_ch;
+    687           (DMAC_CHAN_FLOW_D_M2M | DMAC_CHAN_ENABLE// |//.. DMAC_CHAN_ITC |DMAC_CHAN_IE
+    688                );
+    689          	// lAmt = (long) 
+    690          //((DMAC_REGS_T*)pv)->dma_chan[IdxChnl].config_ch
+    691          
+    692          lAmt = ((DMAC_REGS_T*)pv)->dma_chan[IdxChnl].control;
+    693          	  
+    694          return DMAC_CHAN_TRANSFER_SIZE(lAmt) ;
+    695          }
+    696          //,,	  while(
+    697          //,,(((DMAC_REGS_T*)pv)->dma_chan[IdxChnl].dest_addr) != (((long)pDst) +  lAmt)
+    698          //,,	  );
+    699          
+    700          //---------------------------------------------------------------------------------
+    701          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      24   CY7_rv_cb
+        24   -> __aeabi_memcpy
+      24   CY7_send_cb
+       0   CY7_send_cb1
+      32   DetectorActivity
+        32   -> LookReadMem
+      24   DetectorActivityV1
+        24   -> __aeabi_memcpy
+      24   DmaMemCopy
+        24   -> Dma_get_base
+      24   LookReadMem
+       0   inCY7
+      16   outCY7
+        16   -> CY7_send_cb
+      24   outCY7Br
+        24   -> __aeabi_memcpy
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable7
+       4  ??DataTable7_1
+       4  ??DataTable7_10
+       4  ??DataTable7_11
+       4  ??DataTable7_12
+       4  ??DataTable7_13
+       4  ??DataTable7_14
+       4  ??DataTable7_15
+       4  ??DataTable7_16
+       4  ??DataTable7_17
+       4  ??DataTable7_18
+       4  ??DataTable7_2
+       4  ??DataTable7_3
+       4  ??DataTable7_4
+       4  ??DataTable7_5
+       4  ??DataTable7_6
+       4  ??DataTable7_7
+       4  ??DataTable7_8
+       4  ??DataTable7_9
+     212  CY7_rv_cb
+     596  CY7_send_cb
+       4  CY7_send_cb1
+     644  Cy7_rxbuff
+       4  Cy7_rxfill
+       4  Cy7_rxget
+       4  Cy7_rxsize
+     644  Cy7_txbuff
+       4  Cy7_txfill
+       4  Cy7_txget
+       4  Cy7_txsize
+     216  DetectorActivity
+     156  DetectorActivityV1
+     156  DmaMemCopy
+     512  LookReadMem
+       4  cy7_semafor_bm_1
+       4  cy7_semafor_bm_2
+     220  inCY7
+       4  lP0In
+     268  outCY7
+     152  outCY7Br
+       4  ram_semafor_br_1
+       4  ram_semafor_br_2
+
+ 
+ 1 332 bytes in section .bss
+ 2 412 bytes in section Fast_function
+   156 bytes in section Fast_function_no_cache
+ 
+ 2 568 bytes of CODE memory
+ 1 332 bytes of DATA memory
+
+Errors: none
+Warnings: 17

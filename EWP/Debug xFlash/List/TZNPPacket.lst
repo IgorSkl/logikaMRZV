@@ -1,0 +1,268 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        12/Oct/2015  11:05:09
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\component\TZNPPacket.c
+#    Command line =  
+#        "D:\IAR projects\HR1_0100_00_I720_new2\component\TZNPPacket.c" -D
+#        _STATIC_MEMORY_BOOT -lcN "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\List\" -o "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "C:\Program Files\IAR Systems\Embedded
+#        Workbench 7.40\arm\INC\c\DLib_Config_Normal.h" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\Igor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\component\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\" --cpu_mode arm -On
+#        --use_c++_inline
+#    List file    =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\List\TZNPPacket.lst
+#    Object file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\Obj\TZNPPacket.o
+#
+###############################################################################
+
+D:\IAR projects\HR1_0100_00_I720_new2\component\TZNPPacket.c
+      1          /*
+      2          #include <vcl.h>
+      3          #include <strstrea.h>
+      4          #include <math.h>
+      5          #include <mem.h>
+      6          #include <fstream.h>
+      7          #include <strstrea.h>
+      8          #include <iomanip.h>
+      9          #pragma hdrstop
+     10          
+     11          #include "vmenuDis.h"
+     12          */
+     13          
+     14          #include <stdio.h>
+     15          #include <string.h>
+     16          
+     17          #include "psuperVisor\supermanager.h"
+     18          
+     19          #include "bazisdef.h"
+     20          #include "component\componentdef.h"
+     21          #include "virtualMenu\systemmenudef.h"
+     22          #include "virtualMenu\ustmanagerdef.h"
+     23          
+     24          #include "virtualMenu\textstreamfnc.h"
+     25          #include "virtualMenu\systemmenufnc.h"
+     26          
+     27          #include "virtualMenu\viewMenuList.h"
+     28          #include "virtualMenu\viewmenusub.h"
+     29          #include "psuperVisor\psupervisor.h"
+     30          
+     31          //код компонентов
+     32          #define KOD_COMPONENT  TZNP_COMP1
+     33          //к-во ступеней
+     34          #define CNT_STUPEN_TZNP  5
+     35          
+     36          //массив клонов - конфигураци€
+     37          extern COMPONENT_OBJ  cnfCOMPONENT[];
+     38          extern COMPONENT_OBJ rpzcomponent_obj;//обект компонента дл€ репозитари€
+     39          extern LineMenuItem sub_menu_cnf[];
+     40          extern char deleteComp[];
+     41          
+     42          extern char TZNP1_TITLE[];
+     43          extern char TZNP2_TITLE[];
+     44          extern char TZNP3_TITLE[];
+     45          extern char TZNP4_TITLE[];
+     46          extern char TZNP5_TITLE[];
+     47          
+     48          StreamControl controlStruct_TZNP;//управл структура
+     49          
+     50          void MakePacketTZNP();
+     51          char copyTZNP1ToRepozitar(char packet);
+     52          
+     53          char  *nameStupenTZNP[CNT_STUPEN_TZNP] = {TZNP1_TITLE,
+     54                                                    TZNP2_TITLE,
+     55                                                    TZNP3_TITLE,
+     56                                                    TZNP4_TITLE,
+     57                                                    TZNP5_TITLE
+     58                                                   };//указатели на имена ступеней
+     59          
+     60          //меню
+     61          LineMenuItem sub_menu_TZNP[CNT_STUPEN_TZNP+4] =
+     62          {
+     63            { "“«Ќѕ", NULL},//title
+     64            { &controlStruct_TZNP, sub_menu_cnf},//control_item, parent
+     65            { deleteComp, (void *)&DeleteComponent1, typeMenuProg},
+     66            { NULL, NULL}
+     67          };
+     68          
+     69          char copyTZNPpacketToRepozitar(char packet)
+     70          {
+     71            rpzcomponent_obj.kodC    = KOD_COMPONENT; //код компонента
+     72            rpzcomponent_obj.cntClon = CNT_STUPEN_TZNP;//к-во клонов
+     73          
+     74            if(packet)  return 1;//пакетна€ регистраци€
+     75          //найти в конфиг такой же пакет
+     76            short dx=0;
+     77            while(cnfCOMPONENT[dx].componentEnable)
+     78            {
+     79              //номер пакетного компонента
+     80              if(cnfCOMPONENT[dx].packet==TZNP_PACKET) return 1;//пакетна€ регистраци€
+     81              dx++;
+     82            }//while
+     83          
+     84            MakeEmptyTopSub_menu(&(sub_menu_cnf[0]),
+     85                                 MAX_CNFCOMPONENT*sizeof(LineMenuItem));//добавить пустую запись в top sub_menu
+     86          //новый клон в список
+     87            sub_menu_cnf[1+SUBDATA].Line2 = sub_menu_TZNP; //меню компонента
+     88            sub_menu_cnf[1+SUBDATA].TypesWin = typeMenuSub;
+     89          
+     90            TxtStreamInit(&CONTROL_CNF, &KadrMenuFormat_sub, sub_menu_cnf);//инит control и формир кадра
+     91          
+     92          //---------TZNP5------------------------------
+     93            copyTZNP1ToRepozitar(0);//зарегистрировать в репозитарии
+     94            rpzcomponent_obj.twinControl[3].twin_different();//diff to TZNP5
+     95            rpzcomponent_obj.packet = TZNP_PACKET;    //номер пакетного компонента
+     96          
+     97            MakePacketTZNP();//создать пакет TZNP
+     98          //---------------------------------------------
+     99          
+    100          //---------TZNP4------------------------------
+    101            copyTZNP1ToRepozitar(0);//зарегистрировать в репозитарии
+    102            rpzcomponent_obj.twinControl[2].twin_different();//diff to TZNP4
+    103            rpzcomponent_obj.packet = TZNP_PACKET;    //номер пакетного компонента
+    104          
+    105            MakePacketTZNP();//создать пакет TZNP
+    106          //---------------------------------------------
+    107          
+    108          //---------TZNP3------------------------------
+    109            copyTZNP1ToRepozitar(0);//зарегистрировать в репозитарии
+    110            rpzcomponent_obj.twinControl[1].twin_different();//diff to TZNP3
+    111            rpzcomponent_obj.packet = TZNP_PACKET;    //номер пакетного компонента
+    112          
+    113            MakePacketTZNP();//создать пакет TZNP
+    114          //---------------------------------------------
+    115          
+    116          //---------TZNP2------------------------------
+    117            copyTZNP1ToRepozitar(0);//зарегистрировать в репозитарии TZNP2
+    118            rpzcomponent_obj.twinControl[0].twin_different();//diff to TZNP2
+    119            rpzcomponent_obj.packet = TZNP_PACKET;    //номер пакетного компонента
+    120            MakePacketTZNP();//создать пакет TZNP
+    121          //---------------------------------------------
+    122          
+    123          
+    124          //---------TZNP1------------------------------
+    125            copyTZNP1ToRepozitar(0);//зарегистрировать в репозитарии TZNP1
+    126          
+    127            rpzcomponent_obj.packet = -CNT_STUPEN_TZNP;    //к-во клонов в пакете
+    128            //добавить им€ пакета
+    129            strcat(rpzcomponent_obj.nameComponent, " “«Ќѕ");
+    130            short ii=0;
+    131            while(rpzcomponent_obj.nameComponent[ii]!=' ')
+    132            {
+    133              ii++;
+    134            }
+    135            rpzcomponent_obj.nameComponent[ii] = 0;
+    136          
+    137            MakePacketTZNP();//создать пакет
+    138          
+    139            //имена ступеней TZNP
+    140            sub_menu_TZNP[1+SUBDATA].Line1         = nameStupenTZNP[0];//cnfCOMPONENT[dx-2].nameComponent;
+    141            sub_menu_TZNP[1+1+SUBDATA].Line1       = nameStupenTZNP[1];//cnfCOMPONENT[dx-1].nameComponent;
+    142            sub_menu_TZNP[1+1+1+SUBDATA].Line1     = nameStupenTZNP[2];//cnfCOMPONENT[dx].nameComponent;
+    143            sub_menu_TZNP[1+1+1+1+SUBDATA].Line1   = nameStupenTZNP[3];//cnfCOMPONENT[dx].nameComponent;
+    144            sub_menu_TZNP[1+1+1+1+1+SUBDATA].Line1 = nameStupenTZNP[4];//cnfCOMPONENT[dx].nameComponent;
+    145          
+    146          //---------------------------------------------
+    147            return 1;//пакетна€ регистраци€
+    148          }//copyTZNPpacketToRepozitar()
+    149          
+    150          void MakePacketTZNP()
+    151          {
+    152          //создать пакет
+    153          //копировать в тень
+    154            memcpy((void*)getShadowBuf(), cnfCOMPONENT, sizeof(COMPONENT_OBJ)*MAX_CNFCOMPONENT);
+    155          
+    156            memcpy(&(cnfCOMPONENT[0]), &rpzcomponent_obj, sizeof(COMPONENT_OBJ));
+    157          
+    158          //копировать из тени
+    159            memcpy(&(cnfCOMPONENT[1]), (void*)getShadowBuf(), sizeof(COMPONENT_OBJ)*(MAX_CNFCOMPONENT-1));
+    160          
+    161            MakeEmptyTopSub_menu(&(sub_menu_TZNP[0]), sizeof(sub_menu_TZNP));//добавить пустую запись в top sub_menu
+    162          //новый клон в список
+    163            sub_menu_TZNP[1+SUBDATA].Line2 = (void *)&OpenMenuComponent; //меню компонента
+    164            sub_menu_TZNP[1+SUBDATA].TypesWin = typeMenuProg;
+    165          
+    166            TxtStreamInit(&controlStruct_TZNP, &KadrMenuFormat_sub, sub_menu_TZNP);//инит control и формир кадра
+    167          //инициализировать обекты в конфигурации
+    168            initCOMPONENT(INITUST_TOPCOMP);
+    169          }//MakePacket()
+    170          
+    171          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      32   MakePacketTZNP
+        32   -> MakeEmptyTopSub_menu
+        32   -> TxtStreamInit
+        32   -> __aeabi_memcpy
+        32   -> getShadowBuf
+        32   -> initCOMPONENT
+      16   copyTZNPpacketToRepozitar
+        16   -- Indirect call
+        16   -> MakeEmptyTopSub_menu
+        16   -> MakePacketTZNP
+        16   -> TxtStreamInit
+        16   -> copyTZNP1ToRepozitar
+        16   -> strcat
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable1
+       4  ??DataTable1_1
+       4  ??DataTable1_10
+       4  ??DataTable1_11
+       4  ??DataTable1_2
+       4  ??DataTable1_3
+       4  ??DataTable1_4
+       4  ??DataTable1_5
+       4  ??DataTable1_6
+       4  ??DataTable1_7
+       4  ??DataTable1_8
+       4  ??DataTable1_9
+       8  ?_0
+       8  ?_1
+     168  MakePacketTZNP
+      40  controlStruct_TZNP
+     552  copyTZNPpacketToRepozitar
+      20  nameStupenTZNP
+     108  sub_menu_TZNP
+
+ 
+  40 bytes in section .bss
+ 128 bytes in section .data
+  16 bytes in section .rodata
+ 768 bytes in section .text
+ 
+ 768 bytes of CODE  memory
+  16 bytes of CONST memory
+ 168 bytes of DATA  memory
+
+Errors: none
+Warnings: none

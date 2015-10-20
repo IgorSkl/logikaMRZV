@@ -1,0 +1,172 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  14:32:51
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\ici\hu2.c
+#    Command line =  
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\ici\hu2.c"
+#        -lcN "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\List\" -o
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\" --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=ARM926EJ-S -e --fpu=VFP9-S --dlib_config "D:\Program Files\IAR
+#        Systems\Embedded Workbench 7.2\arm\INC\c\DLib_Config_Normal.h" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\" --interwork
+#        --cpu_mode arm -On --use_c++_inline
+#    List file    =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\hu2.lst
+#    Object file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\hu2.o
+#
+###############################################################################
+
+D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\ici\hu2.c
+      1          #include "../LIB/CDL_AV0/lpc/include/lpc_types.h"
+      2          #include "../LIB/CDL_AV0/lpc/include/lpc_irq_fiq.h"
+      3          #include "../LIB/CDL_AV0/lpc/include/lpc_arm922t_cp15_driver.h"
+      4          //#include "ea3250_board.h"
+      5          #include "../LIB/CDL_AV0/csps/lpc32xx/include/lpc32xx_hsuart_driver.h"
+      6          
+      7          #include "../LIB/CDL_AV0/csps/lpc32xx/include/lpc32xx_intc_driver.h"
+      8          
+      9          #include "../LIB/CDL_AV0/csps/lpc32xx/include/lpc32xx_timer_driver.h"
+     10          long lTmrDisableHSU2 = 0;
+     11          long lDelta = 50;
+     12          long lDeltaTmrHSU2 = 500;
+     13          long lTmrHSU2Val = 0;
+     14          char chEndTransmitHSU2 = 0;
+     15          extern  INT_32 hsuartdev, hs2uartdev;
+     16          extern  UNS_8 hs2_txbuff [512], hs2_rxbuff [512];
+     17          extern int hs2_txsize, hs2_rxsize;
+     18          extern int hs2_txfill, hs2_rxget, hs2_txget, hs2_rxfill;
+     19          extern void hs2_recv_cb(void);
+     20          extern void hs2_send_cb(void);
+     21          extern void hs2_eof_cb(void);
+     22          extern void hs2_rxerr_cb(void);
+     23          
+     24          void hs2_uart_hdw_init(void)
+     25          {
+     26          //register long i;
+     27          
+     28          
+     29          HSUART_CBS_T cbs;
+     30          HSUART_CONTROL_T hsucntl[3];
+     31          //. UNS_8 ch[16];
+     32          
+     33          hsucntl[0].baud_rate = 921600;//115200;
+     34          hsucntl[0].cts_en	 = FALSE;
+     35          hsucntl[0].rts_en	 = FALSE;
+     36          disable_irq();
+     37            /* Set UART3 to not use modem control pins */
+     38            //.UARTCNTL->ctrl &= ~UART_U3_MD_CTRL_EN;
+     39          
+     40            hsuartdev = hs_uart_open((void *) UART2, (INT_32) & hsucntl[0]);
+     41            if (hsuartdev != 0)
+     42            {
+     43              /* Setup RX and TX callbacks */
+     44              cbs.rxcb    = hs2_recv_cb;//term_dat_recv_cb;
+     45              cbs.txcb    = hs2_send_cb;//term_dat_send_cb;
+     46              cbs.rxerrcb = hs2_rxerr_cb;
+     47              cbs.eofcb   = hs2_eof_cb; 
+     48              hs_uart_ioctl(hsuartdev, HSUART_INSTALL_CBS, (INT_32) &cbs);
+     49          	hs_uart_ioctl(hsuartdev, HSUART_CLEAR_FIFOS, 0);
+     50          
+     51              //..!! int_enable(IRQ_UART_IIR7);
+     52          
+     53              /* Initialize TX and RX ring buffers */
+     54              hs2_txfill = hs2_txget = hs2_rxfill = 
+     55              hs2_rxget = hs2_txsize = hs2_rxsize = 0;
+     56          	
+     57          	hs2uartdev = hsuartdev;
+     58          
+     59              /* Loop returning the data from the terminal */
+     60              //.term_dat_out(sendstr, sizeof(sendstr));
+     61              //.ch[0] = 0;
+     62              //.while (ch[0] != 27)
+     63              //.{
+     64              //.  if (term_dat_in(&ch[0], 16) > 0)
+     65              //.  {
+     66              //.    term_dat_out(&ch[0], 1);
+     67              //.  }
+     68              //.}
+     69          	int_clear(IRQ_UART_IIR2);
+     70          	//int_enable(IRQ_UART_IIR7);
+     71            }
+     72          
+     73          
+     74          
+     75          
+     76          }
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   disable_irq
+      80   hs2_uart_hdw_init
+        80   -> disable_irq
+        80   -> hs_uart_ioctl
+        80   -> hs_uart_open
+        80   -> int_clear
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable0
+       4  ??DataTable0_1
+       4  ??DataTable0_10
+       4  ??DataTable0_11
+       4  ??DataTable0_2
+       4  ??DataTable0_3
+       4  ??DataTable0_4
+       4  ??DataTable0_5
+       4  ??DataTable0_6
+       4  ??DataTable0_7
+       4  ??DataTable0_8
+       4  ??DataTable0_9
+       1  chEndTransmitHSU2
+      20  disable_irq
+     232  hs2_uart_hdw_init
+       4  lDelta
+       4  lDeltaTmrHSU2
+       4  lTmrDisableHSU2
+       4  lTmrHSU2Val
+
+ 
+   9 bytes in section .bss
+   8 bytes in section .data
+ 300 bytes in section .text
+ 
+ 300 bytes of CODE memory
+  17 bytes of DATA memory
+
+Errors: none
+Warnings: none

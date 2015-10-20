@@ -1,0 +1,1969 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  14:36:57
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\ici\lpu.c
+#    Command line =  
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\ici\lpu.c"
+#        -lcN "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\List\" -o
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\" --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=ARM926EJ-S -e --fpu=VFP9-S --dlib_config "D:\Program Files\IAR
+#        Systems\Embedded Workbench 7.2\arm\INC\c\DLib_Config_Normal.h" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\" --interwork
+#        --cpu_mode arm -On --use_c++_inline
+#    List file    =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\lpu.lst
+#    Object file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\lpu.o
+#
+###############################################################################
+
+D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\ici\lpu.c
+      1          /*------------------------------------------------------------------------------
+      2          * Copyright (c) 2013 - Factory “KyivPrylad”
+      3          * 
+      4          * Permission to use, copy, modify, and distribute this software for any
+      5          * purpose with or without fee is hereby granted, provided that the above
+      6          * copyright notice and this permission notice appear in all copies.
+      7          * 
+      8          * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+      9          * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+     10          * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+     11          * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+     12          * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+     13          * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+     14          * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+     15          * 
+     16          *------------------------------------------------------------------------------
+     17          *
+     18          * Processor       : Lpc_3240
+     19          * File Name       : lpu.c
+     20          * Description     : Functions and Data for Link Leyer
+     21                              BM BR
+     22          
+     23          *  Version        : 1.00
+     24          *
+     25          *       +----- (NEW | MODify | ADD | DELete)
+     26          *       |
+     27          *  No   |   When       Who                What
+     28          *-----+---+----------+------------------+--------------------------------------
+     29          * 000  NEW  10/09/13   Markovsky A       Creation
+     30          *----------------------------------------------------------------------------*/
+     31          #include    "ApCn.h"
+     32          #include    "CTpu.h"
+     33          #include    "lpu.h"
+     34          
+     35          #include "hu7lI.h"
+     36          #include "cy7.h"
+     37          #include <intrinsics.h>
+     38          #include <string.h>
+     39          #include "../LIB/CDL_AV0/csps/lpc32xx/include/lpc32xx_gpio_driver.h"
+     40          
+     41          //'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+     42          //~~~~~~~~~~~~~~~~    Define Layer T         ~~~~~~~~~~~~~~~~~
+     43          //,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+     44          //~~~~~~~~~~~~~~~~ 
+     45          TRStateLpuCn1Dsc holderCn1LpduUnit;
+     46          RVStateLpuCn1Dsc hldrCn1LpduUnit;
+     47           
+     48          TRStateLpuHSU7Dsc hldrHSU7LpduTRUnit;
+     49          TRStateLpuHSU1Dsc hldrHSU1LpduTRUnit;
+     50          TRStateLpuHSU2Dsc hldrHSU2LpduTRUnit;
+     51          TRStateLpuM2mDsc   hldrM2mLpduTRUnit;
+     52          TRStateLpuSpiDsc  hldrSpiLpduTRUnit;
+     53          
+     54          
+     55          RVStateLpuU3Dsc   hldrU3LpduUnit;
+     56          RVStateLpuHSU7Dsc hldrHSU7LpduUnit;
+     57          RVStateLpuHSU1Dsc hldrHSU1LpduUnit;
+     58          RVStateLpuHSU2Dsc hldrHSU2LpduUnit;
+     59          RVStateLpuM2mDsc   hldrM2mLpduUnit;
+     60          RVStateLpuSpiDsc  hldrSpiLpduUnit;
+     61          //"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+     62          unsigned long ulCtrTrLpduSpi = 0;
+     63          
+     64          
+     65          
+     66          
+     67          
+     68          
+     69          
+     70          
+     71          
+     72          
+     73          
+     74          
+     75          
+     76          
+     77          //"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+     78          
+     79          
+     80          //'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+     81          //~~~~~~~~~~~~~~~~    Define Layer T         ~~~~~~~~~~~~~~~~~
+     82          //,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+     83          //~~~~~~~~~~~~~~~~ 
+     84          //typedef struct tag_
+     85          //{
+     86          	//.union {
+     87              //.
+     88          	//.		unsigned char      arUch[8];//0  input Data  field
+     89          	//.		unsigned short     arUsh[4 ];//01 Key1 field
+     90          	//.		unsigned long int  arUl [2 ];//02 Key2 field 
+     91          	//.}UNFKeyField;//UNF-Union Field Bit - Total 64 bit
+     92              //.
+     93          	//.union {
+     94          	//.		unsigned long ulReserv;  //0x Reserv fiel for future
+     95          	//.		
+     96          	//.}UNFReserv;//
+     97          	
+     98          //}StateLpuCn2Dsc;
+     99          //"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    100          
+    101          void ProcessReceiveLpdu(void)
+    102          {
+    103          register long i,j;
+    104          register char *pDst;
+    105          register void* pv;
+    106          struct 
+    107          	{
+    108          		//unsigned char uchTR_C;
+    109          		unsigned char uChIdxByte ;
+    110          		unsigned short ushSizeLDC;
+    111          		//unsigned char *pUchRV;
+    112          		
+    113          		
+    114          	} sLV;
+    115           pv  = (void*)&holderCn1LpduUnit;
+    116          
+    117          i = hldrCn1LpduUnit.uchLpuCn1State = ((TRStateLpuCn1Dsc*)pv)->uchLpuCn1State;
+    118          if (i==0) return;
+    119          hldrCn1LpduUnit.uchCI          = ((TRStateLpuCn1Dsc*)pv)->uchCI;
+    120          hldrCn1LpduUnit.ushSizeLDC     = ((TRStateLpuCn1Dsc*)pv)->ushSizeLDC;
+    121          hldrCn1LpduUnit.lCs            = ((TRStateLpuCn1Dsc*)pv)->lCs;
+    122          
+    123          ((TRStateLpuCn1Dsc*)pv)->uchCI = 0;
+    124          ((TRStateLpuCn1Dsc*)pv)->uchLpuCn1State = 0;
+    125          j = sLV.ushSizeLDC = ((TRStateLpuCn1Dsc*)pv)->lCapicity;
+    126          ((TRStateLpuCn1Dsc*)pv)->lCapicity = 0;
+    127          
+    128          pDst = (char*)& (hldrCn1LpduUnit.arUch[0]); 
+    129          for (i = 0; i< j; i++)
+    130          pDst[i] = ((TRStateLpuCn1Dsc*)pv)->arUch[i]; 
+    131          
+    132          
+    133          }
+    134          void ProcessTransmitLpdu(void)
+    135          {
+    136          register long i,j;
+    137          register char *pSrc;//,*pDst;
+    138          register void* pv;
+    139           pv  = (void*)&holderCn1LpduUnit;
+    140            pSrc = (char*)&hldrTpCnState;
+    141          j =  ((StateTpLpuDsc*)pSrc)->uchTpState_CNL_1;//
+    142           if (j==0) return;
+    143          ((TRStateLpuCn1Dsc*)pv)->uchCI = HDR_MODE_CNL_1;
+    144          ((TRStateLpuCn1Dsc*)pv)->uchLpuCn1State = 1;
+    145          
+    146          
+    147          i = ((StateTpLpuDsc*)pSrc)->PayloadLPDU_CNL_1
+    148           - ((StateTpLpuDsc*)pSrc)->lCapicity_CNL_1;
+    149           ((TRStateLpuCn1Dsc*)pv)->lCapicity = i;
+    150           
+    151          ((StateTpLpuDsc*)pSrc)->lCapicity_CNL_1 =((StateTpLpuDsc*)pSrc)->PayloadLPDU_CNL_1;
+    152          
+    153          }
+    154          
+    155          long Eval_CS(char* pCh, long iLength )  @ "Fast_function"
+    156          {
+    157          //register long lCs;
+    158          register long i,n;
+    159          n = 1;
+    160          for (i = 0; i < iLength; i++)
+    161          {
+    162          	n +=  pCh[i];
+    163          }
+    164          n &= 0xff;
+    165          
+    166          return n;
+    167          }
+    168          
+    169          void ProcessReceiveLpdu_(void)
+    170          {
+    171          register long i,j;
+    172          register char *pDst;
+    173          register void* pv;
+    174          struct 
+    175          	{
+    176          		//unsigned char uchTR_C;
+    177          		unsigned char uChIdxByte ;
+    178          		unsigned short ushSizeLDC;
+    179          		//unsigned char *pUchRV;
+    180          		
+    181          		
+    182          	} sLV;
+    183           pv  = (void*)&holderCn1LpduUnit;
+    184          
+    185          i = hldrCn1LpduUnit.uchLpuCn1State = ((TRStateLpuCn1Dsc*)pv)->uchLpuCn1State;
+    186          if (i==0) return;
+    187          hldrCn1LpduUnit.uchCI          = ((TRStateLpuCn1Dsc*)pv)->uchCI;
+    188          hldrCn1LpduUnit.ushSizeLDC     = ((TRStateLpuCn1Dsc*)pv)->ushSizeLDC;
+    189          hldrCn1LpduUnit.lCs            = ((TRStateLpuCn1Dsc*)pv)->lCs;
+    190          
+    191          ((TRStateLpuCn1Dsc*)pv)->uchCI = 0;
+    192          ((TRStateLpuCn1Dsc*)pv)->uchLpuCn1State = 0;
+    193          j = sLV.ushSizeLDC = ((TRStateLpuCn1Dsc*)pv)->lCapicity;
+    194          ((TRStateLpuCn1Dsc*)pv)->lCapicity = 0;
+    195          
+    196          pDst = (char*)& (hldrCn1LpduUnit.arUch[0]); 
+    197          for (i = 0; i< j; i++)
+    198          pDst[i] = ((TRStateLpuCn1Dsc*)pv)->arUch[i]; 
+    199          
+    200          
+    201          }
+    202          
+    203          
+    204          void ProcessReceiveLpduU3(void)
+    205          {
+    206          register long i,j;
+    207          //register char *pDst;
+    208          register void* pv;
+    209          struct 
+    210          	{
+    211          		//unsigned char uchTR_C;
+    212          		unsigned char uChIdxByte ;
+    213          		unsigned short ushSizeLDC;
+    214          		//unsigned char *pUchRV;
+    215          		
+    216          		
+    217          	} sLV;
+    218           pv  = (void*)&hldrU3LpduUnit;
+    219          
+    220          //.i = hldrCn1LpduUnit.uchLpuCn1State = ((TRStateLpuCn1Dsc*)pv)->uchLpuCn1State;
+    221          i= ((RVStateLpuU3Dsc*)pv)->uchLpuU3State;//hldrU3LpduUnit. uchLpuU3State
+    222          if (i==0) return;
+    223          //.hldrCn1LpduUnit.uchCI          = ((TRStateLpuCn1Dsc*)pv)->uchCI;
+    224          //.hldrCn1LpduUnit.ushSizeLDC     = ((TRStateLpuCn1Dsc*)pv)->ushSizeLDC;
+    225          //.hldrCn1LpduUnit.lCs            = ((TRStateLpuCn1Dsc*)pv)->lCs;
+    226          //long inU3(UNS_8 *buff, int bytes); (unsigned char*)
+    227          //---j = (long)(((RVStateLpuU3Dsc*)pv)->arUch[0]);
+    228          j = inU3(&(((RVStateLpuU3Dsc*)pv)->arUch[0]),SIZE_LPDU_CNL_U3);
+    229          sLV.ushSizeLDC = j;
+    230          //Clear LL Message income frome hardware 
+    231          if ((j ==0) || (j!=SIZE_LPDU_CNL_U3) ) goto f_exit;
+    232          
+    233          
+    234          //Check CS
+    235          i = Eval_CS((char*)&(((RVStateLpuU3Dsc*)pv)->arUch[0]),j);
+    236          if (i!=(((RVStateLpuU3Dsc*)pv)->arUch[j])) goto f_exit;
+    237          //Check CFI 
+    238          if((((RVStateLpuU3Dsc*)pv)->arUch[0])!=(HDR_MODE_CNL_1)) goto f_exit;
+    239          
+    240          //long inU7(UNS_8 *buff, int bytes);
+    241          //-dbg  ((TRStateLpuCn1Dsc*)pv)->uchCI = 0;
+    242          //-dbg  ((TRStateLpuCn1Dsc*)pv)->uchLpuCn1State = 0;
+    243          //-dbg  j = sLV.ushSizeLDC = ((TRStateLpuCn1Dsc*)pv)->lCapicity;
+    244          //-dbg  ((TRStateLpuCn1Dsc*)pv)->lCapicity = 0;
+    245          
+    246          
+    247          //-dbg pDst = (char*)& (hldrCn1LpduUnit.arUch[0]); 
+    248          //-dbg for (i = 0; i< j; i++)
+    249          //-dbg pDst[i] = ((TRStateLpuCn1Dsc*)pv)->arUch[i]; 
+    250          
+    251          //Activate Next Leyer.
+    252          
+    253          f_exit:
+    254          return;
+    255          }
+    256          
+    257          extern long hs_uart_recover(long);
+    258          extern int hs7_rxsize;
+    259          extern long hs7uartdev;
+    260          void ProcessReceiveLpduHSU7(void)
+    261          {
+    262          register long i,j;
+    263          register char *pDst;
+    264          register void* pv;
+    265          struct 
+    266          	{
+    267          		//unsigned char uchTR_C;
+    268          		char PacketGood,PacketBad;
+    269          		
+    270          		unsigned char uChIdxByte ;
+    271          		unsigned short ushSizeLDC;
+    272          		//unsigned char *pUchRV;
+    273          		
+    274          		
+    275          	} sLV;
+    276          	sLV.PacketGood = 0;sLV.PacketBad = 0;
+    277          	sLV.uChIdxByte = sLV.ushSizeLDC = 0;
+    278           pv  = (void*)&hldrHSU7LpduUnit;//holderCn1LpduUnit;
+    279          pDst = (char*)&hldrHSU7LpduUnit.arUch[0];//( ((RVStateLpuHSU7Dsc *)pv)->arUch[0]  );
+    280          sLV.ushSizeLDC = j = hs7_rxsize; 
+    281          
+    282          //i = hs_uart_recover(hs7uartdev);
+    283          
+    284          if (j<SIZE_LPDU_CNL_HSU7) 
+    285          {
+    286          	sLV.uChIdxByte = inU7((unsigned char*)pDst,j);
+    287          }
+    288          else 
+    289          	{
+    290          		i = sLV.ushSizeLDC;
+    291          		
+    292          		do
+    293          		{
+    294          			i = hs7_rxsize;
+    295          			if (i > SIZE_LPDU_CNL_HSU7)
+    296          			{
+    297          				i-= SIZE_LPDU_CNL_HSU7;
+    298          				j = SIZE_LPDU_CNL_HSU7;
+    299          			}	
+    300          			else 
+    301          				j = i;
+    302          			sLV.uChIdxByte = inU7((unsigned char*)pDst,j);	
+    303          		}
+    304          		while(hs7_rxsize);
+    305          	
+    306          	}
+    307          //1<<24;
+    308          
+    309          
+    310           
+    311          ((RVStateLpuHSU7Dsc *)pv)->uchCI = i= pDst[0];
+    312          if (i != HDR_MODE_CNL_1)
+    313          	sLV.PacketBad++;
+    314          else
+    315          	sLV.PacketGood++;
+    316          
+    317          i = pDst[1];
+    318          
+    319          if (i>SIZE_LPDU_CNL_HSU7)
+    320          sLV.PacketBad++;
+    321          else
+    322          sLV.PacketGood++;
+    323          
+    324          sLV.ushSizeLDC = ((RVStateLpuHSU7Dsc *)pv)->ushSizeLDC = i;
+    325           ((RVStateLpuHSU7Dsc *)pv)->ushSizeLDC = i;
+    326          j = Eval_CS(pDst,i+(SIZE_LPCI_FLD_CNL_HSU7)); 
+    327          if (j!=pDst[i+(SIZE_LPCI_FLD_CNL_HSU7)])
+    328          {
+    329          sLV.PacketBad++;
+    330          }
+    331          else
+    332          sLV.PacketGood++;
+    333          
+    334          ((RVStateLpuHSU7Dsc *)pv)->lCs = j; 
+    335          
+    336          if (sLV.PacketBad)
+    337          {
+    338          	((RVStateLpuHSU7Dsc *)pv)->lCapicity   = 0;
+    339          	((RVStateLpuHSU7Dsc *)pv)->uchCI       = 0;
+    340          	((RVStateLpuHSU7Dsc *)pv)->ushSizeLDC  = 0;
+    341          	((RVStateLpuHSU7Dsc *)pv)->lCs         = 0;
+    342          	
+    343          	((RVStateLpuHSU7Dsc *)pv)->uchLpuHSU7State = 0;
+    344          	return;
+    345          }
+    346          if (sLV.PacketGood)
+    347          {
+    348          	((RVStateLpuHSU7Dsc *)pv)->lCapicity   = 0;
+    349          	((RVStateLpuHSU7Dsc *)pv)->uchCI       = 0;
+    350          	((RVStateLpuHSU7Dsc *)pv)->ushSizeLDC  = 0;
+    351          	((RVStateLpuHSU7Dsc *)pv)->lCs         = 0;	
+    352          ;//Ativate Next Leyer
+    353          	((RVStateLpuHSU7Dsc *)pv)->uchLpuHSU7State = 1;
+    354          //...Now Use as Channel Identification	
+    355          	//((RVStateLpuHSU7Dsc *)pv)->uchCI       = ID_CNL_HSU7;
+    356          
+    357          }
+    358          
+    359          
+    360          }
+    361          
+    362          void ProcessTransmitLpduHSU7(void)
+    363          {
+    364          register long i,j;
+    365          register char *pSrc,*pDst;
+    366          register void* pv;
+    367          struct 
+    368          	{
+    369          		//unsigned char uchTR_C;
+    370          		unsigned short uShIdxByte ;
+    371          		//unsigned short ushSizeLDC;
+    372          		//unsigned char *pUchRV;
+    373          	} sLV;
+    374          static char arCh[20] = {
+    375          0x45,0x45,0x45,0x45,0x45,0x45,0x45,0x45,0x45,0x45,//0x45,0x45,0x45,0x45,
+    376          0x45,0x45,0x45,0x45,0x45,0x45,0x45,0x45,0x45,0x45 //0x45,0x45,0x45,0x45,
+    377          
+    378          };
+    379           pv  = (void*)&hldrHSU7LpduTRUnit;
+    380            pSrc = (char*)&hldrTpCnState;
+    381          
+    382          
+    383          //Start for Activating of Lpdu Units 
+    384          j =  ((StateTpCnDsc*)pSrc)->uchTpState_CNL_HSU7;//
+    385           if (j==0) return;
+    386           
+    387           
+    388          ((TRStateLpuHSU7Dsc*)pv)->uchCI = HDR_MODE_CNL_1;//HDR_MODE_CNL_1;
+    389          ((TRStateLpuHSU7Dsc*)pv)->uchLpuHSU7State = 1;
+    390          
+    391          
+    392          i = ((StateTpCnDsc*)pSrc)->PayloadLPDU_HSU7
+    393          +(SIZE_LDC_FLD_CNL_HSU7)+(SIZE_TOTAL_LDC);
+    394          // - ((StateTpCnDsc*)pSrc)->lCapicity_CNL_HSU7;
+    395           //.i = 20;
+    396           ((TRStateLpuHSU7Dsc*)pv)->lCapicity = i;//Real Size Pacet
+    397           
+    398          //.((StateTpCnDsc*)pSrc)->lCapicity_CNL_HSU7 =((StateTpCnDsc*)pSrc)->PayloadLPDU_HSU7;
+    399          
+    400          //Create Pacet
+    401          ((TRStateLpuHSU7Dsc*)pv)->uchCI = (HDR_MODE_CNL_1);
+    402          ((TRStateLpuHSU7Dsc*)pv)->ushSizeLDC = ((TRStateLpuHSU7Dsc*)pv)->lCapicity;
+    403          
+    404          j = 0;
+    405          (((TRStateLpuHSU7Dsc*)pv)->arUch[0]) = ((TRStateLpuHSU7Dsc*)pv)->uchCI;
+    406          i = ((TRStateLpuHSU7Dsc*)pv)->uchCI;
+    407          i &= 0xf;
+    408          i>>=1;
+    409          switch (i)
+    410          	{
+    411          	case 0:
+    412          		j = 0;
+    413          		break;
+    414          	case 1:
+    415          		
+    416          		(((TRStateLpuHSU7Dsc*)pv)->arUch[j+1]) = ((TRStateLpuHSU7Dsc*)pv)->ushSizeLDC;
+    417          		j = 1;
+    418          		break;
+    419          	case 2:
+    420          	    pDst = (char*)&(((TRStateLpuHSU7Dsc*)pv)->arUch[j+1]);
+    421          		*((short*)pDst) = ((TRStateLpuHSU7Dsc*)pv)->ushSizeLDC;
+    422          		j = 2;
+    423          		break;
+    424          	
+    425          	default:
+    426          	j=1;
+    427          	} 
+    428          
+    429          
+    430          sLV.uShIdxByte = j;
+    431          ///////////////////PUT TOT LDC FIELD////////////////////
+    432          pDst = (char*)&(((TRStateLpuHSU7Dsc*)pv)->arUch[j+1]);
+    433          *(pDst) = ((StateTpCnDsc*)pSrc)->chTotalLDC_CNL_HSU7;
+    434          ////////////////////////////////////////////////////////
+    435          pSrc = (char*)&arCh[0];//Tempor Data !!!
+    436          pDst = (char*) &(((TRStateLpuHSU7Dsc*)pv)->arUch[j+1]); 
+    437          
+    438          //sLV.uShIdxByte += SIZE_TOTAL_LDC;
+    439          
+    440          j = ((TRStateLpuHSU7Dsc*)pv)->ushSizeLDC;
+    441          sLV.uShIdxByte += j; 
+    442          //for (i = 0; i< j; i++)
+    443          //pDst[i]  = pSrc[i];
+    444          
+    445          
+    446          //Check CS
+    447          i = Eval_CS((char*)&(((RVStateLpuU3Dsc*)pv)->arUch[0]),sLV.uShIdxByte);
+    448          ((TRStateLpuHSU7Dsc*)pv)-> lCs =  i;
+    449          j = sLV.uShIdxByte;
+    450          //Move Data to transmit
+    451          (((TRStateLpuHSU7Dsc*)pv)->arUch[j]) = i;
+    452          j = outU7((unsigned char *)&(((TRStateLpuHSU7Dsc*)pv)->arUch[0]),(int)j+2);
+    453          
+    454          Rst_LpduHSU7_TpCnState();
+    455          }
+    456          void ProcessTransmitLpduHSU2(void)
+    457          {
+    458          register long i,j;
+    459          register char *pSrc,*pDst;
+    460          register void* pv;
+    461          struct 
+    462          	{
+    463          		//unsigned char uchTR_C;
+    464          		unsigned short uShIdxByte ;
+    465          		unsigned short ushSizeLDC;
+    466          		//unsigned char *pUchRV;
+    467          	} sLV;
+    468          static char arCh[20] = {
+    469          0x45,0x45,0x45,0x45,0x45,0x45,0x45,0x45,0x45,0x45,//0x45,0x45,0x45,0x45,
+    470          0x45,0x45,0x45,0x45,0x45,0x45,0x45,0x45,0x45,0x45 //0x45,0x45,0x45,0x45,
+    471          
+    472          };
+    473           pv  = (void*)&hldrHSU2LpduTRUnit;
+    474            pSrc = (char*)&hldrTpCnState;
+    475          
+    476          j =   ((TRStateLpuHSU2Dsc*)pv)->uchLpuHSU2State ;
+    477          if (j!=0) return;
+    478          //Start for Activating of Lpdu Units 
+    479          j =  ((StateTpCnDsc*)pSrc)->uchTpState_CNL_HSU2;//
+    480           if (j==0) return;
+    481           
+    482           
+    483          ((TRStateLpuHSU2Dsc*)pv)->uchCI = HDR_MODE_CNL_1;//HDR_MODE_CNL_1;
+    484          ((TRStateLpuHSU2Dsc*)pv)->uchLpuHSU2State = 1;
+    485          
+    486          
+    487          i = ((StateTpCnDsc*)pSrc)->PayloadLPDU_HSU2
+    488          +(SIZE_LDC_FLD_CNL_HSU2)+(SIZE_TOTAL_LDC);
+    489          // - ((StateTpCnDsc*)pSrc)->lCapicity_CNL_HSU7;
+    490           sLV.ushSizeLDC = i;
+    491           ((TRStateLpuHSU2Dsc*)pv)->lCapicity = i+(SIZE_LPCI_FLD_CNL_HSU2);//Real Size Pacet
+    492           
+    493          //.((StateTpCnDsc*)pSrc)->lCapicity_CNL_HSU7 =((StateTpCnDsc*)pSrc)->PayloadLPDU_HSU7;
+    494          
+    495          //Create Pacet
+    496          ((TRStateLpuHSU2Dsc*)pv)->uchCI = (HDR_MODE_CNL_1);
+    497          ((TRStateLpuHSU2Dsc*)pv)->ushSizeLDC = i;//((TRStateLpuHSU2Dsc*)pv)->lCapicity;
+    498          
+    499          j = 0;
+    500          (((TRStateLpuHSU2Dsc*)pv)->arUch[0]) = ((TRStateLpuHSU2Dsc*)pv)->uchCI;
+    501          i = ((TRStateLpuHSU2Dsc*)pv)->uchCI;
+    502          i &= 0xf;
+    503          i>>=1;
+    504          switch (i)
+    505          	{
+    506          	case 0:
+    507          		j = 0;
+    508          		break;
+    509          	case 1:
+    510          		
+    511          		(((TRStateLpuHSU2Dsc*)pv)->arUch[j+1]) = ((TRStateLpuHSU2Dsc*)pv)->ushSizeLDC;
+    512          		j = 1;
+    513          		break;
+    514          	case 2:
+    515          	    pDst = (char*)&(((TRStateLpuHSU2Dsc*)pv)->arUch[j+1]);
+    516          		*((short*)pDst) = ((TRStateLpuHSU2Dsc*)pv)->ushSizeLDC;
+    517          		j = 2;
+    518          		break;
+    519          	
+    520          	default:
+    521          	j=1;
+    522          	} 
+    523          
+    524          
+    525          sLV.uShIdxByte = j;
+    526          ///////////////////PUT TOT LDC FIELD////////////////////
+    527          pDst = (char*)&(((TRStateLpuHSU2Dsc*)pv)->arUch[j+1]);
+    528          *(pDst) = ((StateTpCnDsc*)pSrc)->chTotalLDC_CNL_HSU2;
+    529          ////////////////////////////////////////////////////////
+    530          pSrc = (char*)&arCh[0];//Tempor Data !!!
+    531          pDst = (char*) &(((TRStateLpuHSU2Dsc*)pv)->arUch[j+1]);
+    532          
+    533          //sLV.uShIdxByte += SIZE FIELD _TOTAL_LDC; .iNCLUDED IN ushSizeLDC
+    534          
+    535          j = ((TRStateLpuHSU2Dsc*)pv)->ushSizeLDC;
+    536          sLV.uShIdxByte += sLV.ushSizeLDC;//j; 
+    537          //for (i = 0; i< j; i++)
+    538          //pDst[i]  = pSrc[i];
+    539          
+    540          
+    541          //Check CS
+    542          i = Eval_CS((char*)&(((RVStateLpuU3Dsc*)pv)->arUch[0]),sLV.uShIdxByte);
+    543          ((TRStateLpuHSU2Dsc*)pv)-> lCs =  i;
+    544          j = sLV.uShIdxByte;
+    545          //Move Data to transmit
+    546          (((TRStateLpuHSU2Dsc*)pv)->arUch[j]) = i;
+    547          j = outU2((unsigned char *)&(((TRStateLpuHSU2Dsc*)pv)->arUch[0]),(int)j+(SIZE_CS_FLD_CNL_HSU2));
+    548          
+    549          Rst_LpduHSU2_TpCnState();
+    550          }
+    551          void ProcessTransmitLpduM2m(void)  @ "Fast_function"
+    552          {
+    553          register long i,j;
+    554          register char *pSrc,*pDst;
+    555          register void* pv;
+    556          struct 
+    557          	{
+    558          		//unsigned char uchTR_C;
+    559          		unsigned short uShIdxByte ;
+    560          		unsigned short ushSizeLDC;
+    561          		//unsigned char *pUchRV;
+    562          	} sLV;
+    563          union 
+    564          	{
+    565          		unsigned char   uchAr [4];
+    566          		unsigned short  ushAr [2];
+    567                  unsigned long   ulVal;
+    568          	}unnV1;
+    569           pv  = (void*)&hldrM2mLpduTRUnit;
+    570            pSrc = (char*)&hldrTpCnState;
+    571          
+    572          j =   ((TRStateLpuM2mDsc*)pv)->uchLpuM2mState ;
+    573          if (j!=0) return;
+    574          //Start for Activating of Lpdu Units 
+    575          j =  ((StateTpCnDsc*)pSrc)->uchTpState_CNL_M2m;//
+    576           if (j==0) return;
+    577           
+    578           
+    579          ((TRStateLpuM2mDsc*)pv)->uchCI = HDR_MODE_CNL_M2M;//HDR_MODE_CNL_1;
+    580          ((TRStateLpuM2mDsc*)pv)->uchLpuM2mState = 1;
+    581          
+    582          
+    583          i = ((StateTpCnDsc*)pSrc)->PayloadLPDU_M2m
+    584          +(SIZE_LDC_FLD_CNL_M2M)+(SIZE_TOTAL_LDC);
+    585          // - ((StateTpCnDsc*)pSrc)->lCapicity_CNL_HSU7;
+    586           sLV.ushSizeLDC = i;
+    587           ((TRStateLpuM2mDsc*)pv)->lCapicity = i+(SIZE_LPCI_FLD_CNL_M2M);//Real Size Pacet
+    588           
+    589          //.((StateTpCnDsc*)pSrc)->lCapicity_CNL_HSU7 =((StateTpCnDsc*)pSrc)->PayloadLPDU_HSU7;
+    590          
+    591          //Create Pacet
+    592          ((TRStateLpuM2mDsc*)pv)->uchCI = (HDR_MODE_CNL_M2M);
+    593          ((TRStateLpuM2mDsc*)pv)->ushSizeLDC = i;//((TRStateLpuM2mDsc*)pv)->lCapicity;
+    594          
+    595          j = 0;
+    596          (((TRStateLpuM2mDsc*)pv)->arUch[0]) = ((TRStateLpuM2mDsc*)pv)->uchCI;
+    597          i = ((TRStateLpuM2mDsc*)pv)->uchCI;
+    598          i &= 0xf;
+    599          i>>=1;
+    600          switch (i)
+    601          	{
+    602          	case 0:
+    603          		j = 0;
+    604          		break;
+    605          	case 1:
+    606          		
+    607          		(((TRStateLpuM2mDsc*)pv)->arUch[j+1]) = ((TRStateLpuM2mDsc*)pv)->ushSizeLDC;
+    608          		j = 1;
+    609          		break;
+    610          	case 2:
+    611          	    pDst = (char*)&(((TRStateLpuM2mDsc*)pv)->arUch[j+1]);
+    612          		unnV1.ushAr[0] = ((TRStateLpuM2mDsc*)pv)->ushSizeLDC;
+    613          		//*((short*)pDst) = 
+    614          		pDst[0] = unnV1.uchAr[0];
+    615          		pDst[1] = unnV1.uchAr[1];
+    616          		j = 2;
+    617          		break;
+    618          	
+    619          	default:
+    620          	j=1;
+    621          	} 
+    622          
+    623          
+    624          sLV.uShIdxByte = j;
+    625          ///////////////////PUT TOT LDC FIELD////////////////////
+    626          pDst = (char*)&(((TRStateLpuM2mDsc*)pv)->arUch[j+1]);
+    627          *(pDst) = ((StateTpCnDsc*)pSrc)->chTotalLDC_CNL_M2m;
+    628          ////////////////////////////////////////////////////////
+    629          //....pSrc = (char*)&arCh[0];//Tempor Data !!!
+    630          pDst = (char*) &(((TRStateLpuM2mDsc*)pv)->arUch[j+1]);
+    631          
+    632          //sLV.uShIdxByte += SIZE FIELD _TOTAL_LDC; .iNCLUDED IN ushSizeLDC
+    633          
+    634          j = ((TRStateLpuM2mDsc*)pv)->ushSizeLDC;
+    635          sLV.uShIdxByte += sLV.ushSizeLDC;//j; 
+    636          //for (i = 0; i< j; i++)
+    637          //pDst[i]  = pSrc[i];
+    638          
+    639          
+    640          //Check CS
+    641          i = Eval_CS((char*)&(((RVStateLpuU3Dsc*)pv)->arUch[0]),((TRStateLpuM2mDsc*)pv)->lCapicity);
+    642          ((TRStateLpuM2mDsc*)pv)-> lCs =  i;
+    643          j = sLV.uShIdxByte;
+    644          j = ((TRStateLpuM2mDsc*)pv)->lCapicity;
+    645          //Move Data to transmit
+    646          (((TRStateLpuM2mDsc*)pv)->arUch[j]) = i;
+    647          //j = outCY7((unsigned char *)&(((TRStateLpuM2mDsc*)pv)->arUch[0]),(int)j+(SIZE_CS_FLD_CNL_M2M));
+    648          //hldrM2mLpduTRUnit.uchLpuM2mState = 0;
+    649          Rst_LpduM2m_TpCnState();
+    650          }
+    651          
+    652          static char chMakeSpiExch = 0; long lTmrEnblTrSpi = 0; long lCtrSuccExch = 0;
+    653          void Rst_LpduSpi_TpCnState(void)
+    654          {
+    655          //.hldrHSU7LpduTRUnit <- Insert Setup In Pararm
+    656          //.hldrTpCnState      <- Insert Setup In Pararm
+    657          //---Update this var after the end of transmition+ timeOut 
+    658          hldrTpCnState.uchTpState_CNL_Spi  = 0;
+    659          //----------------------------------------------------------
+    660          hldrTpCnState.PayloadLPDU_Spi     = //SIZE_LPDU_CNL_HSU7
+    661          0;//(SIZE_LPCI_FLD_CNL_HSU7+SIZE_LDC_FLD_CNL_HSU7);
+    662          hldrTpCnState.lCapicity_CNL_Spi   = SIZE_LPDU_CNL_SPI
+    663          -(SIZE_LPCI_FLD_CNL_SPI+SIZE_LDC_FLD_CNL_SPI+SIZE_CS_FLD_CNL_SPI+SIZE_TOTAL_LDC +SIZE_URGENT_DATA_BR_TO_BS);
+    664          hldrTpCnState.pUchLpuTR_CNL_Spi   = (unsigned char*)
+    665          &hldrSpiLpduTRUnit.arUch[SIZE_LPCI_FLD_CNL_SPI+SIZE_LDC_FLD_CNL_SPI+SIZE_TOTAL_LDC];//DemoStr;
+    666          hldrTpCnState.chTotalLDC_CNL_Spi = 0;
+    667          
+    668          //---Update this var after the end of transmition+ timeOut 
+    669          //hldrHSU2LpduTRUnit.uchLpuHSU2State = 0;
+    670          //-----------------------------------------------------------
+    671          //	unsigned char      arUch[SIZE_LPDU_CNL_HSU7];//0   Data  field
+    672          
+    673          	
+    674          hldrSpiLpduTRUnit.lCapicity  = 0;//
+    675          hldrSpiLpduTRUnit.uchCI      = 0;
+    676          hldrSpiLpduTRUnit.ushSizeLDC = 0;
+    677          hldrSpiLpduTRUnit.lCs        = 0;
+    678          
+    679          
+    680          
+    681          
+    682          }
+    683          
+    684          extern  long lSsp0HdwState ;
+    685          
+    686          void ProcessTransmitLpduSpi(void)  @ "Fast_function"
+    687          {
+    688          register long i,j;
+    689          register char *pSrc,*pDst;
+    690          register void* pv;
+    691          struct 
+    692          	{
+    693          		//unsigned char uchTR_C;
+    694          		unsigned short uShIdxByte ;
+    695          		unsigned short ushSizeLDC;
+    696          		//unsigned char *pUchRV;
+    697          	} sLV;
+    698          union 
+    699          	{
+    700          		unsigned char   uchAr [4];
+    701          		unsigned short  ushAr [2];
+    702                  unsigned long   ulVal;
+    703          	}unnV1;
+    704           pv  = (void*)&hldrSpiLpduTRUnit;
+    705            pSrc = (char*)&hldrTpCnState;
+    706          
+    707          //Control state Connect   
+    708          j = lSsp0HdwState & 4;  //
+    709          if (j == 0) 
+    710          return;
+    711            
+    712          j =   ((TRStateLpuSpiDsc*)pv)->uchLpuSpiState ;
+    713          if (j!=0) return;
+    714          //Start for Activating of Lpdu Units 
+    715          j =  ((StateTpCnDsc*)pSrc)->uchTpState_CNL_Spi;//
+    716           if (j==0) return;
+    717          
+    718          if (chMakeSpiExch)
+    719           return;
+    720          
+    721          	if (lTmrEnblTrSpi)
+    722          	{
+    723          		lTmrEnblTrSpi--;
+    724          		return;
+    725          	}
+    726          	else
+    727          	{
+    728          		
+    729          		lTmrEnblTrSpi = 3;//0x11;//0x80;//0x100;
+    730          
+    731          	}
+    732            
+    733          ((TRStateLpuSpiDsc*)pv)->uchCI = HDR_MODE_CNL_SPI;//HDR_MODE_CNL_1;
+    734          ((TRStateLpuSpiDsc*)pv)->uchLpuSpiState = 1;
+    735          
+    736          
+    737          i = ((StateTpCnDsc*)pSrc)->PayloadLPDU_Spi
+    738          +(SIZE_LDC_FLD_CNL_SPI)+(SIZE_TOTAL_LDC);
+    739          unnV1.ushAr[1] = i + (SIZE_LPCI_FLD_CNL_SPI);//Offset Urgent Data
+    740          i +=(SIZE_URGENT_DATA_BR_TO_BS);
+    741          // - ((StateTpCnDsc*)pSrc)->lCapicity_CNL_HSU7;
+    742           sLV.ushSizeLDC = i;
+    743           ((TRStateLpuSpiDsc*)pv)->lCapicity = i+(SIZE_LPCI_FLD_CNL_SPI);//Real Size Pacet
+    744           
+    745          //.((StateTpCnDsc*)pSrc)->lCapicity_CNL_HSU7 =((StateTpCnDsc*)pSrc)->PayloadLPDU_HSU7;
+    746          
+    747          //Create Pacet
+    748          ((TRStateLpuSpiDsc*)pv)->uchCI = (HDR_MODE_CNL_SPI);
+    749          ((TRStateLpuSpiDsc*)pv)->ushSizeLDC = i;//((TRStateLpuSpiDsc*)pv)->lCapicity;
+    750          
+    751          j = 0;
+    752          (((TRStateLpuSpiDsc*)pv)->arUch[0]) = ((TRStateLpuSpiDsc*)pv)->uchCI;
+    753          i = ((TRStateLpuSpiDsc*)pv)->uchCI;
+    754          i &= 0xf;
+    755          i>>=1;
+    756          switch (i)
+    757          	{
+    758          	case 0:
+    759          		j = 0;
+    760          		break;
+    761          	case 1:
+    762          		
+    763          		(((TRStateLpuSpiDsc*)pv)->arUch[j+1]) = ((TRStateLpuSpiDsc*)pv)->ushSizeLDC;
+    764          		j = 1;
+    765          		break;
+    766          	case 2:
+    767          	    pDst = (char*)&(((TRStateLpuSpiDsc*)pv)->arUch[j+1]);
+    768          		unnV1.ushAr[0] = ((TRStateLpuSpiDsc*)pv)->ushSizeLDC;
+    769          		//*((short*)pDst) = 
+    770          		pDst[0] = unnV1.uchAr[0];
+    771          		pDst[1] = unnV1.uchAr[1];
+    772          		j = 2;
+    773          		break;
+    774          	
+    775          	default:
+    776          	j=1;
+    777          	} 
+    778          
+    779          
+    780          sLV.uShIdxByte = j;
+    781          ///////////////////PUT TOT LDC FIELD////////////////////
+    782          pDst = (char*)&(((TRStateLpuSpiDsc*)pv)->arUch[j+1]);
+    783          *(pDst) = ((StateTpCnDsc*)pSrc)->chTotalLDC_CNL_Spi;
+    784          ////////////////////////////////////////////////////////
+    785          //....pSrc = (char*)&arCh[0];//Tempor Data !!!
+    786          pDst = (char*) &(((TRStateLpuSpiDsc*)pv)->arUch[j+1]);
+    787          
+    788          //sLV.uShIdxByte += SIZE FIELD _TOTAL_LDC; .iNCLUDED IN ushSizeLDC
+    789          
+    790          j = ((TRStateLpuSpiDsc*)pv)->ushSizeLDC;
+    791          sLV.uShIdxByte += sLV.ushSizeLDC;//j; 
+    792          //for (i = 0; i< j; i++)
+    793          //pDst[i]  = pSrc[i];
+    794          pDst = (char*) &(((TRStateLpuSpiDsc*)pv)->arUch[0]);
+    795          pDst += unnV1.ushAr[1];
+    796          InsertUrgBr2Bs((void*)pDst);
+    797          
+    798          //Check CS
+    799          i = Eval_CS((char*)&(((TRStateLpuSpiDsc*)pv)->arUch[0]),((TRStateLpuSpiDsc*)pv)->lCapicity);// sLV.uShIdxByte);
+    800          ((TRStateLpuSpiDsc*)pv)-> lCs =  i;
+    801          j = sLV.uShIdxByte;
+    802          j = ((TRStateLpuSpiDsc*)pv)->lCapicity;
+    803          //Move Data to transmit
+    804          (((TRStateLpuSpiDsc*)pv)->arUch[j]) = i;// --- Check Sum ---
+    805          //..j = outSPI1((unsigned char *)&(((TRStateLpuSpiDsc*)pv)->arUch[0]),SIZE_LPDU_CNL_SPI);//(int)j+(SIZE_CS_FLD_CNL_SPI)
+    806          //j = outSPIDma((unsigned char *)&(((TRStateLpuSpiDsc*)pv)->arUch[0]),SIZE_LPDU_CNL_SPI);//(int)j+(SIZE_CS_FLD_CNL_SPI)
+    807          j = OutSPIDma((unsigned char *)&(((TRStateLpuSpiDsc*)pv)->arUch[0]),SIZE_LPDU_CNL_SPI);//(int)j+(SIZE_CS_FLD_CNL_SPI)
+    808          
+    809          chMakeSpiExch++;
+    810          //Rst_LpduSpi_TpCnState();
+    811          }
+    812          
+    813          extern char *DemoStr; 
+    814          void TestSetup_LpduHSU7_ForTransmit(void)
+    815          {
+    816          //.hldrHSU7LpduTRUnit <- Insert Setup In Pararm
+    817          //.hldrTpCnState      <- Insert Setup In Pararm
+    818           
+    819          hldrTpCnState.uchTpState_CNL_HSU7  = 1;
+    820          hldrTpCnState.PayloadLPDU_HSU7     = SIZE_LPDU_CNL_HSU7;
+    821          hldrTpCnState.lCapicity_CNL_HSU7   = SIZE_LPDU_CNL_HSU7 - 8;//Now sizeof str
+    822          hldrTpCnState.pUchLpuTR_CNL_HSU7   = (unsigned char*)DemoStr;
+    823          hldrTpCnState.chTotalLDC_CNL_HSU7 = 0;
+    824          
+    825          
+    826          
+    827          hldrHSU7LpduTRUnit.uchLpuHSU7State = 0;
+    828          //	unsigned char      arUch[SIZE_LPDU_CNL_HSU7];//0   Data  field
+    829          
+    830          	
+    831          hldrHSU7LpduTRUnit.lCapicity  = 0;//
+    832          hldrHSU7LpduTRUnit.uchCI      = 0;
+    833          hldrHSU7LpduTRUnit.ushSizeLDC = 0;
+    834          hldrHSU7LpduTRUnit.lCs        = 0;
+    835          
+    836          
+    837          
+    838          
+    839          
+    840          }
+    841          extern long hs_uart_recover(long);
+    842          extern int hs2_rxsize;
+    843          extern long hs2uartdev;
+    844          void ProcessReceiveLpduHSU2(void)
+    845          {
+    846              register long i,j;
+    847              register char *pDst;
+    848              register void* pv;
+    849          struct 
+    850          	{
+    851          		//unsigned char uchTR_C;
+    852          		char PacketGood,PacketBad;
+    853          		
+    854          		unsigned char uChIdxByte ;
+    855          		unsigned short ushSizeLDC;
+    856          		//unsigned char *pUchRV;
+    857          		
+    858          		
+    859          	} sLV;
+    860          	sLV.PacketGood = 0;sLV.PacketBad = 0;
+    861          	sLV.uChIdxByte = sLV.ushSizeLDC = 0;
+    862           pv  = (void*)&hldrHSU2LpduUnit;//holderCn1LpduUnit;
+    863          pDst = (char*)&hldrHSU2LpduUnit.arUch[0];//( ((RVStateLpuHSU7Dsc *)pv)->arUch[0]  );
+    864          sLV.ushSizeLDC = j = hs2_rxsize; 
+    865          
+    866          //i = hs_uart_recover(hs7uartdev);
+    867          
+    868          if (j<SIZE_LPDU_CNL_HSU2) 
+    869          {
+    870          	sLV.uChIdxByte = inU2((unsigned char*)pDst,j);
+    871          }
+    872          else 
+    873          	{
+    874          		i = sLV.ushSizeLDC;
+    875          		
+    876          		do
+    877          		{
+    878          			i = hs2_rxsize;
+    879          			if (i > SIZE_LPDU_CNL_HSU2)
+    880          			{
+    881          				i-= SIZE_LPDU_CNL_HSU2;
+    882          				j = SIZE_LPDU_CNL_HSU2;
+    883          			}	
+    884          			else 
+    885          				j = i;
+    886          			sLV.uChIdxByte = inU2((unsigned char*)pDst,j);	
+    887          		}
+    888          		while(hs2_rxsize);
+    889          	
+    890          	}
+    891          //1<<24;
+    892          
+    893          
+    894           
+    895          ((RVStateLpuHSU2Dsc *)pv)->uchCI = i= pDst[0];
+    896          if (i != HDR_MODE_CNL_1)
+    897          	sLV.PacketBad++;
+    898          else
+    899          	sLV.PacketGood++;
+    900          
+    901          i = pDst[1];
+    902          
+    903          if (i>SIZE_LPDU_CNL_HSU2)
+    904          sLV.PacketBad++;
+    905          else
+    906          sLV.PacketGood++;
+    907          
+    908          sLV.ushSizeLDC = ((RVStateLpuHSU2Dsc *)pv)->ushSizeLDC = i;
+    909           ((RVStateLpuHSU2Dsc *)pv)->ushSizeLDC = i;
+    910          j = Eval_CS(pDst,i+(SIZE_LPCI_FLD_CNL_HSU2)); 
+    911          if (j!=pDst[i+(SIZE_LPCI_FLD_CNL_HSU2)])
+    912          {
+    913          sLV.PacketBad++;
+    914          }
+    915          else
+    916          sLV.PacketGood++;
+    917          
+    918          ((RVStateLpuHSU2Dsc *)pv)->lCs = j; 
+    919          
+    920          if (sLV.PacketBad)
+    921          {
+    922          	((RVStateLpuHSU2Dsc *)pv)->lCapicity   = 0;
+    923          	((RVStateLpuHSU2Dsc *)pv)->uchCI       = 0;
+    924          	((RVStateLpuHSU2Dsc *)pv)->ushSizeLDC  = 0;
+    925          	((RVStateLpuHSU2Dsc *)pv)->lCs         = 0;
+    926          	
+    927          	((RVStateLpuHSU2Dsc *)pv)->uchLpuHSU2State = 0;
+    928          	return;
+    929          }
+    930          if (sLV.PacketGood)
+    931          {
+    932          	((RVStateLpuHSU2Dsc *)pv)->lCapicity   = 0;
+    933          	((RVStateLpuHSU2Dsc *)pv)->uchCI       = 0;
+    934          	((RVStateLpuHSU2Dsc *)pv)->ushSizeLDC  = 0;
+    935          	((RVStateLpuHSU2Dsc *)pv)->lCs         = 0;	
+    936          ;//Ativate Next Leyer
+    937          	((RVStateLpuHSU2Dsc *)pv)->uchLpuHSU2State = 1;
+    938          //...Now Use as Channel Identification	
+    939          	//((RVStateLpuHSU7Dsc *)pv)->uchCI       = ID_CNL_HSU7;
+    940          
+    941          }
+    942          
+    943          
+    944          }
+    945          void Rst_LpduHSU7_TpCnState(void)
+    946          {
+    947          //.hldrHSU7LpduTRUnit <- Insert Setup In Pararm
+    948          //.hldrTpCnState      <- Insert Setup In Pararm
+    949           
+    950          hldrTpCnState.uchTpState_CNL_HSU7  = 1;
+    951          hldrTpCnState.PayloadLPDU_HSU7     = //SIZE_LPDU_CNL_HSU7
+    952          0;//(SIZE_LPCI_FLD_CNL_HSU7+SIZE_LDC_FLD_CNL_HSU7);
+    953          hldrTpCnState.lCapicity_CNL_HSU7   = SIZE_LPDU_CNL_HSU7// - 8;//Now sizeof str
+    954          -(SIZE_LPCI_FLD_CNL_HSU7+SIZE_LDC_FLD_CNL_HSU7+SIZE_CS_FLD_CNL_HSU7+SIZE_TOTAL_LDC );
+    955          hldrTpCnState.pUchLpuTR_CNL_HSU7   = (unsigned char*)
+    956          &hldrHSU7LpduTRUnit.arUch[SIZE_LPCI_FLD_CNL_HSU7+SIZE_LDC_FLD_CNL_HSU7+SIZE_TOTAL_LDC];//DemoStr;
+    957          hldrTpCnState.chTotalLDC_CNL_HSU7 = 0;
+    958          
+    959          
+    960          hldrHSU7LpduTRUnit.uchLpuHSU7State = 0;
+    961          //	unsigned char      arUch[SIZE_LPDU_CNL_HSU7];//0   Data  field
+    962          
+    963          	
+    964          hldrHSU7LpduTRUnit.lCapicity  = 0;//
+    965          hldrHSU7LpduTRUnit.uchCI      = 0;
+    966          hldrHSU7LpduTRUnit.ushSizeLDC = 0;
+    967          hldrHSU7LpduTRUnit.lCs        = 0;
+    968          
+    969          
+    970          
+    971          
+    972          }
+    973          void Rst_LpduHSU2_TpCnState(void)
+    974          {
+    975          //.hldrHSU7LpduTRUnit <- Insert Setup In Pararm
+    976          //.hldrTpCnState      <- Insert Setup In Pararm
+    977          //---Update this var after the end of transmition+ timeOut 
+    978          hldrTpCnState.uchTpState_CNL_HSU2  = 0;
+    979          //----------------------------------------------------------
+    980          hldrTpCnState.PayloadLPDU_HSU2     = //SIZE_LPDU_CNL_HSU7
+    981          0;//(SIZE_LPCI_FLD_CNL_HSU7+SIZE_LDC_FLD_CNL_HSU7);
+    982          hldrTpCnState.lCapicity_CNL_HSU2   = SIZE_LPDU_CNL_HSU2// - 8;//Now sizeof str
+    983          -(SIZE_LPCI_FLD_CNL_HSU2+SIZE_LDC_FLD_CNL_HSU2+SIZE_CS_FLD_CNL_HSU2+SIZE_TOTAL_LDC );
+    984          hldrTpCnState.pUchLpuTR_CNL_HSU2   = (unsigned char*)
+    985          &hldrHSU2LpduTRUnit.arUch[SIZE_LPCI_FLD_CNL_HSU2+SIZE_LDC_FLD_CNL_HSU2+SIZE_TOTAL_LDC];//DemoStr;
+    986          hldrTpCnState.chTotalLDC_CNL_HSU2 = 0;
+    987          
+    988          //---Update this var after the end of transmition+ timeOut 
+    989          //hldrHSU2LpduTRUnit.uchLpuHSU2State = 0;
+    990          //-----------------------------------------------------------
+    991          //	unsigned char      arUch[SIZE_LPDU_CNL_HSU7];//0   Data  field
+    992          
+    993          	
+    994          hldrHSU2LpduTRUnit.lCapicity  = 0;//
+    995          hldrHSU2LpduTRUnit.uchCI      = 0;
+    996          hldrHSU2LpduTRUnit.ushSizeLDC = 0;
+    997          hldrHSU2LpduTRUnit.lCs        = 0;
+    998          
+    999          
+   1000          
+   1001          
+   1002          }
+   1003          
+   1004          void Rst_LpduM2m_TpCnState(void)  @ "Fast_function"
+   1005          {
+   1006          //.hldrHSU7LpduTRUnit <- Insert Setup In Pararm
+   1007          //.hldrTpCnState      <- Insert Setup In Pararm
+   1008          //---Update this var after the end of transmition+ timeOut 
+   1009          hldrTpCnState.uchTpState_CNL_M2m  = 0;
+   1010          //----------------------------------------------------------
+   1011          hldrTpCnState.PayloadLPDU_M2m     = //SIZE_LPDU_CNL_HSU7
+   1012          0;//(SIZE_LPCI_FLD_CNL_HSU7+SIZE_LDC_FLD_CNL_HSU7);
+   1013          hldrTpCnState.lCapicity_CNL_M2m   = SIZE_LPDU_CNL_M2M
+   1014          -(SIZE_LPCI_FLD_CNL_M2M+SIZE_LDC_FLD_CNL_M2M+SIZE_CS_FLD_CNL_M2M+SIZE_TOTAL_LDC );
+   1015          hldrTpCnState.pUchLpuTR_CNL_M2m   = (unsigned char*)
+   1016          &hldrM2mLpduTRUnit.arUch[SIZE_LPCI_FLD_CNL_M2M+SIZE_LDC_FLD_CNL_M2M+SIZE_TOTAL_LDC];//DemoStr;
+   1017          hldrTpCnState.chTotalLDC_CNL_M2m = 0;
+   1018          
+   1019          //---Update this var after the end of transmition+ timeOut 
+   1020          //hldrHSU2LpduTRUnit.uchLpuHSU2State = 0;
+   1021          //-----------------------------------------------------------
+   1022          //	unsigned char      arUch[SIZE_LPDU_CNL_HSU7];//0   Data  field
+   1023          
+   1024          	
+   1025          //hldrM2mLpduTRUnit.lCapicity  = 0;//
+   1026          hldrM2mLpduTRUnit.uchCI      = 0;
+   1027          hldrM2mLpduTRUnit.ushSizeLDC = 0;
+   1028          hldrM2mLpduTRUnit.lCs        = 0;
+   1029          
+   1030          
+   1031          
+   1032          
+   1033          }
+   1034          extern long Cy7_rxsize;
+   1035          void ProcessReceiveLpduCY7(void)  @ "Fast_function"
+   1036          {
+   1037              register long i,j;
+   1038              register char *pDst;
+   1039              register void* pv;
+   1040          struct 
+   1041          	{
+   1042          		//unsigned char uchTR_C;
+   1043          		char PacketGood,PacketBad;
+   1044          		
+   1045          		unsigned char uChIdxByte ;
+   1046          		unsigned short ushSizeLDC;
+   1047          		//unsigned char *pUchRV;
+   1048          		
+   1049          	} sLV;
+   1050          	sLV.PacketGood = 0;sLV.PacketBad = 0;
+   1051          	sLV.uChIdxByte = sLV.ushSizeLDC = 0;
+   1052           pv  = (void*)&hldrM2mLpduUnit;//hldrHSU2LpduUnit;//
+   1053          pDst = (char*)&hldrM2mLpduUnit.arUch[0];//
+   1054          sLV.ushSizeLDC = j = Cy7_rxsize; 
+   1055          
+   1056          if (j<SIZE_LPDU_CNL_M2M) 
+   1057          {
+   1058          	sLV.uChIdxByte = inCY7((unsigned char*)pDst,j);
+   1059          }
+   1060          else 
+   1061          	{
+   1062          		i = sLV.ushSizeLDC;
+   1063          		
+   1064          		do
+   1065          		{
+   1066          			i = Cy7_rxsize;
+   1067          			if (i > SIZE_LPDU_CNL_M2M)
+   1068          			{
+   1069          				i-= SIZE_LPDU_CNL_M2M;
+   1070          				j = SIZE_LPDU_CNL_M2M;
+   1071          			}	
+   1072          			else 
+   1073          				j = i;
+   1074          			sLV.uChIdxByte = inCY7((unsigned char*)pDst,j);	
+   1075          		}
+   1076          		while(Cy7_rxsize);
+   1077          	
+   1078          	} 
+   1079           
+   1080           
+   1081          ((RVStateLpuM2mDsc *)pv)->uchCI = i= pDst[0];
+   1082          if (i != HDR_MODE_CNL_M2M)
+   1083          	sLV.PacketBad++;
+   1084          else
+   1085          	sLV.PacketGood++;
+   1086          
+   1087          i = pDst[2];
+   1088          i <<= 8;
+   1089          i|= pDst[1];
+   1090          
+   1091          if (i>SIZE_LPDU_CNL_M2M)
+   1092          sLV.PacketBad++;
+   1093          else
+   1094          sLV.PacketGood++;
+   1095          
+   1096          sLV.ushSizeLDC = ((RVStateLpuM2mDsc *)pv)->ushSizeLDC = i;
+   1097          // ((RVStateLpuHSU2Dsc *)pv)->ushSizeLDC = i;
+   1098          j = Eval_CS(pDst,i+(SIZE_LPCI_FLD_CNL_M2M)); 
+   1099          if (j!=pDst[i+(SIZE_LPCI_FLD_CNL_M2M)])
+   1100          {
+   1101          sLV.PacketBad++;
+   1102          }
+   1103          else
+   1104          sLV.PacketGood++;
+   1105          
+   1106          ((RVStateLpuM2mDsc *)pv)->lCs = j; 
+   1107          
+   1108          if (sLV.PacketBad)
+   1109          {
+   1110          	((RVStateLpuM2mDsc *)pv)->lCapicity   = 0;
+   1111          	((RVStateLpuM2mDsc *)pv)->uchCI       = 0;
+   1112          	((RVStateLpuM2mDsc *)pv)->ushSizeLDC  = 0;
+   1113          	((RVStateLpuM2mDsc *)pv)->lCs         = 0;
+   1114          	
+   1115          	((RVStateLpuM2mDsc *)pv)->uchLpuM2mState = 0;
+   1116          	return;
+   1117          }
+   1118          if (sLV.PacketGood)
+   1119          {
+   1120          	((RVStateLpuM2mDsc *)pv)->lCapicity   = 0;
+   1121          	((RVStateLpuM2mDsc *)pv)->uchCI       = 0;
+   1122          	((RVStateLpuM2mDsc *)pv)->ushSizeLDC  = 0;
+   1123          	((RVStateLpuM2mDsc *)pv)->lCs         = 0;	
+   1124          ;//Ativate Next Leyer
+   1125          	((RVStateLpuM2mDsc *)pv)->uchLpuM2mState = 1;
+   1126          //...Now Use as Channel Identification	
+   1127          	//((RVStateLpuHSU7Dsc *)pv)->uchCI       = ID_CNL_HSU7;
+   1128          
+   1129          }
+   1130          
+   1131          
+   1132          
+   1133          
+   1134          
+   1135          
+   1136          
+   1137          }
+   1138          
+   1139          unsigned long uiAmtSpiGoodRvPacket = 0; 
+   1140          unsigned long uiAmtSpiBadRvPacket = 0;
+   1141          extern  long lSsp0HdwState ;
+   1142          static char chTotalBadPacketCtr = 0;
+   1143          extern volatile  int  spi1_rxsize;//spi1_txsize,
+   1144          void ProcessReceiveLpduSpi(void)  @ "Fast_function"
+   1145          {
+   1146              register long i,j;
+   1147              register char *pDst;
+   1148              register void* pv;
+   1149          struct 
+   1150          	{
+   1151          		//unsigned char uchTR_C;
+   1152          		char PacketGood,PacketBad;
+   1153          		
+   1154          		unsigned short ushIdxByte ;
+   1155          		unsigned short ushSizeLDC;
+   1156          		//unsigned char *pUchRV;
+   1157          		
+   1158          	} sLV;
+   1159          	sLV.PacketGood = 0;sLV.PacketBad = 0;
+   1160          	sLV.ushIdxByte = sLV.ushSizeLDC = 0;
+   1161           pv  = (void*)&hldrSpiLpduUnit;//hldrHSU2LpduUnit;//
+   1162          pDst = (char*)&hldrSpiLpduUnit.arUch[0];//
+   1163          sLV.ushSizeLDC = j = spi1_rxsize;//Cy7_rxsize; SIZE_LPDU_CNL_SPI
+   1164          
+   1165          if (j<SIZE_LPDU_CNL_SPI) 
+   1166          {
+   1167          	sLV.ushIdxByte = InSPIDma((unsigned char*)pDst,j);//inSPI1((unsigned char*)pDst,j);
+   1168          }
+   1169          else 
+   1170          	{
+   1171          		i = sLV.ushSizeLDC;
+   1172          		
+   1173          		do
+   1174          		{
+   1175          			i = spi1_rxsize;//Cy7_rxsize;
+   1176          			if (i > SIZE_LPDU_CNL_SPI)
+   1177          			{
+   1178          				i-= SIZE_LPDU_CNL_SPI;
+   1179          				j = SIZE_LPDU_CNL_SPI;
+   1180          			}	
+   1181          			else 
+   1182          				j = i;
+   1183          			sLV.ushIdxByte = InSPIDma((unsigned char*)pDst,j);//inSPI1((unsigned char*)pDst,j);	
+   1184          		}
+   1185          		while(spi1_rxsize);//Total erroneus algorithm for hundling SPI data
+   1186          	
+   1187          	} 
+   1188           
+   1189           
+   1190          ((RVStateLpuSpiDsc *)pv)->uchCI = i= pDst[0];
+   1191          if (i != HDR_MODE_CNL_SPI)
+   1192          	sLV.PacketBad++;
+   1193          else
+   1194          	sLV.PacketGood++;
+   1195          
+   1196          i = pDst[2];
+   1197          i <<= 8;
+   1198          i|= pDst[1];
+   1199          
+   1200          if (i>SIZE_LPDU_CNL_SPI)
+   1201          sLV.PacketBad++;
+   1202          else
+   1203          sLV.PacketGood++;
+   1204          
+   1205          sLV.ushSizeLDC = ((RVStateLpuSpiDsc *)pv)->ushSizeLDC = i;
+   1206          // ((RVStateLpuHSU2Dsc *)pv)->ushSizeLDC = i;
+   1207          j = Eval_CS(pDst,i+(SIZE_LPCI_FLD_CNL_SPI)); 
+   1208          if (j!=pDst[i+(SIZE_LPCI_FLD_CNL_SPI)])
+   1209          {
+   1210          sLV.PacketBad++;
+   1211          }
+   1212          else
+   1213          sLV.PacketGood++;
+   1214          
+   1215          ((RVStateLpuSpiDsc *)pv)->lCs = j; 
+   1216          
+   1217          if (sLV.PacketBad)
+   1218          {
+   1219          	((RVStateLpuSpiDsc *)pv)->lCapicity   = 0;
+   1220          	((RVStateLpuSpiDsc *)pv)->uchCI       = 0;
+   1221          	((RVStateLpuSpiDsc *)pv)->ushSizeLDC  = 0;
+   1222          	((RVStateLpuSpiDsc *)pv)->lCs         = 0;
+   1223          	
+   1224          	uiAmtSpiBadRvPacket++;
+   1225          	((RVStateLpuSpiDsc *)pv)->uchLpuSpiState = 0;
+   1226          	if(sLV.PacketBad >= 2)//Need Use 2 not 3
+   1227          	chTotalBadPacketCtr++;
+   1228          	if (chTotalBadPacketCtr > 3)//..if (chTotalBadPacketCtr > 203)
+   1229          	{
+   1230          		//ReInit Spi Channel
+   1231          		chTotalBadPacketCtr = 0;//~..lSsp0HdwState = 0;Spi0_Rst();
+   1232          		lTmrEnblTrSpi = 22;//Make Pause For Resyncro
+   1233          		uiAmtSpiGoodRvPacket = uiAmtSpiBadRvPacket = 0;
+   1234          		//sLV.PacketGood = 0;
+   1235          		//while(sLV.ushIdxByte)
+   1236          		//{
+   1237          		//	sLV.PacketGood = 50;
+   1238          		//	while(sLV.PacketGood--);
+   1239          		//	sLV.ushIdxByte--;
+   1240          		//}
+   1241          	}
+   1242          	
+   1243          	goto ExitProcessReceiveLpduSpi;//return;
+   1244          }
+   1245          if (sLV.PacketGood)
+   1246          {
+   1247          	((RVStateLpuSpiDsc *)pv)->lCapicity   = 0;
+   1248          	((RVStateLpuSpiDsc *)pv)->uchCI       = 0;
+   1249          	((RVStateLpuSpiDsc *)pv)->ushSizeLDC  = 0;
+   1250          	((RVStateLpuSpiDsc *)pv)->lCs         = 0;	
+   1251          ;//Ativate Next Leyer
+   1252          	((RVStateLpuSpiDsc *)pv)->uchLpuSpiState = 1;
+   1253          //...Now Use as Channel Identification	
+   1254          	//((RVStateLpuHSU7Dsc *)pv)->uchCI       = ID_CNL_HSU7;
+   1255          	chTotalBadPacketCtr = 0;
+   1256          	
+   1257          	if (lCtrSuccExch < 0xf00000)
+   1258          	lCtrSuccExch++;
+   1259          	else
+   1260          	lCtrSuccExch--;
+   1261          	
+   1262          	uiAmtSpiGoodRvPacket++;
+   1263          
+   1264          
+   1265          }
+   1266          ExitProcessReceiveLpduSpi:
+   1267          	if (chMakeSpiExch)
+   1268          	{
+   1269          		chMakeSpiExch = 0;
+   1270          		Rst_LpduSpi_TpCnState();
+   1271          		GPIO->p3_outp_clr = ((1<<7));GPIO->p3_outp_clr = (1<<23);
+   1272          		//Control HandShaking State
+   1273          		if( (GPIO->p3_inp_state) & (1<<16))
+   1274          		;
+   1275          		else
+   1276          		;
+   1277          		if( (GPIO->p3_inp_state) & (1<<17))
+   1278          		;
+   1279          		else
+   1280          		;
+   1281          		
+   1282          		
+   1283          	}
+   1284          
+   1285          
+   1286          }
+   1287          
+   1288          extern  long lSsp0HdwState ;
+   1289          
+   1290          void ProcessTransmitStubSeqSpi(void)  @ "Fast_function"
+   1291          {
+   1292          register long i,j;
+   1293          register char *pSrc,*pDst;
+   1294          register void* pv;
+   1295          //.struct 
+   1296          //.	{
+   1297          //.		//unsigned char uchTR_C;
+   1298          //.		unsigned short uShIdxByte ;
+   1299          //.		unsigned short ushSizeLDC;
+   1300          //.		//unsigned char *pUchRV;
+   1301          //.	} sLV;
+   1302          union 
+   1303          	{
+   1304          		unsigned char   uchAr [4];
+   1305          		unsigned short  ushAr [2];
+   1306                  unsigned long   ulVal;
+   1307          	}unnV1;
+   1308          //Control state Connect   
+   1309          j = lSsp0HdwState & 4;  //
+   1310          if (j == 0) 
+   1311          return;
+   1312           pv  = (void*)&hldrSpiLpduTRUnit;
+   1313            pSrc = (char*)&hldrTpCnState;
+   1314          //Start for Activating of Lpdu Units 
+   1315          j =  ((StateTpCnDsc*)pSrc)->uchTpState_CNL_Spi;//
+   1316           if (j!=0)
+   1317           return;
+   1318          
+   1319          j =   ((TRStateLpuSpiDsc*)pv)->uchLpuSpiState ;
+   1320          if (j!=0)
+   1321           return;//Transmittion Active
+   1322          
+   1323          if (chMakeSpiExch)
+   1324           return;
+   1325          
+   1326          	if (lTmrEnblTrSpi)
+   1327          	{
+   1328          		lTmrEnblTrSpi--;
+   1329          		return;
+   1330          	}
+   1331          	else
+   1332          	{
+   1333          		
+   1334          		lTmrEnblTrSpi = 3;//0x12;//0x80;//0x100;
+   1335          
+   1336          	}
+   1337           
+   1338          ((TRStateLpuSpiDsc*)pv)->uchCI = HDR_MODE_CNL_SPI;//HDR_MODE_CNL_1;
+   1339          ((TRStateLpuSpiDsc*)pv)->uchLpuSpiState = 1;
+   1340          
+   1341          
+   1342          i = 0//((StateTpCnDsc*)pSrc)->PayloadLPDU_Spi
+   1343          +(SIZE_LDC_FLD_CNL_SPI)+(SIZE_TOTAL_LDC)+(SIZE_URGENT_DATA_BR_TO_BS);
+   1344          // 
+   1345          //. sLV.ushSizeLDC = i;
+   1346           ((TRStateLpuSpiDsc*)pv)->lCapicity = i+(SIZE_LPCI_FLD_CNL_SPI);//Real Size Pacet
+   1347           
+   1348          
+   1349          
+   1350          //Create Pacet
+   1351          ((TRStateLpuSpiDsc*)pv)->uchCI = (HDR_MODE_CNL_SPI);
+   1352          ((TRStateLpuSpiDsc*)pv)->ushSizeLDC = i;//((TRStateLpuSpiDsc*)pv)->lCapicity;
+   1353          
+   1354          j = 0;
+   1355          (((TRStateLpuSpiDsc*)pv)->arUch[0]) = ((TRStateLpuSpiDsc*)pv)->uchCI;
+   1356          i = ((TRStateLpuSpiDsc*)pv)->uchCI;
+   1357          i &= 0xf;
+   1358          i>>=1;
+   1359          switch (i)
+   1360          	{
+   1361          	case 0:
+   1362          		j = 0;
+   1363          		break;
+   1364          	case 1:
+   1365          		
+   1366          		(((TRStateLpuSpiDsc*)pv)->arUch[j+1]) = ((TRStateLpuSpiDsc*)pv)->ushSizeLDC;
+   1367          		j = 1;
+   1368          		break;
+   1369          	case 2:
+   1370          	    pDst = (char*)&(((TRStateLpuSpiDsc*)pv)->arUch[j+1]);
+   1371          		unnV1.ushAr[0] = ((TRStateLpuSpiDsc*)pv)->ushSizeLDC;
+   1372          		//*((short*)pDst) = 
+   1373          		pDst[0] = unnV1.uchAr[0];
+   1374          		pDst[1] = unnV1.uchAr[1];
+   1375          		j = 2;
+   1376          		break;
+   1377          	
+   1378          	default:
+   1379          	j=1;
+   1380          	} 
+   1381          ///////////////////PUT TOT LDC FIELD////////////////////
+   1382          pDst = (char*)&(((TRStateLpuSpiDsc*)pv)->arUch[j+1]);
+   1383          *(pDst) = 0;//((StateTpCnDsc*)pSrc)->chTotalLDC_CNL_Spi;
+   1384          ////////////////////////////////////////////////////////
+   1385          //pDst = (char*)&(((TRStateLpuSpiDsc*)pv)->arUch[0]); <-- Test Code for Generation Num Seq in Buff
+   1386          //for( i = 5; i<(510>>1); i++)
+   1387          //*((short*)pDst +i) = i+213;    
+   1388          	
+   1389          
+   1390          	
+   1391          
+   1392          //Check CS
+   1393          i = Eval_CS((char*)&(((TRStateLpuSpiDsc*)pv)->arUch[0]),((TRStateLpuSpiDsc*)pv)->lCapicity);// sLV.uShIdxByte);
+   1394          ((TRStateLpuSpiDsc*)pv)-> lCs =  i;
+   1395          
+   1396          j = ((TRStateLpuSpiDsc*)pv)->lCapicity;
+   1397          //Move Data to transmit
+   1398          (((TRStateLpuSpiDsc*)pv)->arUch[j]) = i;
+   1399          //j = outSPI1((unsigned char *)&(((TRStateLpuSpiDsc*)pv)->arUch[0]),SIZE_LPDU_CNL_SPI);//(int)j+(SIZE_CS_FLD_CNL_SPI)
+   1400          j = OutSPIDma((unsigned char *)&(((TRStateLpuSpiDsc*)pv)->arUch[0]),SIZE_LPDU_CNL_SPI);//(int)j+(SIZE_CS_FLD_CNL_SPI)
+   1401          //j = outSPI1((unsigned char *)&(((TRStateLpuSpiDsc*)pv)->arUch[0]),SIZE_LPDU_CNL_SPI);//(int)j+(SIZE_CS_FLD_CNL_SPI)
+   1402          chMakeSpiExch++;
+   1403          //Rst_LpduSpi_TpCnState();
+   1404          }
+   1405          
+   1406          
+   1407          void ProcessReceiveLpduCY7V1(void)  @ "Fast_function"
+   1408          {
+   1409              register long i,j;
+   1410              register char *pDst;
+   1411              register void* pv;
+   1412          struct 
+   1413          	{
+   1414          		//unsigned char uchTR_C;
+   1415          		char PacketGood,PacketBad;
+   1416          		
+   1417          		unsigned char uChIdxByte ;
+   1418          		unsigned short ushSizeLDC;
+   1419          		//unsigned char *pUchRV;
+   1420          		
+   1421          	} sLV;
+   1422          	sLV.PacketGood = 0;sLV.PacketBad = 0;
+   1423          	sLV.uChIdxByte = sLV.ushSizeLDC = 0;
+   1424           pv  = (void*)&hldrM2mLpduUnit;//hldrHSU2LpduUnit;//
+   1425          pDst = (char*)&hldrM2mLpduUnit.arUch[0];//
+   1426          
+   1427          
+   1428           
+   1429          ((RVStateLpuM2mDsc *)pv)->uchCI = i= pDst[0];
+   1430          if (i != HDR_MODE_CNL_M2M)
+   1431          	sLV.PacketBad++;
+   1432          else
+   1433          	sLV.PacketGood++;
+   1434          
+   1435          i = pDst[2];
+   1436          i <<= 8;
+   1437          i|= pDst[1];
+   1438          
+   1439          if (i>SIZE_LPDU_CNL_M2M)
+   1440          sLV.PacketBad++;
+   1441          else
+   1442          sLV.PacketGood++;
+   1443          
+   1444          sLV.ushSizeLDC = ((RVStateLpuM2mDsc *)pv)->ushSizeLDC = i;
+   1445          // ((RVStateLpuHSU2Dsc *)pv)->ushSizeLDC = i;
+   1446          j = Eval_CS(pDst,i+(SIZE_LPCI_FLD_CNL_M2M)); 
+   1447          if (j!=pDst[i+(SIZE_LPCI_FLD_CNL_M2M)])
+   1448          {
+   1449          sLV.PacketBad++;
+   1450          }
+   1451          else
+   1452          sLV.PacketGood++;
+   1453          
+   1454          ((RVStateLpuM2mDsc *)pv)->lCs = j; 
+   1455          
+   1456          if (sLV.PacketBad)
+   1457          {
+   1458          	((RVStateLpuM2mDsc *)pv)->lCapicity   = 0;
+   1459          	((RVStateLpuM2mDsc *)pv)->uchCI       = 0;
+   1460          	((RVStateLpuM2mDsc *)pv)->ushSizeLDC  = 0;
+   1461          	((RVStateLpuM2mDsc *)pv)->lCs         = 0;
+   1462          	
+   1463          	((RVStateLpuM2mDsc *)pv)->uchLpuM2mState = 0;
+   1464          	return;
+   1465          }
+   1466          if (sLV.PacketGood)
+   1467          {
+   1468          	((RVStateLpuM2mDsc *)pv)->lCapicity   = 0;
+   1469          	((RVStateLpuM2mDsc *)pv)->uchCI       = 0;
+   1470          	((RVStateLpuM2mDsc *)pv)->ushSizeLDC  = 0;
+   1471          	((RVStateLpuM2mDsc *)pv)->lCs         = 0;	
+   1472          ;//Ativate Next Leyer
+   1473          	((RVStateLpuM2mDsc *)pv)->uchLpuM2mState = 1;
+   1474          //...Now Use as Channel Identification	
+   1475          	//((RVStateLpuHSU7Dsc *)pv)->uchCI       = ID_CNL_HSU7;
+   1476          
+   1477          }
+   1478          
+   1479          
+   1480          
+   1481          
+   1482          
+   1483          
+   1484          
+   1485          }
+   1486          
+   1487          extern long UpdateLgrBuf(void );
+   1488          
+   1489          
+   1490          
+   1491          
+   1492          long lIdxBuf = 0;
+   1493          long lSamplesNum = 0;
+   1494          long lBackSamplesNum = 0;
+   1495          char chSelectorCurrBuff = 0;//Select Active Buf
+   1496          
+   1497          
+   1498          #define AMOUNT_SAMPLES_IN_BUF 50
+   1499          
+   1500          
+   1501          void InsertUrgBr2Bs(void* pv)
+   1502          {
+   1503          register long i,j;
+   1504          register char *pSrc,*pDst;
+   1505          union 
+   1506          	{
+   1507          		unsigned char   uchAr [4];
+   1508          		unsigned short  ushAr [2];
+   1509                  unsigned long   ulVal;
+   1510          	}unnV1;
+   1511          UrgentDataBrDsc hldrTestData = {
+   1512          	{
+   1513          		//{
+   1514          			0x46,0x46,0x46,0x46,0x46,0x46,0x46,0x46,0x46,0x46,
+   1515          			0x46,0x46,0x46,0x46,0x46,0x46,0x46,0x46,0x46,0x46, 
+   1516          			0x46,0x46,0x46,0x46,0x46,0x46,0x46,0x46,0x46,0x46, 
+   1517          			0x46,0x46,0x46,0x46,0x46,0x46,0x46,0x46,0x46,0x46, 
+   1518          			0x46,0x46,0x46,0x46,0x46,0x46,0x46,0x46,0x46,0x46, 
+   1519          			0x46,0x46,0x46,0x46,0x46,0x46,0x46,0x46,0x46,0x46 
+   1520          		//}
+   1521          		,
+   1522          		//{
+   1523          			0x41,0x41,0x41,0x41,0x41,0x41,0x41,0x41,0x41,0x41, 
+   1524          			0x41,0x41,0x41,0x41,0x41,0x41,0x41,0x41,0x41,0x41 
+   1525          		//}
+   1526          		,
+   1527          		//{
+   1528          			1,2,3,4
+   1529          		//}
+   1530          	}
+   1531          };
+   1532          
+   1533          // memcpy((void*)&hldrM2mLpduUnit.arUch[0],(const void*)ADR_AR_BM,SIZE_LPDU_CNL_CY7 );//ReadData	
+   1534          	// memcpy(pv,(const void*) &hldrTestData,SIZE_URGENT_DATA_BR_TO_BS);//ReadData
+   1535          	 
+   1536          	i = UpdateLgrBuf();
+   1537          	// *
+   1538          	unnV1.ulVal = ulCtrTrLpduSpi;
+   1539          	pSrc = &(((UrgentDataBrDsc*)pv)->UN_UrgentDataBR.sBrWrp.chArCtrLinkTr[0]);
+   1540          	
+   1541          	// chArCtrLinkTr[
+   1542          	 pSrc[0] = unnV1. uchAr [0];
+   1543          	 pSrc[1] = unnV1. uchAr [1];
+   1544          	 pSrc[2] = unnV1. uchAr [2];
+   1545          	 pSrc[3] = unnV1. uchAr [3];
+   1546          	//Put ArAnlg
+   1547          	//^i = l_IdxAWthCmdBufGet;
+   1548          	pSrc =  &hldrTestData.UN_UrgentDataBR.sBrWrp.chArAnlg[0];//^&arAnallogWthCmdBuf_L[0];
+   1549          	//^pSrc += i;
+   1550          	
+   1551          	pDst = &(((UrgentDataBrDsc*)pv)->UN_UrgentDataBR.sBrWrp.chArAnlg[0]);
+   1552          	 memcpy(pDst,(const void*) pSrc,SIZE_ANALOG_DATA);
+   1553          	//Put ArCmd
+   1554          	pDst = &(((UrgentDataBrDsc*)pv)->UN_UrgentDataBR.sBrWrp.chArCmd[0]);
+   1555          	pSrc = &hldrTestData.UN_UrgentDataBR.sBrWrp.chArCmd[0];//+= SIZE_ANALOG_DATA;
+   1556          	memcpy(pDst,(const void*) pSrc,SIZE_COMMAND_DATA);
+   1557          	//Put Wrp 
+   1558          	pDst = &(((UrgentDataBrDsc*)pv)->UN_UrgentDataBR.sBrWrp.chArWrp[0]);
+   1559          	//pSrc += SIZE_COMMAND_DATA;
+   1560          	unnV1.ulVal = l_time_lable;
+   1561          	 pDst[0] = unnV1. uchAr [0];//pSrc [0];//SIZE_WRP_LOG_DATA
+   1562          	 pDst[1] = unnV1. uchAr [1];//pSrc [1];
+   1563          	 pDst[2] = unnV1. uchAr [2];//pSrc [2];
+   1564          	 pDst[3] = unnV1. uchAr [3];//pSrc [3];
+   1565          	 
+   1566          	pDst = &(((UrgentDataBrDsc*)pv)->UN_UrgentDataBR.sBrWrp.chAbnNum[0]); 
+   1567          	unnV1.ulVal =  l_Abs_Numerator_Br;
+   1568          	 pDst[0] = unnV1. uchAr [0];//pSrc [0];//SIZE_WRP_LOG_DATA
+   1569          	 pDst[1] = unnV1. uchAr [1];//pSrc [1];
+   1570          	 pDst[2] = unnV1. uchAr [2];//pSrc [2];
+   1571          	 pDst[3] = unnV1. uchAr [3];//pSrc [3];
+   1572          	// * /
+   1573          }
+   1574          
+   1575          
+   1576          //////////////////////////////////////////////////////////////////////////////////////////
+   1577          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+   1578          //---
+   1579          extern long UpdateLgrBuf(void );
+   1580                                                  //unsigned short* p_out_param);
+   1581          //..................................................................................
+   1582          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+   1583          //~~~     функция обоновления данных объединенного регистратора                ~~~~~
+   1584          //~~~                                                                          ~~~~~
+   1585          //~~~     возврат 3 - команда выполнена успешно                                ~~~~~
+   1586          //~~~     возврат 4 - возникла  ошибка                                         ~~~~~
+   1587          //~~~     6-32 24*8   -192 bita                                               ~~~~~
+   1588          //``````````````````````````````````````````````````````````````````````````````````
+   1589          //~~~   p_in_param должен указывать на область памяти команд 24  байта         ~~~~~
+   1590          //~~~    //значения младших бит должны располагаться по мл. адресам памяти     ~~~~~
+   1591          //~~~       p_in_param+0 -> 0-7;                                               ~~~~~
+   1592          //~~~   	p_in_param+1 -> 8-15;                                              ~~~~~
+   1593          /*
+   1594          //Fragment Logger Function
+   1595          #ifndef SIZE_ANALOG_DATA
+   1596          #define SIZE_ANALOG_DATA    0x1
+   1597          
+   1598          #ifndef SIZE_COMMAND_DATA
+   1599          #define SIZE_COMMAND_DATA   0x1
+   1600          */
+   1601          #define AMOUNT_RECORDS_ANALOG_WITH_CMD 10
+   1602          long l_Abs_Numerator_Br = 0;
+   1603          long l_IdxAWthCmdBufGet = 0;
+   1604          long l_time_lable = 0;
+   1605          long l_IdxAWthCmdBuf = 0;
+   1606          long  arAnallogWthCmdBuf_L[((SIZE_ANALOG_DATA + SIZE_COMMAND_DATA)*(AMOUNT_RECORDS_ANALOG_WITH_CMD))];
+   1607          
+   1608          long UpdateLgrBuf(void )
+   1609          {
+   1610          struct 
+   1611          	{
+   1612          		//short         shCountCmd;  
+   1613          		unsigned char uChIdxByte ;
+   1614          		unsigned char uChIdxBit ;
+   1615          		//-short shVal;
+   1616          		unsigned short ushBeg,ushEnd;
+   1617          		
+   1618          	} sLV;
+   1619          union 
+   1620          	    {
+   1621          	    	unsigned char   uchAr [4];
+   1622          	    	unsigned short  ushAr [2];
+   1623                      unsigned long   ulVal;
+   1624          	    }unnV1;
+   1625          		
+   1626          	l_IdxAWthCmdBufGet = l_IdxAWthCmdBuf;//Fill
+   1627          /*		  
+   1628          GetAnalogDataState((arAnallogWthCmdBuf_L +  l_IdxAWthCmdBuf));
+   1629            l_IdxAWthCmdBuf += SIZE_ANALOG_DATA;
+   1630          GetCmdState ((arAnallogWthCmdBuf_L +  l_IdxAWthCmdBuf));  
+   1631            l_IdxAWthCmdBuf += SIZE_COMMAND_DATA;
+   1632            arAnallogWthCmdBuf_L[l_IdxAWthCmdBuf++] = l_time_lable;
+   1633            
+   1634          */
+   1635            
+   1636            if (l_IdxAWthCmdBuf >= ((SIZE_ANALOG_DATA + SIZE_COMMAND_DATA)*(AMOUNT_RECORDS_ANALOG_WITH_CMD)) )
+   1637            l_IdxAWthCmdBuf = 0;
+   1638            
+   1639            if(l_time_lable < 0x7fffffff) l_time_lable++;
+   1640            else 
+   1641          	l_time_lable = 0;
+   1642            if(l_Abs_Numerator_Br < 0x7fffffff) l_Abs_Numerator_Br++;
+   1643            else 
+   1644          	l_Abs_Numerator_Br = 0;
+   1645          
+   1646          	return 0;
+   1647          }
+   1648          //-----------------------------------------------------------------------------
+   1649          //,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+   1650          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+   1651          short shCtrTrLpduSpiTeleMechs = 0;
+   1652          
+   1653          
+   1654          
+   1655          #include    "Tlmc.h"
+   1656          #include    "var_r_apcs_ici.h"
+   1657          //////////////////////////////////////////////////////////////////////////////////////////
+   1658          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+   1659          //---
+   1660          extern void ProcessLLEvt (void);
+   1661                                                  
+   1662          //..................................................................................
+   1663          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+   1664          //~~~                 ~~~~~
+   1665          //~~~                ~~~~~
+   1666          //``````````````````````````````````````````````````````````````````````````````````
+   1667          //~~~      ~~~~~
+   1668          //~~~      ~~~~~
+   1669          
+   1670          void ProcessLLEvt (void)
+   1671          {
+   1672          	register long lrVar;
+   1673          
+   1674          	//if( IciCopy_ulCtrTrLpduSpi!=ulCtrTrLpduSpi )
+   1675          	{
+   1676          	
+   1677          	
+   1678          		//Timer for Activate Telemechs
+   1679          		lrVar = shCtrTrLpduSpiTeleMechs;//*( (U8*)(pU8+OFF_BYTE_10_MS_CNTR ));
+   1680          		lrVar++;
+   1681          	
+   1682          		if ( (lrVar) >= 5 )//5
+   1683          		{
+   1684          			shCtrTrLpduSpiTeleMechs = 0;//*( (U8*)(pU8+OFF_BYTE_10_MS_CNTR )) = 0;
+   1685          			if((AppReqTransmitTeleMechs == 0) || (AppReqTransmitTeleMechs >= TERM) )
+   1686          			AppReqTransmitTeleMechs = START;//Process 5  LL Events();
+   1687          			//Get TeleDataFrom APCS
+   1688          			GetInState    (&(holderTeleMechs.UNTeleMechs.sBrTeleMechsTeleInfoWrp.chArIn    [0]) );
+   1689          			GetOutState   (&(holderTeleMechs.UNTeleMechs.sBrTeleMechsTeleInfoWrp.chArOut   [0]) );
+   1690          			GetTrgOutState(&(holderTeleMechs.UNTeleMechs.sBrTeleMechsTeleInfoWrp.chArOutTrg[0]) );
+   1691          			GetLedState   (&(holderTeleMechs.UNTeleMechs.sBrTeleMechsTeleInfoWrp.chArLed   [0]) );
+   1692          			GetTrgLedState(&(holderTeleMechs.UNTeleMechs.sBrTeleMechsTeleInfoWrp.chArLedTrg[0]) );
+   1693          			//^^holderTeleMechs.UNTeleMechs.sBrTeleMechsTeleInfoWrp.chArIn    [0] = 0x1;
+   1694          			//^^holderTeleMechs.UNTeleMechs.sBrTeleMechsTeleInfoWrp.chArOut   [0] = 0x2;
+   1695          			//^^holderTeleMechs.UNTeleMechs.sBrTeleMechsTeleInfoWrp.chArOutTrg[0] = 0x3;
+   1696          			//^^holderTeleMechs.UNTeleMechs.sBrTeleMechsTeleInfoWrp.chArLed   [0] = 0x4;
+   1697          			//^^holderTeleMechs.UNTeleMechs.sBrTeleMechsTeleInfoWrp.chArLedTrg[0] = 0x5;
+   1698          			
+   1699          			
+   1700          		}
+   1701          		else
+   1702          			shCtrTrLpduSpiTeleMechs = lrVar;//*( (U8*)(pU8+OFF_BYTE_10_MS_CNTR ))= lrVar;
+   1703          			
+   1704          			
+   1705          			
+   1706          	}
+   1707          	
+   1708          //
+   1709          
+   1710          
+   1711          
+   1712          }
+   1713          
+   1714          //-----------------------------------------------------------------------------
+   1715          //,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+   1716          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+   1717          
+   1718          
+   1719          
+   1720          
+   1721          
+   1722          
+   1723          
+   1724          
+   1725          
+   1726          
+   1727          
+   1728          
+   1729          
+   1730          /* EOF */
+   1731          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   Eval_CS
+     144   InsertUrgBr2Bs
+       144   -> UpdateLgrBuf
+       144   -> __aeabi_memcpy
+       144   -> __aeabi_memcpy4
+       8   ProcessLLEvt
+         8   -> GetInState
+         8   -> GetLedState
+         8   -> GetOutState
+         8   -> GetTrgLedState
+         8   -> GetTrgOutState
+       8   ProcessReceiveLpdu
+      32   ProcessReceiveLpduCY7
+        32   -> Eval_CS
+        32   -> inCY7
+      32   ProcessReceiveLpduCY7V1
+        32   -> Eval_CS
+      32   ProcessReceiveLpduHSU2
+        32   -> Eval_CS
+        32   -> inU2
+      32   ProcessReceiveLpduHSU7
+        32   -> Eval_CS
+        32   -> inU7
+      32   ProcessReceiveLpduSpi
+        32   -> Eval_CS
+        32   -> InSPIDma
+        32   -> Rst_LpduSpi_TpCnState
+      24   ProcessReceiveLpduU3
+        24   -> Eval_CS
+        24   -> inU3
+       8   ProcessReceiveLpdu_
+       4   ProcessTransmitLpdu
+      32   ProcessTransmitLpduHSU2
+        32   -> Eval_CS
+        32   -> Rst_LpduHSU2_TpCnState
+        32   -> outU2
+      32   ProcessTransmitLpduHSU7
+        32   -> Eval_CS
+        32   -> Rst_LpduHSU7_TpCnState
+        32   -> outU7
+      32   ProcessTransmitLpduM2m
+        32   -> Eval_CS
+        32   -> Rst_LpduM2m_TpCnState
+      32   ProcessTransmitLpduSpi
+        32   -> Eval_CS
+        32   -> InsertUrgBr2Bs
+        32   -> OutSPIDma
+      32   ProcessTransmitStubSeqSpi
+        32   -> Eval_CS
+        32   -> OutSPIDma
+       0   Rst_LpduHSU2_TpCnState
+       0   Rst_LpduHSU7_TpCnState
+       0   Rst_LpduM2m_TpCnState
+       0   Rst_LpduSpi_TpCnState
+       0   TestSetup_LpduHSU7_ForTransmit
+       0   UpdateLgrBuf
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable14
+       4  ??DataTable14_1
+       4  ??DataTable14_10
+       4  ??DataTable14_11
+       4  ??DataTable14_12
+       4  ??DataTable14_13
+       4  ??DataTable14_14
+       4  ??DataTable14_15
+       4  ??DataTable14_16
+       4  ??DataTable14_17
+       4  ??DataTable14_18
+       4  ??DataTable14_19
+       4  ??DataTable14_2
+       4  ??DataTable14_20
+       4  ??DataTable14_21
+       4  ??DataTable14_22
+       4  ??DataTable14_23
+       4  ??DataTable14_24
+       4  ??DataTable14_25
+       4  ??DataTable14_26
+       4  ??DataTable14_27
+       4  ??DataTable14_28
+       4  ??DataTable14_29
+       4  ??DataTable14_3
+       4  ??DataTable14_30
+       4  ??DataTable14_31
+       4  ??DataTable14_32
+       4  ??DataTable14_33
+       4  ??DataTable14_4
+       4  ??DataTable14_5
+       4  ??DataTable14_6
+       4  ??DataTable14_7
+       4  ??DataTable14_8
+       4  ??DataTable14_9
+       4  ??DataTable54
+       4  ??DataTable54_1
+       4  ??DataTable54_10
+       4  ??DataTable54_11
+       4  ??DataTable54_12
+       4  ??DataTable54_13
+       4  ??DataTable54_14
+       4  ??DataTable54_15
+       4  ??DataTable54_16
+       4  ??DataTable54_17
+       4  ??DataTable54_2
+       4  ??DataTable54_3
+       4  ??DataTable54_4
+       4  ??DataTable54_5
+       4  ??DataTable54_6
+       4  ??DataTable54_7
+       4  ??DataTable54_8
+       4  ??DataTable54_9
+     108  ?_0
+      52  Eval_CS
+     272  InsertUrgBr2Bs
+     140  ProcessLLEvt
+     168  ProcessReceiveLpdu
+     528  ProcessReceiveLpduCY7
+     388  ProcessReceiveLpduCY7V1
+     464  ProcessReceiveLpduHSU2
+     464  ProcessReceiveLpduHSU7
+     828  ProcessReceiveLpduSpi
+     116  ProcessReceiveLpduU3
+     168  ProcessReceiveLpdu_
+      84  ProcessTransmitLpdu
+     368  ProcessTransmitLpduHSU2
+     348  ProcessTransmitLpduHSU7
+     396  ProcessTransmitLpduM2m
+     560  ProcessTransmitLpduSpi
+     460  ProcessTransmitStubSeqSpi
+     112  Rst_LpduHSU2_TpCnState
+     124  Rst_LpduHSU7_TpCnState
+     104  Rst_LpduM2m_TpCnState
+     116  Rst_LpduSpi_TpCnState
+     128  TestSetup_LpduHSU7_ForTransmit
+     164  UpdateLgrBuf
+    3760  arAnallogWthCmdBuf_L
+      20  arCh
+      20  arCh
+       1  chMakeSpiExch
+       1  chSelectorCurrBuff
+       1  chTotalBadPacketCtr
+     212  hldrCn1LpduUnit
+      76  hldrHSU1LpduTRUnit
+      76  hldrHSU1LpduUnit
+      76  hldrHSU2LpduTRUnit
+      76  hldrHSU2LpduUnit
+      76  hldrHSU7LpduTRUnit
+      76  hldrHSU7LpduUnit
+     652  hldrM2mLpduTRUnit
+     652  hldrM2mLpduUnit
+     528  hldrSpiLpduTRUnit
+     528  hldrSpiLpduUnit
+      72  hldrU3LpduUnit
+     212  holderCn1LpduUnit
+       4  lBackSamplesNum
+       4  lCtrSuccExch
+       4  lIdxBuf
+       4  lSamplesNum
+       4  lTmrEnblTrSpi
+       4  l_Abs_Numerator_Br
+       4  l_IdxAWthCmdBuf
+       4  l_IdxAWthCmdBufGet
+       4  l_time_lable
+       2  shCtrTrLpduSpiTeleMechs
+       4  uiAmtSpiBadRvPacket
+       4  uiAmtSpiGoodRvPacket
+       4  ulCtrTrLpduSpi
+
+ 
+ 7 125 bytes in section .bss
+    40 bytes in section .data
+   108 bytes in section .rodata
+ 3 372 bytes in section .text
+ 3 388 bytes in section Fast_function
+ 
+ 6 760 bytes of CODE  memory
+   108 bytes of CONST memory
+ 7 165 bytes of DATA  memory
+
+Errors: none
+Warnings: 26

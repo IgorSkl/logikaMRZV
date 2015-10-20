@@ -1,0 +1,326 @@
+###############################################################################
+#                                                                             #
+#     IAR Assembler V7.40.3.8902/W32 for ARM 15/Oct/2015  14:29:03            #
+#     Copyright 1999-2015 IAR Systems AB.                                     #
+#                                                                             #
+#           Source file   =  D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\NXP\cstartup.s#
+#           List file     =  D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\List\cstartup.lst#
+#           Object file   =  D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\Obj\cstartup.o#
+#           Command line  =  D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\NXP\cstartup.s #
+#                            -OD:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\Obj\ #
+#                            -s+ -M<> -w+ -r -DICODE_IRAM_DEF                 #
+#                            -LD:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\List\ #
+#                            -t8 --cpu ARM926EJ-S --fpu VFP9-S                #
+#                                                                             #
+###############################################################################
+
+    1                           ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                                ;;;;;;
+    2                           ;;
+    3                           ;; Part one of the system initialization
+                                 code,
+    4                           ;; contains low-level
+    5                           ;; initialization.
+    6                           ;;
+    7                           ;; Copyright 2006 IAR Systems. All rights
+                                 reserved.
+    8                           ;;
+    9                           ;; $Revision: 30870 $
+   10                           ;;
+   11                           
+   12                                   MODULE  ?cstartup
+   13                           
+   14                                   ;; Forward declaration of sections.
+   15                                   SECTION IRQ_STACK:DATA:NOROOT(3)
+   16                                   SECTION FIQ_STACK:DATA:NOROOT(3)
+   17                                   SECTION SVC_STACK:DATA:NOROOT(3)
+   18                                   SECTION ABT_STACK:DATA:NOROOT(3)
+   19                                   SECTION UND_STACK:DATA:NOROOT(3)
+   20                                   SECTION CSTACK:DATA:NOROOT(3)
+   21                           
+   22                           ;
+   23                           ; The module in this file are included in the
+                                 libraries, and may be
+   24                           ; replaced by any user-defined modules that
+                                 define the PUBLIC symbol
+   25                           ; __iar_program_start or a user defined start
+                                 symbol.
+   26                           ;
+   27                           ; To override the cstartup defined in the
+                                 library, simply add your
+   28                           ; modified version to the workbench project.
+   29                           
+   30                                   SECTION .intvec:CODE:ROOT(2)
+   31                           
+   32                                   PUBLIC  __vector
+   33                                   PUBLIC  __iar_program_start
+   34                           
+   35                                               EXTERN      undef_handler,
+                                 swi_handler, prefetch_handler
+   36                                               EXTERN      data_handler,
+                                 irq_handler, fiq_handler
+   37                                           ARM     ; Always ARM mode
+                                 after reset   
+   38                           __vector:
+   39    00000000 18F09FE5                      ldr     pc,[pc,#24]     ;
+                                                         Absolute jump can
+                                                         reach 4 GByte
+   40                           ;               ldr     b,?cstartup     ;
+                                 Relative branch allows remap, limited to 32
+                                 MByte
+   41                           __undef_handler:
+   42    00000004 18F09FE5          ldr pc,[pc,#24]     ; Branch to undef_handl
+                                                        er
+   43                           __swi_handler:
+   44    00000008 18F09FE5                      ldr     pc,[pc,#24]     ;
+                                                         Branch to swi_handler
+   45                           __prefetch_handler:
+   46    0000000C 18F09FE5                      ldr     pc,[pc,#24]     ;
+                                                         Branch to prefetch_han
+                                                        dler
+   47                           __data_handler
+   48    00000010 18F09FE5                      ldr     pc,[pc,#24]     ;
+                                                         Branch to data_handler
+   49    00000014 FFFFFFFF                        dc32 0xFFFFFFFF
+   50                           __irq_handler
+   51    00000018 18F09FE5                      ldr     pc,[pc,#24]     ;
+                                                         Branch to irq_handler
+   52                           __fiq_handler:
+   53    0000001C 18F09FE5                      ldr     pc,[pc,#24]     ;
+                                                         Branch to fiq_handler
+   54                           
+   55                                           ; Constant table entries (for
+                                 ldr pc) will be placed at 0x20
+   56    00000020 ........            dc32      __iar_program_start
+   57    00000024 ........            dc32      __undef_handler
+   58    00000028 ........            dc32      __swi_handler
+   59    0000002C ........            dc32      __prefetch_handler
+   60    00000030 ........            dc32      __data_handler
+   61    00000034 FFFFFFFF                        dc32 0xFFFFFFFF
+   62    00000038 ........            dc32      __irq_handler
+   63    0000003C ........            dc32      __fiq_handler
+   64                           
+   65                           
+   66                           ;        PUBLIC  ?cstartup
+   67                                   EXTERN  ?main
+   68                                   EXTERN  LowLevelInit
+   69                                   EXTERN  bootloader
+   70                                   REQUIRE __vector
+   71                           #ifdef BOOT_LEVEL_2
+   73                           #else
+   74                                   SECTION .cstartup:CODE:NOROOT(2)
+   75                           #endif
+   76                                   ARM
+   77                           
+   78                           __iar_program_start:
+   79                           ?cstartup:
+   80                           ;
+   81                           ; Add initialization needed before setup of
+                                 stackpointers here.
+   82                           ;
+   83                           CP_DIS_MASK DEFINE  0xFFFFEFFA
+   84                           // Disable Addr translation, D cache and
+                                 enable I cache
+   85    00000000 101F11EE                      mrc     p15,0,R1,C1,C0,0
+   86    00000004 A8009FE5                      ldr     R0,=CP_DIS_MASK     ;
+                                                         0xFFFFEFFA
+   87    00000008 001001E0                      and     R1,R1,R0
+   88    0000000C 401D81E3                      orr     R1,R1,#(1<<12)
+   89    00000010 101F01EE                      mcr     p15,0,R1,C1,C0,0
+   90                           ; Disable WDT
+   91    00000014 9C009FE5                      ldr     r0,=0x400040BC      ;
+                                                         TIMCLK_CTRL
+   92    00000018 001090E5                      ldr     r1,[r0]
+   93    0000001C 0110C1E3                      bic     r1,r1,#1            ;
+                                                         clear WDT_CLK_ENA
+   94    00000020 001080E5                      str     r1,[r0]
+   95                           
+   96                           
+   97                                   /* Set pc to actual code location
+                                 (i.e. not in remap zone) */
+   98    00000024 90F09FE5                  LDR     pc, =label
+   99                           
+  100                                   /* Perform low-level initialization of
+                                 the chip using LowLevelInit() */
+  101                           label:
+  102    00000028 90009FE5                  LDR     r0, =LowLevelInit
+  103    0000002C 90409FE5                  LDR     r4, =0x08000FF8
+  104    00000030 04D0A0E1                  MOV     sp, r4
+  105    00000034 30FF2FE1                  BLX     r0
+  106                           
+  107                           #ifdef BOOT_LEVEL_2
+  116                           #endif
+  117                           
+  118                           ;
+  119                           ; Initialize the stack pointers.
+  120                           ; The pattern below can be used for any of the
+                                 exception stacks:
+  121                           ; FIQ, IRQ, SVC, ABT, UND, SYS.
+  122                           ; The USR mode uses the same stack as
+                                 SYS.
+  123                           ; The stack segments must be defined in the
+                                 linker command file,
+  124                           ; and be declared above.
+  125                           ;
+  126                           ; --------------------
+  127                           ; Mode, correspords to bits 0-5 in CPSR
+  128                           
+  129                           MODE_MSK DEFINE 0x1F            ; Bit mask for
+                                 mode bits in CPSR
+  130                           USR_MODE DEFINE 0x10            ; User
+                                 mode
+  131                           FIQ_MODE DEFINE 0x11            ; Fast
+                                 Interrupt Request mode
+  132                           IRQ_MODE DEFINE 0x12            ; Interrupt
+                                 Request mode
+  133                           SVC_MODE DEFINE 0x13            ; Supervisor
+                                 mode
+  134                           ABT_MODE DEFINE 0x17            ; Abort
+                                 mode
+  135                           UND_MODE DEFINE 0x1B            ; Undefined
+                                 Instruction mode
+  136                           SYS_MODE DEFINE 0x1F            ; System
+                                 mode
+  137                           
+  138                           #define I_BIT            0x80
+  139                           #define F_BIT            0x40
+  140                           
+  141                           
+  142    00000038 00000FE1              mrs         r0,cpsr                    
+                                                             ; Original PSR
+                                                     value
+  143    0000003C 1F00C0E3              bic         r0,r0,#MODE_MSK            
+                                                             ; Clear the mode
+                                                     bits
+  144    00000040 D30080E3              orr         r0,r0,#SVC_MODE | I_BIT |
+                                                     F_BIT                    
+                                                     ; Set Supervisor mode
+                                                     bits
+  145    00000044 00F021E1              msr         cpsr_c,r0                  
+                                                             ; Change the
+                                                     mode
+  146    00000048 78D09FE5              ldr         sp,=SFE(SVC_STACK)         
+                                                             ; End of
+                                                     SVC_STACK
+  147                           
+  148    0000004C 1F00C0E3              bic         r0,r0,#MODE_MSK            
+                                                             ; Clear the mode
+                                                     bits
+  149    00000050 DB0080E3              orr         r0,r0,#UND_MODE | I_BIT |
+                                                     F_BIT                    
+                                                     ; Set Undefined mode
+                                                     bits
+  150    00000054 00F021E1              msr         cpsr_c,r0                  
+                                                             ; Change the
+                                                     mode
+  151    00000058 6CD09FE5              ldr         sp,=SFE(UND_STACK)         
+                                                             ; End of
+                                                     UND_MODE
+  152                           
+  153    0000005C 1F00C0E3              bic         r0,r0,#MODE_MSK            
+                                                             ; Clear the mode
+                                                     bits
+  154    00000060 D70080E3              orr         r0,r0,#ABT_MODE | I_BIT |
+                                                     F_BIT                    
+                                                     ; Set Data abort mode
+                                                     bits
+  155    00000064 00F021E1              msr         cpsr_c,r0                  
+                                                             ; Change the
+                                                     mode
+  156    00000068 60D09FE5              ldr         sp,=SFE(ABT_STACK)         
+                                                             ; End of
+                                                     ABT_STACK
+  157                           
+  158    0000006C 1F00C0E3              bic         r0,r0,#MODE_MSK            
+                                                             ; Clear the mode
+                                                     bits
+  159    00000070 D10080E3              orr         r0,r0,#FIQ_MODE | I_BIT |
+                                                     F_BIT                    
+                                                     ; Set FIR mode bits
+  160    00000074 00F021E1              msr         cpsr_c,r0                  
+                                                             ; Change the
+                                                     mode
+  161    00000078 54D09FE5              ldr         sp,=SFE(FIQ_STACK)         
+                                                             ; End of
+                                                     FIQ_STACK
+  162                           
+  163    0000007C 1F00C0E3              bic         r0,r0,#MODE_MSK            
+                                                             ; Clear the mode
+                                                     bits
+  164    00000080 D20080E3              orr         r0,r0,#IRQ_MODE | I_BIT |
+                                                     F_BIT                    
+                                                     ; Set IRQ mode bits
+  165    00000084 00F021E1              msr         cpsr_c,r0                  
+                                                             ; Change the
+                                                     mode
+  166    00000088 48D09FE5              ldr         sp,=SFE(IRQ_STACK)         
+                                                             ; End of
+                                                     IRQ_STACK
+  167                           
+  168    0000008C 1F00C0E3              bic         r0,r0,#MODE_MSK            
+                                                             ; Clear the mode
+                                                     bits
+  169    00000090 1F0080E3              orr         r0,r0,#SYS_MODE            
+                                                             ; Set System mode
+                                                     bits
+  170    00000094 00F021E1              msr         cpsr_c,r0                  
+                                                             ; Change the
+                                                     mode
+  171    00000098 3CD09FE5              ldr         sp,=SFE(CSTACK)            
+                                                             ; End of
+                                                     CSTACK
+  172                           
+  173                           #ifdef __ARMVFP__
+  174                                   ;; Enable the VFP coprocessor.
+  175                           
+  176    0000009C 4004A0E3              MOV     r0, #0x40000000         ; Set
+                                                 EN bit in VFP
+  177    000000A0 100AE8EE              FMXR    fpexc, r0               ;
+                                                 FPEXC, clear others.
+  178                           
+  179                           ;
+  180                           ; Disable underflow exceptions by setting
+                                 flush to zero mode.
+  181                           ; For full IEEE 754 underflow compliance this
+                                 code should be removed
+  182                           ; and the appropriate exception handler
+                                 installed.
+  183                           ;
+  184                           
+  185    000000A4 4007A0E3              MOV     r0, #0x01000000         ; Set
+                                                 FZ bit in VFP
+  186    000000A8 100AE1EE              FMXR    fpscr, r0               ;
+                                                 FPSCR, clear others.
+  187                           #endif
+  188                           
+  189                           ; Continue to ?main for C-level initialization
+                                .
+  190                           
+  191                           
+  192    000000AC 2C009FE5              LDR     r0, =?main
+  193    000000B0 10FF2FE1              BX      r0
+  194                           
+  194.1                                  TABLE
+  194.2  000000B4 FAEFFFFF              Reference on line 86
+  194.3  000000B8 BC400040              Reference on line 91
+  194.4  000000BC ........              Reference on line 98
+  194.5  000000C0 ........              Reference on line 102
+  194.6  000000C4 F80F0008              Reference on line 103
+  194.7  000000C8 ........              Reference on line 146
+  194.8  000000CC ........              Reference on line 151
+  194.9  000000D0 ........              Reference on line 156
+  194.10 000000D4 ........              Reference on line 161
+  194.11 000000D8 ........              Reference on line 166
+  194.12 000000DC ........              Reference on line 171
+  194.13 000000E0 ........              Reference on line 192
+  195                               END
+##############################
+#           CRC:0            #
+#        Errors:   0         #
+#        Warnings: 0         #
+#         Bytes: 292         #
+##############################
+
+
+
+

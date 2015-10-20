@@ -1,0 +1,2908 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  14:35:29
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\LIB\source\lpc32xx_clkpwr_driver.c
+#    Command line =  
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\LIB\source\lpc32xx_clkpwr_driver.c"
+#        -lcN "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\List\" -o
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\" --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=ARM926EJ-S -e --fpu=VFP9-S --dlib_config "D:\Program Files\IAR
+#        Systems\Embedded Workbench 7.2\arm\INC\c\DLib_Config_Normal.h" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\" --interwork
+#        --cpu_mode arm -On --use_c++_inline
+#    List file    =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\lpc32xx_clkpwr_driver.lst
+#    Object file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\lpc32xx_clkpwr_driver.o
+#
+###############################################################################
+
+D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\LIB\source\lpc32xx_clkpwr_driver.c
+      1          /***********************************************************************
+      2           * $Id: lpc32xx_clkpwr_driver.c 35145 2010-03-19 18:10:17Z anderslu $
+      3           *
+      4           * Project: LPC32xx SLC NAND controller driver
+      5           *
+      6           * Description:
+      7           *     This file contains driver support for the LPC32xx SLC NAND
+      8           *     controller.
+      9           *
+     10           ***********************************************************************
+     11           * Software that is described herein is for illustrative purposes only
+     12           * which provides customers with programming information regarding the
+     13           * products. This software is supplied "AS IS" without any warranties.
+     14           * NXP Semiconductors assumes no responsibility or liability for the
+     15           * use of the software, conveys no license or title under any patent,
+     16           * copyright, or mask work right to the product. NXP Semiconductors
+     17           * reserves the right to make changes in the software without
+     18           * notification. NXP Semiconductors also make no representation or
+     19           * warranty that such application will be suitable for the specified
+     20           * use without further testing or modification.
+     21           *********************************************************************/
+     22          
+     23          #include "lpc32xx_clkpwr_driver.h"
+     24          
+     25          #ifdef __ICCARM__
+     26          #include "intrinsics.h"
+     27          #endif
+     28          
+     29          /***********************************************************************
+     30           * SLC NAND controller driver package data
+     31          ***********************************************************************/
+     32          
+     33          /* Structure containing event register pointers */
+     34          typedef struct
+     35          {
+     36            volatile UNS_32 *start_er;
+     37            volatile UNS_32 *start_sr;
+     38            volatile UNS_32 *start_rsr;
+     39            volatile UNS_32 *start_apr;
+     40          } CLKPWR_EVENTREG_GROUP_T;
+     41          
+     42          /* Normal base clocks for peripherals */
+     43          CLKPWR_BASE_CLOCK_T clkpwr_base_clk[CLKPWR_LAST_CLK] =
+     44          {
+     45            CLKPWR_HCLK,       /* CLKPWR_USB_HCLK */
+     46            CLKPWR_HCLK,       /* CLKPWR_LCD_CLK */
+     47            CLKPWR_HCLK,       /* CLKPWR_SSP1_CLK */
+     48            CLKPWR_HCLK,       /* CLKPWR_SSP0_CLK */
+     49            CLKPWR_HCLK,       /* CLKPWR_I2S1_CLK */
+     50            CLKPWR_HCLK,       /* CLKPWR_I2S0_CLK */
+     51            CLKPWR_ARM_CLK,    /* CLKPWR_MSCARD_CLK */
+     52            CLKPWR_HCLK,       /* CLKPWR_MAC_DMA_CLK */
+     53            CLKPWR_HCLK,       /* CLKPWR_MAC_MMIO_CLK */
+     54            CLKPWR_HCLK,       /* CLKPWR_MAC_HRC_CLK */
+     55            CLKPWR_HCLK,       /* CLKPWR_I2C2_CLK */
+     56            CLKPWR_HCLK,       /* CLKPWR_I2C1_CLK */
+     57            CLKPWR_RTC_CLK,    /* CLKPWR_KEYSCAN_CLK */
+     58            CLKPWR_RTC_CLK,    /* CLKPWR_ADC_CLK */
+     59            CLKPWR_RTC_CLK,    /* CLKPWR_PWM2_CLK */
+     60            CLKPWR_RTC_CLK,    /* CLKPWR_PWM1_CLK */
+     61            CLKPWR_PERIPH_CLK, /* CLKPWR_HSTIMER_CLK */
+     62            CLKPWR_PERIPH_CLK, /* CLKPWR_WDOG_CLK */
+     63            CLKPWR_PERIPH_CLK, /* CLKPWR_TIMER3_CLK */
+     64            CLKPWR_PERIPH_CLK, /* CLKPWR_TIMER2_CLK */
+     65            CLKPWR_PERIPH_CLK, /* CLKPWR_TIMER1_CLK */
+     66            CLKPWR_PERIPH_CLK, /* CLKPWR_TIMER0_CLK */
+     67            CLKPWR_PERIPH_CLK, /* CLKPWR_PWM4_CLK */
+     68            CLKPWR_PERIPH_CLK, /* CLKPWR_PWM3_CLK */
+     69            CLKPWR_HCLK,       /* CLKPWR_SPI2_CLK */
+     70            CLKPWR_HCLK,       /* CLKPWR_SPI1_CLK */
+     71            CLKPWR_HCLK,       /* CLKPWR_NAND_SLC_CLK */
+     72            CLKPWR_HCLK,       /* CLKPWR_NAND_MLC_CLK */
+     73            CLKPWR_PERIPH_CLK, /* CLKPWR_UART6_CLK */
+     74            CLKPWR_PERIPH_CLK, /* CLKPWR_UART5_CLK */
+     75            CLKPWR_PERIPH_CLK, /* CLKPWR_UART4_CLK */
+     76            CLKPWR_PERIPH_CLK, /* CLKPWR_UART3_CLK */
+     77            CLKPWR_HCLK,       /* CLKPWR_DMA_CLK */
+     78            CLKPWR_DDR_CLK     /* CLKPWR_SDRAMDDR_CLK */
+     79          };
+     80          
+     81          /* Post divider values for PLLs based on selected register value */
+     82          static UNS_32 pll_postdivs[4] =
+     83          {
+     84            1, 2, 4, 8
+     85          };
+     86          
+     87          /* CLK divider values for HCLK based on selected register value */
+     88          static UNS_32 hclkdivs[4] =
+     89          {
+     90            1, 2, 4, 4
+     91          };
+     92          
+     93          /***********************************************************************
+     94           * CLKPWR controller driver public functions
+     95           **********************************************************************/
+     96          
+     97          /***********************************************************************
+     98           *
+     99           * Function: clkpwr_abs
+    100           *
+    101           * Purpose: ABS difference function
+    102           *
+    103           * Processing:
+    104           *     See function.
+    105           *
+    106           * Parameters:
+    107           *     v1 : Value 1 for ABS
+    108           *     v2 : Value 2 for ABS
+    109           *
+    110           * Outputs: None
+    111           *
+    112           * Returns: Absolute difference between the 2 values
+    113           *
+    114           * Notes: None
+    115           *
+    116           **********************************************************************/
+    117          INT_32 clkpwr_abs(INT_32 v1, INT_32 v2)
+    118          {
+    119            if (v1 > v2)
+    120            {
+    121              return v1 - v2;
+    122            }
+    123          
+    124            return v2 - v1;
+    125          }
+    126          
+    127          /***********************************************************************
+    128           *
+    129           * Function: clkpwr_check_pll_setup
+    130           *
+    131           * Purpose: Determines if a PLL setup is valid
+    132           *
+    133           * Processing:
+    134           *     See function.
+    135           *
+    136           * Parameters:
+    137           *     ifreq    : PLL input frequency
+    138           *     pllsetup : Pointer to PLL setup structure
+    139           *
+    140           * Outputs: None
+    141           *
+    142           * Returns: Computed PLL frequency or 0 if invalid
+    143           *
+    144           * Notes: Used for PLL setup value verification.
+    145           *
+    146           **********************************************************************/
+    147          UNS_32 clkpwr_check_pll_setup(UNS_32 ifreq,
+    148                                        CLKPWR_HCLK_PLL_SETUP_T *pllsetup)
+    149          {
+    150            UNS_64 i64freq, p, m, n, fcco = 0, fref = 0, cfreq = 0;
+    151            INT_32 mode;
+    152          
+    153            /* PLL requirements */
+    154            /* ifreq must be >= 1MHz and <= 20MHz */
+    155            /* FCCO must be >= 156MHz and <= 320MHz */
+    156            /* FREF must be >= 1MHz and <= 27MHz. */
+    157            /* Assume the passed input data is not valid */
+    158          
+    159            /* Work with 64-bit values to prevent overflow */
+    160            i64freq = (UNS_64) ifreq;
+    161            m = (UNS_64) pllsetup->pll_m;
+    162            n = (UNS_64) pllsetup->pll_n;
+    163            p = (UNS_64) pllsetup->pll_p;
+    164          
+    165            /* Get components of the PLL register */
+    166            mode = (pllsetup->cco_bypass_b15 << 2) |
+    167                   (pllsetup->direct_output_b14 << 1) |
+    168                   pllsetup->fdbk_div_ctrl_b13;
+    169            switch (mode)
+    170            {
+    171              case 0x0: /* Non-integer mode */
+    172                cfreq = (m * i64freq) / (2 * p * n);
+    173                fcco = (m * i64freq) / n;
+    174                fref = i64freq / n;
+    175                break;
+    176          
+    177              case 0x1: /* integer mode */
+    178                cfreq = (m * i64freq) / n;
+    179                fcco = (m * i64freq) / (n * 2 * p);
+    180                fref = i64freq / n;
+    181                break;
+    182          
+    183              case 0x2:
+    184              case 0x3: /* Direct mode */
+    185                cfreq = (m * i64freq) / n;
+    186                fcco = cfreq;
+    187                fref = i64freq / n;
+    188                break;
+    189          
+    190              case 0x4:
+    191              case 0x5: /* Bypass mode */
+    192                cfreq = i64freq / (2 * p);
+    193                fcco = 156000000;
+    194                fref = 1000000;
+    195                break;
+    196          
+    197              case 0x6:
+    198              case 0x7: /* Direct bypass mode */
+    199                cfreq = i64freq;
+    200                fcco = 156000000;
+    201                fref = 1000000;
+    202                break;
+    203            }
+    204          
+    205            if ((fcco < 156000000) || (fcco > 320000000))
+    206            {
+    207              /* not a valid range */
+    208              cfreq = 0;
+    209            }
+    210          
+    211            if ((fref < 1000000) || (fref > 27000000))
+    212            {
+    213              /* not a valid range */
+    214              cfreq = 0;
+    215            }
+    216          
+    217            return (INT_32) cfreq;
+    218          }
+    219          
+    220          /***********************************************************************
+    221           *
+    222           * Function: clkpwr_pll_rate_from_val
+    223           *
+    224           * Purpose: Compute a PLL's frequency from a PLL register value
+    225           *
+    226           * Processing:
+    227           *     See function.
+    228           *
+    229           * Parameters:
+    230           *     osc_rate : PLL input clock in Hz
+    231           *     val      : 32-bit register value
+    232           *
+    233           * Outputs: None
+    234           *
+    235           * Returns: The PLL output frequency in Hz, or 0
+    236           *
+    237           * Notes: None
+    238           *
+    239           **********************************************************************/
+    240          UNS_32 clkpwr_pll_rate_from_val(UNS_32 osc_rate,
+    241                                          UNS_32 val)
+    242          {
+    243            CLKPWR_HCLK_PLL_SETUP_T pllcfg;
+    244          
+    245            /* Get components of the PLL register */
+    246            pllcfg.cco_bypass_b15 = 0;
+    247            pllcfg.direct_output_b14 = 0;
+    248            pllcfg.fdbk_div_ctrl_b13 = 0;
+    249            if ((val & CLKPWR_HCLKPLL_CCO_BYPASS) != 0)
+    250            {
+    251              pllcfg.cco_bypass_b15 = 1;
+    252            }
+    253            if ((val & CLKPWR_HCLKPLL_POSTDIV_BYPASS) != 0)
+    254            {
+    255              pllcfg.direct_output_b14 = 1;
+    256            }
+    257            if ((val & CLKPWR_HCLKPLL_FDBK_SEL_FCLK) != 0)
+    258            {
+    259              pllcfg.fdbk_div_ctrl_b13 = 1;
+    260            }
+    261            pllcfg.pll_m = 1 + ((val >> 1) & 0xFF);
+    262            pllcfg.pll_n = 1 + ((val >> 9) & 0x3);
+    263            pllcfg.pll_p = pll_postdivs[((val >> 11) & 0x3)];
+    264          
+    265            return clkpwr_check_pll_setup(osc_rate, &pllcfg);
+    266          }
+    267          
+    268          /***********************************************************************
+    269           *
+    270           * Function: clkpwr_pll_rate
+    271           *
+    272           * Purpose: Compute a PLL's frequency
+    273           *
+    274           * Processing:
+    275           *     See function.
+    276           *
+    277           * Parameters:
+    278           *     osc_rate : PLL input clock in Hz
+    279           *     pPllreg  : Pointer to PLL register set
+    280           *
+    281           * Outputs: None
+    282           *
+    283           * Returns: The PLL output frequency in Hz, or 0
+    284           *
+    285           * Notes: None
+    286           *
+    287           **********************************************************************/
+    288          UNS_32 clkpwr_pll_rate(UNS_32 osc_rate,
+    289                                 UNS_32 *pPllreg)
+    290          {
+    291            return clkpwr_pll_rate_from_val(osc_rate, *pPllreg);
+    292          }
+    293          
+    294          /***********************************************************************
+    295           *
+    296           * Function: clkpwr_mask_and_set
+    297           *
+    298           * Purpose: Set or mask off a specific field or bit
+    299           *
+    300           * Processing:
+    301           *     See function.
+    302           *
+    303           * Parameters:
+    304           *     pReg : Pointer to address to modify
+    305           *     mask : Mask to apply to value
+    306           *     set  : '1' = mask and set, '0' = mask only
+    307           *
+    308           * Outputs: None
+    309           *
+    310           * Returns: '1' if the selected PLL oscillator is locked, otherwise 0
+    311           *
+    312           * Notes: None
+    313           *
+    314           **********************************************************************/
+    315          void clkpwr_mask_and_set(volatile UNS_32 *pReg,
+    316                                   UNS_32 mask,
+    317                                   UNS_32 set)
+    318          {
+    319            UNS_32 tmp;
+    320          
+    321            tmp = *pReg & ~mask;
+    322            if (set != 0)
+    323            {
+    324              tmp |= mask;
+    325            }
+    326            *pReg = tmp;
+    327          }
+    328          
+    329          /***********************************************************************
+    330           *
+    331           * Function: clkpwr_get_event_field
+    332           *
+    333           * Purpose: Get register and bit position for an event ID
+    334           *
+    335           * Processing:
+    336           *     See function.
+    337           *
+    338           * Parameters:
+    339           *     event_id : Event enumeration to change
+    340           *     pReg     : Pointer to where to save register addresses
+    341           *     bitnum   : Bit number mapped to event
+    342           *
+    343           * Outputs: None
+    344           *
+    345           * Returns: 1 if a valid event_id, otherwise 0
+    346           *
+    347           * Notes: None
+    348           *
+    349           **********************************************************************/
+    350          INT_32 clkpwr_get_event_field(CLKPWR_EVENT_T event_id,
+    351                                        CLKPWR_EVENTREG_GROUP_T *pReg,
+    352                                        INT_32 *bitnum)
+    353          {
+    354            INT_32 status = 0;
+    355          
+    356            if (event_id < CLKPWR_SOURCES_EXT_BASE)
+    357            {
+    358              pReg->start_er = &CLKPWR->clkpwr_int_er;
+    359              pReg->start_sr = &CLKPWR->clkpwr_int_sr;
+    360              pReg->start_rsr = &CLKPWR->clkpwr_int_rs;
+    361              pReg->start_apr = &CLKPWR->clkpwr_int_ap;
+    362              *bitnum = (INT_32)event_id;
+    363              status = 1;
+    364            }
+    365            else if (event_id < CLKPWR_SOURCES_GPIO_BASE)
+    366            {
+    367              pReg->start_er = &CLKPWR->clkpwr_pin_er;
+    368              pReg->start_sr = &CLKPWR->clkpwr_pin_sr;
+    369              pReg->start_rsr = &CLKPWR->clkpwr_pin_rs;
+    370              pReg->start_apr = &CLKPWR->clkpwr_pin_ap;
+    371              *bitnum = (INT_32)(CLKPWR_SOURCES_GPIO_BASE - event_id);
+    372              status = 1;
+    373            }
+    374            else if (event_id < CLKPWR_EVENT_LAST)
+    375            {
+    376              pReg->start_er = &CLKPWR->clkpwr_p01_er;
+    377              pReg->start_sr = NULL;
+    378              pReg->start_rsr = NULL;
+    379              pReg->start_apr = NULL;
+    380              *bitnum = (INT_32)(CLKPWR_EVENT_LAST - event_id);
+    381              status = 1;
+    382            }
+    383          
+    384            return status;
+    385          }
+    386          
+    387          /***********************************************************************
+    388           *
+    389           * Function: clkpwr_get_base_clock
+    390           *
+    391           * Purpose: Get the base clock for a main clock
+    392           *
+    393           * Processing:
+    394           *     See function.
+    395           *
+    396           * Parameters:
+    397           *     ipclk : Clock to get the rate of
+    398           *
+    399           * Outputs: None
+    400           *
+    401           * Returns: The base clock for the selected clock.
+    402           *
+    403           * Notes: None
+    404           *
+    405           **********************************************************************/
+    406          CLKPWR_BASE_CLOCK_T clkpwr_get_base_clock(CLKPWR_CLK_T ipclk)
+    407          {
+    408            CLKPWR_BASE_CLOCK_T baseclk = CLKPWR_BASE_INVALID;
+    409          
+    410            if (ipclk <= CLKPWR_LAST_CLK)
+    411            {
+    412              /* Get base clock for the selected clock */
+    413              baseclk = clkpwr_base_clk[ipclk];
+    414          
+    415              /* Do default clocks need to be overrided? */
+    416              switch (ipclk)
+    417              {
+    418                case CLKPWR_ADC_CLK:
+    419                  /* Is the peripheral clock used? */
+    420                  if ((CLKPWR->clkpwr_adc_clk_ctrl_1 &
+    421                       CLKPWR_ADCCTRL1_PCLK_SEL) != 0)
+    422                  {
+    423                    baseclk = CLKPWR_PERIPH_CLK;
+    424                  }
+    425                  break;
+    426          
+    427                case CLKPWR_PWM2_CLK:
+    428                  /* Is the peripheral clock used? */
+    429                  if ((CLKPWR->clkpwr_pwm_clk_ctrl &
+    430                       CLKPWR_PWMCLK_PWM2SEL_PCLK) != 0)
+    431                  {
+    432                    baseclk = CLKPWR_PERIPH_CLK;
+    433                  }
+    434                  break;
+    435          
+    436                case CLKPWR_PWM1_CLK:
+    437                  /* Is the peripheral clock used? */
+    438                  if ((CLKPWR->clkpwr_pwm_clk_ctrl &
+    439                       CLKPWR_PWMCLK_PWM1SEL_PCLK) != 0)
+    440                  {
+    441                    baseclk = CLKPWR_PERIPH_CLK;
+    442                  }
+    443                  break;
+    444          
+    445                default:
+    446                  break;
+    447              }
+    448          
+    449            }
+    450          
+    451            return baseclk;
+    452          }
+    453          
+    454          /**********************************************************************
+    455           * Clock control functions
+    456           *********************************************************************/
+    457          
+    458          /***********************************************************************
+    459           *
+    460           * Function: clkpwr_find_pll_cfg
+    461           *
+    462           * Purpose:
+    463           *     Find a PLL configuration for the selected frequency and
+    464           *     tolerance (in .1% increments), returns the actual frequency of
+    465           *     the PLL for the configuration
+    466           *
+    467           * Processing:
+    468           *     See function.
+    469           *
+    470           * Parameters:
+    471           *     pllin_freq  : Frequency into the PLL
+    472           *     target_freq : Frequency in Hz to compute PLL values for
+    473           *     tol_001     : Tolerance in 1/10th of a percent for target frequency
+    474           *     pllsetup    : Pointer to PLL config structure to fill
+    475           *
+    476           * Outputs: None
+    477           *
+    478           * Returns: New configured frequency, or '0' if an error occurs
+    479           *
+    480           * Notes: None
+    481           *
+    482           **********************************************************************/
+    483          UNS_32 clkpwr_find_pll_cfg(UNS_32 pllin_freq,
+    484                                     UNS_32 target_freq,
+    485                                     INT_32 tol_001,
+    486                                     CLKPWR_HCLK_PLL_SETUP_T *pllsetup)
+    487          {
+    488            UNS_32 ifreq, freqtol, m, n, p, fclkout = 0;
+    489            UNS_32 flag = 0, freqret = 0;
+    490            UNS_64 lfreqtol;
+    491          
+    492            /* Determine frequency tolerance limits */
+    493            lfreqtol = ((UNS_64) target_freq * (UNS_64) tol_001) / 1000;
+    494            freqtol = (INT_32) lfreqtol;
+    495          
+    496            /* Get PLL clock */
+    497            ifreq = pllin_freq;
+    498          
+    499            /* Is direct bypass mode possible? */
+    500            if (clkpwr_abs(pllin_freq, target_freq) <= freqtol)
+    501            {
+    502              flag = 1;
+    503              pllsetup->analog_on = 0;
+    504              pllsetup->cco_bypass_b15 = 1; /* Bypass CCO */
+    505              pllsetup->direct_output_b14 = 1; /* Bypass post divider */
+    506              pllsetup->fdbk_div_ctrl_b13 = 1;
+    507              pllsetup->pll_p = pll_postdivs[0]; /* Doesn't matter */
+    508              pllsetup->pll_n = 1; /* Doesn't matter */
+    509              pllsetup->pll_m = 1; /* Doesn't matter */
+    510              fclkout = clkpwr_check_pll_setup(ifreq, pllsetup);
+    511            }
+    512            else if (target_freq <= ifreq) /* Is bypass mode possible? */
+    513            {
+    514              pllsetup->analog_on = 0;
+    515              pllsetup->cco_bypass_b15 = 1; /* Bypass CCO */
+    516              pllsetup->direct_output_b14 = 0;
+    517              pllsetup->fdbk_div_ctrl_b13 = 1;
+    518              pllsetup->pll_n = 1; /* Doesn't matter */
+    519              pllsetup->pll_m = 1; /* Doesn't matter */
+    520              for (p = 0; ((p <= 3) && (flag == 0)); p++)
+    521              {
+    522                pllsetup->pll_p = pll_postdivs[p];
+    523                fclkout = clkpwr_check_pll_setup(ifreq, pllsetup);
+    524                if (clkpwr_abs(target_freq, fclkout) <= freqtol)
+    525                {
+    526                  /* Found a matching frequency */
+    527                  flag = 1;
+    528                }
+    529              }
+    530            }
+    531          
+    532            /* Is direct mode possible? */
+    533            if (flag == 0)
+    534            {
+    535              pllsetup->analog_on = 1;
+    536              pllsetup->cco_bypass_b15 = 0; /* Bypass CCO */
+    537              pllsetup->direct_output_b14 = 1;
+    538              pllsetup->fdbk_div_ctrl_b13 = 0;
+    539              pllsetup->pll_p = pll_postdivs[0];
+    540              for (m = 1; ((m <= 256) && (flag == 0)); m++)
+    541              {
+    542                for (n = 1; ((n <= 4) && (flag == 0)); n++)
+    543                {
+    544                  /* Compute output frequency for this value */
+    545                  pllsetup->pll_n = n;
+    546                  pllsetup->pll_m = m;
+    547                  fclkout = clkpwr_check_pll_setup(ifreq, pllsetup);
+    548                  if (clkpwr_abs(target_freq, fclkout) <= freqtol)
+    549                  {
+    550                    flag = 1;
+    551                  }
+    552                }
+    553              }
+    554            }
+    555          
+    556            /* Is integer mode possible? */
+    557            if (flag == 0)
+    558            {
+    559              /* Bypass and direct modes won't work with this frequency, so
+    560                 integer mode may need to be used */
+    561              pllsetup->analog_on = 1;
+    562              pllsetup->cco_bypass_b15 = 0;
+    563              pllsetup->direct_output_b14 = 0;
+    564              pllsetup->fdbk_div_ctrl_b13 = 1;
+    565              for (m = 1; ((m <= 256) && (flag == 0)); m++)
+    566              {
+    567                for (n = 1; ((n <= 4) && (flag == 0)); n++)
+    568                {
+    569                  for (p = 0; ((p < 4) && (flag == 0)); p++)
+    570                  {
+    571                    /* Compute output frequency for this value */
+    572                    pllsetup->pll_p = pll_postdivs[p];
+    573                    pllsetup->pll_n = n;
+    574                    pllsetup->pll_m = m;
+    575                    fclkout = clkpwr_check_pll_setup(ifreq, pllsetup);
+    576                    if (clkpwr_abs(target_freq, fclkout) <= freqtol)
+    577                    {
+    578                      flag = 1;
+    579                    }
+    580                  }
+    581                }
+    582              }
+    583            }
+    584          
+    585            if (flag == 0)
+    586            {
+    587              /* Try non-integer mode */
+    588              pllsetup->analog_on = 1;
+    589              pllsetup->cco_bypass_b15 = 0;
+    590              pllsetup->direct_output_b14 = 0;
+    591              pllsetup->fdbk_div_ctrl_b13 = 0;
+    592              for (m = 1; ((m <= 256) && (flag == 0)); m++)
+    593              {
+    594                for (n = 1; ((n <= 4) && (flag == 0)); n++)
+    595                {
+    596                  for (p = 0; ((p < 4) && (flag == 0)); p++)
+    597                  {
+    598                    /* Compute output frequency for this value */
+    599                    pllsetup->pll_p = pll_postdivs[p];
+    600                    pllsetup->pll_n = n;
+    601                    pllsetup->pll_m = m;
+    602                    fclkout = clkpwr_check_pll_setup(ifreq, pllsetup);
+    603                    if (clkpwr_abs(target_freq, fclkout) <= freqtol)
+    604                    {
+    605                      flag = 1;
+    606                    }
+    607                  }
+    608                }
+    609              }
+    610            }
+    611          
+    612            if (flag == 1)
+    613            {
+    614              freqret = fclkout;
+    615            }
+    616          
+    617            return freqret;
+    618          }
+    619          
+    620          /***********************************************************************
+    621           *
+    622           * Function: clkpwr_pll397_setup
+    623           *
+    624           * Purpose: Setup the PLL397 oscillator
+    625           *
+    626           * Processing:
+    627           *     See function.
+    628           *
+    629           * Parameters:
+    630           *     bypass_enable : (1) to enable bypass, (0) to disable bypass mode
+    631           *     bias : Must be a macro of type CLKPWR_PLL397_BIAS_xxxx
+    632           *     enable : (1) to enable, (0) to disable
+    633           *
+    634           * Outputs: None
+    635           *
+    636           * Returns: Nothing
+    637           *
+    638           * Notes: None
+    639           *
+    640           **********************************************************************/
+    641          void clkpwr_pll397_setup(INT_32 bypass_enable,
+    642                                   UNS_32 bias,
+    643                                   INT_32 pll_enable)
+    644          {
+    645            volatile UNS_32 tmp;
+    646          
+    647            tmp = CLKPWR->clkpwr_pll397_ctrl & ~(CLKPWR_PLL397_BYPASS |
+    648                                                 CLKPWR_PLL397_BIAS_MASK |
+    649          									   CLKPWR_SYSCTRL_PLL397_DIS);
+    650          
+    651            if (bypass_enable != 0)
+    652            {
+    653              tmp = tmp | CLKPWR_PLL397_BYPASS;
+    654            }
+    655            tmp = tmp | bias;
+    656          
+    657            if (pll_enable == 0)
+    658            {
+    659              tmp = tmp | CLKPWR_SYSCTRL_PLL397_DIS;
+    660            }
+    661          
+    662            CLKPWR->clkpwr_pll397_ctrl = tmp;
+    663          }
+    664          
+    665          /***********************************************************************
+    666           *
+    667           * Function: clkpwr_hclkpll_setup
+    668           *
+    669           * Purpose: Setup the HCLK PLL with a PLL structure
+    670           *
+    671           * Processing:
+    672           *     See function.
+    673           *
+    674           * Parameters:
+    675           *     pHCLKPllSetup : Pointer to a HCLK PLL setup structure
+    676           *
+    677           * Outputs: None
+    678           *
+    679           * Returns: 1 if the PLL was setup ok, otherwise 0 if no change
+    680           *
+    681           * Notes: The PLL will be disabled out of this function.
+    682           *
+    683           **********************************************************************/
+    684          INT_32 clkpwr_hclkpll_setup(CLKPWR_HCLK_PLL_SETUP_T *pHCLKPllSetup)
+    685          {
+    686            UNS_32 tv, tmp = 0;
+    687          
+    688            if (pHCLKPllSetup->analog_on != 0)
+    689            {
+    690              tmp |= CLKPWR_HCLKPLL_POWER_UP;
+    691            }
+    692            if (pHCLKPllSetup->cco_bypass_b15 != 0)
+    693            {
+    694              tmp |= CLKPWR_HCLKPLL_CCO_BYPASS;
+    695            }
+    696            if (pHCLKPllSetup->direct_output_b14 != 0)
+    697            {
+    698              tmp |= CLKPWR_HCLKPLL_POSTDIV_BYPASS;
+    699            }
+    700            if (pHCLKPllSetup->fdbk_div_ctrl_b13 != 0)
+    701            {
+    702              tmp |= CLKPWR_HCLKPLL_FDBK_SEL_FCLK;
+    703            }
+    704          
+    705            switch (pHCLKPllSetup->pll_p)
+    706            {
+    707              case 1:
+    708                tv = 0;
+    709                break;
+    710          
+    711              case 2:
+    712                tv = 1;
+    713                break;
+    714          
+    715              case 4:
+    716                tv = 2;
+    717                break;
+    718          
+    719              case 8:
+    720                tv = 3;
+    721                break;
+    722          
+    723              default:
+    724                return 0;
+    725            }
+    726            tmp |= CLKPWR_HCLKPLL_POSTDIV_2POW(tv);
+    727            tmp |= CLKPWR_HCLKPLL_PREDIV_PLUS1(pHCLKPllSetup->pll_n - 1);
+    728            tmp |= CLKPWR_HCLKPLL_PLLM(pHCLKPllSetup->pll_m - 1);
+    729          
+    730            CLKPWR->clkpwr_hclkpll_ctrl = tmp;
+    731          
+    732            return clkpwr_check_pll_setup(
+    733                     clkpwr_get_base_clock_rate(CLKPWR_SYSCLK), pHCLKPllSetup);
+    734          }
+    735          
+    736          /***********************************************************************
+    737           *
+    738           * Function: clkpwr_usbclkpll_setup
+    739           *
+    740           * Purpose: Setup the USB PLL with a PLL structure
+    741           *
+    742           * Processing:
+    743           *     See function.
+    744           *
+    745           * Parameters:
+    746           *     pHCLKPllSetup : Pointer to a HCLK PLL setup structure
+    747           *
+    748           * Outputs: None
+    749           *
+    750           * Returns: 1 if the PLL was setup ok, otherwise 0 if no change
+    751           *
+    752           * Notes: The PLL will be disabled out of this function. USB and HCLK
+    753           *        PLL structures are identical.
+    754           *
+    755           **********************************************************************/
+    756          INT_32 clkpwr_usbclkpll_setup(CLKPWR_HCLK_PLL_SETUP_T *pHCLKPllSetup)
+    757          {
+    758            UNS_32 tv, tmp = 0;
+    759          
+    760            if (pHCLKPllSetup->analog_on != 0)
+    761            {
+    762              tmp |= CLKPWR_HCLKPLL_POWER_UP;
+    763            }
+    764            if (pHCLKPllSetup->cco_bypass_b15 != 0)
+    765            {
+    766              tmp |= CLKPWR_HCLKPLL_CCO_BYPASS;
+    767            }
+    768            if (pHCLKPllSetup->direct_output_b14 != 0)
+    769            {
+    770              tmp |= CLKPWR_HCLKPLL_POSTDIV_BYPASS;
+    771            }
+    772            if (pHCLKPllSetup->fdbk_div_ctrl_b13 != 0)
+    773            {
+    774              tmp |= CLKPWR_HCLKPLL_FDBK_SEL_FCLK;
+    775            }
+    776          
+    777            switch (pHCLKPllSetup->pll_p)
+    778            {
+    779              case 1:
+    780                tv = 0;
+    781                break;
+    782          
+    783              case 2:
+    784                tv = 1;
+    785                break;
+    786          
+    787              case 4:
+    788                tv = 2;
+    789                break;
+    790          
+    791              case 8:
+    792                tv = 3;
+    793                break;
+    794          
+    795              default:
+    796                return 0;
+    797            }
+    798            tmp |= CLKPWR_HCLKPLL_POSTDIV_2POW(tv);
+    799            tmp |= CLKPWR_HCLKPLL_PREDIV_PLUS1(pHCLKPllSetup->pll_n - 1);
+    800            tmp |= CLKPWR_HCLKPLL_PLLM(pHCLKPllSetup->pll_m - 1);
+    801          
+    802            CLKPWR->clkpwr_usb_ctrl = tmp;
+    803          
+    804          //  return 1;
+    805            return clkpwr_check_pll_setup(
+    806                     clkpwr_get_base_clock_rate(CLKPWR_SYSCLK), pHCLKPllSetup);
+    807          }
+    808          
+    809          /***********************************************************************
+    810           *
+    811           * Function: clkpwr_hclkpll_direct_setup
+    812           *
+    813           * Purpose: Setup the HCLK PLL with a direct value
+    814           *
+    815           * Processing:
+    816           *     See function.
+    817           *
+    818           * Parameters:
+    819           *     pllsetupval : PLL direct setup value
+    820           *
+    821           * Outputs: None
+    822           *
+    823           * Returns: Nothing
+    824           *
+    825           * Notes: The PLL will be disabled out of this function.
+    826           *
+    827           **********************************************************************/
+    828          void clkpwr_hclkpll_direct_setup(UNS_32 pllsetupval)
+    829          {
+    830            CLKPWR->clkpwr_hclkpll_ctrl = pllsetupval;
+    831          }
+    832          
+    833          /***********************************************************************
+    834           *
+    835           * Function: clkpwr_pll_dis_en
+    836           *
+    837           * Purpose: Enable or disable a PLL
+    838           *
+    839           * Processing:
+    840           *     See function.
+    841           *
+    842           * Parameters:
+    843           *     pll    : PLL to enable or disable
+    844           *     enable : 0 to disable, 1 to enable
+    845           *
+    846           * Outputs: None
+    847           *
+    848           * Returns: Nothing
+    849           *
+    850           * Notes: None
+    851           *
+    852           **********************************************************************/
+    853          void clkpwr_pll_dis_en(CLKPWR_PLL_T pll,
+    854                                 INT_32 enable)
+    855          {
+    856            switch (pll)
+    857            {
+    858              case CLKPWR_PLL397:
+    859                if (enable == 0)
+    860                {
+    861                  CLKPWR->clkpwr_pll397_ctrl |= CLKPWR_SYSCTRL_PLL397_DIS;
+    862                }
+    863                else
+    864                {
+    865                  CLKPWR->clkpwr_pll397_ctrl &= ~CLKPWR_SYSCTRL_PLL397_DIS;
+    866                }
+    867                break;
+    868          
+    869              case CLKPWR_HCLK_PLL:
+    870                if (enable != 0)
+    871                {
+    872                  CLKPWR->clkpwr_hclkpll_ctrl |= CLKPWR_HCLKPLL_POWER_UP;
+    873                }
+    874                else
+    875                {
+    876                  CLKPWR->clkpwr_hclkpll_ctrl &= ~CLKPWR_HCLKPLL_POWER_UP;
+    877                }
+    878                break;
+    879          
+    880              case CLKPWR_USB_PLL:
+    881                if (enable != 0)
+    882                {
+    883                  CLKPWR->clkpwr_usb_ctrl |= CLKPWR_USBCTRL_PLL_PWRUP;
+    884                }
+    885                else
+    886                {
+    887                  CLKPWR->clkpwr_usb_ctrl &= ~CLKPWR_USBCTRL_PLL_PWRUP;
+    888                }
+    889                break;
+    890          
+    891              default:
+    892                break;
+    893            }
+    894          }
+    895          
+    896          /***********************************************************************
+    897           *
+    898           * Function: clkpwr_is_pll_locked
+    899           *
+    900           * Purpose: Get a PLL lock status
+    901           *
+    902           * Processing:
+    903           *     See function.
+    904           *
+    905           * Parameters:
+    906           *     pll : PLL to check the status of
+    907           *
+    908           * Outputs: None
+    909           *
+    910           * Returns: '1' if the selected PLL oscillator is locked, otherwise 0
+    911           *
+    912           * Notes:
+    913           *     If the analog is disabled for the HCKL or USB PLL, it may still
+    914           *     provide a clock, but never a locked status. In these cases, a
+    915           *     simulated lock status is returned.
+    916           *
+    917           **********************************************************************/
+    918          INT_32 clkpwr_is_pll_locked(CLKPWR_PLL_T pll)
+    919          {
+    920            INT_32 locked = 0;
+    921          
+    922            switch (pll)
+    923            {
+    924              case CLKPWR_PLL397:
+    925                if ((CLKPWR->clkpwr_pll397_ctrl &
+    926                     CLKPWR_SYSCTRL_PLL397_STS) != 0)
+    927                {
+    928                  locked = 1;
+    929                }
+    930                break;
+    931          
+    932              case CLKPWR_HCLK_PLL:
+    933                if ((CLKPWR->clkpwr_hclkpll_ctrl &
+    934                     CLKPWR_HCLKPLL_PLL_STS) != 0)
+    935                {
+    936                  locked = 1;
+    937                }
+    938                else if ((CLKPWR->clkpwr_hclkpll_ctrl &
+    939                          CLKPWR_HCLKPLL_POWER_UP) == 0)
+    940                {
+    941                  /* Simulated status */
+    942                  locked = 1;
+    943                }
+    944                break;
+    945          
+    946              case CLKPWR_USB_PLL:
+    947                if ((CLKPWR->clkpwr_usb_ctrl &
+    948                     CLKPWR_USBCTRL_PLL_STS) != 0)
+    949                {
+    950                  locked = 1;
+    951                }
+    952                else if ((CLKPWR->clkpwr_usb_ctrl &
+    953                          CLKPWR_USBCTRL_PLL_PWRUP) == 0)
+    954                {
+    955                  /* Simulated status */
+    956                  locked = 1;
+    957                }
+    958                break;
+    959          
+    960              default:
+    961                break;
+    962            }
+    963          
+    964            return locked;
+    965          }
+    966          
+    967          /***********************************************************************
+    968           *
+    969           * Function: clkpwr_mainosc_setup
+    970           *
+    971           * Purpose: Setup the main oscillator
+    972           *
+    973           * Processing:
+    974           *     See function.
+    975           *
+    976           * Parameters:
+    977           *     capload_add : adds 0 to 12.7pF, or 0.1pF per increment
+    978           *     osc_enable  : (1) to enable, (0) to disable
+    979           *
+    980           * Outputs: None
+    981           *
+    982           * Returns: Nothing
+    983           *
+    984           * Notes: None
+    985           *
+    986           **********************************************************************/
+    987          void clkpwr_mainosc_setup(UNS_32 capload_add,
+    988                                    INT_32 osc_enable)
+    989          {
+    990            volatile UNS_32 tmp;
+    991          
+    992            /* Read current register value and mask off cap load value */
+    993            tmp = CLKPWR->clkpwr_main_osc_ctrl & ~(CLKPWR_MOSC_CAP_MASK |
+    994                                                   CLKPWR_MOSC_DISABLE |
+    995          										 CLKPWR_SYSCTRL_BP_MASK);
+    996          
+    997            /* Add in new cap load value */
+    998            tmp = tmp | CLKPWR_MOSC_ADD_CAP(capload_add);
+    999          
+   1000            if (osc_enable == 0)
+   1001            {
+   1002              tmp = tmp | CLKPWR_MOSC_DISABLE;
+   1003            }
+   1004          
+   1005            CLKPWR->clkpwr_main_osc_ctrl = tmp;
+   1006          }
+   1007          
+   1008          /***********************************************************************
+   1009           *
+   1010           * Function: clkpwr_sysclk_setup
+   1011           *
+   1012           * Purpose: Setup the system clocking
+   1013           *
+   1014           * Processing:
+   1015           *     See function.
+   1016           *
+   1017           * Parameters:
+   1018           *     osc   : Selected oscillator to use
+   1019           *     bpval : Bad phase clock switch value
+   1020           *
+   1021           * Outputs: None
+   1022           *
+   1023           * Returns: Nothing
+   1024           *
+   1025           * Notes: None
+   1026           *
+   1027           **********************************************************************/
+   1028          void clkpwr_sysclk_setup(CLKPWR_OSC_T osc,
+   1029                                   INT_32 bpval)
+   1030          {
+   1031            volatile UNS_32 tmp;
+   1032          
+   1033            tmp = CLKPWR->clkpwr_sysclk_ctrl & ~(CLKPWR_SYSCTRL_BP_MASK |
+   1034                                                 CLKPWR_SYSCTRL_USEPLL397);
+   1035          
+   1036            tmp = tmp | CLKPWR_SYSCTRL_BP_TRIG(bpval);
+   1037            switch (osc)
+   1038            {
+   1039              case CLKPWR_PLL397_OSC:
+   1040                tmp = tmp | CLKPWR_SYSCTRL_USEPLL397;
+   1041                break;
+   1042          
+   1043              case CLKPWR_MAIN_OSC:
+   1044              default:
+   1045                break;
+   1046            }
+   1047          
+   1048            CLKPWR->clkpwr_sysclk_ctrl = tmp;
+   1049          }
+   1050          
+   1051          /***********************************************************************
+   1052           *
+   1053           * Function: clkpwr_get_osc
+   1054           *
+   1055           * Purpose: Determine which oscillator is selected
+   1056           *
+   1057           * Processing:
+   1058           *     See function.
+   1059           *
+   1060           * Parameters: None
+   1061           *
+   1062           * Outputs: None
+   1063           *
+   1064           * Returns: Oscillator enumeration for active oscillator
+   1065           *
+   1066           * Notes: None
+   1067           *
+   1068           **********************************************************************/
+   1069          CLKPWR_OSC_T clkpwr_get_osc(void)
+   1070          {
+   1071            CLKPWR_OSC_T sosc = CLKPWR_MAIN_OSC;
+   1072            if ((CLKPWR->clkpwr_sysclk_ctrl & CLKPWR_SYSCTRL_SYSCLKMUX) != 0)
+   1073            {
+   1074              sosc = CLKPWR_PLL397_OSC;
+   1075            }
+   1076          
+   1077            return sosc;
+   1078          }
+   1079          
+   1080          /***********************************************************************
+   1081           *
+   1082           * Function: clkpwr_set_hclk_divs
+   1083           *
+   1084           * Purpose: Setup the HCLK dividers
+   1085           *
+   1086           * Processing:
+   1087           *     See function.
+   1088           *
+   1089           * Parameters:
+   1090           *     dram_clk_div   : CLKPWR_HCLKDIV_DDRCLK_xx value
+   1091           *     periph_clk_div : Must be 1 to 256, peripheral clock divider
+   1092           *     hclk_div_val   : Must be 1, 2, or 4
+   1093           *
+   1094           * Outputs: None
+   1095           *
+   1096           * Returns: Nothing
+   1097           *
+   1098           * Notes: None
+   1099           *
+   1100           **********************************************************************/
+   1101          void clkpwr_set_hclk_divs(UNS_32 dram_clk_div,
+   1102                                    INT_32 periph_clk_div,
+   1103                                    INT_32 hclk_div_val)
+   1104          {
+   1105            UNS_32 hclkval = 0;
+   1106          
+   1107            switch (hclk_div_val)
+   1108            {
+   1109              case 1:
+   1110                hclkval = 0;
+   1111                break;
+   1112          
+   1113              case 2:
+   1114                hclkval = 1;
+   1115                break;
+   1116          
+   1117              case 4:
+   1118              default:
+   1119                hclkval = 2;
+   1120                break;
+   1121            }
+   1122          
+   1123            CLKPWR->clkpwr_hclk_div = (dram_clk_div |
+   1124              CLKPWR_HCLKDIV_PCLK_DIV(periph_clk_div - 1) |
+   1125              CLKPWR_HCLKDIV_DIV_2POW(hclkval));
+   1126          }
+   1127          
+   1128          /***********************************************************************
+   1129           *
+   1130           * Function: clkpwr_get_base_clock_rate
+   1131           *
+   1132           * Purpose: Get the clock frequency for a base clock
+   1133           *
+   1134           * Processing:
+   1135           *     See function.
+   1136           *
+   1137           * Parameters:
+   1138           *     baseclk : Base clock to get the rate of
+   1139           *
+   1140           * Outputs: None
+   1141           *
+   1142           * Returns:
+   1143           *     The current clock rate for the selected peripheral in Hz, or 0
+   1144           *     if the clock rate can't be determined.
+   1145           *
+   1146           * Notes: None
+   1147           *
+   1148           **********************************************************************/
+   1149          UNS_32 clkpwr_get_base_clock_rate(CLKPWR_BASE_CLOCK_T baseclk)
+   1150          {
+   1151            UNS_32 sys_clk, ddr_clock, ddr_hclk_div, hclkpll_clk, periph_clk;
+   1152            UNS_32 tmp, hclk1_clk, arm1_clk, hclk_clk, arm_clk, clkrate;
+   1153          
+   1154            /* Is PLL397 oscillator being used? */
+   1155            if ((CLKPWR->clkpwr_sysclk_ctrl & CLKPWR_SYSCTRL_USEPLL397) != 0)
+   1156            {
+   1157              /* PLL397 is used */
+   1158              sys_clk = CLOCK_OSC_FREQ * 397;
+   1159            }
+   1160            else
+   1161            {
+   1162              sys_clk = MAIN_OSC_FREQ;
+   1163            }
+   1164          
+   1165            /* Compute HCLK DDR divider */
+   1166            ddr_hclk_div = 0;
+   1167            if ((CLKPWR->clkpwr_sdramclk_ctrl & CLKPWR_SDRCLK_USE_DDR) != 0)
+   1168            {
+   1169              /* DDR is being used */
+   1170              if ((CLKPWR->clkpwr_hclk_div & CLKPWR_HCLKDIV_DDRCLK_NORM) != 0)
+   1171              {
+   1172                ddr_hclk_div = 1;
+   1173              }
+   1174              else if ((CLKPWR->clkpwr_hclk_div &
+   1175                        CLKPWR_HCLKDIV_DDRCLK_HALF) != 0)
+   1176              {
+   1177                ddr_hclk_div = 2;
+   1178              }
+   1179            }
+   1180            else
+   1181            {
+   1182              /* SDRAM is being used */
+   1183              tmp = CLKPWR->clkpwr_hclk_div & CLKPWR_HCLKDIV_DIV_2POW(0x3);
+   1184              ddr_hclk_div = hclkdivs[tmp] - 1;
+   1185            }
+   1186          
+   1187            /* Is the device in run mode? */
+   1188            if ((CLKPWR->clkpwr_pwr_ctrl & CLKPWR_SELECT_RUN_MODE) != 0)
+   1189            {
+   1190              /* In run mode */
+   1191          
+   1192              /* Compute HCLK PLL rate */
+   1193              hclkpll_clk = clkpwr_pll_rate(sys_clk,
+   1194                (UNS_32 *) & CLKPWR->clkpwr_hclkpll_ctrl);
+   1195          
+   1196              /* Base DDR rate */
+   1197              ddr_clock = hclkpll_clk;
+   1198          
+   1199              /* Base peripheral clock rate */
+   1200              tmp = 1 + ((CLKPWR->clkpwr_hclk_div >> 2) & 0x1F);
+   1201              periph_clk = hclkpll_clk / tmp;
+   1202          
+   1203              /* Base HCLK rate (when not using peripheral clock */
+   1204              hclk1_clk = hclkpll_clk /
+   1205               hclkdivs[CLKPWR_HCLKDIV_DIV_2POW(CLKPWR->clkpwr_hclk_div)];
+   1206          
+   1207              /* Base ARM clock (when not using peripheral clock */
+   1208              arm1_clk = hclkpll_clk;
+   1209            }
+   1210            else
+   1211            {
+   1212              /* In direct-run mode */
+   1213          
+   1214              /* Base DDR rate */
+   1215              ddr_clock = sys_clk;
+   1216          
+   1217              /* Base peripheral clock rate */
+   1218              periph_clk = sys_clk;
+   1219          
+   1220              /* Base HCLK rate (when not using peripheral clock */
+   1221              hclk1_clk = sys_clk;
+   1222          
+   1223              /* Base ARM clock (when not using peripheral clock */
+   1224              arm1_clk = sys_clk;
+   1225            }
+   1226          
+   1227            /* Compute SDRAM/DDR clock */
+   1228            ddr_clock = ddr_clock / (ddr_hclk_div + 1);
+   1229          
+   1230            /* Compute HCLK and ARM clock rates */
+   1231            if ((CLKPWR->clkpwr_pwr_ctrl & CLKPWR_CTRL_FORCE_PCLK) != 0)
+   1232            {
+   1233              /* HCLK and ARM clock run from peripheral clock */
+   1234              hclk_clk = periph_clk;
+   1235              arm_clk = periph_clk;
+   1236            }
+   1237            else
+   1238            {
+   1239              /* Normal clock is used for HCLK and ARM clock */
+   1240              hclk_clk = hclk1_clk;
+   1241              arm_clk = arm1_clk;
+   1242            }
+   1243          
+   1244            /* Determine rates */
+   1245            switch (baseclk)
+   1246            {
+   1247              case CLKPWR_MAINOSC_CLK:
+   1248                /* Main oscillator rate */
+   1249                clkrate = MAIN_OSC_FREQ;
+   1250                break;
+   1251          
+   1252              case CLKPWR_RTC_CLK:
+   1253                /* RTC oscillator rate */
+   1254                clkrate = CLOCK_OSC_FREQ;
+   1255                break;
+   1256          
+   1257              case CLKPWR_SYSCLK:
+   1258                /* System oscillator (main osc or PLL397) rate */
+   1259                clkrate = sys_clk;
+   1260                break;
+   1261          
+   1262              case CLKPWR_ARM_CLK:
+   1263                clkrate = arm_clk;
+   1264                break;
+   1265          
+   1266              case CLKPWR_HCLK:
+   1267                clkrate = hclk_clk;
+   1268                break;
+   1269          
+   1270              case CLKPWR_PERIPH_CLK:
+   1271                clkrate = periph_clk;
+   1272                break;
+   1273          
+   1274              case CLKPWR_USB_HCLK_SYS:
+   1275                clkrate = 0; // Not supported
+   1276                break;
+   1277          
+   1278              case CLKPWR_48M_CLK:
+   1279                clkrate = 0; // Not supported
+   1280                break;
+   1281          
+   1282              case CLKPWR_DDR_CLK:
+   1283                clkrate = ddr_clock;
+   1284                break;
+   1285          
+   1286              case CLKPWR_MSSD_CLK:
+   1287                clkrate = hclk_clk;
+   1288                break;
+   1289          
+   1290              default:
+   1291                clkrate = 0;
+   1292                break;
+   1293            }
+   1294          
+   1295            return clkrate;
+   1296          }
+   1297          
+   1298          /***********************************************************************
+   1299           *
+   1300           * Function: clkpwr_force_arm_hclk_to_pclk
+   1301           *
+   1302           * Purpose: Force (or unforce) HCLK and ARM_CLK to run from PERIPH_CLK
+   1303           *
+   1304           * Processing:
+   1305           *     See function.
+   1306           *
+   1307           * Parameters:
+   1308           *     force : '1' to force HCLK and ARM clock to PERIPH_CLK, '0' normal
+   1309           *
+   1310           * Outputs: None
+   1311           *
+   1312           * Returns: Nothing
+   1313           *
+   1314           * Notes: None
+   1315           *
+   1316           **********************************************************************/
+   1317          void clkpwr_force_arm_hclk_to_pclk(INT_32 force)
+   1318          {
+   1319            UNS_32 tmp;
+   1320          
+   1321            tmp = CLKPWR->clkpwr_pwr_ctrl & ~CLKPWR_CTRL_FORCE_PCLK;
+   1322            if (force != 0)
+   1323            {
+   1324              tmp |= CLKPWR_CTRL_FORCE_PCLK;
+   1325            }
+   1326          
+   1327            CLKPWR->clkpwr_pwr_ctrl = tmp;
+   1328          }
+   1329          
+   1330          /***********************************************************************
+   1331           *
+   1332           * Function: clkpwr_set_mode
+   1333           *
+   1334           * Purpose: Select operational mode (run, direct run, or stop)
+   1335           *
+   1336           * Processing:
+   1337           *     See function.
+   1338           *
+   1339           * Parameters:
+   1340           *     freq    : Frequency in Hz to compute PLL values for
+   1341           *     tol     : Tolerance in percent for target frequency
+   1342           *     pllsetup: Pointer to PLL config structure to fill
+   1343           *
+   1344           * Outputs: None
+   1345           *
+   1346           * Returns: '1' if the PLL config is valid, otherwise 0
+   1347           *
+   1348           * Notes: None
+   1349           *
+   1350           **********************************************************************/
+   1351          void clkpwr_set_mode(CLKPWR_MODE_T mode)
+   1352          {
+   1353            UNS_32 tmp;
+   1354          
+   1355            switch (mode)
+   1356            {
+   1357              case CLKPWR_MD_RUN:
+   1358                tmp = CLKPWR->clkpwr_pwr_ctrl | CLKPWR_SELECT_RUN_MODE;
+   1359                CLKPWR->clkpwr_pwr_ctrl = tmp;
+   1360                break;
+   1361          
+   1362              case CLKPWR_MD_DIRECTRUN:
+   1363                tmp = CLKPWR->clkpwr_pwr_ctrl & ~CLKPWR_SELECT_RUN_MODE;
+   1364                CLKPWR->clkpwr_pwr_ctrl = tmp;
+   1365                break;
+   1366          
+   1367              case CLKPWR_MODE_STOP:
+   1368                tmp = CLKPWR->clkpwr_pwr_ctrl | CLKPWR_STOP_MODE_CTRL;
+   1369                CLKPWR->clkpwr_pwr_ctrl = tmp;
+   1370                break;
+   1371          
+   1372              default:
+   1373                break;
+   1374            }
+   1375          }
+   1376          
+   1377          /***********************************************************************
+   1378           *
+   1379           * Function: clkpwr_clk_en_dis
+   1380           *
+   1381           * Purpose: Enable or disable a clock
+   1382           *
+   1383           * Processing:
+   1384           *     See function.
+   1385           *
+   1386           * Parameters:
+   1387           *     clk    : Clock to enable or disable
+   1388           *     enable : '1' to enable, '0' to disable
+   1389           *
+   1390           * Outputs: None
+   1391           *
+   1392           * Returns: '1' if the selected PLL oscillator is locked, otherwise 0
+   1393           *
+   1394           * Notes: None
+   1395           *
+   1396           **********************************************************************/
+   1397          void clkpwr_clk_en_dis(CLKPWR_CLK_T clk,
+   1398                                 INT_32 enable)
+   1399          {
+   1400            switch (clk)
+   1401            {
+   1402          #if 0 // Not supported
+   1403              case CLKPWR_USB_HCLK:
+   1404                clkpwr_mask_and_set(&CLKPWR->clkpwr_pwr_ctrl,
+   1405                                    CLKPWR_DISABLE_USB_HCLK, !enable);
+   1406                break;
+   1407          #endif
+   1408              case CLKPWR_LCD_CLK:
+   1409                clkpwr_mask_and_set(&CLKPWR->clkpwr_lcdclk_ctrl,
+   1410                                    CLKPWR_LCDCTRL_CLK_EN, enable);
+   1411                break;
+   1412          
+   1413              case CLKPWR_SSP1_CLK:
+   1414                clkpwr_mask_and_set(&CLKPWR->clkpwr_ssp_blk_ctrl,
+   1415                                    CLKPWR_SSPCTRL_SSPCLK1_EN, enable);
+   1416                break;
+   1417          
+   1418              case CLKPWR_SSP0_CLK:
+   1419                clkpwr_mask_and_set(&CLKPWR->clkpwr_ssp_blk_ctrl,
+   1420                                    CLKPWR_SSPCTRL_SSPCLK0_EN, enable);
+   1421                break;
+   1422          
+   1423              case CLKPWR_I2S1_CLK:
+   1424                clkpwr_mask_and_set(&CLKPWR->clkpwr_i2s_clk_ctrl,
+   1425                                    CLKPWR_I2SCTRL_I2SCLK1_EN, enable);
+   1426                break;
+   1427          
+   1428              case CLKPWR_I2S0_CLK:
+   1429                clkpwr_mask_and_set(&CLKPWR->clkpwr_i2s_clk_ctrl,
+   1430                                    CLKPWR_I2SCTRL_I2SCLK0_EN, enable);
+   1431                break;
+   1432          
+   1433              case CLKPWR_MSCARD_CLK:
+   1434                clkpwr_mask_and_set(&CLKPWR->clkpwr_ms_ctrl,
+   1435                                    CLKPWR_MSCARD_SDCARD_EN, enable);
+   1436                if ((CLKPWR->clkpwr_ms_ctrl &
+   1437                     CLKPWR_MSCARD_SDCARD_DIV(0xF)) == 0)
+   1438                {
+   1439                  /* Set fastest clock */
+   1440                  CLKPWR->clkpwr_ms_ctrl |= CLKPWR_MSCARD_SDCARD_DIV(1);
+   1441                }
+   1442                break;
+   1443          
+   1444              case CLKPWR_MAC_DMA_CLK:
+   1445                clkpwr_mask_and_set(&CLKPWR->clkpwr_macclk_ctrl,
+   1446                                    CLKPWR_MACCTRL_DMACLK_EN, enable);
+   1447                break;
+   1448          
+   1449              case CLKPWR_MAC_MMIO_CLK:
+   1450                clkpwr_mask_and_set(&CLKPWR->clkpwr_macclk_ctrl,
+   1451                                    CLKPWR_MACCTRL_MMIOCLK_EN, enable);
+   1452                break;
+   1453          
+   1454              case CLKPWR_MAC_HRC_CLK:
+   1455                clkpwr_mask_and_set(&CLKPWR->clkpwr_macclk_ctrl,
+   1456                                    CLKPWR_MACCTRL_HRCCLK_EN, enable);
+   1457                break;
+   1458          
+   1459              case CLKPWR_I2C2_CLK:
+   1460                clkpwr_mask_and_set(&CLKPWR->clkpwr_i2c_clk_ctrl,
+   1461                                    CLKPWR_I2CCLK_I2C2CLK_EN, enable);
+   1462                break;
+   1463          
+   1464              case CLKPWR_I2C1_CLK:
+   1465                clkpwr_mask_and_set(&CLKPWR->clkpwr_i2c_clk_ctrl,
+   1466                                    CLKPWR_I2CCLK_I2C1CLK_EN, enable);
+   1467                break;
+   1468          
+   1469              case CLKPWR_KEYSCAN_CLK:
+   1470                clkpwr_mask_and_set(&CLKPWR->clkpwr_key_clk_ctrl,
+   1471                                    CLKPWR_KEYCLKCTRL_CLK_EN, enable);
+   1472                break;
+   1473          
+   1474              case CLKPWR_ADC_CLK:
+   1475                clkpwr_mask_and_set(&CLKPWR->clkpwr_adc_clk_ctrl,
+   1476                                    CLKPWR_ADC32CLKCTRL_CLK_EN, enable);
+   1477                break;
+   1478          
+   1479              case CLKPWR_PWM2_CLK:
+   1480                clkpwr_mask_and_set(&CLKPWR->clkpwr_pwm_clk_ctrl,
+   1481                                    CLKPWR_PWMCLK_PWM2CLK_EN, enable);
+   1482                break;
+   1483          
+   1484              case CLKPWR_PWM1_CLK:
+   1485                clkpwr_mask_and_set(&CLKPWR->clkpwr_pwm_clk_ctrl,
+   1486                                    CLKPWR_PWMCLK_PWM1CLK_EN, enable);
+   1487                break;
+   1488          
+   1489              case CLKPWR_HSTIMER_CLK:
+   1490                clkpwr_mask_and_set(&CLKPWR->clkpwr_timer_clk_ctrl,
+   1491                                    CLKPWR_PWMCLK_HSTIMER_EN, enable);
+   1492                break;
+   1493          
+   1494              case CLKPWR_WDOG_CLK:
+   1495                clkpwr_mask_and_set(&CLKPWR->clkpwr_timer_clk_ctrl,
+   1496                                    CLKPWR_PWMCLK_WDOG_EN, enable);
+   1497                break;
+   1498          
+   1499              case CLKPWR_TIMER3_CLK:
+   1500                clkpwr_mask_and_set(&CLKPWR->clkpwr_timers_pwms_clk_ctrl_1,
+   1501                                    CLKPWR_TMRPWMCLK_TIMER3_EN, enable);
+   1502                break;
+   1503          
+   1504              case CLKPWR_TIMER2_CLK:
+   1505                clkpwr_mask_and_set(&CLKPWR->clkpwr_timers_pwms_clk_ctrl_1,
+   1506                                    CLKPWR_TMRPWMCLK_TIMER2_EN, enable);
+   1507                break;
+   1508          
+   1509              case CLKPWR_TIMER1_CLK:
+   1510                clkpwr_mask_and_set(&CLKPWR->clkpwr_timers_pwms_clk_ctrl_1,
+   1511                                    CLKPWR_TMRPWMCLK_TIMER1_EN, enable);
+   1512                break;
+   1513          
+   1514              case CLKPWR_TIMER0_CLK:
+   1515                clkpwr_mask_and_set(&CLKPWR->clkpwr_timers_pwms_clk_ctrl_1,
+   1516                                    CLKPWR_TMRPWMCLK_TIMER0_EN, enable);
+   1517                break;
+   1518          
+   1519              case CLKPWR_PWM4_CLK:
+   1520                clkpwr_mask_and_set(&CLKPWR->clkpwr_timers_pwms_clk_ctrl_1,
+   1521                                    CLKPWR_TMRPWMCLK_PWM4_EN, enable);
+   1522                break;
+   1523          
+   1524              case CLKPWR_PWM3_CLK:
+   1525                clkpwr_mask_and_set(&CLKPWR->clkpwr_timers_pwms_clk_ctrl_1,
+   1526                                    CLKPWR_PWM3_CLK, enable);
+   1527                break;
+   1528          
+   1529              case CLKPWR_SPI2_CLK:
+   1530                clkpwr_mask_and_set(&CLKPWR->clkpwr_spi_clk_ctrl,
+   1531                                    CLKPWR_SPICLK_SPI2CLK_EN, enable);
+   1532                break;
+   1533          
+   1534              case CLKPWR_SPI1_CLK:
+   1535                clkpwr_mask_and_set(&CLKPWR->clkpwr_spi_clk_ctrl,
+   1536                                    CLKPWR_SPICLK_SPI1CLK_EN, enable);
+   1537                break;
+   1538          
+   1539              case CLKPWR_NAND_SLC_CLK:
+   1540                clkpwr_mask_and_set(&CLKPWR->clkpwr_nand_clk_ctrl,
+   1541                                    CLKPWR_NANDCLK_SLCCLK_EN, enable);
+   1542                break;
+   1543          
+   1544              case CLKPWR_NAND_MLC_CLK:
+   1545                clkpwr_mask_and_set(&CLKPWR->clkpwr_nand_clk_ctrl,
+   1546                                    CLKPWR_NANDCLK_MLCCLK_EN, enable);
+   1547                break;
+   1548          
+   1549              case CLKPWR_UART6_CLK:
+   1550                clkpwr_mask_and_set(&CLKPWR->clkpwr_uart_clk_ctrl,
+   1551                                    CLKPWR_UARTCLKCTRL_UART6_EN, enable);
+   1552                break;
+   1553          
+   1554              case CLKPWR_UART5_CLK:
+   1555                clkpwr_mask_and_set(&CLKPWR->clkpwr_uart_clk_ctrl,
+   1556                                    CLKPWR_UARTCLKCTRL_UART5_EN, enable);
+   1557                break;
+   1558          
+   1559              case CLKPWR_UART4_CLK:
+   1560                clkpwr_mask_and_set(&CLKPWR->clkpwr_uart_clk_ctrl,
+   1561                                    CLKPWR_UARTCLKCTRL_UART4_EN, enable);
+   1562                break;
+   1563          
+   1564              case CLKPWR_UART3_CLK:
+   1565                clkpwr_mask_and_set(&CLKPWR->clkpwr_uart_clk_ctrl,
+   1566                                    CLKPWR_UARTCLKCTRL_UART3_EN, enable);
+   1567                break;
+   1568          
+   1569              case CLKPWR_DMA_CLK:
+   1570                clkpwr_mask_and_set(&CLKPWR->clkpwr_dmaclk_ctrl,
+   1571                                    CLKPWR_DMACLKCTRL_CLK_EN, enable);
+   1572                break;
+   1573          
+   1574              case CLKPWR_SDRAMDDR_CLK:
+   1575                clkpwr_mask_and_set(&CLKPWR->clkpwr_sdramclk_ctrl,
+   1576                                    CLKPWR_SDRCLK_CLK_DIS, !enable);
+   1577                break;
+   1578          
+   1579              default:
+   1580                break;
+   1581            }
+   1582          }
+   1583          
+   1584          /***********************************************************************
+   1585           *
+   1586           * Function: clkpwr_autoclk_en_dis
+   1587           *
+   1588           * Purpose: Enable or disable a autoclock
+   1589           *
+   1590           * Processing:
+   1591           *     See function.
+   1592           *
+   1593           * Parameters:
+   1594           *     clk    : Clock to set
+   1595           *     enable : '1' to enable autoclock, 0 to disable
+   1596           *
+   1597           * Outputs: None
+   1598           *
+   1599           * Returns: Nothing
+   1600           *
+   1601           * Notes: None
+   1602           *
+   1603           **********************************************************************/
+   1604          void clkpwr_autoclk_en_dis(CLKPWR_AUTOCLK_T clk,
+   1605                                     INT_32 enable)
+   1606          {
+   1607            volatile UNS_32 tmp;
+   1608          
+   1609            switch (clk)
+   1610            {
+   1611              case CLKPWR_ACLK_USB_DEV:
+   1612                tmp = (CLKPWR->clkpwr_autoclock & ~CLKPWR_AUTOCLK_USB_EN);
+   1613                if (enable != 0)
+   1614                {
+   1615                  tmp |= CLKPWR_AUTOCLK_USB_EN;
+   1616                }
+   1617                CLKPWR->clkpwr_autoclock = tmp;
+   1618                break;
+   1619          
+   1620              case CLKPWR_ACLK_IRAM:
+   1621                tmp = (CLKPWR->clkpwr_autoclock & ~CLKPWR_AUTOCLK_IRAM_EN);
+   1622                if (enable != 0)
+   1623                {
+   1624                  tmp |= CLKPWR_AUTOCLK_IRAM_EN;
+   1625                }
+   1626                CLKPWR->clkpwr_autoclock = tmp;
+   1627                break;
+   1628          
+   1629              case CLKPWR_ACLK_IROM:
+   1630                tmp = (CLKPWR->clkpwr_autoclock & ~CLKPWR_AUTOCLK_IROM_EN);
+   1631                if (enable != 0)
+   1632                {
+   1633                  tmp |= CLKPWR_AUTOCLK_IROM_EN;
+   1634                }
+   1635                CLKPWR->clkpwr_autoclock = tmp;
+   1636                break;
+   1637          
+   1638              default:
+   1639                break;
+   1640            }
+   1641          }
+   1642          
+   1643          /***********************************************************************
+   1644           *
+   1645           * Function: clkpwr_get_clock_rate
+   1646           *
+   1647           * Purpose: Get the clock frequency for a specific clocked peripheral
+   1648           *
+   1649           * Processing:
+   1650           *     See function.
+   1651           *
+   1652           * Parameters:
+   1653           *     ipclk : Clock to get the rate of
+   1654           *
+   1655           * Outputs: None
+   1656           *
+   1657           * Returns:
+   1658           *     The current clock rate for the selected peripheral in Hz, or 0
+   1659           *     if the clock rate can't be determined.
+   1660           *
+   1661           * Notes: None
+   1662           *
+   1663           **********************************************************************/
+   1664          UNS_32 clkpwr_get_clock_rate(CLKPWR_CLK_T ipclk)
+   1665          {
+   1666            CLKPWR_BASE_CLOCK_T baseclk;
+   1667            UNS_32 tmp, baseclkrate = 0, divrate = 1;
+   1668          
+   1669            /* Get base clock for the selected clock */
+   1670            baseclk = clkpwr_get_base_clock(ipclk);
+   1671            if (baseclk != CLKPWR_BASE_INVALID)
+   1672            {
+   1673              /* Based on ipclk, determine possible divders at the clock
+   1674              and power control block that apply to the IP clock */
+   1675              baseclkrate = clkpwr_get_base_clock_rate(baseclk);
+   1676              switch (ipclk)
+   1677              {
+   1678                case CLKPWR_MSCARD_CLK:
+   1679                  tmp = CLKPWR->clkpwr_ms_ctrl &
+   1680                        CLKPWR_MSCARD_SDCARD_DIV(0xF);
+   1681                  if (tmp == 0)
+   1682                  {
+   1683                    baseclkrate = 0;
+   1684                  }
+   1685                  else
+   1686                  {
+   1687                    divrate = tmp;
+   1688                  }
+   1689                  break;
+   1690          
+   1691                case CLKPWR_LCD_CLK:
+   1692                  tmp = (CLKPWR->clkpwr_lcdclk_ctrl &
+   1693                         CLKPWR_LCDCTRL_PSCALE_MSK);
+   1694                  divrate = 1 + tmp;
+   1695                  break;
+   1696          
+   1697                case CLKPWR_ADC_CLK:
+   1698                  /* Clock divider only applies when peripheral clock
+   1699                     is used for ADC clock */
+   1700                  tmp = CLKPWR->clkpwr_adc_clk_ctrl_1;
+   1701                  if ((tmp & CLKPWR_ADCCTRL1_PCLK_SEL) != 0)
+   1702                  {
+   1703                    tmp = (tmp & CLKPWR_ADCCTRL1_RTDIV(0xF) >> 8);
+   1704                    if (tmp == 0)
+   1705                    {
+   1706                      baseclkrate = 0;
+   1707                    }
+   1708                    else
+   1709                    {
+   1710                      divrate = tmp;
+   1711                    }
+   1712                  }
+   1713                  break;
+   1714          
+   1715                case CLKPWR_PWM2_CLK:
+   1716                  tmp = (CLKPWR->clkpwr_pwm_clk_ctrl &
+   1717                         CLKPWR_PWMCLK_PWM2_DIV(0xF) >> 8);
+   1718                  if (tmp == 0)
+   1719                  {
+   1720                    baseclkrate = 0;
+   1721                  }
+   1722                  else
+   1723                  {
+   1724                    divrate = tmp;
+   1725                  }
+   1726                  break;
+   1727          
+   1728                case CLKPWR_PWM1_CLK:
+   1729                  tmp = (CLKPWR->clkpwr_pwm_clk_ctrl &
+   1730                         CLKPWR_PWMCLK_PWM1_DIV(0xF) >> 4);
+   1731                  if (tmp == 0)
+   1732                  {
+   1733                    baseclkrate = 0;
+   1734                  }
+   1735                  else
+   1736                  {
+   1737                    divrate = tmp;
+   1738                  }
+   1739                  break;
+   1740          
+   1741                default:
+   1742                  break;
+   1743              }
+   1744            }
+   1745          
+   1746            return (baseclkrate / divrate);
+   1747          }
+   1748          
+   1749          /***********************************************************************
+   1750           *
+   1751           * Function: clkpwr_wk_event_en_dis
+   1752           *
+   1753           * Purpose: Enable or disable a wakeup event
+   1754           *
+   1755           * Processing:
+   1756           *     See function.
+   1757           *
+   1758           * Parameters:
+   1759           *     event_id : Event enumeration to change
+   1760           *     enable  : '1' to enable the event for wakeup, '0' to disable
+   1761           *
+   1762           * Outputs: None
+   1763           *
+   1764           * Returns: Nothing
+   1765           *
+   1766           * Notes: None
+   1767           *
+   1768           **********************************************************************/
+   1769          void clkpwr_wk_event_en_dis(CLKPWR_EVENT_T event_id,
+   1770                                      INT_32 enable)
+   1771          {
+   1772            volatile UNS_32 tmp;
+   1773            INT_32 bitnum = 0;
+   1774            CLKPWR_EVENTREG_GROUP_T *pRegs = NULL;
+   1775          
+   1776            if (clkpwr_get_event_field(event_id, pRegs, &bitnum) == 0)
+   1777            {
+   1778              /* Invalid */
+   1779              return;
+   1780            }
+   1781          
+   1782            tmp = *pRegs->start_er;
+   1783            if (enable != 0)
+   1784            {
+   1785              tmp |= _BIT(bitnum);
+   1786            }
+   1787            else
+   1788            {
+   1789              tmp &= ~_BIT(bitnum);
+   1790            }
+   1791          
+   1792            *pRegs->start_er = tmp;
+   1793          }
+   1794          
+   1795          /***********************************************************************
+   1796           *
+   1797           * Function: clkpwr_is_raw_event_active
+   1798           *
+   1799           * Purpose: Get the raw captured status of an event
+   1800           *
+   1801           * Processing:
+   1802           *     See function.
+   1803           *
+   1804           * Parameters:
+   1805           *     event_id : Event enumeration to check
+   1806           *
+   1807           * Outputs: None
+   1808           *
+   1809           * Returns: '1' if the selected event is active, otherwise '0'
+   1810           *
+   1811           * Notes: None
+   1812           *
+   1813           **********************************************************************/
+   1814          INT_32 clkpwr_is_raw_event_active(CLKPWR_EVENT_T event_id)
+   1815          {
+   1816            INT_32 event_sts = 0;
+   1817            INT_32 bitnum = 0;
+   1818            CLKPWR_EVENTREG_GROUP_T *pRegs = NULL;
+   1819          
+   1820            if (clkpwr_get_event_field(event_id, pRegs, &bitnum) != 0)
+   1821            {
+   1822              if ((*pRegs->start_rsr & _BIT(bitnum)) != 0)
+   1823              {
+   1824                event_sts = 1;
+   1825              }
+   1826            }
+   1827          
+   1828            return event_sts;
+   1829          }
+   1830          
+   1831          /***********************************************************************
+   1832           *
+   1833           * Function: clkpwr_is_msk_event_active
+   1834           *
+   1835           * Purpose: Get the masked captured status of an event
+   1836           *
+   1837           * Processing:
+   1838           *     See function.
+   1839           *
+   1840           * Parameters:
+   1841           *     event_id : Event enumeration to check
+   1842           *
+   1843           * Outputs: None
+   1844           *
+   1845           * Returns: '1' if the selected event is active, otherwise '0'
+   1846           *
+   1847           * Notes: None
+   1848           *
+   1849           **********************************************************************/
+   1850          INT_32 clkpwr_is_msk_event_active(CLKPWR_EVENT_T event_id)
+   1851          {
+   1852            INT_32 event_sts = 0;
+   1853            INT_32 bitnum = 0;
+   1854            CLKPWR_EVENTREG_GROUP_T *pRegs = NULL;
+   1855          
+   1856            if (clkpwr_get_event_field(event_id, pRegs, &bitnum) == 0)
+   1857            {
+   1858              if ((*pRegs->start_sr & _BIT(bitnum)) != 0)
+   1859              {
+   1860                event_sts = 1;
+   1861              }
+   1862            }
+   1863          
+   1864            return event_sts;
+   1865          }
+   1866          
+   1867          /***********************************************************************
+   1868           *
+   1869           * Function: clkpwr_clear_event
+   1870           *
+   1871           * Purpose: Clear a captured event status
+   1872           *
+   1873           * Processing:
+   1874           *     See function.
+   1875           *
+   1876           * Parameters:
+   1877           *     event_id : Event enumeration to  clear
+   1878           *
+   1879           * Outputs: None
+   1880           *
+   1881           * Returns: Nothing
+   1882           *
+   1883           * Notes: None
+   1884           *
+   1885           **********************************************************************/
+   1886          void clkpwr_clear_event(CLKPWR_EVENT_T event_id)
+   1887          {
+   1888            INT_32 bitnum = 0;
+   1889            CLKPWR_EVENTREG_GROUP_T *pRegs = NULL;
+   1890          
+   1891            if (clkpwr_get_event_field(event_id, pRegs, &bitnum) == 0)
+   1892            {
+   1893              /* Invalid */
+   1894              return;
+   1895            }
+   1896          
+   1897            /* Clear selected event */
+   1898            *pRegs->start_rsr = _BIT(bitnum);
+   1899          }
+   1900          
+   1901          /***********************************************************************
+   1902           *
+   1903           * Function: clkpwr_set_event_pol
+   1904           *
+   1905           * Purpose:
+   1906           *     Set event signal polarity (0) = falling edge, (1) = rising edge
+   1907           *
+   1908           * Processing:
+   1909           *     See function.
+   1910           *
+   1911           * Parameters:
+   1912           *     event_id : Event enumeration to set polarity of
+   1913           *     high     : '1' for high [polarity, '0' for low polarity
+   1914           *
+   1915           * Outputs: None
+   1916           *
+   1917           * Returns: Nothing
+   1918           *
+   1919           * Notes: None
+   1920           *
+   1921           **********************************************************************/
+   1922          void clkpwr_set_event_pol(CLKPWR_EVENT_T event_id,
+   1923                                    INT_32 high)
+   1924          {
+   1925            volatile UNS_32 tmp;
+   1926            INT_32 bitnum = 0;
+   1927            CLKPWR_EVENTREG_GROUP_T *pRegs = NULL;
+   1928          
+   1929            if (clkpwr_get_event_field(event_id, pRegs, &bitnum) == 0)
+   1930            {
+   1931              /* Invalid */
+   1932              return;
+   1933            }
+   1934          
+   1935            /* Set polarity high or low */
+   1936            tmp = *pRegs->start_apr & ~_BIT(bitnum);
+   1937            if (high != 0)
+   1938            {
+   1939              tmp |= _BIT(bitnum);
+   1940            }
+   1941            *pRegs->start_apr = tmp;
+   1942          }
+   1943          
+   1944          /***********************************************************************
+   1945           *
+   1946           * Function: clkpwr_get_uid
+   1947           *
+   1948           * Purpose:
+   1949           *     Returns the chip's unoqie ID into the passed array.
+   1950           *
+   1951           * Processing:
+   1952           *     See function.
+   1953           *
+   1954           * Parameters:
+   1955           *     uid: Array to fill with 4 32-bit unique ID words
+   1956           *
+   1957           * Outputs: None
+   1958           *
+   1959           * Returns: Nothing
+   1960           *
+   1961           * Notes: None
+   1962           *
+   1963           **********************************************************************/
+   1964          void clkpwr_get_uid(UNS_32 uid[4]) {
+   1965          	uid[0] = CLKPWR->clkpwr_uid[0];
+   1966          	uid[1] = CLKPWR->clkpwr_uid[1];
+   1967          	uid[2] = CLKPWR->clkpwr_uid[2];
+   1968          	uid[3] = CLKPWR->clkpwr_uid[3];
+   1969          }
+   1970          
+   1971          /***********************************************************************
+   1972           *
+   1973           * Function: clkpwr_set_mux
+   1974           *
+   1975           * Purpose:
+   1976           *     Set a muxed GPO signal to it's default (0) or GPO state (1)
+   1977           *
+   1978           * Processing:
+   1979           *     Change the function of the selected muxed pin based on the
+   1980           *     passed input value.
+   1981           *
+   1982           * Parameters:
+   1983           *     mux_signal: Muxed signal enumeration to change
+   1984           *     mux1      : Set to non-zero value to enable muxed state
+   1985           *
+   1986           * Outputs: None
+   1987           *
+   1988           * Returns: Nothing
+   1989           *
+   1990           * Notes: None
+   1991           *
+   1992           **********************************************************************/
+   1993          void clkpwr_set_mux(CLKPWR_MUX_STATE_T mux_signal,
+   1994                              INT_32 mux1)
+   1995          {
+   1996            switch (mux_signal)
+   1997            {
+   1998              case CLKPWR_HIGHCORE:
+   1999                if (mux1 == 0)
+   2000                {
+   2001                  CLKPWR->clkpwr_pwr_ctrl &= ~CLKPWR_HIGHCORE_GPIO_EN;
+   2002                }
+   2003                else
+   2004                {
+   2005                  CLKPWR->clkpwr_pwr_ctrl |= CLKPWR_HIGHCORE_GPIO_EN;
+   2006                }
+   2007                break;
+   2008          
+   2009              case CLKPWR_SYSCLKEN:
+   2010                if (mux1 == 0)
+   2011                {
+   2012                  CLKPWR->clkpwr_pwr_ctrl &= ~CLKPWR_SYSCLKEN_GPIO_EN;
+   2013                }
+   2014                else
+   2015                {
+   2016                  CLKPWR->clkpwr_pwr_ctrl |= CLKPWR_SYSCLKEN_GPIO_EN;
+   2017                }
+   2018                break;
+   2019          
+   2020              case CLKPWR_TEST_CLK1:
+   2021                if (mux1 == 0)
+   2022                {
+   2023                  CLKPWR->clkpwr_test_clk_sel &=
+   2024                    ~CLKPWR_TESTCLK_TESTCLK1_EN;
+   2025                }
+   2026                else
+   2027                {
+   2028                  CLKPWR->clkpwr_test_clk_sel |=
+   2029                    CLKPWR_TESTCLK_TESTCLK1_EN;
+   2030                }
+   2031                break;
+   2032          
+   2033              case CLKPWR_TEST_CLK2:
+   2034                if (mux1 == 0)
+   2035                {
+   2036                  CLKPWR->clkpwr_test_clk_sel &=
+   2037                    ~CLKPWR_TESTCLK_TESTCLK2_EN;
+   2038                }
+   2039                else
+   2040                {
+   2041                  CLKPWR->clkpwr_test_clk_sel |=
+   2042                    CLKPWR_TESTCLK_TESTCLK2_EN;
+   2043                }
+   2044                break;
+   2045          
+   2046              case CLKPWR_SPI2_DATIO:
+   2047              case CLKPWR_SPI2_CLK_PAD:
+   2048                if (mux1 == 0)
+   2049                {
+   2050                  CLKPWR->clkpwr_spi_clk_ctrl &= ~CLKPWR_SPICLK_USE_SPI2;
+   2051                }
+   2052                else
+   2053                {
+   2054                  CLKPWR->clkpwr_spi_clk_ctrl |= CLKPWR_SPICLK_USE_SPI2;
+   2055                }
+   2056                break;
+   2057          
+   2058              case CLKPWR_SPI1_DATIO:
+   2059              case CLKPWR_SPI1_CLK_PAD:
+   2060                if (mux1 == 0)
+   2061                {
+   2062                  CLKPWR->clkpwr_spi_clk_ctrl &= ~CLKPWR_SPICLK_USE_SPI1;
+   2063                }
+   2064                else
+   2065                {
+   2066                  CLKPWR->clkpwr_spi_clk_ctrl |= CLKPWR_SPICLK_USE_SPI1;
+   2067                }
+   2068                break;
+   2069          
+   2070              default:
+   2071                break;
+   2072            }
+   2073          }
+   2074          
+   2075          /***********************************************************************
+   2076           *
+   2077           * Function: clkpwr_set_mux_state
+   2078           *
+   2079           * Purpose: Set a muxed signal to passed value
+   2080           *
+   2081           * Processing:
+   2082           *     Set a muxed signal state for the passed selections to the
+   2083           *     passed state.
+   2084           *
+   2085           * Parameters:
+   2086           *     mux_signal: Muxed signal enumeration to change
+   2087           *     state     : Value to set the GPO output to
+   2088           *
+   2089           * Outputs: None
+   2090           *
+   2091           * Returns: Nothing
+   2092           *
+   2093           * Notes: None
+   2094           *
+   2095           **********************************************************************/
+   2096          void clkpwr_set_mux_state(CLKPWR_MUX_STATE_T mux_signal,
+   2097                                    INT_32 state)
+   2098          {
+   2099            volatile UNS_32 tmp;
+   2100          
+   2101            switch (mux_signal)
+   2102            {
+   2103              case CLKPWR_HIGHCORE:
+   2104                if (state == 0)
+   2105                {
+   2106                  CLKPWR->clkpwr_pwr_ctrl &= ~CLKPWR_HIGHCORE_STATE_BIT;
+   2107                }
+   2108                else
+   2109                {
+   2110                  CLKPWR->clkpwr_pwr_ctrl |= CLKPWR_HIGHCORE_STATE_BIT;
+   2111                }
+   2112                break;
+   2113          
+   2114              case CLKPWR_SYSCLKEN:
+   2115                if (state == 0)
+   2116                {
+   2117                  CLKPWR->clkpwr_pwr_ctrl &= ~CLKPWR_SYSCLKEN_STATE_BIT;
+   2118                }
+   2119                else
+   2120                {
+   2121                  CLKPWR->clkpwr_pwr_ctrl |= CLKPWR_SYSCLKEN_STATE_BIT;
+   2122                }
+   2123                break;
+   2124          
+   2125              case CLKPWR_TEST_CLK1:
+   2126                tmp = (CLKPWR->clkpwr_test_clk_sel &
+   2127                       ~CLKPWR_TESTCLK1_SEL_MASK) | (UNS_32) state;
+   2128                CLKPWR->clkpwr_test_clk_sel = tmp;
+   2129                break;
+   2130          
+   2131              case CLKPWR_TEST_CLK2:
+   2132                tmp = (CLKPWR->clkpwr_test_clk_sel &
+   2133                       ~CLKPWR_TESTCLK2_SEL_MASK) | (UNS_32) state;
+   2134                CLKPWR->clkpwr_test_clk_sel = tmp;
+   2135                break;
+   2136          
+   2137              case CLKPWR_SPI2_DATIO:
+   2138                if (state == 0)
+   2139                {
+   2140                  CLKPWR->clkpwr_spi_clk_ctrl &=
+   2141                    ~CLKPWR_SPICLK_SET_SPI2DATIO;
+   2142                }
+   2143                else
+   2144                {
+   2145                  CLKPWR->clkpwr_spi_clk_ctrl |=
+   2146                    CLKPWR_SPICLK_SET_SPI2DATIO;
+   2147                }
+   2148                break;
+   2149          
+   2150              case CLKPWR_SPI2_CLK_PAD:
+   2151                if (state == 0)
+   2152                {
+   2153                  CLKPWR->clkpwr_spi_clk_ctrl &=
+   2154                    ~CLKPWR_SPICLK_SET_SPI2CLK;
+   2155                }
+   2156                else
+   2157                {
+   2158                  CLKPWR->clkpwr_spi_clk_ctrl |=
+   2159                    CLKPWR_SPICLK_SET_SPI2CLK;
+   2160                }
+   2161                break;
+   2162          
+   2163              case CLKPWR_SPI1_DATIO:
+   2164                if (state == 0)
+   2165                {
+   2166                  CLKPWR->clkpwr_spi_clk_ctrl &=
+   2167                    ~CLKPWR_SPICLK_SET_SPI1DATIO;
+   2168                }
+   2169                else
+   2170                {
+   2171                  CLKPWR->clkpwr_spi_clk_ctrl |=
+   2172                    CLKPWR_SPICLK_SET_SPI1DATIO;
+   2173                }
+   2174                break;
+   2175          
+   2176              case CLKPWR_SPI1_CLK_PAD:
+   2177                if (state == 0)
+   2178                {
+   2179                  CLKPWR->clkpwr_spi_clk_ctrl &=
+   2180                    ~CLKPWR_SPICLK_SET_SPI1CLK;
+   2181                }
+   2182                else
+   2183                {
+   2184                  CLKPWR->clkpwr_spi_clk_ctrl |=
+   2185                    CLKPWR_SPICLK_SET_SPI1CLK;
+   2186                }
+   2187                break;
+   2188          
+   2189              default:
+   2190                break;
+   2191            }
+   2192          }
+   2193          
+   2194          /***********************************************************************
+   2195           *
+   2196           * Function: clkpwr_setup_mcard_ctrlr
+   2197           *
+   2198           * Purpose: Memory card (MSSDIO) pad and clock setup
+   2199           *
+   2200           * Processing:
+   2201           *     See function.
+   2202           *
+   2203           * Parameters:
+   2204           *     enable_pullups   : '1 to enable all pullups, '0' to disable
+   2205           *     dat2_3_pullup_on : '1' to enable pullups on data 2 and 3 pads
+   2206           *     dat1_pullup_on   : '1' to enable pullups on data 1 pad
+   2207           *     dat0_pullup_on   : '1' to enable pullups on data 0 pad
+   2208           *     freq_div         : 'Must be 1 to 15, or 0 to disable
+   2209           *
+   2210           * Outputs: None
+   2211           *
+   2212           * Returns: Nothing
+   2213           *
+   2214           * Notes: None
+   2215           *
+   2216           **********************************************************************/
+   2217          void clkpwr_setup_mcard_ctrlr(INT_32 enable_pullups,
+   2218                                        INT_32 dat2_3_pullup_on,
+   2219                                        INT_32 dat1_pullup_on,
+   2220                                        INT_32 dat0_pullup_on,
+   2221                                        INT_32 freq_div)
+   2222          {
+   2223            UNS_32 tmp;
+   2224          
+   2225            tmp = CLKPWR->clkpwr_ms_ctrl & CLKPWR_MSCARD_SDCARD_EN;
+   2226            if (enable_pullups != 0)
+   2227            {
+   2228              tmp |= CLKPWR_MSCARD_MSDIO_PU_EN;
+   2229            }
+   2230            if (dat2_3_pullup_on == 0)
+   2231            {
+   2232              tmp |= CLKPWR_MSCARD_MSDIO23_DIS;
+   2233            }
+   2234            if (dat1_pullup_on == 0)
+   2235            {
+   2236              tmp |= CLKPWR_MSCARD_MSDIO1_DIS;
+   2237            }
+   2238            if (dat0_pullup_on == 0)
+   2239            {
+   2240              tmp |= CLKPWR_MSCARD_MSDIO0_DIS;
+   2241            }
+   2242            tmp |= CLKPWR_MSCARD_SDCARD_DIV(freq_div);
+   2243            CLKPWR->clkpwr_ms_ctrl = tmp;
+   2244          }
+   2245          
+   2246          /***********************************************************************
+   2247           *
+   2248           * Function: clkpwr_setup_pwm
+   2249           *
+   2250           * Purpose: Set the drive strength of I2C signals
+   2251           *
+   2252           * Processing:
+   2253           *     See function.
+   2254           *
+   2255           * Parameters:
+   2256           *     i2c_num : Must be 1 or 2
+   2257           *     high    : '1' for high driver
+   2258           *
+   2259           * Outputs: None
+   2260           *
+   2261           * Returns: Nothing
+   2262           *
+   2263           * Notes: None
+   2264           *
+   2265           **********************************************************************/
+   2266          void clkpwr_set_i2c_driver(INT_32 i2c_num,
+   2267                                     INT_32 high)
+   2268          {
+   2269            volatile UNS_32 tmp;
+   2270          
+   2271            if (i2c_num == 1)
+   2272            {
+   2273              tmp = CLKPWR->clkpwr_i2c_clk_ctrl & ~CLKPWR_I2CCLK_I2C1HI_DRIVE;
+   2274              if (high != 0)
+   2275              {
+   2276                tmp |= CLKPWR_I2CCLK_I2C1HI_DRIVE;
+   2277              }
+   2278              CLKPWR->clkpwr_i2c_clk_ctrl = tmp;
+   2279            }
+   2280            else if (i2c_num == 2)
+   2281            {
+   2282              tmp = CLKPWR->clkpwr_i2c_clk_ctrl & ~CLKPWR_I2CCLK_I2C2HI_DRIVE;
+   2283              if (high != 0)
+   2284              {
+   2285                tmp |= CLKPWR_I2CCLK_I2C2HI_DRIVE;
+   2286              }
+   2287              CLKPWR->clkpwr_i2c_clk_ctrl = tmp;
+   2288            }
+   2289          }
+   2290          
+   2291          /***********************************************************************
+   2292           *
+   2293           * Function: clkpwr_setup_pwm
+   2294           *
+   2295           * Purpose:
+   2296           *     Configure PWM 1 or 2 with a clock source and divider value
+   2297           *
+   2298           * Processing:
+   2299           *     See function.
+   2300           *
+   2301           * Parameters:
+   2302           *     pwm_num  : Must be 1 or 2
+   2303           *     clk_src  : '0' for 32KHz clock, 1 for PERIPH_CLK
+   2304           *     freq_dev : Must be 1 to 15, or 0 to disable
+   2305           *
+   2306           * Outputs: None
+   2307           *
+   2308           * Returns: Nothing
+   2309           *
+   2310           * Notes: None
+   2311           *
+   2312           **********************************************************************/
+   2313          void clkpwr_setup_pwm(INT_32 pwm_num,
+   2314                                INT_32 clk_src,
+   2315                                INT_32 freq_dev)
+   2316          {
+   2317            volatile UNS_32 tmp;
+   2318          
+   2319            if (pwm_num == 1)
+   2320            {
+   2321              tmp = CLKPWR->clkpwr_pwm_clk_ctrl &
+   2322                    ~(CLKPWR_PWMCLK_PWM1_DIV(0xF) | CLKPWR_PWMCLK_PWM1SEL_PCLK);
+   2323              if (clk_src != 0)
+   2324              {
+   2325                tmp |= CLKPWR_PWMCLK_PWM1SEL_PCLK;
+   2326              }
+   2327              tmp |= CLKPWR_PWMCLK_PWM1_DIV(freq_dev);
+   2328              CLKPWR->clkpwr_pwm_clk_ctrl = tmp;
+   2329            }
+   2330            else if (pwm_num == 2)
+   2331            {
+   2332              tmp = CLKPWR->clkpwr_pwm_clk_ctrl &
+   2333                    ~(CLKPWR_PWMCLK_PWM2_DIV(0xF) | CLKPWR_PWMCLK_PWM2SEL_PCLK);
+   2334              if (clk_src != 0)
+   2335              {
+   2336                tmp |= CLKPWR_PWMCLK_PWM2SEL_PCLK;
+   2337              }
+   2338              tmp |= CLKPWR_PWMCLK_PWM2_DIV(freq_dev);
+   2339              CLKPWR->clkpwr_pwm_clk_ctrl = tmp;
+   2340            }
+   2341          }
+   2342          
+   2343          /***********************************************************************
+   2344           *
+   2345           * Function: clkpwr_setup_nand_ctrlr
+   2346           *
+   2347           * Purpose: NAND FLASH controller setup (except clocks)
+   2348           *
+   2349           * Processing:
+   2350           *     See function.
+   2351           *
+   2352           * Parameters:
+   2353           *     use_slc            : '1' for SLC, '0' for MLC
+   2354           *     use_dma_req_on_rnb : Enable DMA_REQ signal on NAND_RnB
+   2355           *     use_dma_req_on_int : Enable DMA_REQ signal on NAND_INT
+   2356           *
+   2357           * Outputs: None
+   2358           *
+   2359           * Returns: Nothing
+   2360           *
+   2361           * Notes: None
+   2362           *
+   2363           **********************************************************************/
+   2364          void clkpwr_setup_nand_ctrlr(INT_32 use_slc,
+   2365                                       INT_32 use_dma_req_on_rnb,
+   2366                                       INT_32 use_dma_req_on_int)
+   2367          {
+   2368            UNS_32 tmp;
+   2369          
+   2370            if (use_slc != 0)
+   2371            {
+   2372              /* Select SLC interface and SLC interrupt */
+   2373              tmp = CLKPWR_NANDCLK_SEL_SLC;
+   2374            }
+   2375            else
+   2376            {
+   2377              /* Select MLC interface and MLC interrupt */
+   2378              tmp = CLKPWR_NANDCLK_INTSEL_MLC;
+   2379            }
+   2380          
+   2381            /* Enable DMA support */
+   2382            if (use_dma_req_on_rnb != 0)
+   2383            {
+   2384              tmp |= CLKPWR_NANDCLK_DMA_RNB;
+   2385            }
+   2386            if (use_dma_req_on_int != 0)
+   2387            {
+   2388              tmp |= CLKPWR_NANDCLK_DMA_INT;
+   2389            }
+   2390          
+   2391            CLKPWR->clkpwr_nand_clk_ctrl = tmp;
+   2392          }
+   2393          
+   2394          /***********************************************************************
+   2395           *
+   2396           * Function: clkpwr_setup_adc_ts
+   2397           *
+   2398           * Purpose: ADC/touchscreen controller setup
+   2399           *
+   2400           * Processing:
+   2401           *     See function.
+   2402           *
+   2403           * Parameters:
+   2404           *     sel_periph_clk : '1' for PERIPH_CLK, '0' for RTC
+   2405           *     clkdiv         : ADC clock divider, 0 to 15, or 0 for off
+   2406           *
+   2407           * Outputs: None
+   2408           *
+   2409           * Returns: Nothing
+   2410           *
+   2411           * Notes: None
+   2412           *
+   2413           **********************************************************************/
+   2414          void clkpwr_setup_adc_ts(INT_32 sel_periph_clk,
+   2415                                   INT_32 clkdiv)
+   2416          {
+   2417            UNS_32 tmp;
+   2418          
+   2419            tmp = CLKPWR_ADCCTRL1_RTDIV(clkdiv);
+   2420            if (sel_periph_clk != 0)
+   2421            {
+   2422              tmp |= CLKPWR_ADCCTRL1_PCLK_SEL;
+   2423            }
+   2424          
+   2425            CLKPWR->clkpwr_adc_clk_ctrl_1 = tmp;
+   2426          }
+   2427          
+   2428          /***********************************************************************
+   2429           *
+   2430           * Function: clkpwr_setup_ssp
+   2431           *
+   2432           * Purpose: SSP controller setup
+   2433           *
+   2434           * Processing:
+   2435           *     See function.
+   2436           *
+   2437           * Parameters:
+   2438           *     ssp1_rx_dma_en : 1 = Enable SSP1 RX DMA, 0 = disable
+   2439           *     ssp1_tx_dma_en : 1 = Enable SSP1 RX DMA, 0 = disable
+   2440           *     ssp0_rx_dma_en : 1 = Enable SSP1 RX DMA, 0 = disable
+   2441           *     ssp0_tx_dma_en : 1 = Enable SSP1 RX DMA, 0 = disable
+   2442           *
+   2443           * Outputs: None
+   2444           *
+   2445           * Returns: Nothing
+   2446           *
+   2447           * Notes: Enabling SSP DMA will disable DMA for SPI peripherals.
+   2448           *
+   2449           **********************************************************************/
+   2450          void clkpwr_setup_ssp(INT_32 ssp1_rx_dma_en,
+   2451                                INT_32 ssp1_tx_dma_en,
+   2452                                INT_32 ssp0_rx_dma_en,
+   2453                                INT_32 ssp0_tx_dma_en)
+   2454          {
+   2455            volatile UNS_32 tmp;
+   2456          
+   2457            tmp = CLKPWR->clkpwr_ssp_blk_ctrl & ~(CLKPWR_SSPCTRL_DMA_SSP1RX |
+   2458              CLKPWR_SSPCTRL_DMA_SSP1TX | CLKPWR_SSPCTRL_DMA_SSP0RX |
+   2459              CLKPWR_SSPCTRL_DMA_SSP0TX);
+   2460            if (ssp1_rx_dma_en != 0)
+   2461            {
+   2462              tmp |= CLKPWR_SSPCTRL_DMA_SSP1RX;
+   2463            }
+   2464            if (ssp1_tx_dma_en != 0)
+   2465            {
+   2466              tmp |= CLKPWR_SSPCTRL_DMA_SSP1TX;
+   2467            }
+   2468            if (ssp0_rx_dma_en != 0)
+   2469            {
+   2470              tmp |= CLKPWR_SSPCTRL_DMA_SSP0RX;
+   2471            }
+   2472            if (ssp0_tx_dma_en != 0)
+   2473            {
+   2474              tmp |= CLKPWR_SSPCTRL_DMA_SSP0TX;
+   2475            }
+   2476          
+   2477            CLKPWR->clkpwr_ssp_blk_ctrl = tmp;
+   2478          }
+   2479          
+   2480          /***********************************************************************
+   2481           *
+   2482           * Function: clkpwr_setup_i2s
+   2483           *
+   2484           * Purpose: I2S controller setup
+   2485           *
+   2486           * Processing:
+   2487           *     See function.
+   2488           *
+   2489           * Parameters:
+   2490           *     i2s1_tx_clk_from_rx : 1 = I2S1 TX clock = RX clock, 0 = swap
+   2491           *     i2s1_rx_clk_from_tx : 1 = I2S1 RX clock = TX clock, 0 = swap
+   2492           *     i2s1_use_dma        : 1 = Enable I2S1 RX DMA, 0 = UART7 DMA
+   2493           *     i2s0_rx_clk_from_tx : 1 = I2S0 TX clock = RX clock, 0 = swap
+   2494           *     i2s0_tx_clk_from_rx : 1 = I2S0 RX clock = TX clock, 0 = swap
+   2495           *
+   2496           * Outputs: None
+   2497           *
+   2498           * Returns: Nothing
+   2499           *
+   2500           * Notes: Enabling I2S1 DMA will disable DMA for UART7 peripherals.
+   2501           *
+   2502           **********************************************************************/
+   2503          void clkpwr_setup_i2s(INT_32 i2s1_tx_clk_from_rx,
+   2504                                INT_32 i2s1_rx_clk_from_tx,
+   2505                                INT_32 i2s1_use_dma,
+   2506                                INT_32 i2s0_rx_clk_from_tx,
+   2507                                INT_32 i2s0_tx_clk_from_rx)
+   2508          {
+   2509            volatile UNS_32 tmp;
+   2510          
+   2511            tmp = CLKPWR->clkpwr_i2s_clk_ctrl & ~(CLKPWR_I2SCTRL_I2S1_RX_FOR_TX |
+   2512              CLKPWR_I2SCTRL_I2S1_TX_FOR_RX | CLKPWR_I2SCTRL_I2S1_USE_DMA |
+   2513              CLKPWR_I2SCTRL_I2S0_RX_FOR_TX | CLKPWR_I2SCTRL_I2S0_TX_FOR_RX);
+   2514            if (i2s1_tx_clk_from_rx != 0)
+   2515            {
+   2516              tmp |= CLKPWR_I2SCTRL_I2S1_RX_FOR_TX;
+   2517            }
+   2518            if (i2s1_rx_clk_from_tx != 0)
+   2519            {
+   2520              tmp |= CLKPWR_I2SCTRL_I2S1_TX_FOR_RX;
+   2521            }
+   2522            if (i2s1_use_dma != 0)
+   2523            {
+   2524              tmp |= CLKPWR_I2SCTRL_I2S1_USE_DMA;
+   2525            }
+   2526            if (i2s0_tx_clk_from_rx != 0)
+   2527            {
+   2528              tmp |= CLKPWR_I2SCTRL_I2S0_RX_FOR_TX;
+   2529            }
+   2530            if (i2s0_rx_clk_from_tx != 0)
+   2531            {
+   2532              tmp |= CLKPWR_I2SCTRL_I2S0_TX_FOR_RX;
+   2533            }
+   2534          
+   2535            CLKPWR->clkpwr_i2s_clk_ctrl = tmp;
+   2536          }
+   2537          
+   2538          /***********************************************************************
+   2539           *
+   2540           * Function: clkpwr_setup_lcd
+   2541           *
+   2542           * Purpose: LCD controller setup
+   2543           *
+   2544           * Processing:
+   2545           *     See function.
+   2546           *
+   2547           * Parameters:
+   2548           *     lcdpins    : Select pin mux group
+   2549           *     clkdiv     : Must be 1 to 32
+   2550           *
+   2551           * Outputs: None
+   2552           *
+   2553           * Returns: Nothing
+   2554           *
+   2555           * Notes: None
+   2556           *
+   2557           **********************************************************************/
+   2558          void clkpwr_setup_lcd(LCD_PIN_MUX_T lcdpins,
+   2559                                INT_32 clkdiv)
+   2560          {
+   2561            volatile UNS_32 tmp;
+   2562          
+   2563            tmp = CLKPWR->clkpwr_lcdclk_ctrl & ~(CLKPWR_LCDCTRL_LCDTYPE_MSK |
+   2564                                                 CLKPWR_LCDCTRL_PSCALE_MSK);
+   2565            switch (lcdpins)
+   2566            {
+   2567              case CLKPWR_LCDMUX_TFT12:
+   2568                tmp = CLKPWR_LCDCTRL_LCDTYPE_TFT12;
+   2569                break;
+   2570          
+   2571              case CLKPWR_LCDMUX_TFT16:
+   2572                tmp = CLKPWR_LCDCTRL_LCDTYPE_TFT16;
+   2573                break;
+   2574          
+   2575              case CLKPWR_LCDMUX_TFT15:
+   2576                tmp = CLKPWR_LCDCTRL_LCDTYPE_TFT15;
+   2577                break;
+   2578          
+   2579              case CLKPWR_LCDMUX_TFT24:
+   2580                tmp = CLKPWR_LCDCTRL_LCDTYPE_TFT24;
+   2581                break;
+   2582          
+   2583              case CLKPWR_LCDMUX_STN4M:
+   2584                tmp = CLKPWR_LCDCTRL_LCDTYPE_STN4M;
+   2585                break;
+   2586          
+   2587              case CLKPWR_LCDMUX_STN8C:
+   2588                tmp = CLKPWR_LCDCTRL_LCDTYPE_STN8C;
+   2589                break;
+   2590          
+   2591              case CLKPWR_LCDMUX_DSTN4M:
+   2592                tmp = CLKPWR_LCDCTRL_LCDTYPE_DSTN4M;
+   2593                break;
+   2594          
+   2595              case CLKPWR_LCDMUX_DSTN8C:
+   2596                tmp = CLKPWR_LCDCTRL_LCDTYPE_DSTN8C;
+   2597                break;
+   2598          
+   2599              default:
+   2600                break;
+   2601            }
+   2602          
+   2603            /* Prescaler */
+   2604            tmp |= CLKPWR_LCDCTRL_SET_PSCALE(clkdiv);
+   2605            CLKPWR->clkpwr_lcdclk_ctrl = tmp;
+   2606          }
+   2607          
+   2608          /***********************************************************************
+   2609           *
+   2610           * Function: clkpwr_select_enet_iface
+   2611           *
+   2612           * Purpose: Ethernet enable and select MII/RMII interface selection
+   2613           *
+   2614           * Processing:
+   2615           *     See function.
+   2616           *
+   2617           * Parameters:
+   2618           *     enable   : 1 = enable, 0 = disable
+   2619           *     use_rmii : 1 = RMII, 0 = MII
+   2620           *
+   2621           * Outputs: None
+   2622           *
+   2623           * Returns: Nothing
+   2624           *
+   2625           * Notes: None
+   2626           *
+   2627           **********************************************************************/
+   2628          void clkpwr_select_enet_iface(INT_32 enable,
+   2629                                        INT_32 use_rmii)
+   2630          {
+   2631            volatile UNS_32 tmp;
+   2632          
+   2633            tmp = CLKPWR->clkpwr_macclk_ctrl & ~CLKPWR_MACCTRL_PINS_MSK;
+   2634            if (enable == 0)
+   2635            {
+   2636              tmp |= CLKPWR_MACCTRL_NO_ENET_PIS;
+   2637            }
+   2638            else if (use_rmii == 0)
+   2639            {
+   2640              tmp |= CLKPWR_MACCTRL_USE_RMII_PINS;
+   2641            }
+   2642            else
+   2643            {
+   2644              tmp |= CLKPWR_MACCTRL_USE_MII_PINS;
+   2645            }
+   2646          
+   2647            CLKPWR->clkpwr_macclk_ctrl = tmp;
+   2648          }
+   2649          
+   2650          
+   2651          
+   2652          /***********************************************************************
+   2653           *
+   2654           * Function: clkpwr_halt_cpu
+   2655           *
+   2656           * Purpose: Enter low power mode (clocks disabled) in the CPU core
+   2657           *
+   2658           * Processing:
+   2659           *     Issue the coprocessor CP15 command to the CPU core to halt the
+   2660           *     CPU clocks until an interrupt occurs.
+   2661           *
+   2662           * Parameters: None
+   2663           *
+   2664           * Outputs: None
+   2665           *
+   2666           * Returns: Nothing
+   2667           *
+   2668           * Notes:
+   2669           *     See the ARM926EJ-S TRM for more information on the wait
+   2670           *     for inetrrupt command.
+   2671           *
+   2672           **********************************************************************/
+   2673          void clkpwr_halt_cpu(void)
+   2674          {
+   2675            register UNS_32 status = 0;
+   2676          
+   2677            /* Read the MMU control register */
+   2678          #ifdef __GNUC__
+   2679          asm("MCR p15, 0, %0, c7, c0, 4" : "=r"(status));
+   2680          #endif
+   2681          #ifdef __arm
+   2682            __asm
+   2683            {
+   2684              MCR p15, 0, status, c7, c0, 4;
+   2685            }
+   2686          #endif
+   2687          #ifdef __ICCARM__
+   2688            /* IAR CC includes some "intrinsic" functions to access ARM CP regs */
+   2689            __MCR(15, 0, status, 7, 0, 4);
+   2690          #endif
+   2691          }
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   clkpwr_abs
+       4   clkpwr_autoclk_en_dis
+      96   clkpwr_check_pll_setup
+        96 __aeabi_uldivmod
+      16   clkpwr_clear_event
+        16   -> clkpwr_get_event_field
+      16   clkpwr_clk_en_dis
+        16   -> clkpwr_mask_and_set
+      72   clkpwr_find_pll_cfg
+        72   -> clkpwr_abs
+        72   -> clkpwr_check_pll_setup
+        72 __aeabi_uldivmod
+       0   clkpwr_force_arm_hclk_to_pclk
+       0   clkpwr_get_base_clock
+      56   clkpwr_get_base_clock_rate
+        56   -> clkpwr_pll_rate
+        56 __aeabi_uidiv
+      24   clkpwr_get_clock_rate
+        24   -> clkpwr_get_base_clock
+        24   -> clkpwr_get_base_clock_rate
+        24 __aeabi_uidiv
+       0   clkpwr_get_event_field
+       0   clkpwr_get_osc
+       0   clkpwr_get_uid
+       0   clkpwr_halt_cpu
+       0   clkpwr_hclkpll_direct_setup
+      16   clkpwr_hclkpll_setup
+        16   -> clkpwr_check_pll_setup
+        16   -> clkpwr_get_base_clock_rate
+      24   clkpwr_is_msk_event_active
+        24   -> clkpwr_get_event_field
+       0   clkpwr_is_pll_locked
+      24   clkpwr_is_raw_event_active
+        24   -> clkpwr_get_event_field
+       4   clkpwr_mainosc_setup
+       0   clkpwr_mask_and_set
+       4   clkpwr_pll397_setup
+       0   clkpwr_pll_dis_en
+      16   clkpwr_pll_rate
+        16   -> clkpwr_pll_rate_from_val
+      40   clkpwr_pll_rate_from_val
+        40   -> clkpwr_check_pll_setup
+       4   clkpwr_select_enet_iface
+      24   clkpwr_set_event_pol
+        24   -> clkpwr_get_event_field
+       4   clkpwr_set_hclk_divs
+       4   clkpwr_set_i2c_driver
+       0   clkpwr_set_mode
+       0   clkpwr_set_mux
+       4   clkpwr_set_mux_state
+       0   clkpwr_setup_adc_ts
+      12   clkpwr_setup_i2s
+       4   clkpwr_setup_lcd
+       8   clkpwr_setup_mcard_ctrlr
+       0   clkpwr_setup_nand_ctrlr
+       4   clkpwr_setup_pwm
+       8   clkpwr_setup_ssp
+       4   clkpwr_sysclk_setup
+      16   clkpwr_usbclkpll_setup
+        16   -> clkpwr_check_pll_setup
+        16   -> clkpwr_get_base_clock_rate
+      24   clkpwr_wk_event_en_dis
+        24   -> clkpwr_get_event_field
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable16
+       4  ??DataTable16_1
+       4  ??DataTable16_2
+       4  ??DataTable16_3
+       4  ??DataTable16_4
+       4  ??DataTable16_5
+       4  ??DataTable17
+       4  ??DataTable19
+       4  ??DataTable19_1
+       4  ??DataTable20
+       4  ??DataTable20_1
+       4  ??DataTable21
+       4  ??DataTable22
+       4  ??DataTable23
+       4  ??DataTable23_1
+       4  ??DataTable23_2
+       4  ??DataTable24
+       4  ??DataTable25
+       4  ??DataTable25_1
+       4  ??DataTable30
+       4  ??DataTable30_1
+       4  ??DataTable30_10
+       4  ??DataTable30_11
+       4  ??DataTable30_12
+       4  ??DataTable30_13
+       4  ??DataTable30_14
+       4  ??DataTable30_15
+       4  ??DataTable30_16
+       4  ??DataTable30_17
+       4  ??DataTable30_2
+       4  ??DataTable30_3
+       4  ??DataTable30_4
+       4  ??DataTable30_5
+       4  ??DataTable30_6
+       4  ??DataTable30_7
+       4  ??DataTable30_8
+       4  ??DataTable30_9
+      24  clkpwr_abs
+     200  clkpwr_autoclk_en_dis
+      36  clkpwr_base_clk
+     780  clkpwr_check_pll_setup
+      72  clkpwr_clear_event
+     796  clkpwr_clk_en_dis
+     992  clkpwr_find_pll_cfg
+      40  clkpwr_force_arm_hclk_to_pclk
+     172  clkpwr_get_base_clock
+     512  clkpwr_get_base_clock_rate
+     348  clkpwr_get_clock_rate
+     268  clkpwr_get_event_field
+      36  clkpwr_get_osc
+      68  clkpwr_get_uid
+      12  clkpwr_halt_cpu
+      12  clkpwr_hclkpll_direct_setup
+     232  clkpwr_hclkpll_setup
+      96  clkpwr_is_msk_event_active
+     184  clkpwr_is_pll_locked
+      96  clkpwr_is_raw_event_active
+      84  clkpwr_mainosc_setup
+      32  clkpwr_mask_and_set
+     100  clkpwr_pll397_setup
+     204  clkpwr_pll_dis_en
+      28  clkpwr_pll_rate
+     164  clkpwr_pll_rate_from_val
+      96  clkpwr_select_enet_iface
+     124  clkpwr_set_event_pol
+      96  clkpwr_set_hclk_divs
+     128  clkpwr_set_i2c_driver
+     120  clkpwr_set_mode
+     372  clkpwr_set_mux
+     452  clkpwr_set_mux_state
+      32  clkpwr_setup_adc_ts
+     140  clkpwr_setup_i2s
+     244  clkpwr_setup_lcd
+      92  clkpwr_setup_mcard_ctrlr
+      64  clkpwr_setup_nand_ctrlr
+     168  clkpwr_setup_pwm
+     116  clkpwr_setup_ssp
+     100  clkpwr_sysclk_setup
+     232  clkpwr_usbclkpll_setup
+     136  clkpwr_wk_event_en_dis
+      16  hclkdivs
+      16  pll_postdivs
+
+ 
+    68 bytes in section .data
+ 8 412 bytes in section .text
+ 
+ 8 412 bytes of CODE memory
+    68 bytes of DATA memory
+
+Errors: none
+Warnings: none

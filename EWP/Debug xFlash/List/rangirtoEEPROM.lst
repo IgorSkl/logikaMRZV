@@ -1,0 +1,266 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        12/Oct/2015  11:05:04
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\dataEEPROM\rangirtoEEPROM.c
+#    Command line =  
+#        "D:\IAR projects\HR1_0100_00_I720_new2\dataEEPROM\rangirtoEEPROM.c" -D
+#        _STATIC_MEMORY_BOOT -lcN "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\List\" -o "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "C:\Program Files\IAR Systems\Embedded
+#        Workbench 7.40\arm\INC\c\DLib_Config_Normal.h" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\Igor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\component\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\" --cpu_mode arm -On
+#        --use_c++_inline
+#    List file    =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\List\rangirtoEEPROM.lst
+#    Object file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\Obj\rangirtoEEPROM.o
+#
+###############################################################################
+
+D:\IAR projects\HR1_0100_00_I720_new2\dataEEPROM\rangirtoEEPROM.c
+      1          /*
+      2          #include "lpc_types.h"
+      3          #include "lpc_irq_fiq.h"
+      4          #include "lpc_arm922t_cp15_driver.h"
+      5          
+      6          #include "lpc32xx_hstimer.h"
+      7          #include "lpc32xx_ssp.h"
+      8          #include "lpc32xx_gpio.h"
+      9          
+     10          #include "lpc32xx_intc_driver.h"
+     11          #include "lpc32xx_clkpwr_driver.h"
+     12          
+     13          #include "arm926ej_cp15_drv.h"
+     14          #include "ttbl.h"
+     15          */
+     16          #include "lpc_types.h"
+     17          
+     18          #include <stdio.h>
+     19          #include <string.h>
+     20          
+     21          #include "psuperVisor\supermanager.h"
+     22          
+     23          #include "component\componentdef.h"
+     24          #include "callbackelement\callbackelementdef.h"
+     25          #include "callbackelement\ustrangEEPROMdef.h"
+     26          #include "psuperVisor\psvisor_helpdef.h"
+     27          #include "virtualMenu\wideLogManagerdef.h"
+     28          
+     29          #include "virtualMenu\rangmanagerfnc.h"
+     30          #include "callbackelement\callbackelementfnc.h"
+     31          #include "psuperVisor\psvisor_helpfnc.h"
+     32          #include "virtualMenu\systemmenufnc.h"
+     33          #include "callbackelement\missionCollectionEEPROM.h"
+     34          #include "dataEEPROM\dataEEPROM.h"
+     35          
+     36          extern CALLBACK_MISSION cb_missionDEVICE1;
+     37          extern CALLBACK_MISSION *cb_mission_crrDEVICE1;//текущая миссия
+     38          extern short  missionSeparatorDEVICE1;//сепаратор миссии
+     39          extern int timing;
+     40          extern int timingLoad;
+     41          extern int cicling;
+     42          extern int  mngUSTAVKI[];
+     43          extern UNS_32 ArrayRANGIR[];
+     44          extern char  tmp_eeprom[];//MAX_MNGUSTAVKI*4блока *4байта
+     45          
+     46          extern int missionCicling;//циклы одинаковых миссий
+     47          
+     48          int controlRang;
+     49          
+     50          int stepElementSaveRANGtoEEPROM(int alter)
+     51          {
+     52          //исполнение миссий для записи ранж
+     53            int                      alter_offset_rang = OFF1_B64RANG;
+     54            if(alter&USTALTER_MASKA)
+     55              alter_offset_rang = OFF2_B64RANG;
+     56            //сост процесса записи ранж
+     57            int condition = SAVE_RANG_BUSY;//процесс записи ранж занят
+     58            switch(missionSeparatorDEVICE1)
+     59            {
+     60            case CBACK_MISSION_1BWRITE_MASSIV:
+     61            {
+     62              char *sourceData = (char *)ArrayRANGIR;
+     63              missionSeparatorDEVICE1 = CBACK_NOMISSION;//больше миссий не будет
+     64              if(missionCicling<(MAX_B64RANG-1)) //циклы одинаковых миссий
+     65              {
+     66                //сформировать миссию записи ранж в EEPROM 1 блок
+     67                Build_cbMission_1BWRITE_MASSIV(sourceData,
+     68                                               BLOKMISSION_1 +BLOKMISSION_1*missionCicling,
+     69                                               BLOKMISSION_1 +BLOKMISSION_1*missionCicling +alter_offset_rang);
+     70                missionCicling++;//циклы одинаковых миссий
+     71              }//if
+     72              else
+     73              {
+     74                missionCicling = 0;//циклы одинаковых миссий
+     75                //сформировать миссию чтения ранж EEPROM 1 блок
+     76                Build_cbMission_1BREAD_MASSIV((char *)tmp_eeprom, alter_offset_rang, 0);
+     77              }
+     78            }
+     79            break;
+     80          
+     81            case CBACK_MISSION_1BREAD_MASSIV:
+     82            {
+     83              missionSeparatorDEVICE1 = CBACK_NOMISSION;//больше миссий не будет
+     84              if(missionCicling<(MAX_B64RANG-1)) //циклы одинаковых миссий
+     85              {
+     86                //сформировать миссию чтения ранж EEPROM 1 блок
+     87                Build_cbMission_1BREAD_MASSIV((char *)tmp_eeprom,
+     88                                              BLOKMISSION_1 +BLOKMISSION_1*missionCicling +alter_offset_rang,
+     89                                              BLOKMISSION_1 +BLOKMISSION_1*missionCicling);
+     90                missionCicling++;//циклы одинаковых миссий
+     91              }///if
+     92              else
+     93              {
+     94                missionCicling = 0;//циклы одинаковых миссий
+     95                condition = SAVE_RANG_COMPLETE;//процесс записи ранж завершен
+     96              }
+     97            }
+     98            break;
+     99          
+    100            default:;//NO MORE MISSION
+    101            }//switch
+    102            return  condition;//процесс записи
+    103          }//stepElementSaveRANGtoEEPROM(int cntB64, int offB64)
+    104          
+    105          int stepElementReadRANGtoEEPROM(int alter)
+    106          {
+    107          //исполнение миссий для чтения ранжирования
+    108            int                      alter_offset_rang = OFF1_B64RANG;
+    109           // int                      alter_offset_ust = OFF1_B64UST;
+    110            if(alter&USTALTER_MASKA)
+    111              alter_offset_rang = OFF2_B64RANG;
+    112           // if(alter&USTALTER_MASKA)
+    113             // alter_offset_ust = OFF2_B64UST;
+    114            //сост процесса
+    115            int condition = READ_RANG_BUSY;//процесс чтения ранж занят
+    116            switch(missionSeparatorDEVICE1)
+    117            {
+    118            case CBACK_MISSION_1BREAD_MASSIV:
+    119            {
+    120              missionSeparatorDEVICE1 = CBACK_NOMISSION;//больше миссий не будет
+    121              if(missionCicling<(MAX_B64RANG-1)) //циклы одинаковых миссий
+    122              {
+    123                //сформировать миссию чтения ранжирования в EEPROM 1 блок
+    124                Build_cbMission_1BREAD_MASSIV((char *)tmp_eeprom,
+    125                                              BLOKMISSION_1 +BLOKMISSION_1*missionCicling +alter_offset_rang,
+    126                                              BLOKMISSION_1 +BLOKMISSION_1*missionCicling);
+    127                missionCicling++;//циклы одинаковых миссий
+    128              }//if
+    129              else
+    130              {
+    131                missionCicling = 0;//циклы одинаковых миссий
+    132                condition = READ_RANG_COMPLETE;//процесс чтения ранж завершен
+    133              }
+    134            }
+    135            break;
+    136          
+    137            default:;//NO MORE MISSION
+    138            }//switch
+    139          
+    140            return  condition;//процесс чтения уст
+    141          }//stepElementReadUSTAVKItoEEPROM()
+    142          
+    143          int stepElementRead1RANGtoEEPROM(int alter)
+    144          {
+    145          //исполнение миссий для чтения ранж
+    146            int                      alter_offset_rang = OFF1_B64RANG;
+    147            if(alter&USTALTER_MASKA)
+    148              alter_offset_rang = OFF2_B64RANG;
+    149          //чтение ранж EEPROM
+    150            int condition = READ_RANG_BUSY;//процесс чтения ранж занят
+    151            //сформировать миссию чтения ранж  EEPROM 1 блок
+    152            Build_cbMission_1BREAD_MASSIV((char *)tmp_eeprom, alter_offset_rang, 0);
+    153            return  condition;//процесс чтения ранж
+    154          }//stepElementRead1RANGtoEEPROM(int alter)
+    155          
+    156          int controlPREPARErang()
+    157          {
+    158            controlRang ++;
+    159          //подготовка ранж
+    160          //    int tt1 = setCRCMassiv((int *)tmp_eeprom, MAX_MNGRANG); //CRC
+    161          //    int tt2 = ((int *)tmp_eeprom)[MAX_MNGRANG];
+    162            if(
+    163              setCRCMassiv((int *)tmp_eeprom, MAX_MNGRANG)== //CRC
+    164              ((int *)tmp_eeprom)[MAX_MNGRANG]
+    165            ){
+    166             CopyEEPROMtoRANGIR();//копировать данные из EEPROM в ранжир
+    167             return 0;//нет ошибок
+    168             }//if
+    169            return 1;//ошибка
+    170          }//controlPREPARErang()
+    171          
+    172          int controlSaveRang()
+    173          {
+    174          //контроль результ записи ранж
+    175            if(
+    176              setCRCMassiv((int *)tmp_eeprom, MAX_MNGRANG) == //CRC для ранж
+    177              ((int *)tmp_eeprom)[MAX_MNGRANG]
+    178              //getCRCrang()//получить CRC
+    179            ) return 0;
+    180            return 1;//ошибка
+    181          }//controlSaveRang()
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   controlPREPARErang
+         8   -> CopyEEPROMtoRANGIR
+         8   -> setCRCMassiv
+       8   controlSaveRang
+         8   -> setCRCMassiv
+      16   stepElementRead1RANGtoEEPROM
+        16   -> Build_cbMission_1BREAD_MASSIV
+      16   stepElementReadRANGtoEEPROM
+        16   -> Build_cbMission_1BREAD_MASSIV
+      24   stepElementSaveRANGtoEEPROM
+        24   -> Build_cbMission_1BREAD_MASSIV
+        24   -> Build_cbMission_1BWRITE_MASSIV
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable4
+       4  ??DataTable4_1
+       4  ??DataTable4_2
+       4  ??DataTable4_3
+       4  ??DataTable4_4
+      72  controlPREPARErang
+       4  controlRang
+      48  controlSaveRang
+      60  stepElementRead1RANGtoEEPROM
+     168  stepElementReadRANGtoEEPROM
+     304  stepElementSaveRANGtoEEPROM
+
+ 
+   4 bytes in section .bss
+ 672 bytes in section .text
+ 
+ 672 bytes of CODE memory
+   4 bytes of DATA memory
+
+Errors: none
+Warnings: none

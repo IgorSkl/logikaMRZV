@@ -1,0 +1,365 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  16:25:10
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\virtualMenu\widelogmanager.c
+#    Command line =  
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\virtualMenu\widelogmanager.c"
+#        -lcN "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\List\" -o
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\" --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=ARM926EJ-S -e --fpu=VFP9-S --dlib_config "D:\Program Files\IAR
+#        Systems\Embedded Workbench 7.2\arm\INC\c\DLib_Config_Normal.h" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\" --interwork
+#        --cpu_mode arm -On --use_c++_inline
+#    List file    =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\widelogmanager.lst
+#    Object file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\widelogmanager.o
+#
+###############################################################################
+
+D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\virtualMenu\widelogmanager.c
+      1          /*
+      2          #include <vcl.h>
+      3          #include <strstrea.h>
+      4          #include <math.h>
+      5          #include <mem.h>
+      6          #include <fstream.h>
+      7          #include <strstrea.h>
+      8          #include <iomanip.h>
+      9          #pragma hdrstop
+     10          */
+     11          #include <stdio.h>
+     12          #include <string.h>
+     13          
+     14          #include "psuperVisor\supermanager.h"
+     15          
+     16          #include "bazisdef.h"
+     17          #include "component\componentdef.h"
+     18          #include "virtualMenu\widelogmanagerdef.h"
+     19          #include "virtualMenu\systemmenudef.h"
+     20          
+     21          #include "virtualMenu\rangmanagerfnc.h"
+     22          #include "virtualMenu\widelogmanagerfnc.h"
+     23          #include "virtualMenu\ustmanagerfnc.h"
+     24          #include "psuperVisor\psvisor_helpfnc.h"
+     25          
+     26          #include "psuperVisor\psupervisor.h"
+     27          #include "virtualMenu\viewMenuCnf.h"
+     28          
+     29          #include "toSpeedOptim.h"
+     30          
+     31          extern UNS_32 pActualCMD[];//текущие плюс расшир логика
+     32          extern UNS_32 ArrayRANGIR[];
+     33          
+     34          //массив расширенной логики
+     35          /*
+     36           Структура массива расширенной логики
+     37          LE1
+     38          DblOctatPRM
+     39          DblOctatMINUS
+     40          DblOctatPLUS
+     41          
+     42          LE2
+     43          DblOctatPRM
+     44          DblOctatMINUS
+     45          DblOctatPLUS
+     46          ..........
+     47          */
+     48          //первые DQUADRO для компонентов конфиг, а вторые DQUADRO для компонентов РЛ
+     49          UNS_32 ArrayWIDELOG[3*2*DQUADRO*LE_TOTAL];
+     50          //тип лог элемента
+     51          //0-ОТКЛ
+     52          //1-ИЛИ
+     53          //2-И
+     54          //3-ИСКЛ ИЛИ
+     55          int    TypLE[LE_TOTAL];
+     56          UNS_32 PlusCircleCmd[2*DQUADRO];//командный массив плюсовых команд LE
+     57          UNS_32 InputLECmd[2*DQUADRO];//входной командный массив LE
+     58          UNS_32 EXEOutputCmd[2*DQUADRO];//выходной командный массив компонентов
+     59          UNS_32 *WideLogActual;//текущий командный массив расшир логики
+     60          
+     61          /**********************************************
+     62          МЕНЕДЖЕР РАСШИРЕННОЙ ЛОГИКИ
+     63          Подготовить ArrayWIDELOG к редактированию
+     64          **********************************************/
+     65          void MngWideLogPrepareArrayWIDELOGtoEdit()
+     66          {
+     67            //копировать в тень
+     68            memcpy((void*)getShadowBuf(), ArrayWIDELOG, sizeof(ArrayWIDELOG));
+     69          }//MngWideLogPrepareArrayWIDELOGtoEdit()
+     70          
+     71          /**********************************************
+     72          МЕНЕДЖЕР РАСШИРЕННОЙ ЛОГИКИ
+     73          Получить адр ArrayWIDELOG заданной LE для редактирования прямых
+     74          **********************************************/
+     75          UNS_32 * MngWLGetLEWLtoEdit_PRM(int numLE)
+     76          {
+     77            return  &(((UNS_32 *)getShadowBuf())[2*DQUADRO*(numLE*3 +0)]);
+     78          }//MngWLGetLEWLtoEdit_PRM(int numLE)
+     79          
+     80          /**********************************************
+     81          МЕНЕДЖЕР РАСШИРЕННОЙ ЛОГИКИ
+     82          Закончить редактировать ArrayWIDELOG
+     83          **********************************************/
+     84          void MngWLEndingEditArrayWIDELOG()
+     85          {
+     86            //копировать из тени
+     87            memcpy(ArrayWIDELOG, (void*)getShadowBuf(), sizeof(ArrayWIDELOG));
+     88          }//
+     89          
+     90          short SetCmdToLE(short kodC, short numClon, short numIO, short numLE, short typesCmd)
+     91          {
+     92          //отранж команду numIO компонента kodC с номером клона numClon на numLE со знаком typesCmd
+     93            short idxClon = SearchCnfClonToComponent(kodC, numClon);
+     94            if(idxClon<0)return 1;//клон не найден
+     95            short idxCmd = getOffsetIOCmdCnf(idxClon) + numIO;//индекс команды
+     96          
+     97            MngWideLogPrepareArrayWIDELOGtoEdit();//Подготовить ArrayWIDELOG к редактированию
+     98          
+     99            short isConflict = SetLEToClon(idxCmd, numLE, typesCmd);
+    100            MngWLEndingEditArrayWIDELOG();//Закончить редактировать ArrayWIDELOG
+    101            return isConflict;
+    102          }//SetCmdToClonLE(short kodC, short numClon, short numIO, short numLE, short typesCmd)
+    103          
+    104          short SetCmdToLE_WL(short kodC, short numClon, short numIO, short numLE, short typesCmd)
+    105          {
+    106          //отранж команду из конф РЛ numIO компонента kodC с номером клона numClon на numLE со знаком typesCmd
+    107            short idxClon = SearchCnfClonToComponent_WL(kodC, numClon);
+    108            if(idxClon<0)return 1;//клон не найден
+    109            short idxCmd = getOffsetIOCmdCnf_WL(idxClon) + numIO;//индекс команды РЛ
+    110          
+    111            MngWideLogPrepareArrayWIDELOGtoEdit();//Подготовить ArrayWIDELOG к редактированию
+    112          
+    113            short isConflict = SetLEToClon(idxCmd +SIZE_RANGIRCMD, numLE, typesCmd);
+    114            MngWLEndingEditArrayWIDELOG();//Закончить редактировать ArrayWIDELOG
+    115            return isConflict;
+    116          }//SetCmdToLE_WL(short kodC, short numClon, short numIO, short numLE, short typesCmd)
+    117          
+    118          short SetLEToClon(int idxCmd, int numLE, int typesCmd)
+    119          {
+    120          //установить команду на LE
+    121            short isConflict = 0;//проверить маску
+    122            UNS_32 *prm =  MngWLGetLEWLtoEdit_PRM(numLE);//массив LE
+    123            //откл команда
+    124            NumBitClearingQuadro(idxCmd,
+    125                                 prm
+    126                                ); //сброс бита по его индексу
+    127            NumBitClearingQuadro(idxCmd,
+    128                                 &(prm[DQUADRO*2])//инверс
+    129                                ); //сброс бита по его индексу
+    130            NumBitClearingQuadro(idxCmd,
+    131                                 &(prm[DQUADRO*2+DQUADRO*2])//плюс
+    132                                ); //сброс бита по его индексу
+    133          
+    134            switch(typesCmd)
+    135            {
+    136            case typeCmd_PRM:
+    137              NumBitSettingQuadro(idxCmd,
+    138                                  prm
+    139                                 ); //уст бита по его индексу
+    140              break;
+    141          
+    142            case typeCmd_MINUS:
+    143              NumBitSettingQuadro(idxCmd,
+    144                                  &(prm[DQUADRO*2])//инверс
+    145                                 ); //уст бита по его индексу
+    146              break;
+    147          
+    148            case typeCmd_PLUS:{
+    149              NumBitSettingQuadro(idxCmd,
+    150                                  &(prm[DQUADRO*2+DQUADRO*2])//плюс
+    151                                 ); //уст бита по его индексу
+    152              UNS_32 *pplus = &(prm[DQUADRO*2+DQUADRO*2]);
+    153              //наложить маски выходов других LE
+    154              for(int i=0; i<LE_TOTAL; i++){
+    155               if(i==numLE) continue;//текущий LE не учитывать
+    156               UNS_32 *prmLE =  MngWLGetLEWLtoEdit_PRM(i);//массив LE
+    157               UNS_32 *pplusLE = &(prmLE[DQUADRO*2+DQUADRO*2]);
+    158               for(int k=0; k<DQUADRO*2; k++) {
+    159                    if(pplus[k] & pplusLE[k]) isConflict = 1;//есть конфликт
+    160                    }//for
+    161               for(int k=0; k<DQUADRO*2; k++) pplus[k] &= ~pplusLE[k];//наложить маску LE
+    162               }//for
+    163                //наложить маски DV
+    164                for(int i=0; i<DV_TOTAL; i++){
+    165                 UNS_32 *pDV = //MngRangGetPointerUVVRANGIRtoEdit(DV1_SM +i);
+    166                    &ArrayRANGIR[(DV1_SM +i)*DQUADRO];
+    167                 for(int k=0; k<DQUADRO; k++) pplus[k] &= ~pDV[k];//наложить маску DV
+    168               }//for
+    169              }//case
+    170              break;
+    171            default:
+    172              ;
+    173            }//switch
+    174          
+    175            return isConflict;//проверить маску 
+    176          }//SetLEToClon(int idxCmd, UNS_32 *prm, int typesCmd)
+    177          
+    178          short ApplyDVMask(int numUVV)
+    179          {
+    180          //наложить маску на DV
+    181           short isConflict = 0;
+    182              //уйти если не ДВ
+    183              if(!((LIGHTRANGUVV>=DV1_SM) && (LIGHTRANGUVV<(DV1_SM+DV_TOTAL)))) return 0;
+    184          
+    185          //Получить адр конкр DV
+    186               UNS_32 *pDV = MngRangGetPointerUVVRANGIRtoEdit(numUVV);
+    187          
+    188              //наложить маску
+    189              for(int i=0; i<LE_TOTAL; i++){
+    190               //плюсовые LE
+    191               UNS_32 *pplusLE = &ArrayWIDELOG[2*DQUADRO*i*3 +DQUADRO*2+DQUADRO*2];
+    192               for(int k=0; k<DQUADRO; k++) {
+    193                    if(pDV[k] & pplusLE[k]) isConflict = 1;//проверить маску 
+    194                    }//for
+    195               for(int k=0; k<DQUADRO; k++) pDV[k] &= ~pplusLE[k];//наложить маску 
+    196               }//for
+    197            return isConflict;
+    198          }//ApplyDVMask(int numUVV)
+    199          
+    200          short ApplyDVMaskToRead(int numUVV)
+    201          {
+    202          //наложить маску на DV
+    203           short isConflict = 0;
+    204              //уйти если не ДВ
+    205          //   if(!((LIGHTRANGUVV>=DV1_SM) && (LIGHTRANGUVV<(DV1_SM+DV_TOTAL)))) return 0;
+    206             if(!((numUVV>=DV1_SM) && (numUVV<(DV1_SM+DV_TOTAL)))) return isConflict;
+    207          
+    208          //Получить адр конкр DV
+    209               UNS_32 *pDV = MngRangGetPointerUVVRANGIRtoRead(numUVV);
+    210          
+    211              //наложить маску
+    212              for(int i=0; i<LE_TOTAL; i++){
+    213               //плюсовые LE
+    214               UNS_32 *pplusLE = &ArrayWIDELOG[2*DQUADRO*i*3 +DQUADRO*2+DQUADRO*2];
+    215               for(int k=0; k<DQUADRO; k++) {
+    216                    if(pDV[k] & pplusLE[k]) isConflict = 1;//проверить маску 
+    217                    }//for
+    218               for(int k=0; k<DQUADRO; k++) pDV[k] &= ~pplusLE[k];//наложить маску 
+    219               }//for
+    220            return isConflict;
+    221          }//ApplyDVMaskToRead(int numUVV)
+    222          
+    223          void SetTypLE(short numLE, short typesLE)
+    224          {
+    225          //задать тип лог элемента
+    226            TypLE[numLE] = typesLE;
+    227          }//SetTypLE(short numLE, short typesLE)
+    228          
+    229          void ClearTypesLE()
+    230          {
+    231          //отключить все лог элементы
+    232            memset(TypLE, typeLE_DIS, sizeof(TypLE));
+    233          }//ClearTypesLE()
+    234          
+    235          void ClearWIDELOG()
+    236          {
+    237          //очистить всю РЛ
+    238            memset(ArrayWIDELOG, 0, sizeof(ArrayWIDELOG));
+    239          }//ClearWIDELOG()
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      16   ApplyDVMask
+        16   -> MngRangGetPointerUVVRANGIRtoEdit
+      16   ApplyDVMaskToRead
+        16   -> MngRangGetPointerUVVRANGIRtoRead
+      16   ClearTypesLE
+        16   -> __aeabi_memset
+      16   ClearWIDELOG
+        16   -> __aeabi_memset
+      16   MngWLEndingEditArrayWIDELOG
+        16   -> __aeabi_memcpy
+        16   -> getShadowBuf
+       8   MngWLGetLEWLtoEdit_PRM
+         8   -> getShadowBuf
+      16   MngWideLogPrepareArrayWIDELOGtoEdit
+        16   -> __aeabi_memcpy
+        16   -> getShadowBuf
+      40   SetCmdToLE
+        40   -> MngWLEndingEditArrayWIDELOG
+        40   -> MngWideLogPrepareArrayWIDELOGtoEdit
+        40   -> SearchCnfClonToComponent
+        40   -> SetLEToClon
+        40   -> getOffsetIOCmdCnf
+      40   SetCmdToLE_WL
+        40   -> MngWLEndingEditArrayWIDELOG
+        40   -> MngWideLogPrepareArrayWIDELOGtoEdit
+        40   -> SearchCnfClonToComponent_WL
+        40   -> SetLEToClon
+        40   -> getOffsetIOCmdCnf_WL
+      32   SetLEToClon
+        32   -> MngWLGetLEWLtoEdit_PRM
+        32   -> NumBitClearingQuadro
+        32   -> NumBitSettingQuadro
+       0   SetTypLE
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable7
+       4  ??DataTable7_1
+       4  ??DataTable7_2
+       4  ??DataTable7_3
+     224  ApplyDVMask
+     216  ApplyDVMaskToRead
+   15360  ArrayWIDELOG
+      36  ClearTypesLE
+      36  ClearWIDELOG
+      80  EXEOutputCmd
+      80  InputLECmd
+      40  MngWLEndingEditArrayWIDELOG
+      24  MngWLGetLEWLtoEdit_PRM
+      40  MngWideLogPrepareArrayWIDELOGtoEdit
+      80  PlusCircleCmd
+     172  SetCmdToLE
+     176  SetCmdToLE_WL
+     428  SetLEToClon
+      40  SetTypLE
+     256  TypLE
+       4  WideLogActual
+
+ 
+ 15 860 bytes in section .bss
+  1 448 bytes in section .text
+ 
+  1 448 bytes of CODE memory
+ 15 860 bytes of DATA memory
+
+Errors: none
+Warnings: none

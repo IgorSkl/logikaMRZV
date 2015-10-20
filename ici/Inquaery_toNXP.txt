@@ -1,0 +1,9 @@
+ Move Data from SSP data register(SSP0DR-0x2008 4008 ) unstable.
+ Hello, I am writing a program that moves data through SSP channel.
+ It properly worked on SSP whith interrupt. 
+ But I need to send and receive 512 bytes through  SSP channel on DMA channel hardware.
+ I`m allocate dma chanell 6 for transmittion and dma channel 7 on reception.
+ Program whith dma chanell 6 works properly. But whith dma chanell 7 not.
+ Once program   receive 512 bytes properly. But then program don`t receive data.
+What is wrong? 
+Equipment for Electronics

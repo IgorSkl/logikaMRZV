@@ -1,0 +1,704 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  14:33:04
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\ici\hu7l.c
+#    Command line =  
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\ici\hu7l.c"
+#        -lcN "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\List\" -o
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\" --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=ARM926EJ-S -e --fpu=VFP9-S --dlib_config "D:\Program Files\IAR
+#        Systems\Embedded Workbench 7.2\arm\INC\c\DLib_Config_Normal.h" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\" --interwork
+#        --cpu_mode arm -On --use_c++_inline
+#    List file    =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\hu7l.lst
+#    Object file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\hu7l.o
+#
+###############################################################################
+
+D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\ici\hu7l.c
+      1          /*------------------------------------------------------------------------------
+      2          * Copyright (c) 2013 - Factory “KyivPrylad”
+      3          * 
+      4          * Permission to use, copy, modify, and distribute this software for any
+      5          * purpose with or without fee is hereby granted, provided that the above
+      6          * copyright notice and this permission notice appear in all copies.
+      7          * 
+      8          * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+      9          * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+     10          * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+     11          * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+     12          * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+     13          * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+     14          * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+     15          * 
+     16          *------------------------------------------------------------------------------
+     17          *
+     18          * Processor       : Lpc_3240
+     19          * File Name       : u7l.c
+     20          * Description     : Functions and Data for Low Level Communication,
+     21                              BO BR
+     22          
+     23          *  Version        : 1.00
+     24          *
+     25          *       +----- (NEW | MODify | ADD | DELete)
+     26          *       |
+     27          *  No   |   When       Who                What
+     28          *-----+---+----------+------------------+--------------------------------------
+     29          * 000  NEW  02/09/13   Markovsky A       Creation
+     30          *----------------------------------------------------------------------------*/
+     31          
+     32          
+     33          //.#include "lpc32xx_chip.h"
+     34          //.#include "phy3250_board.h"
+     35          //.#include "lpc32xx_timer_driver.h"
+     36          //.#include "lpc32xx_intc_driver.h"
+     37          //.#include "lpc32xx_gpio_driver.h"
+     38          //.#include "lpc32xx_clkpwr_driver.h"
+     39          //.#include "lpc32xx_hsuart_driver.h"
+     40          //.#include "lpc32xx_uart.h"
+     41          
+     42          
+     43          #include "../LIB/CDL_AV0/lpc/include/lpc_types.h"
+     44          #include "../LIB/CDL_AV0/lpc/include/lpc_irq_fiq.h"
+     45          #include "../LIB/CDL_AV0/lpc/include/lpc_arm922t_cp15_driver.h"
+     46          //
+     47          #include "../LIB/CDL_AV0/csps/lpc32xx/include/lpc32xx_hsuart_driver.h"
+     48          #include "../LIB/CDL_AV0/csps/lpc32xx/include/lpc32xx_intc_driver.h"
+     49          #include "../LIB/CDL_AV0/csps/lpc32xx/include/lpc32xx_timer_driver.h"
+     50          
+     51          
+     52          /* Prototype for external IRQ handler */
+     53          void lpc32xx_irq_handler(void);
+     54          extern unsigned char chEntry_Hs7;
+     55          extern unsigned char chHdwErorHSU7;
+     56          /* HSUART device handles */
+     57           INT_32 hs7uartdev = 0;
+     58           INT_32 hsuartdev = 0;
+     59          static UNS_8 hs7_txbuff [512], hs7_rxbuff [512];
+     60          volatile  int hs7_txsize = 0, hs7_rxsize = 0;
+     61          
+     62           int hs7_txfill  = 0;
+     63           int hs7_rxget   = 0; 
+     64           int hs7_txget   = 0;
+     65           int hs7_rxfill  = 0;
+     66          
+     67          void foo7(void)
+     68          {
+     69          	hs7_txfill = hs7_txget = hs7_rxfill = 
+     70          	hs7_rxget = hs7_txsize = hs7_rxsize = 0;
+     71          
+     72          }
+     73          /***********************************************************************
+     74           *
+     75           * Function: term_dat_send_cb
+     76           *
+     77           * Purpose: HS UART transmit data callback
+     78           *
+     79           * Processing:
+     80           *     Move data from the ring buffer to the driver.
+     81           *
+     82           * Parameters: None
+     83           *
+     84           * Outputs: None
+     85           *
+     86           * Returns: Nothing
+     87           *
+     88           * Notes: This function is called in interrupt context.
+     89           *
+     90           **********************************************************************/
+     91          //.void term_dat_send_cb(void)
+     92          //.{
+     93          //.  INT_32 bwrite, tosend = 512 - txget;
+     94          //.  HSUART_CFG_T *phsuart = (HSUART_CFG_T *) hsuartdev;
+     95          //.
+     96          //.  if (tosend > txsize)
+     97          //.  {
+     98          //.    tosend = txsize;
+     99          //.  }
+    100          //.
+    101          //.  if (tosend == 0)
+    102          //.  {
+    103          //.    phsuart->regptr->ctrl &= ~HSU_TX_INT_EN;
+    104          //.  }
+    105          //.  else
+    106          //.  {
+    107          //.    phsuart->regptr->ctrl |= HSU_TX_INT_EN;
+    108          //.  }
+    109          //.
+    110          //.  /* Write data */
+    111          //.  bwrite = hsuart_write(hsuartdev, &txbuff[txget], tosend);
+    112          //.  txsize = txsize - bwrite;
+    113          //.  txget = txget + bwrite;
+    114          //.  if (txget >= 512)
+    115          //.  {
+    116          //.    txget = 0;
+    117          //.  }
+    118          //.
+    119          //.}
+    120          
+    121          /***********************************************************************
+    122           *
+    123           * Function: term_dat_recv_cb
+    124           *
+    125           * Purpose: HS UART receive data callback
+    126           *
+    127           * Processing:
+    128           *     Read data from the driver into the RX ring buffer.
+    129           *
+    130           * Parameters: None
+    131           *
+    132           * Outputs: None
+    133           *
+    134           * Returns: Nothing
+    135           *
+    136           * Notes:
+    137           *     Ring buffer overflow is not accounted for in this application.
+    138           *     This function is called in interrupt context.
+    139           *
+    140           **********************************************************************/
+    141           
+    142          //.void term_dat_recv_cb(void)
+    143          //.{
+    144          //.  INT_32 bread, toreadmax = 512 - rxfill;
+    145          //.
+    146          //.  /* Read data */
+    147          //.  bread = hsuart_read(hsuartdev, &rxbuff[rxfill], toreadmax);
+    148          //.  rxsize = rxsize + bread;
+    149          //.  rxfill = rxfill + bread;
+    150          //.  if (rxfill >= 512)
+    151          //.  {
+    152          //.    rxfill = 0;
+    153          //.  }
+    154          //.}
+    155          
+    156          /***********************************************************************
+    157           *
+    158           * Function: term_dat_out
+    159           *
+    160           * Purpose: Send some data on the terminal interface
+    161           *
+    162           * Processing:
+    163           *     Place data into the TX ring buffer and start HS UART transmission.
+    164           *
+    165           * Parameters:
+    166           *     dat   : Data to send
+    167           *     bytes : Number of bytes to send
+    168           *
+    169           * Outputs: None
+    170           *
+    171           * Returns: Nothing
+    172           *
+    173           * Notes: Will block until all bytes are sent.
+    174           *
+    175           **********************************************************************/
+    176          //.void term_dat_out(UNS_8 *dat, int bytes)
+    177          //.{
+    178          //.  while (bytes > 0)
+    179          //.  {
+    180          //.    while ((bytes > 0) && (txsize < 512))
+    181          //.    {
+    182          //.      txbuff[txfill] = *dat;
+    183          //.      txfill++;
+    184          //.      if (txfill >= 512)
+    185          //.      {
+    186          //.        txfill = 0;
+    187          //.      }
+    188          //.      dat++;
+    189          //.      bytes--;
+    190          //.      int_disable(IRQ_UART_IIR2);
+    191          //.      txsize++;
+    192          //.      int_enable(IRQ_UART_IIR2);
+    193          //.    }
+    194          //.
+    195          //.    int_disable(IRQ_UART_IIR2);
+    196          //.    term_dat_send_cb();
+    197          //.    int_enable(IRQ_UART_IIR2);
+    198          //.  }
+    199          //.}
+    200          
+    201          /***********************************************************************
+    202           *
+    203           * Function: term_dat_in
+    204           *
+    205           * Purpose: Read some data from the terminal interface
+    206           *
+    207           * Processing:
+    208           *     Move data from the ring buffer to the passed buffer.
+    209           *
+    210           * Parameters:
+    211           *     buff  : Where to place the data
+    212           *     bytes : Number of bytes to read
+    213           *
+    214           * Outputs: None
+    215           *
+    216           * Returns: Number of bytes actually read
+    217           *
+    218           * Notes: None
+    219           *
+    220           **********************************************************************/
+    221          //.int term_dat_in(UNS_8 *buff, int bytes)
+    222          //.{
+    223          //.  int bread = 0;
+    224          //.
+    225          //.  while ((bytes > 0) && (rxsize > 0))
+    226          //.  {
+    227          //.    *buff = rxbuff[rxget];
+    228          //.    buff++;
+    229          //.    rxget++;
+    230          //.    if (rxget >= 512)
+    231          //.    {
+    232          //.      rxget = 0;
+    233          //.    }
+    234          //.    bytes--;
+    235          //.    bread++;
+    236          //.    int_disable(IRQ_UART_IIR2);
+    237          //.    rxsize--;
+    238          //.    int_enable(IRQ_UART_IIR2);
+    239          //.  }
+    240          //.
+    241          //.  return bread;
+    242          //.}
+    243          
+    244          /*
+    245          
+    246          char chI; 
+    247          
+    248           INT_32 uartdev = 0;
+    249          static UNS_8 txbuff [512], rxbuff [512];
+    250          volatile static int txsize, rxsize;
+    251          static int txfill = 0;
+    252          static int rxget  = 0;
+    253          static int txget  = 0;
+    254          static int rxfill = 0;
+    255          void foo(void)
+    256          {
+    257          	txfill = txget = rxfill = rxget = txsize = rxsize = 0;
+    258          
+    259          }*/
+    260          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    261          //---   
+    262          void hs7_recv_cb(void)  @ "Fast_function";
+    263          //..................................................................................
+    264          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    265          //~~~ Purpose: Read some data from the terminal interface                        ~~~
+    266          //~~~ Processing: Move data from the ring buffer to the passed buffer            ~~~
+    267          //~~~        ~~~
+    268          //~~~        ~~~
+    269          //~~~        ~~~
+    270          //``````````````````````````````````````````````````````````````````````````````````
+    271          //~~~ Returns: Number of bytes actually read                                      ~~
+    272          //~~~                                                                             ~~ 
+    273          //~~~                                                                             ~~
+    274          //~~~          ~~
+    275          //~~~          ~~
+    276          //,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+    277          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    278          //=================================================================================
+    279          //Body func                                                                  
+    280          //=================================================================================
+    281          void hs7_recv_cb(void)  @ "Fast_function"
+    282          {
+    283            INT_32 bread, toreadmax = 512 - hs7_rxfill;
+    284          
+    285            /* Read data */
+    286            //bread = uart_read(uartdev, &rxbuff[rxfill], toreadmax);
+    287            bread = hs_uart_read( hs7uartdev, &hs7_rxbuff[hs7_rxfill], toreadmax);
+    288            
+    289            hs7_rxsize = hs7_rxsize + bread;
+    290            hs7_rxfill = hs7_rxfill + bread;
+    291            if (hs7_rxfill >= 512)
+    292            {
+    293              hs7_rxfill = 0;
+    294            }
+    295          }
+    296          
+    297          //---------------------------------------------------------------------------------
+    298          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    299          //---   
+    300          void hs7_send_cb(void)  @ "Fast_function";
+    301          //..................................................................................
+    302          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    303          //~~~ Purpose: Read some data from the terminal interface                        ~~~
+    304          //~~~ Processing: Move data from the ring buffer to the passed buffer            ~~~
+    305          //~~~        ~~~
+    306          //~~~        ~~~
+    307          //~~~        ~~~
+    308          //``````````````````````````````````````````````````````````````````````````````````
+    309          //~~~ Returns: Number of bytes actually read                                      ~~
+    310          //~~~                                                                             ~~ 
+    311          //~~~                                                                             ~~
+    312          //~~~          ~~
+    313          //~~~          ~~
+    314          //,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+    315          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    316          //=================================================================================
+    317          //Body func                                                                  
+    318          //=================================================================================
+    319          
+    320          void hs7_send_cb(void)  @ "Fast_function"
+    321          {
+    322            INT_32 bwrite, tosend = 512 - hs7_txget;
+    323            HSUART_CFG_T *phsuart = (HSUART_CFG_T *)  hs7uartdev;//hsuartdev;
+    324            if (tosend > hs7_txsize)
+    325            {
+    326              tosend = hs7_txsize;
+    327            }
+    328            if (tosend == 0)
+    329            {
+    330              phsuart->regptr->ctrl &= ~HSU_TX_INT_EN;
+    331            }
+    332            else
+    333            {
+    334              phsuart->regptr->ctrl |= HSU_TX_INT_EN;
+    335            }
+    336          
+    337            /* Write data */
+    338            bwrite = hs_uart_write( hs7uartdev, &hs7_txbuff[hs7_txget], tosend);//hsuartdev
+    339            hs7_txsize = hs7_txsize - bwrite;
+    340            hs7_txget  = hs7_txget + bwrite;
+    341            if (hs7_txget >= 512)
+    342            {
+    343              hs7_txget = 0;
+    344            }
+    345          
+    346          }
+    347          //---------------------------------------------------------------------------------
+    348          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    349          //---   
+    350          void hs7_rxerr_cb(void)  @ "Fast_function";
+    351          //..................................................................................
+    352          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    353          //~~~ Purpose: Read some data from the terminal interface                        ~~~
+    354          //~~~ Processing: Move data from the ring buffer to the passed buffer            ~~~
+    355          //~~~        ~~~
+    356          //~~~        ~~~
+    357          //~~~        ~~~
+    358          //``````````````````````````````````````````````````````````````````````````````````
+    359          //~~~ Returns: Number of bytes actually read                                      ~~
+    360          //~~~                                                                             ~~ 
+    361          //~~~                                                                             ~~
+    362          //~~~          ~~
+    363          //~~~          ~~
+    364          //,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+    365          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    366          //=================================================================================
+    367          //Body func                                                                  
+    368          //=================================================================================
+    369          void hs7_rxerr_cb(void)  @ "Fast_function"
+    370          {
+    371            //.INT_32 bread, toreadmax = 512 - hs7_rxfill;
+    372          HSUART_CFG_T* pHs_uart_dat = (HSUART_CFG_T* )hs7uartdev;//hs_uart_dat[2];
+    373          register unsigned long i;
+    374            /* Read data */
+    375            i = pHs_uart_dat->regptr->iir;
+    376            if (i|(HSU_RX_OE_INT))
+    377            {
+    378               pHs_uart_dat->regptr->iir = HSU_RX_OE_INT;
+    379            }
+    380            if (i|(HSU_BRK_INT))
+    381            {
+    382               pHs_uart_dat->regptr->iir = HSU_BRK_INT;
+    383            }
+    384            if (i|(HSU_FE_INT))
+    385            {
+    386               pHs_uart_dat->regptr->iir = HSU_FE_INT;
+    387            }
+    388            
+    389            while ((pHs_uart_dat->regptr->level & 0xFF) != 0)
+    390            {
+    391              //i =	pregs->txrx_fifo;
+    392          	i =	pHs_uart_dat->regptr->txrx_fifo;
+    393            }
+    394            //bread = uart_read(uartdev, &rxbuff[rxfill], toreadmax);
+    395            
+    396            //.bread = hs_uart_read(hsuartdev, &hs7_rxbuff[hs7_rxfill], toreadmax);
+    397            //.hs7_rxsize = hs7_rxsize + bread;
+    398            //.hs7_rxfill = hs7_rxfill + bread;
+    399            //.if (hs7_rxfill >= 512)
+    400            //.{
+    401            //.  hs7_rxfill = 0;
+    402            //.}
+    403            
+    404            hs7_txfill = hs7_txget = hs7_rxfill = 
+    405            hs7_rxget = hs7_txsize = hs7_rxsize = 0;
+    406          }
+    407          
+    408          //---------------------------------------------------------------------------------
+    409          //Transmit 60 Byte
+    410          //Receve 60 Biytea
+    411          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    412          //---   
+    413          long outU7(UNS_8 *dat, int bytes)  @ "Fast_function";
+    414          //..................................................................................
+    415          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    416          //~~~ Purpose:  Send some data on the terminal interface                         ~~~
+    417          //~~~ Processing: Place data into the TX ring buffer and start UART transmission ~~~
+    418          //~~~        ~~~
+    419          //~~~  dat   : Data to send                                                      ~~~
+    420          //~~~  bytes : Number of bytes to send                                           ~~~
+    421          //``````````````````````````````````````````````````````````````````````````````````
+    422          //~~~ Notes: Will block until all bytes are sent                                  ~~
+    423          //~~~                                                                             ~~ 
+    424          //~~~                                                                             ~~
+    425          //~~~          ~~
+    426          //~~~          ~~
+    427          //,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+    428          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    429          //=================================================================================
+    430          //Body func                                                                  
+    431          //=================================================================================
+    432          
+    433          long outU7(UNS_8 *dat, int bytes)  @ "Fast_function"
+    434          {
+    435              if (hs7_txsize>bytes)
+    436            {
+    437          	return 0;//Stop Do Something
+    438            }
+    439            disable_irq();
+    440            if ((hs7_txfill == hs7_txget)&&(hs7_txsize==0))
+    441            hs7_txget = hs7_txfill = 0;//.!!!
+    442            enable_irq();
+    443            
+    444            while (bytes > 0)
+    445            {
+    446              while ((bytes > 0) && (hs7_txsize < 512))
+    447              {
+    448                hs7_txbuff[hs7_txfill] = *dat;
+    449                hs7_txfill++;
+    450                if (hs7_txfill >= 512)
+    451                {
+    452                  hs7_txfill = 0;
+    453                }
+    454                dat++;
+    455                bytes--;
+    456                disable_irq();//int_disable(IRQ_UART_IIR7);
+    457                hs7_txsize++;
+    458                enable_irq();//int_enable(IRQ_UART_IIR7);
+    459              }
+    460          
+    461               disable_irq();//int_disable(IRQ_UART_IIR7);
+    462              //.term_dat_send_cb();
+    463          	hs7_send_cb();
+    464              enable_irq();//int_enable(IRQ_UART_IIR7);
+    465            }
+    466            return 0;
+    467          }
+    468          //---------------------------------------------------------------------------------
+    469          extern INT_32 hs7uartdev;
+    470          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    471          //---   
+    472          long inU7(UNS_8 *buff, int bytes)  @ "Fast_function";
+    473          //..................................................................................
+    474          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    475          //~~~ Purpose: Read some data from the terminal interface                        ~~~
+    476          //~~~ Processing: Move data from the ring buffer to the passed buffer            ~~~
+    477          //~~~        ~~~
+    478          //~~~        ~~~
+    479          //~~~        ~~~
+    480          //``````````````````````````````````````````````````````````````````````````````````
+    481          //~~~ Returns: Number of bytes actually read                                      ~~
+    482          //~~~                                                                             ~~ 
+    483          //~~~                                                                             ~~
+    484          //~~~          ~~
+    485          //~~~          ~~
+    486          //,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+    487          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    488          //=================================================================================
+    489          //Body func                                                                  
+    490          //=================================================================================
+    491          long inU7(UNS_8 *buff, int bytes)  @ "Fast_function"
+    492          {
+    493          
+    494          int bread = 0;
+    495          
+    496            while ((bytes > 0) && (hs7_rxsize > 0))
+    497            {
+    498              *buff = hs7_rxbuff[hs7_rxget];
+    499              buff++;
+    500              hs7_rxget++;
+    501              if (hs7_rxget >= 512)
+    502              {
+    503                hs7_rxget = 0;
+    504              }
+    505              bytes--;
+    506              bread++;
+    507              disable_irq();//int_disable(IRQ_UART_IIR7);
+    508              hs7_rxsize--;
+    509              enable_irq();//int_enable(IRQ_UART_IIR7);
+    510            }
+    511            if (hs7_rxfill == hs7_rxget)
+    512            {
+    513          	disable_irq();//int_disable(IRQ_UART_IIR7);
+    514          	hs7_rxfill = hs7_rxget = 0;
+    515          	enable_irq();//int_enable(IRQ_UART_IIR7);
+    516            }
+    517            if(chHdwErorHSU7)
+    518            {
+    519              Int_disableGen(IRQ_UART_IIR7);//int_disable(IRQ_UART_IIR7);
+    520              int_clear(IRQ_UART_IIR7);
+    521          	chHdwErorHSU7 = 0;
+    522              bytes = hs_uart_recover(hs7uartdev);
+    523            }
+    524          //MIC-> er |= 1<<IRQ_UART_IIR7;
+    525          Int_enableGen(IRQ_UART_IIR7);//int_enable(IRQ_UART_IIR7);
+    526            return bread;
+    527          	
+    528          	
+    529          }
+    530          //---------------------------------------------------------------------------------
+    531          
+    532          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    533          //---   
+    534          void hs7_eof_cb(void)  @ "Fast_function";
+    535          //..................................................................................
+    536          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    537          //~~~ Purpose:                          ~~~
+    538          //~~~ Processing:                       ~~~
+    539          //~~~        ~~~
+    540          //~~~        ~~~
+    541          //~~~        ~~~
+    542          //``````````````````````````````````````````````````````````````````````````````````
+    543          //~~~                                                                             ~~
+    544          //~~~                                                                             ~~ 
+    545          //~~~                                                                             ~~
+    546          //~~~          ~~
+    547          //~~~          ~~
+    548          //,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+    549          //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    550          //=================================================================================
+    551          //Body func                                                                  
+    552          //=================================================================================
+    553          void hs7_eof_cb(void) @ "Fast_function"
+    554          {
+    555          
+    556          //HSUART_CFG_T *phsuart = (HSUART_CFG_T *) hs7uartdev;
+    557          
+    558          //if need Start Process of Analises
+    559          
+    560          //hs7_rxfill = hs7_rxget = hs7_rxsize = 0;
+    561          	chEntry_Hs7++;
+    562          	//MIC-> er &= ~tmp;
+    563          }
+    564          //---------------------------------------------------------------------------------
+    565          __root __ramfunc int foo_wef(void)
+    566          {
+    567            static int x = 0;
+    568            return x++;
+    569          }
+    570          
+    571          
+    572          
+    573          /* EOF */
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   disable_irq
+       0   enable_irq
+       0   foo7
+       0   foo_wef
+       0   hs7_eof_cb
+      16   hs7_recv_cb
+        16   -> hs_uart_read
+       0   hs7_rxerr_cb
+      16   hs7_send_cb
+        16   -> hs_uart_write
+      16   inU7
+        16   -> Int_disableGen
+        16   -> Int_enableGen
+        16   -> disable_irq
+        16   -> enable_irq
+        16   -> hs_uart_recover
+        16   -> int_clear
+      16   outU7
+        16   -> disable_irq
+        16   -> enable_irq
+        16   -> hs7_send_cb
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable0
+       4  ??DataTable0_1
+       4  ??DataTable0_2
+       4  ??DataTable0_3
+       4  ??DataTable0_4
+       4  ??DataTable0_5
+       4  ??DataTable11
+       4  ??DataTable11_1
+       4  ??DataTable11_10
+       4  ??DataTable11_2
+       4  ??DataTable11_3
+       4  ??DataTable11_4
+       4  ??DataTable11_5
+       4  ??DataTable11_6
+       4  ??DataTable11_7
+       4  ??DataTable11_8
+       4  ??DataTable11_9
+      20  disable_irq
+      20  enable_irq
+      56  foo7
+      28  foo_wef
+      24  hs7_eof_cb
+     124  hs7_recv_cb
+     512  hs7_rxbuff
+     144  hs7_rxerr_cb
+       4  hs7_rxfill
+       4  hs7_rxget
+       4  hs7_rxsize
+     212  hs7_send_cb
+     512  hs7_txbuff
+       4  hs7_txfill
+       4  hs7_txget
+       4  hs7_txsize
+       4  hs7uartdev
+       4  hsuartdev
+     288  inU7
+     276  outU7
+       4  x
+
+ 
+ 1 060 bytes in section .bss
+   120 bytes in section .text
+    28 bytes in section .textrw
+ 1 112 bytes in section Fast_function
+ 
+ 1 260 bytes of CODE memory
+ 1 060 bytes of DATA memory
+
+Errors: none
+Warnings: none

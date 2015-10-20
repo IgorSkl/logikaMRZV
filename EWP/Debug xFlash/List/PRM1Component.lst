@@ -1,0 +1,1872 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        12/Oct/2015  11:05:04
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\component\PRM1Component.c
+#    Command line =  
+#        "D:\IAR projects\HR1_0100_00_I720_new2\component\PRM1Component.c" -D
+#        _STATIC_MEMORY_BOOT -lcN "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\List\" -o "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "C:\Program Files\IAR Systems\Embedded
+#        Workbench 7.40\arm\INC\c\DLib_Config_Normal.h" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\Igor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\component\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\" --cpu_mode arm -On
+#        --use_c++_inline
+#    List file    =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\List\PRM1Component.lst
+#    Object file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\Obj\PRM1Component.o
+#
+###############################################################################
+
+D:\IAR projects\HR1_0100_00_I720_new2\component\PRM1Component.c
+      1          #ifndef _HIDE_COMPONENT
+      2          /*
+      3          #include <vcl.h>
+      4          #include <strstrea.h>
+      5          #include <math.h>
+      6          #include <mem.h>
+      7          #include <fstream.h>
+      8          #include <strstrea.h>
+      9          #include <iomanip.h>
+     10          #pragma hdrstop
+     11          
+     12          #include "vmenuDis.h"
+     13          */
+     14          
+     15          #include <stdio.h>
+     16          #include <string.h>
+     17          
+     18          #include "bazisdef.h"
+     19          #include "component\componentdef.h"
+     20          #include "virtualMenu\systemmenudef.h"
+     21          #include "virtualMenu\ustmanagerdef.h"
+     22          #include "psuperVisor\psvisor_helpdef.h"
+     23          
+     24          #include "virtualMenu\textstreamfnc.h"
+     25          #include "virtualMenu\systemmenufnc.h"
+     26          #include "virtualMenu\ustmanagerfnc.h"
+     27          #include "psuperVisor\psvisor_helpfnc.h"
+     28          #include "virtualMenu\rangmanagerfnc.h"
+     29          #include "logictimers\logictimersfnc.h"
+     30          
+     31          #include "virtualMenu\viewMenuList.h"
+     32          #include "virtualMenu\viewMenuSub.h"
+     33          
+     34          #include "psupervisor\psupervisor.h"
+     35          
+     36          #include "toSpeedOptim.h"
+     37          
+     38          #include "..\bazis.h"
+     39          
+     40          //код компонентов
+     41          #define KOD_COMPONENT  PRM1_COMP1
+     42          //к-во ступеней
+     43          #define CNT_STUPEN_PRM1  1
+     44          
+     45          #endif // _HIDE_COMPONENT
+     46          
+     47          //РАСПРЕДЕЛЕНИЕ УСТАВОК  в менеджере уставок
+     48          //уставка Допуск ДВ
+     49          #define MNGUST_PRM1_DDV1   0
+     50          #define MNGUST_PRM1_DDV2   1
+     51          #define MNGUST_PRM1_DDV3   2
+     52          #define MNGUST_PRM1_DDV4   3
+     53          #define MNGUST_PRM1_DDV5   4
+     54          #define MNGUST_PRM1_DDV6   5
+     55          #define MNGUST_PRM1_DDV7   6
+     56          #define MNGUST_PRM1_DDV8   7
+     57          #define MNGUST_PRM1_DDV9   8
+     58          #define MNGUST_PRM1_DDV10  9
+     59          #define MNGUST_PRM1_DDV11  10
+     60          #define MNGUST_PRM1_DDV12  11
+     61          #define MNGUST_PRM1_DDV13  12
+     62          #define MNGUST_PRM1_DDV14  13
+     63          #define MNGUST_PRM1_DDV15  14
+     64          #define MNGUST_PRM1_DDV16  15
+     65          #define MNGUST_PRM1_DDV17  16
+     66          #define MNGUST_PRM1_DDV18  17
+     67          #define MNGUST_PRM1_DDV19  18
+     68          #define MNGUST_PRM1_DDV20  19
+     69          #define MNGUST_PRM1_DDV21  20
+     70          #define MNGUST_PRM1_DDV22  21
+     71          #define MNGUST_PRM1_DDV23  22
+     72          #define MNGUST_PRM1_DDV24  23
+     73          #define MNGUST_PRM1_DDV25  24
+     74          #define MNGUST_PRM1_DDV26  25
+     75          #define MNGUST_PRM1_DDV27  26
+     76          #define MNGUST_PRM1_DDV28  27
+     77          #define MNGUST_PRM1_DDV29  28
+     78          #define MNGUST_PRM1_DDV30  29
+     79          #define MNGUST_PRM1_DDV31  30
+     80          #define MNGUST_PRM1_DDV32  31
+     81          #define MNGUST_PRM1_DDV33  32
+     82          #define MNGUST_PRM1_DDV34  33
+     83          #define MNGUST_PRM1_DDV35  34
+     84          #define MNGUST_PRM1_DDV36  35
+     85          
+     86          //уставка выдержки
+     87          #define MNGVID_PRM1     36
+     88          #define MNGVID_PRM1_V   37
+     89          #define MNGVID_PRM1_DIS 38
+     90          //выдержкa UI НЦН ДЗ
+     91          #define MNGVID_PRM1_UINCNDZ 39
+     92          //выдержка обрат последоват CM НЦН ДЗ
+     93          #define MNGVID_PRM1_CMNCNDZ 40
+     94          
+     95          //уставка управления PRM1
+     96          #define MNGUPR_PRM1    41
+     97          //уставка управления DV
+     98          #define MNGUPR_DVLOW   42
+     99          #define MNGUPR_DVMIDD  43
+    100          #define MNGUPR_DVHI    44
+    101          //уставка управления RELE
+    102          #define MNGUPR_RELE    45
+    103          //уставка управления CDI
+    104          #define MNGUPR_CDI     46
+    105          
+    106          //уставки PRM1 блок откл
+    107          #define MNGUST_PRM1_BO  47
+    108          //уставки PRM1 блок вкл
+    109          #define MNGUST_PRM1_BV  48
+    110          //к-во уставок в менеджере уставок
+    111          #define MNGUST_PRM1_TOTAL  49
+    112          
+    113          //РАСПРЕДЕЛЕНИЕ ENA КОМАНД
+    114          //неисправность цепей напр МТЗ
+    115          #define ENA_PRM1_FAILU_MTZ  0
+    116          //неисправность цепей напр ДЗ
+    117          #define ENA_PRM1_FAILU_DZ   1
+    118          //к-во ENA команд
+    119          #define ENACMD_PRM1_TOTAL   2
+    120          
+    121          //РАСПРЕДЕЛЕНИЕ УСТАВОК в супервизоре
+    122          //уставка Допуск ДВ
+    123          #define SPV_DDV1_UST       0
+    124          #define SPV_DDV2_UST       1
+    125          #define SPV_DDV3_UST       2
+    126          #define SPV_DDV4_UST       3
+    127          #define SPV_DDV5_UST       4
+    128          #define SPV_DDV6_UST       5
+    129          #define SPV_DDV7_UST       6
+    130          #define SPV_DDV8_UST       7
+    131          #define SPV_DDV9_UST       8
+    132          #define SPV_DDV10_UST      9
+    133          #define SPV_DDV11_UST      10
+    134          #define SPV_DDV12_UST      11
+    135          #define SPV_DDV13_UST      12
+    136          #define SPV_DDV14_UST      13
+    137          #define SPV_DDV15_UST      14
+    138          #define SPV_DDV16_UST      15
+    139          #define SPV_DDV17_UST      16
+    140          #define SPV_DDV18_UST      17
+    141          #define SPV_DDV19_UST      18
+    142          #define SPV_DDV20_UST      19
+    143          #define SPV_DDV21_UST      20
+    144          #define SPV_DDV22_UST      21
+    145          #define SPV_DDV23_UST      22
+    146          #define SPV_DDV24_UST      23
+    147          #define SPV_DDV25_UST      24
+    148          #define SPV_DDV26_UST      25
+    149          #define SPV_DDV27_UST      26
+    150          #define SPV_DDV28_UST      27
+    151          #define SPV_DDV29_UST      28
+    152          #define SPV_DDV30_UST      29
+    153          #define SPV_DDV31_UST      30
+    154          #define SPV_DDV32_UST      31
+    155          #define SPV_DDV33_UST      32
+    156          #define SPV_DDV34_UST      33
+    157          #define SPV_DDV35_UST      34
+    158          #define SPV_DDV36_UST      35
+    159          
+    160          //уставка сработки
+    161          #define SPVSRAB_02UH       36
+    162          #define SPVSRAB_12IH       37
+    163          #define SPVSRAB_U005       38
+    164          #define SPVSRAB_UCM005     39
+    165          #define SPVSRAB_ICM005     40
+    166          #define SPVSRAB_U025       41
+    167          //уставка возврата
+    168          #define SPVVOZV_02UH       42
+    169          #define SPVVOZV_12IH       43
+    170          #define SPVVOZV_U005       44
+    171          #define SPVVOZV_UCM005     45
+    172          #define SPVVOZV_ICM005     46
+    173          #define SPVVOZV_U025       47
+    174          
+    175          //уставка SPV выход
+    176          #define SPV_OUTA_02UH      48
+    177          #define SPV_OUTB_02UH      49
+    178          #define SPV_OUTC_02UH      50
+    179          
+    180          #define SPV_OUTA_12IH      51
+    181          #define SPV_OUTB_12IH      52
+    182          #define SPV_OUTC_12IH      53
+    183          
+    184          #define SPV_OUTA_U005      54
+    185          #define SPV_OUTB_U005      55
+    186          #define SPV_OUTC_U005      56
+    187          
+    188          #define SPV_OUTAL_U025     57
+    189          #define SPV_OUTBL_U025     58
+    190          #define SPV_OUTCL_U025     59
+    191          
+    192          #define SPV_OUTAF_U025     60
+    193          #define SPV_OUTBF_U025     61
+    194          #define SPV_OUTCF_U025     62
+    195          
+    196          #define SPV_OUT_UCM005     63
+    197          
+    198          #define SPV_OUT_ICM005     64
+    199          
+    200          //уставка ДВ -ПрямойИнверсный
+    201          #define SPV_UPR_DVLOW      65
+    202          #define SPV_UPR_DVMIDD     66
+    203          #define SPV_UPR_DVHI       67
+    204          //уставка Реле -НормальныйТриггерный
+    205          #define SPV_UPR_RELE       68
+    206          //уставка СДИ -НормальныйТриггерный
+    207          #define SPV_UPR_CDI        69
+    208          //НЦН ДЗ
+    209          #define SPVSRAB_DZ_02UH    70
+    210          #define SPVVOZV_DZ_02UH    71
+    211          #define SPV_OUT_DZ_02UH    72
+    212          #define SPV_OUT_DZ_UCMICM  73          
+    213          #define SPV_DZ_UCMICM      74
+    214          
+    215          //к-во уставок в супервизоре
+    216          #define SPVUST_PRM1_TOTAL  75
+    217          
+    218          //---------------IO COMMAND------------------
+    219          //РАСПРЕДЕЛЕНИЕ IO КОМАНД ДЛЯ PRM1
+    220          //Положение ВВ
+    221          //CMD_POL_VV
+    222          #define IOCMD1_PRM1 0
+    223          //Неиспр цепей напряжения ДЗ
+    224          //CMD_FAILU_COMMON
+    225          #define IOCMD2_PRM1 1
+    226          //Руч откл ВВ
+    227          //CMD_HANDOTKL_VV
+    228          #define IOCMD3_PRM1 2
+    229          //CMD_BO
+    230          //Работа БО
+    231          #define IOCMD4_PRM1 3
+    232          //CMD_BV
+    233          //Работа БB
+    234          #define IOCMD5_PRM1 4
+    235          //TEST
+    236          #define IOCMD6_PRM1 5
+    237          //к-во IO команд
+    238          #define IOCMD_PRM1_TOTAL    6
+    239          
+    240          //---------------TL COMMAND------------------
+    241          //РАСПРЕДЕЛЕНИЕ TL КОМАНД ДЛЯ PRM1
+    242          //к-во TL команд
+    243          #define TLCMD_PRM1_TOTAL    0
+    244          
+    245          //--------------- TIMERS ------------------
+    246          //РАСПРЕДЕЛЕНИЕ ТАЙМЕРОВ ДЛЯ PRM1
+    247          //таймер 0
+    248          #define TIMER1_PRM1        0
+    249          //таймер 1
+    250          #define TIMER2_PRM1        1
+    251          //таймер SEAM
+    252          #define TIMER_SEAM_PRM1    2
+    253          //таймер DIS
+    254          #define TIMERDIS_PRM1      3
+    255          //миним таймер DIS
+    256          #define TIMER_MINDIS_PRM1  4
+    257          //таймер БО
+    258          #define TIMER_RELEBO       5
+    259          //таймер БB
+    260          #define TIMER_RELEBV       6
+    261          //UI НЦН ДЗ
+    262          #define TIMER_UINCNDZ_PRM1  7
+    263          //UCM НЦН ДЗ
+    264          #define TIMER_CMNCNDZ_PRM1  8
+    265          //05 НЦН ДЗ
+    266          #define TIMER_05NCNDZ_PRM1  9
+    267          //к-во таймеров
+    268          #define TIMERS_PRM1_TOTAL   10
+    269          
+    270          #ifndef _HIDE_COMPONENT
+    271          
+    272          extern LineMenuItem sub_menu_ust_compUVV[];
+    273          extern LineMenuItem sub_menu_upr_compUVV[];
+    274          
+    275          extern COMPONENT_OBJ rpzcomponent_obj;//обект компонента для репозитария
+    276          extern int  tmpUSTAVKI[];
+    277          
+    278          extern LineMenuItem sub_menu_cnf[];
+    279          extern LineMenuItem sub_menu_tmp[];
+    280          
+    281          extern int  IndexUstSPV;//индекс уставок в супервизоре
+    282          
+    283          extern COMPONENT_OBJ  cnfCOMPONENT[];
+    284          extern int  spvUSTAVKI[];//текущие уставки супервизора
+    285          extern char *bitStringUNI[];
+    286          extern int  IndexIO;//индекс IO
+    287          extern int  IndexENA;//индекс ENA команд
+    288          extern int  IndexTIMERS;//таймерный индекс
+    289          
+    290          void UstListCompPRM1();
+    291          void UstListCompUVV();
+    292          void ustRedactorCompPRM1();
+    293          void UstCompPRM1();
+    294          void UstCompUVV();
+    295          
+    296          void PereinitVidListCompPRM1(short flg);
+    297          void VidListCompPRM1();
+    298          void vidRedactorCompPRM1();
+    299          void VidCompPRM1();
+    300          
+    301          void PereinitUprListCompPRM1(short flg);
+    302          void UprListCompPRM1();
+    303          void uprRedactorCompPRM1();
+    304          void UprCompPRM1();
+    305          short  KadrMenuFormat_upr_compPRM1(void *workCntr);//(WorkControl *workCntr);
+    306          int   initUstPRM1(char init);
+    307          void  prepareUstPRM1(short idxC);
+    308          void  logicPRM1(int idxC);
+    309          int   isDISactiv_PRM1(int idxC);
+    310          
+    311          short  KadrMenuFormat_PRM1(WorkControl *workCntr);
+    312          
+    313          void EditUstPRM1();
+    314          void EditVidPRM1();
+    315          void EditUprPRM1();
+    316          void EditUstUVV();
+    317          void EditUprDV();
+    318          void EditUprCDI();
+    319          void EditUprRELE();
+    320          int codecUstPRM1(char codec, short offset, int ust);
+    321          void PereinitUprListCompUVV(short flg);
+    322          
+    323          void UprListCompUVV();
+    324          void UprListCompDV();
+    325          void PereinitUprListCompDV(short flg);
+    326          short  KadrMenuFormat_upr_compDV(void *workCntr);
+    327          char *selectorUprStrDV(short iBit, UNS_32 ustUpr);
+    328          void UprCompDVLow();
+    329          void UprCompDVMidd();
+    330          void UprListCompRELE();
+    331          void UprCompDVHi();
+    332          void UprListCompCDI();
+    333          void UprCompRELE();
+    334          void UprCompCDI();
+    335          void PereinitUprListCompRELE(short flg);
+    336          short  KadrMenuFormat_upr_compRELE(void *workCntr);
+    337          char *selectorUprStrRELE(short iBit, UNS_32 ustUpr);
+    338          
+    339          void PereinitUprListCompCDI(short flg);
+    340          short  KadrMenuFormat_upr_compCDI(void *workCntr);
+    341          
+    342          short  KadrMenuFormat_ustvidPRM1(void *workCntr);
+    343          char *selectorUprStrPRM1(short iBit, UNS_32 ustUpr);
+    344          
+    345          int offsetIOCmdPRM1;//смещение для IO PRM1
+    346          int offsetENACmdPRM1;//смещение для ENA PRM1
+    347          int offsetSPVCmdPRM1;//смещение для SPV PRM1
+    348          int offsetTimersPRM1;//смещение на таймерный индекс PRM1
+    349          int offsetUstMngPRM1;//смещение на уставки PRM1
+    350          
+    351          int ReleTrigger = 0;//тригг реле
+    352          int CDITrigger = 0;//тригг СДИ
+    353          UNS_32 GruppaUst;//группа уставок
+    354          
+    355          char PRM1_TITLE[] = "PRM1";
+    356          
+    357          IONAMESTATUS_COMPONENT ionsPRM1[IOCMD_PRM1_TOTAL] =
+    358          {
+    359            {
+    360              //CMD_POL_VV
+    361              1,//статус iocmd1
+    362              "Положение ВВ"
+    363            },
+    364            {
+    365              //CMD_FAILU_COMMON
+    366              1,//статус iocmd2
+    367              "Неиспр цепей напряжения ДЗ"
+    368            },
+    369            {
+    370              //CMD_HANDOTKL_VV
+    371              1,//статус iocmd3
+    372              "Руч откл ВВ"
+    373            },
+    374            {
+    375              //CMD_BO
+    376              1,//статус iocmd4
+    377              "Работа БО"
+    378            },
+    379            {
+    380              //CMD_BV
+    381              1,//статус iocmd5
+    382              "Работа БB"
+    383            },
+    384            {
+    385              //TEST
+    386              1,//статус iocmd
+    387              "TEST"
+    388            }
+    389          };
+    390          
+    391          LineMenuItem sub_menu_comp_PRM1[8] =
+    392          {
+    393            { PRM1_TITLE, NULL},//title
+    394            { &CONTROL1_COMP, &sub_menu_cnf,   typeMenuSub},//control_item, parent
+    395            { "Уставки PRM1",     (void *)&UstListCompPRM1, typeMenuProg},
+    396            { "Уставки УВВ",      (void *)&UstListCompUVV,  typeMenuProg},
+    397            { "Выдержки PRM1",    (void *)&VidListCompPRM1, typeMenuProg},
+    398            { "Управление PRM1",  (void *)&UprListCompPRM1, typeMenuProg},
+    399            { "Управление УВВ",   (void *)&UprListCompUVV,  typeMenuProg},
+    400            { NULL, NULL}
+    401          };
+    402          
+    403          LineMenuItem sub_menu_ust_compPRM1[] =
+    404          {
+    405            { "Уставки PRM1", NULL},//title
+    406            { &CONTROL2_COMP, &sub_menu_comp_PRM1, typeMenuList},//control_item, parent
+    407            { "Блок откл",  (void *)&UstCompPRM1, typeMenuProg},
+    408            { "Блок вкл",   (void *)&UstCompPRM1, typeMenuProg},
+    409            { NULL, NULL}
+    410          
+    411          };
+    412          
+    413          LineMenuItem sub_menu_ust_compUVV[] =
+    414          {
+    415            { "Уставки УВВ", NULL},//title
+    416            { &CONTROL2_COMP, &sub_menu_comp_PRM1, typeMenuList},//control_item, parent
+    417          /*
+    418            { "Дпс ДВ1",  (void *)&UstCompUVV, typeMenuProg},
+    419            { "Дпс ДВ2",  (void *)&UstCompUVV, typeMenuProg},
+    420            { "Дпс ДВ3",  (void *)&UstCompUVV, typeMenuProg},
+    421            { "Дпс ДВ4",  (void *)&UstCompUVV, typeMenuProg},
+    422            { "Дпс ДВ5",  (void *)&UstCompUVV, typeMenuProg},
+    423            { "Дпс ДВ6",  (void *)&UstCompUVV, typeMenuProg},
+    424            { "Дпс ДВ7",  (void *)&UstCompUVV, typeMenuProg},
+    425            { "Дпс ДВ8",  (void *)&UstCompUVV, typeMenuProg},
+    426            { "Дпс ДВ9",  (void *)&UstCompUVV, typeMenuProg},
+    427            { "Дпс ДВ10", (void *)&UstCompUVV, typeMenuProg},
+    428            { "Дпс ДВ11", (void *)&UstCompUVV, typeMenuProg},
+    429            { "Дпс ДВ12", (void *)&UstCompUVV, typeMenuProg},
+    430            { "Дпс ДВ13", (void *)&UstCompUVV, typeMenuProg},
+    431            { "Дпс ДВ14", (void *)&UstCompUVV, typeMenuProg},
+    432            { "Дпс ДВ15", (void *)&UstCompUVV, typeMenuProg},
+    433            { "Дпс ДВ16", (void *)&UstCompUVV, typeMenuProg},
+    434            { "Дпс ДВ17", (void *)&UstCompUVV, typeMenuProg},
+    435            { "Дпс ДВ18", (void *)&UstCompUVV, typeMenuProg},
+    436            { "Дпс ДВ19", (void *)&UstCompUVV, typeMenuProg},
+    437            { "Дпс ДВ20", (void *)&UstCompUVV, typeMenuProg},
+    438            { "Дпс ДВ21", (void *)&UstCompUVV, typeMenuProg},
+    439            { "Дпс ДВ22", (void *)&UstCompUVV, typeMenuProg},
+    440            { "Дпс ДВ23", (void *)&UstCompUVV, typeMenuProg},
+    441            { "Дпс ДВ24", (void *)&UstCompUVV, typeMenuProg},
+    442            { "Дпс ДВ25", (void *)&UstCompUVV, typeMenuProg},
+    443            { "Дпс ДВ26", (void *)&UstCompUVV, typeMenuProg},
+    444            { "Дпс ДВ27", (void *)&UstCompUVV, typeMenuProg},
+    445            { "Дпс ДВ28", (void *)&UstCompUVV, typeMenuProg},
+    446            { "Дпс ДВ29", (void *)&UstCompUVV, typeMenuProg},
+    447            { "Дпс ДВ30", (void *)&UstCompUVV, typeMenuProg},
+    448            { "Дпс ДВ31", (void *)&UstCompUVV, typeMenuProg},
+    449            { "Дпс ДВ32", (void *)&UstCompUVV, typeMenuProg},
+    450            { "Дпс ДВ33", (void *)&UstCompUVV, typeMenuProg},
+    451            { "Дпс ДВ34", (void *)&UstCompUVV, typeMenuProg},
+    452            { "Дпс ДВ35", (void *)&UstCompUVV, typeMenuProg},
+    453            { "Дпс ДВ36", (void *)&UstCompUVV, typeMenuProg},
+    454          */
+    455            { NULL, NULL}
+    456          
+    457          };
+    458          
+    459          LineMenuItem sub_menu_vid_compPRM1[] =
+    460          {
+    461            { "Выдержки PRM1", NULL},//title
+    462            { &CONTROL2_COMP,     &sub_menu_comp_PRM1, typeMenuList},//control_item, parent
+    463            { "Выдержка PRM1",        (void *)&VidCompPRM1, typeMenuProg},
+    464            { "Выдержка PRM1 вперед", (void *)&VidCompPRM1, typeMenuProg},
+    465            { "Выдержка PRM1 ДИС",    (void *)&VidCompPRM1, typeMenuProg},
+    466            { NULL, NULL}
+    467          
+    468          };
+    469          
+    470          LineMenuItem sub_menu_upr_compPRM1[] =
+    471          {
+    472            { "Управл PRM1", NULL},//title
+    473            { &CONTROL2_COMP,   &sub_menu_comp_PRM1, typeMenuList},//control_item, parent
+    474            { "Неиспр цепей напр МТЗ", (void *)&UprCompPRM1, typeMenuProg},
+    475            { "Неиспр цепей напр ДЗ",  (void *)&UprCompPRM1, typeMenuProg},
+    476            { NULL, NULL}
+    477          
+    478          };
+    479          
+    480          LineMenuItem sub_menu_upr_compUVV[] =
+    481          {
+    482            { "Управл УВВ", NULL},//title
+    483            { &CONTROL_UVV,   &sub_menu_comp_PRM1, typeMenuSub},//control_item, parent
+    484            { "Управл ДВ",         (void *)&UprListCompDV, typeMenuProg},
+    485            { "Управл реле",       (void *)&UprListCompRELE, typeMenuProg},
+    486            { "Управл СДИ",        (void *)&UprListCompCDI,  typeMenuProg},
+    487            { NULL, NULL}
+    488          
+    489          };
+    490          
+    491          LineMenuItem sub_menu_upr_compDV[] =
+    492          {
+    493            { "Управл ДВ", NULL},//title
+    494            { &CONTROL_UDV,   &sub_menu_upr_compUVV, typeMenuList},//control_item, parent
+    495          /*
+    496            { "Вход ДВ1",  (void *)&UprCompDVLow, typeMenuProg},
+    497            { "Вход ДВ2",  (void *)&UprCompDVLow, typeMenuProg},
+    498            { "Вход ДВ3",  (void *)&UprCompDVLow, typeMenuProg},
+    499            { "Вход ДВ4",  (void *)&UprCompDVLow, typeMenuProg},
+    500            { "Вход ДВ5",  (void *)&UprCompDVLow, typeMenuProg},
+    501            { "Вход ДВ6",  (void *)&UprCompDVLow, typeMenuProg},
+    502            { "Вход ДВ7",  (void *)&UprCompDVLow, typeMenuProg},
+    503            { "Вход ДВ8",  (void *)&UprCompDVLow, typeMenuProg},
+    504            { "Вход ДВ9",  (void *)&UprCompDVLow, typeMenuProg},
+    505            { "Вход ДВ10", (void *)&UprCompDVLow, typeMenuProg},
+    506            { "Вход ДВ11", (void *)&UprCompDVLow, typeMenuProg},
+    507            { "Вход ДВ12", (void *)&UprCompDVLow, typeMenuProg},
+    508            { "Вход ДВ13", (void *)&UprCompDVLow, typeMenuProg},
+    509            { "Вход ДВ14", (void *)&UprCompDVLow, typeMenuProg},
+    510            { "Вход ДВ15", (void *)&UprCompDVLow, typeMenuProg},
+    511            { "Вход ДВ16", (void *)&UprCompDVLow, typeMenuProg},
+    512            { "Вход ДВ17", (void *)&UprCompDVMidd, typeMenuProg},
+    513            { "Вход ДВ18", (void *)&UprCompDVMidd, typeMenuProg},
+    514            { "Вход ДВ19", (void *)&UprCompDVMidd, typeMenuProg},
+    515            { "Вход ДВ20", (void *)&UprCompDVMidd, typeMenuProg},
+    516            { "Вход ДВ21", (void *)&UprCompDVMidd, typeMenuProg},
+    517            { "Вход ДВ22", (void *)&UprCompDVMidd, typeMenuProg},
+    518            { "Вход ДВ23", (void *)&UprCompDVMidd, typeMenuProg},
+    519            { "Вход ДВ24", (void *)&UprCompDVMidd, typeMenuProg},
+    520            { "Вход ДВ25", (void *)&UprCompDVMidd, typeMenuProg},
+    521            { "Вход ДВ26", (void *)&UprCompDVMidd, typeMenuProg},
+    522            { "Вход ДВ27", (void *)&UprCompDVMidd, typeMenuProg},
+    523            { "Вход ДВ28", (void *)&UprCompDVMidd, typeMenuProg},
+    524            { "Вход ДВ29", (void *)&UprCompDVMidd, typeMenuProg},
+    525            { "Вход ДВ30", (void *)&UprCompDVMidd, typeMenuProg},
+    526            { "Вход ДВ31", (void *)&UprCompDVMidd, typeMenuProg},
+    527            { "Вход ДВ32", (void *)&UprCompDVMidd, typeMenuProg},
+    528            { "Вход ДВ33", (void *)&UprCompDVHi, typeMenuProg},
+    529            { "Вход ДВ34", (void *)&UprCompDVHi, typeMenuProg},
+    530            { "Вход ДВ35", (void *)&UprCompDVHi, typeMenuProg},
+    531            { "Вход ДВ36", (void *)&UprCompDVHi, typeMenuProg},
+    532          */
+    533            { NULL, NULL}
+    534          
+    535          };
+    536          
+    537          LineMenuItem sub_menu_upr_compRELE[] =
+    538          {
+    539            { "Управл Реле", NULL},//title
+    540            { &CONTROL_URELE,   &sub_menu_upr_compUVV, typeMenuList},//control_item, parent
+    541          /*
+    542            { "Выход реле Р01",      (void *)&UprCompRELE, typeMenuProg},
+    543            { "Выход реле Р02",      (void *)&UprCompRELE, typeMenuProg},
+    544            { "Выход реле Р03",      (void *)&UprCompRELE, typeMenuProg},
+    545            { "Выход реле Р04",      (void *)&UprCompRELE, typeMenuProg},
+    546            { "Выход реле Р05",      (void *)&UprCompRELE, typeMenuProg},
+    547            { "Выход реле Р06",      (void *)&UprCompRELE, typeMenuProg},
+    548            { "Выход реле Р07",      (void *)&UprCompRELE, typeMenuProg},
+    549            { "Выход реле Р08",      (void *)&UprCompRELE, typeMenuProg},
+    550            { "Выход реле Р09",      (void *)&UprCompRELE, typeMenuProg},
+    551            { "Выход реле Р010",     (void *)&UprCompRELE, typeMenuProg},
+    552            { "Выход реле Р011",     (void *)&UprCompRELE, typeMenuProg},
+    553            { "Выход реле Р012",     (void *)&UprCompRELE, typeMenuProg},
+    554            { "Выход реле Р013",     (void *)&UprCompRELE, typeMenuProg},
+    555            { "Выход реле Р014",     (void *)&UprCompRELE, typeMenuProg},
+    556            { "Выход реле Р015",     (void *)&UprCompRELE, typeMenuProg},
+    557            { "Выход реле Р016",     (void *)&UprCompRELE, typeMenuProg},
+    558          */
+    559            { NULL, NULL}
+    560          
+    561          };
+    562          
+    563          LineMenuItem sub_menu_upr_compCDI[] =
+    564          {
+    565            { "Управл СДИ", NULL},//title
+    566            { &CONTROL_UCDI,   &sub_menu_upr_compUVV, typeMenuList},//control_item, parent
+    567          /*
+    568            { "Выход СДИ01",      (void *)&UprCompCDI, typeMenuProg},
+    569            { "Выход СДИ02",      (void *)&UprCompCDI, typeMenuProg},
+    570            { "Выход СДИ03",      (void *)&UprCompCDI, typeMenuProg},
+    571            { "Выход СДИ04",      (void *)&UprCompCDI, typeMenuProg},
+    572            { "Выход СДИ05",      (void *)&UprCompCDI, typeMenuProg},
+    573            { "Выход СДИ06",      (void *)&UprCompCDI, typeMenuProg},
+    574            { "Выход СДИ07",      (void *)&UprCompCDI, typeMenuProg},
+    575            { "Выход СДИ08",      (void *)&UprCompCDI, typeMenuProg},
+    576            { "Выход СДИ09",      (void *)&UprCompCDI, typeMenuProg},
+    577            { "Выход СДИ010",     (void *)&UprCompCDI, typeMenuProg},
+    578            { "Выход СДИ011",     (void *)&UprCompCDI, typeMenuProg},
+    579            { "Выход СДИ012",     (void *)&UprCompCDI, typeMenuProg},
+    580          */
+    581            { NULL, NULL}
+    582          
+    583          };
+    584          
+    585          void PereinitUstListCompPRM1(short flg)
+    586          {
+    587          //переиниц
+    588            //инит компонентного контроля
+    589            TxtStreamInit(&CONTROL2_COMP, &KadrMenuFormat_ustvidPRM1, sub_menu_ust_compPRM1);//инит control и формир кадра
+    590            if(flg==0)//END
+    591            {
+    592              TxtStreamSetEnd(&CONTROL2_COMP, SIZE_PAGE_VIEW/2);//перейти на END
+    593            }//if
+    594          
+    595            ViewDiskrMenuList();//вывести окно отображения
+    596            ListPStr();//доступ к уставкам
+    597          }//PereinitUstListComp2()
+    598          
+    599          void PereinitUstListCompUVV(short flg)
+    600          {
+    601          //переиниц
+    602            //инит компонентного контроля
+    603            TxtStreamInit(&CONTROL2_COMP, &KadrMenuFormat_ustvidPRM1, sub_menu_ust_compUVV);//инит control и формир кадра
+    604            if(flg==0)//END
+    605            {
+    606              TxtStreamSetEnd(&CONTROL2_COMP, SIZE_PAGE_VIEW/2);//перейти на END
+    607            }//if
+    608          
+    609            ViewDiskrMenuList();//вывести окно отображения
+    610            ListPStr();//доступ к уставкам
+    611          }//PereinitUstListComp2()
+    612          
+    613          void UstListCompPRM1()
+    614          {
+    615            SelectorMNGBAZA(MNGUST_PRM1_BO);//установка базу уставок
+    616          
+    617            SelectorSUBMENU(sub_menu_ust_compPRM1);//уcтановить текущее субменю
+    618          
+    619            SelectorTEXTCONTROL(&CONTROL2_COMP);//текущий control
+    620          
+    621            SelectorFHOME(&PereinitUstListCompPRM1);//указатель на ф-цию HOME
+    622            InitFHOME(1);//exe ф-цию HOME
+    623          
+    624            LanderUpDown();//wkl Up Down
+    625          }//UstListCompPRM1()
+    626          
+    627          void UstCompPRM1()
+    628          {
+    629            SelectorCRRLIGHTLINE();//найти подсвеченную строку текущего текст потока
+    630            PrepareEditMenu(sub_menu_ust_compPRM1);
+    631            PassWord(EditUstPRM1);
+    632          }//VidCompPRM1()
+    633          
+    634          void EditUstPRM1()
+    635          {
+    636          //редактировать уставку
+    637            SystemEditUst(sub_menu_ust_compPRM1);//[LIGHTLINEMENU +1+SUBDATA].Line1, LIGHTLINEMENU);
+    638          }//UstCompPRM1()
+    639          
+    640          void UstListCompUVV()
+    641          {
+    642            SelectorMNGBAZA(0);//установка базу уставок
+    643          
+    644            SelectorSUBMENU(sub_menu_ust_compUVV);//уcтановить текущее субменю
+    645          
+    646            SelectorTEXTCONTROL(&CONTROL2_COMP);//текущий control
+    647          
+    648            SelectorFHOME(&PereinitUstListCompUVV);//указатель на ф-цию HOME
+    649            InitFHOME(1);//exe ф-цию HOME
+    650          
+    651            LanderUpDown();//wkl Up Down
+    652          }//UstListCompUVV()
+    653          
+    654          void UstCompUVV()
+    655          {
+    656            SelectorCRRLIGHTLINE();//найти подсвеченную строку текущего текст потока
+    657            PrepareEditMenu(sub_menu_ust_compUVV);
+    658            PassWord(EditUstUVV);
+    659          }//VidCompUVV()
+    660          
+    661          void EditUstUVV()
+    662          {
+    663          //редактировать уставку
+    664            SystemEditUst(sub_menu_ust_compUVV);//[LIGHTLINEMENU +1+SUBDATA].Line1, LIGHTLINEMENU);
+    665          }//UstCompUVV()
+    666          
+    667          short  KadrMenuFormat_ustvidPRM1(void *pstr)
+    668          {
+    669           WorkControl *workCntr = (WorkControl *)pstr;
+    670          //формирователь кадра
+    671            char locTxt[50];
+    672            RESET_COUNTER;//сброс счетчиков
+    673            for(int i=0;; i++)
+    674            {
+    675          //критерий терминатора
+    676              if(((LineMenuItem *)workCntr->userPoint)[i+1+SUBDATA].Line1==NULL)break;
+    677          
+    678              COMPARE_COUNTER
+    679              {
+    680                strcpy((char *)workCntr->twoString, (char *)( ((LineMenuItem *)workCntr->userPoint) )[i+1+SUBDATA].Line1);
+    681                sprintf(locTxt, "   %d", getUstOffsetMngUSTAVKI(i));
+    682                strcpy((char *)workCntr->twoString + sizeof(WorkVariantChar)/2, locTxt);
+    683                return 1;//сравнить счетчики кадров
+    684              }
+    685            }//for
+    686          
+    687            return 1;
+    688          }//KadrMenuFormat_ust_1(WorkControl *workCntr)
+    689          
+    690          //--------------------------------------------------
+    691          
+    692          void PereinitVidListCompPRM1(short flg)
+    693          {
+    694          //переиниц
+    695            //инит компонентного контроля
+    696            TxtStreamInit(&CONTROL2_COMP, &KadrMenuFormat_ustvidPRM1, sub_menu_vid_compPRM1);//инит control и формир кадра
+    697            if(flg==0)//END
+    698            {
+    699              TxtStreamSetEnd(&CONTROL2_COMP, SIZE_PAGE_VIEW/2);//перейти на END
+    700            }//if
+    701          
+    702            ViewDiskrMenuList();//вывести окно отображения
+    703            ListPStr();//доступ к уставкам
+    704          }//PereinitUstListComp2()
+    705          
+    706          void VidListCompPRM1()
+    707          {
+    708            SelectorMNGBAZA(MNGVID_PRM1);//установка базы уставок
+    709          
+    710            SelectorSUBMENU(sub_menu_vid_compPRM1);//утановить текущее субменю
+    711          
+    712            SelectorTEXTCONTROL(&CONTROL2_COMP);//текущий control
+    713          
+    714            SelectorFHOME(&PereinitVidListCompPRM1);//указатель на ф-цию HOME
+    715            InitFHOME(1);//exe ф-цию HOME
+    716          
+    717            LanderUpDown();//wkl Up Down
+    718          }//VidListCompPRM1()
+    719          
+    720          void UprListCompUVV()
+    721          {
+    722          //  CRR_SUBMENU = sub_menu_upr_compUVV;//текущее субменю
+    723            SelectorSUBMENU(sub_menu_upr_compUVV);//утановить текущее субменю
+    724          
+    725          //  CRR_TEXTSTREAM = &CONTROL_UVV;//текущий control
+    726            SelectorTEXTCONTROL(&CONTROL_UVV);//текущий control
+    727          //  CRR_FHOME = &PereinitUprListCompUVV;//указатель на ф-цию HOME
+    728          
+    729          //  CRR_FHOME(1);//переиниц
+    730            SelectorFHOME(&PereinitUprListCompUVV);//указатель на ф-цию HOME
+    731            InitFHOME(1);//exe ф-цию HOME
+    732          
+    733            LanderUpDown();//wkl Up Down
+    734          }//UprListCompUVV()
+    735          
+    736          void VidCompPRM1()
+    737          {
+    738            SelectorCRRLIGHTLINE();//найти подсвеченную строку текущего текст потока
+    739            PrepareEditMenu(sub_menu_vid_compPRM1);
+    740          //  PassWord(EditVidAPV);
+    741            EditVidPRM1();
+    742          }//VidCompPRM1()
+    743          
+    744          void EditVidPRM1()
+    745          {
+    746          //редактировать уставку
+    747            SystemEditUst(sub_menu_vid_compPRM1);//[LIGHTLINEMENU +1+SUBDATA].Line1, LIGHTLINEMENU);
+    748          }//
+    749          
+    750          //--------------------------------------------------
+    751          
+    752          void PereinitUprListCompPRM1(short flg)
+    753          {
+    754          //переиниц
+    755            //инит компонентного контроля
+    756            TxtStreamInit(&CONTROL2_COMP, &KadrMenuFormat_upr_compPRM1, NULL);//инит control и формир кадра
+    757            if(flg==0)//END
+    758            {
+    759              TxtStreamSetEnd(&CONTROL2_COMP, SIZE_PAGE_VIEW/2);//перейти на END
+    760            }//if
+    761          
+    762            ViewDiskrMenuList();//вывести окно отображения
+    763            ListPStr();//доступ к уставкам
+    764          }//PereinitUstList
+    765          
+    766          void PereinitUprListCompUVV(short flg)
+    767          {
+    768          //переиниц
+    769            //инит компонентного контроля
+    770            TxtStreamInit(&CONTROL_UVV, &KadrMenuFormat_sub, sub_menu_upr_compUVV);//инит control и формир кадра
+    771            if(flg==0)//END
+    772            {
+    773              TxtStreamSetEnd(&CONTROL_UVV, SIZE_PAGE_VIEW/2);//перейти на END
+    774            }//if
+    775          
+    776            ViewDiskrMenuSub();//вывести окно отображения
+    777            LanderPStr();//размещение указателя строки
+    778          //  ListPStr();//доступ к уставкам
+    779          }//PereinitUprListCompUVV(short flg)
+    780          
+    781          void UprListCompPRM1()
+    782          {
+    783            SelectorMNGBAZA(MNGUPR_PRM1);//установка базы уставок
+    784          
+    785            SelectorSUBMENU(sub_menu_upr_compPRM1);//утановить текущее субменю
+    786          
+    787            SelectorTEXTCONTROL(&CONTROL2_COMP);//текущий control
+    788          
+    789            SelectorFHOME(&PereinitUprListCompPRM1);//указатель на ф-цию HOME
+    790            InitFHOME(1);//exe ф-цию HOME
+    791          
+    792            LanderUpDown();//wkl Up Down
+    793          }//VidListCompPRM1()
+    794          
+    795          void UprCompPRM1()
+    796          {
+    797            SelectorCRRLIGHTLINE();//найти подсвеченную строку текущего текст потока
+    798            PrepareEditMenu(sub_menu_upr_compPRM1);
+    799            PassWord(EditUprPRM1);
+    800          
+    801          }//UprCompPRM1()
+    802          
+    803          void EditUprPRM1()
+    804          {
+    805          //редактировать уставку упр
+    806            char *nameUpr = (char *)sub_menu_upr_compPRM1[LIGHTLINEMENU +1+SUBDATA].Line1;
+    807            UpravlRedactor(nameUpr, LIGHTLINEMENU, &selectorUprStrPRM1);//редактировать уставку управления
+    808          }//EditUprPRM1()
+    809          
+    810          void UprListCompDV()
+    811          {
+    812            SelectorMNGBAZA(MNGUPR_DVLOW);//установка базы уставок
+    813          
+    814            SelectorSUBMENU(sub_menu_upr_compDV);//утановить текущее субменю
+    815          
+    816            SelectorTEXTCONTROL(&CONTROL_UDV);//текущий control
+    817          
+    818            SelectorFHOME(&PereinitUprListCompDV);//указатель на ф-цию HOME
+    819            InitFHOME(1);//exe ф-цию HOME
+    820          
+    821            LanderUpDown();//wkl Up Down
+    822          }//VidListCompDV()
+    823          
+    824          void UprCompDVLow()
+    825          {
+    826            SelectorMNGBAZA(MNGUPR_DVLOW);//установка базы уставок
+    827            SelectorCRRLIGHTLINE();//найти подсвеченную строку текущего текст потока
+    828            PrepareEditMenu(sub_menu_upr_compDV);
+    829            PassWord(EditUprDV);
+    830          
+    831          }//UprCompDVLow()
+    832          void UprCompDVMidd()
+    833          {
+    834            SelectorMNGBAZA(MNGUPR_DVMIDD);//установка базы уставок
+    835            SelectorCRRLIGHTLINE();//найти подсвеченную строку текущего текст потока
+    836            PrepareEditMenu(sub_menu_upr_compDV);
+    837            PassWord(EditUprDV);
+    838          
+    839          }//UprCompDVMidd()
+    840          void UprCompDVHi()
+    841          {
+    842            SelectorMNGBAZA(MNGUPR_DVHI);//установка базы уставок
+    843            SelectorCRRLIGHTLINE();//найти подсвеченную строку текущего текст потока
+    844            PrepareEditMenu(sub_menu_upr_compDV);
+    845            PassWord(EditUprDV);
+    846          
+    847          }//UprCompDVHi()
+    848          
+    849          void EditUprDV()
+    850          {
+    851          //редактировать уставку упр
+    852            char *nameUpr = (char *)sub_menu_upr_compDV[LIGHTLINEMENU +1+SUBDATA].Line1;
+    853            UpravlRedactor(nameUpr, LIGHTLINEMENU, &selectorUprStrDV);//редактировать уставку управления
+    854          }//EditUprDV()
+    855          
+    856          void PereinitUprListCompDV(short flg)
+    857          {
+    858          //переиниц
+    859            //инит компонентного контроля
+    860            TxtStreamInit(&CONTROL_UDV, &KadrMenuFormat_upr_compDV, NULL);//инит control и формир кадра
+    861            if(flg==0)//END
+    862            {
+    863              TxtStreamSetEnd(&CONTROL_UDV, SIZE_PAGE_VIEW/2);//перейти на END
+    864            }//if
+    865          
+    866            ViewDiskrMenuList();//вывести окно отображения
+    867            ListPStr();//доступ к уставкам
+    868          }//PereinitUprListCompDV(short flg)
+    869          
+    870          void UprListCompRELE()
+    871          {
+    872            SelectorMNGBAZA(MNGUPR_RELE);//установка базы уставок
+    873          
+    874            SelectorSUBMENU(sub_menu_upr_compRELE);//утановить текущее субменю
+    875          
+    876            SelectorTEXTCONTROL(&CONTROL_URELE);//текущий control
+    877          
+    878            SelectorFHOME(&PereinitUprListCompRELE);//указатель на ф-цию HOME
+    879            InitFHOME(1);//exe ф-цию HOME
+    880          
+    881            LanderUpDown();//wkl Up Down
+    882          }//VidListCompRELE()
+    883          
+    884          void UprCompRELE()
+    885          {
+    886            SelectorCRRLIGHTLINE();//найти подсвеченную строку текущего текст потока
+    887            PrepareEditMenu(sub_menu_upr_compRELE);
+    888            PassWord(EditUprRELE);
+    889          
+    890          }//UprCompRELE()
+    891          
+    892          void EditUprRELE()
+    893          {
+    894          //редактировать уставку упр
+    895            char *nameUpr = (char *)sub_menu_upr_compRELE[LIGHTLINEMENU +1+SUBDATA].Line1;
+    896            UpravlRedactor(nameUpr, LIGHTLINEMENU, &selectorUprStrRELE);//редактировать уставку управления
+    897          }//EditUprRELE()
+    898          
+    899          void PereinitUprListCompRELE(short flg)
+    900          {
+    901          //переиниц
+    902            //инит компонентного контроля
+    903            TxtStreamInit(&CONTROL_URELE, &KadrMenuFormat_upr_compRELE, NULL);//инит control и формир кадра
+    904            if(flg==0)//END
+    905            {
+    906              TxtStreamSetEnd(&CONTROL_URELE, SIZE_PAGE_VIEW/2);//перейти на END
+    907            }//if
+    908          
+    909            ViewDiskrMenuList();//вывести окно отображения
+    910            ListPStr();//доступ к уставкам
+    911          }//PereinitUprListCompRELE(short flg)
+    912          
+    913          void UprListCompCDI()
+    914          {
+    915            SelectorMNGBAZA(MNGUPR_CDI);//установка базы уставок
+    916          
+    917            SelectorSUBMENU(sub_menu_upr_compCDI);//утановить текущее субменю
+    918          
+    919            SelectorTEXTCONTROL(&CONTROL_UCDI);//текущий control
+    920          
+    921            SelectorFHOME(&PereinitUprListCompCDI);//указатель на ф-цию HOME
+    922            InitFHOME(1);//exe ф-цию HOME
+    923          
+    924            LanderUpDown();//wkl Up Down
+    925          }//VidListCompCDI()
+    926          
+    927          void UprCompCDI()
+    928          {
+    929            SelectorCRRLIGHTLINE();//найти подсвеченную строку текущего текст потока
+    930            PrepareEditMenu(sub_menu_upr_compCDI);
+    931            PassWord(EditUprCDI);
+    932          
+    933          }//UprCompCDI()
+    934          
+    935          void EditUprCDI()
+    936          {
+    937          //редактировать уставку упр
+    938            char *nameUpr = (char *)sub_menu_upr_compCDI[LIGHTLINEMENU +1+SUBDATA].Line1;
+    939            UpravlRedactor(nameUpr, LIGHTLINEMENU, &selectorUprStrRELE);//редактировать уставку управления
+    940          }//EditUprCDI()
+    941          
+    942          void PereinitUprListCompCDI(short flg)
+    943          {
+    944          //переиниц
+    945            //инит компонентного контроля
+    946            TxtStreamInit(&CONTROL_UCDI, &KadrMenuFormat_upr_compCDI, NULL);//инит control и формир кадра
+    947            if(flg==0)//END
+    948            {
+    949              TxtStreamSetEnd(&CONTROL_UCDI, SIZE_PAGE_VIEW/2);//перейти на END
+    950            }//if
+    951          
+    952            ViewDiskrMenuList();//вывести окно отображения
+    953            ListPStr();//доступ к уставкам
+    954          }//PereinitUprListCompCDI(short flg)
+    955          
+    956          short  KadrMenuFormat_upr_compPRM1(void *pstr)
+    957          {
+    958           WorkControl *workCntr = (WorkControl *)pstr;
+    959          //формирователь кадра
+    960            RESET_COUNTER;//сброс счетчиков
+    961            for(int i=0;; i++)
+    962            {
+    963          //критерий терминатора
+    964              char *nameUpr = (char *)sub_menu_upr_compPRM1[i+1+SUBDATA].Line1;
+    965              if(nameUpr==NULL) break;
+    966          
+    967              COMPARE_COUNTER
+    968              {
+    969                strcpy((char *)workCntr->twoString, nameUpr);
+    970          
+    971                strcpy((char *)workCntr->twoString + sizeof(WorkVariantChar)/2,
+    972                selectorUprStrPRM1(i, getCurrentMngUSTAVKI()));
+    973          
+    974                return 1;//сравнить счетчики кадров
+    975              }
+    976            }//for
+    977          
+    978            return 1;
+    979          }//KadrMenuFormat_upr_compPRM1(WorkControl *workCntr)
+    980          
+    981          short  KadrMenuFormat_upr_compDV(void *pstr)
+    982          {
+    983           WorkControl *workCntr = (WorkControl *)pstr;
+    984           short offset=0;
+    985          //формирователь кадра
+    986            RESET_COUNTER;//сброс счетчиков
+    987            for(int i=0;; i++)
+    988            {
+    989          //критерий терминатора
+    990              char *nameUpr = (char *)sub_menu_upr_compDV[i+1+SUBDATA].Line1;
+    991              if(nameUpr==NULL) break;
+    992          
+    993              COMPARE_COUNTER
+    994              {
+    995                strcpy((char *)workCntr->twoString, nameUpr);
+    996          
+    997                LIGHTMNGUBAZA = MNGUPR_DVLOW;//смотреть мл 16 ДВ
+    998                offset=i;
+    999                if(i>15){
+   1000                      offset=i-16;
+   1001                      LIGHTMNGUBAZA = MNGUPR_DVMIDD;//смотреть cp 16 ДВ
+   1002                      }
+   1003                if(i>31){
+   1004                      LIGHTMNGUBAZA = MNGUPR_DVHI;//смотреть ct 16 ДВ
+   1005                      offset=i-32;
+   1006                      }//if
+   1007                strcpy((char *)workCntr->twoString + sizeof(WorkVariantChar)/2,
+   1008                selectorUprStrDV(offset, getCurrentMngUSTAVKI()));
+   1009          
+   1010                return 1;
+   1011              }
+   1012            }//for
+   1013          
+   1014            return 1;
+   1015          }//KadrMenuFormat_upr_compDV(WorkControl *workCntr)
+   1016          
+   1017          short  KadrMenuFormat_upr_compRELE(void *pstr)
+   1018          {
+   1019           WorkControl *workCntr = (WorkControl *)pstr;
+   1020          //формирователь кадра
+   1021            RESET_COUNTER;//сброс счетчиков
+   1022            for(int i=0;; i++)
+   1023            {
+   1024          //критерий терминатора
+   1025              char *nameUpr = (char *)sub_menu_upr_compRELE[i+1+SUBDATA].Line1;
+   1026              if(nameUpr==NULL) break;
+   1027          
+   1028              COMPARE_COUNTER
+   1029              {
+   1030                strcpy((char *)workCntr->twoString, nameUpr);
+   1031          
+   1032                strcpy((char *)workCntr->twoString + sizeof(WorkVariantChar)/2,
+   1033                selectorUprStrRELE(i, getCurrentMngUSTAVKI()));
+   1034          
+   1035                return 1;
+   1036              }
+   1037            }//for
+   1038          
+   1039            return 1;
+   1040          }//KadrMenuFormat_upr_compRELE(WorkControl *workCntr)
+   1041          
+   1042          short  KadrMenuFormat_upr_compCDI(void *pstr)
+   1043          {
+   1044           WorkControl *workCntr = (WorkControl *)pstr;
+   1045          //формирователь кадра
+   1046            RESET_COUNTER;//сброс счетчиков
+   1047            for(int i=0;; i++)
+   1048            {
+   1049          //критерий терминатора
+   1050              char *nameUpr = (char *)sub_menu_upr_compCDI[i+1+SUBDATA].Line1;
+   1051              if(nameUpr==NULL) break;
+   1052          
+   1053              COMPARE_COUNTER
+   1054              {
+   1055                strcpy((char *)workCntr->twoString, nameUpr);
+   1056          
+   1057                strcpy((char *)workCntr->twoString + sizeof(WorkVariantChar)/2,
+   1058                selectorUprStrRELE(i, getCurrentMngUSTAVKI()));
+   1059          
+   1060                return 1;
+   1061              }
+   1062            }//for
+   1063          
+   1064            return 1;
+   1065          }//KadrMenuFormat_upr_compCDI(void *pstr)
+   1066          
+   1067          char *selectorUprStrPRM1(short iBit, UNS_32 ustUpr)
+   1068          {
+   1069            switch(iBit)
+   1070            {
+   1071          
+   1072            default:
+   1073              if(NumBitCheckWord(iBit, &ustUpr)) return bitStringUNI[UNIUPR_WKL];
+   1074              return bitStringUNI[UNIUPR_OTKL];
+   1075            }//switch
+   1076          }//selectorUprStrPRM1(short ibit, UNS_32 ustUpr)
+   1077          
+   1078          char *selectorUprStrDV(short iBit, UNS_32 ustUpr)
+   1079          {
+   1080            switch(iBit)
+   1081            {
+   1082          
+   1083            default:
+   1084              if(NumBitCheckWord(iBit, &ustUpr)) return bitStringUNI[UNIUPR_INVERS];
+   1085              return bitStringUNI[UNIUPR_PRM];
+   1086            }//switch
+   1087          }//selectorUprStrDV(short ibit, UNS_32 ustUpr)
+   1088          
+   1089          char *selectorUprStrRELE(short iBit, UNS_32 ustUpr)
+   1090          {
+   1091            switch(iBit)
+   1092            {
+   1093          
+   1094            default:;
+   1095            }//switch
+   1096              if(NumBitCheckWord(iBit, &ustUpr)) return bitStringUNI[UNIUPR_TRIG];
+   1097              return bitStringUNI[UNIUPR_NORM];
+   1098          }//selectorUprStrRELE(short ibit, UNS_32 ustUpr)
+   1099          
+   1100          int initUstPRM1(char init)
+   1101          {
+   1102            //инициал уставок
+   1103            if (init)
+   1104            {
+   1105          //уставка сработки
+   1106              tmpUSTAVKI[MNGUST_PRM1_DDV1] = 10;
+   1107              tmpUSTAVKI[MNGUST_PRM1_DDV2] = 15;
+   1108              tmpUSTAVKI[MNGUST_PRM1_DDV3] = 20;
+   1109              tmpUSTAVKI[MNGUST_PRM1_DDV4] = 25;
+   1110              tmpUSTAVKI[MNGUST_PRM1_DDV5] = 10;
+   1111              tmpUSTAVKI[MNGUST_PRM1_DDV6] = 15;
+   1112              tmpUSTAVKI[MNGUST_PRM1_DDV7] = 20;
+   1113              tmpUSTAVKI[MNGUST_PRM1_DDV8] = 25;
+   1114              tmpUSTAVKI[MNGUST_PRM1_DDV9] = 10;
+   1115              tmpUSTAVKI[MNGUST_PRM1_DDV10] = 15;
+   1116              tmpUSTAVKI[MNGUST_PRM1_DDV11] = 20;
+   1117              tmpUSTAVKI[MNGUST_PRM1_DDV12] = 25;
+   1118              tmpUSTAVKI[MNGUST_PRM1_DDV13] = 26;
+   1119              tmpUSTAVKI[MNGUST_PRM1_DDV14] = 27;
+   1120              tmpUSTAVKI[MNGUST_PRM1_DDV15] = 28;
+   1121              tmpUSTAVKI[MNGUST_PRM1_DDV16] = 29;
+   1122              tmpUSTAVKI[MNGUST_PRM1_DDV17] = 30;
+   1123              tmpUSTAVKI[MNGUST_PRM1_DDV18] = 31;
+   1124              tmpUSTAVKI[MNGUST_PRM1_DDV19] = 32;
+   1125              tmpUSTAVKI[MNGUST_PRM1_DDV20] = 33;
+   1126              tmpUSTAVKI[MNGUST_PRM1_DDV21] = 34;
+   1127              tmpUSTAVKI[MNGUST_PRM1_DDV22] = 35;
+   1128              tmpUSTAVKI[MNGUST_PRM1_DDV23] = 36;
+   1129              tmpUSTAVKI[MNGUST_PRM1_DDV24] = 37;
+   1130              tmpUSTAVKI[MNGUST_PRM1_DDV25] = 38;
+   1131              tmpUSTAVKI[MNGUST_PRM1_DDV26] = 39;
+   1132              tmpUSTAVKI[MNGUST_PRM1_DDV27] = 40;
+   1133              tmpUSTAVKI[MNGUST_PRM1_DDV28] = 41;
+   1134              tmpUSTAVKI[MNGUST_PRM1_DDV29] = 42;
+   1135              tmpUSTAVKI[MNGUST_PRM1_DDV30] = 43;
+   1136              tmpUSTAVKI[MNGUST_PRM1_DDV31] = 44;
+   1137              tmpUSTAVKI[MNGUST_PRM1_DDV32] = 45;
+   1138              tmpUSTAVKI[MNGUST_PRM1_DDV33] = 46;
+   1139              tmpUSTAVKI[MNGUST_PRM1_DDV34] = 47;
+   1140              tmpUSTAVKI[MNGUST_PRM1_DDV35] = 48;
+   1141              tmpUSTAVKI[MNGUST_PRM1_DDV36] = 49;
+   1142          //уставка выдержки
+   1143              tmpUSTAVKI[MNGVID_PRM1]     = 3000;
+   1144              tmpUSTAVKI[MNGVID_PRM1_V]   = 600;
+   1145              tmpUSTAVKI[MNGVID_PRM1_DIS] = 60000;//работа рег ДИС
+   1146          //уставка управления
+   1147              tmpUSTAVKI[MNGUPR_PRM1] = 0;
+   1148          //уставка управления
+   1149              tmpUSTAVKI[MNGUPR_DVLOW] = 0;
+   1150              tmpUSTAVKI[MNGUPR_DVMIDD] = 0;
+   1151              tmpUSTAVKI[MNGUPR_DVHI] = 0;
+   1152          //уставка управления
+   1153              tmpUSTAVKI[MNGUPR_RELE] = 0;
+   1154          //уставка управления
+   1155              tmpUSTAVKI[MNGUPR_CDI] = 0;
+   1156          //блок откл
+   1157              tmpUSTAVKI[MNGUST_PRM1_BO] = 122;
+   1158          //блок вкл
+   1159              tmpUSTAVKI[MNGUST_PRM1_BV] = 123;
+   1160          
+   1161            }//if
+   1162          
+   1163            offsetSPVCmdPRM1 = IndexUstSPV;//смещение для SPV PRM1
+   1164            IndexUstSPV += SPVUST_PRM1_TOTAL;//индекс уставок в супервизоре
+   1165            return MNGUST_PRM1_TOTAL;//к-во уставок в менеджере уставок
+   1166          }//initUstPRM1(char init)
+   1167          
+   1168          void  prepareUstPRM1(short idxC)
+   1169          {
+   1170          //смещение на уставки PRM1
+   1171            offsetUstMngPRM1 = getClonOffsetMngUSTAVKI(idxC, 0);//прочитать смещение уставки клона idxC
+   1172            //подготовка ENA команд для клона
+   1173            CopyWideENAToENAcmd(PrepareENACmd(idxC, MNGUPR_PRM1), ENACMD_PRM1_TOTAL);
+   1174            //подготовка уставок
+   1175            int tmpOffsetUSpv = getOffsetSPVUstCnf(idxC);//смещение уставок внутри супервизора
+   1176            //Допуск ДВ
+   1177            SPV_UST(SPV_DDV1_UST) =
+   1178              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV1);
+   1179            SPV_UST(SPV_DDV2_UST) =
+   1180              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV2);
+   1181            SPV_UST(SPV_DDV3_UST) =
+   1182              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV3);
+   1183            SPV_UST(SPV_DDV4_UST) =
+   1184              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV4);
+   1185            SPV_UST(SPV_DDV5_UST) =
+   1186              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV5);
+   1187            SPV_UST(SPV_DDV6_UST) =
+   1188              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV6);
+   1189            SPV_UST(SPV_DDV7_UST) =
+   1190              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV7);
+   1191            SPV_UST(SPV_DDV8_UST) =
+   1192              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV8);
+   1193            SPV_UST(SPV_DDV9_UST) =
+   1194              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV9);
+   1195            SPV_UST(SPV_DDV10_UST) =
+   1196              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV10);
+   1197            SPV_UST(SPV_DDV11_UST) =
+   1198              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV11);
+   1199            SPV_UST(SPV_DDV12_UST) =
+   1200              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV12);
+   1201            SPV_UST(SPV_DDV13_UST) =
+   1202              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV13);
+   1203            SPV_UST(SPV_DDV14_UST) =
+   1204              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV14);
+   1205            SPV_UST(SPV_DDV15_UST) =
+   1206              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV15);
+   1207            SPV_UST(SPV_DDV16_UST) =
+   1208              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV16);
+   1209            SPV_UST(SPV_DDV17_UST) =
+   1210              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV17);
+   1211            SPV_UST(SPV_DDV18_UST) =
+   1212              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV18);
+   1213            SPV_UST(SPV_DDV19_UST) =
+   1214              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV19);
+   1215            SPV_UST(SPV_DDV20_UST) =
+   1216              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV20);
+   1217            SPV_UST(SPV_DDV21_UST) =
+   1218              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV21);
+   1219            SPV_UST(SPV_DDV22_UST) =
+   1220              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV22);
+   1221            SPV_UST(SPV_DDV23_UST) =
+   1222              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV23);
+   1223            SPV_UST(SPV_DDV24_UST) =
+   1224              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV24);
+   1225            SPV_UST(SPV_DDV25_UST) =
+   1226              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV25);
+   1227            SPV_UST(SPV_DDV26_UST) =
+   1228              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV26);
+   1229            SPV_UST(SPV_DDV27_UST) =
+   1230              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV27);
+   1231            SPV_UST(SPV_DDV28_UST) =
+   1232              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV28);
+   1233            SPV_UST(SPV_DDV29_UST) =
+   1234              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV29);
+   1235            SPV_UST(SPV_DDV30_UST) =
+   1236              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV30);
+   1237            SPV_UST(SPV_DDV31_UST) =
+   1238              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV31);
+   1239            SPV_UST(SPV_DDV32_UST) =
+   1240              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV32);
+   1241            SPV_UST(SPV_DDV33_UST) =
+   1242              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV33);
+   1243            SPV_UST(SPV_DDV34_UST) =
+   1244              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV34);
+   1245            SPV_UST(SPV_DDV35_UST) =
+   1246              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV35);
+   1247            SPV_UST(SPV_DDV36_UST) =
+   1248              getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_DDV36);
+   1249          
+   1250          //уставка ДВ -ПрямойИнверсный
+   1251            SPV_UST(SPV_UPR_DVLOW) =
+   1252              getNativUstMngUSTAVKI(idxC, MNGUPR_DVLOW);
+   1253            SPV_UST(SPV_UPR_DVMIDD) =
+   1254              getNativUstMngUSTAVKI(idxC, MNGUPR_DVMIDD);
+   1255            SPV_UST(SPV_UPR_DVHI) =
+   1256              getNativUstMngUSTAVKI(idxC, MNGUPR_DVHI);
+   1257          
+   1258          //уставка Реле -НормальныйТриггерный
+   1259            int spvupr_rele =
+   1260            SPV_UST(SPV_UPR_RELE) =
+   1261              getNativUstMngUSTAVKI(idxC, MNGUPR_RELE);
+   1262          
+   1263          //уставка СДИ -НормальныйТриггерный
+   1264            int spvupr_cdi =
+   1265            SPV_UST(SPV_UPR_CDI) =
+   1266              getNativUstMngUSTAVKI(idxC, MNGUPR_CDI);
+   1267          //обнулить триггеры у норм реле
+   1268            ReleTrigger &= spvupr_rele;//тригг реле
+   1269          //обнулить триггеры у норм СДИ
+   1270            CDITrigger  &= spvupr_cdi;//тригг СДИ
+   1271          
+   1272            //уставка SPV сработки 20V
+   1273            SPV_UST(SPVSRAB_02UH) = 20000;
+   1274            //уставка SPV возврата DOWN
+   1275            SPV_UST(SPVVOZV_02UH) = 21000;
+   1276          
+   1277            //уставка SPV сработки 6A
+   1278            SPV_UST(SPVSRAB_12IH) = 6000;
+   1279            //уставка SPV возврата DOWN
+   1280            SPV_UST(SPVVOZV_12IH) = 6300;
+   1281          
+   1282            //уставка SPV сработки
+   1283            SPV_UST(SPVSRAB_U005) = 5000;
+   1284            //уставка SPV возврата
+   1285            SPV_UST(SPVVOZV_U005) = 5250;
+   1286          
+   1287            //уставка SPV сработки 0.25B
+   1288            SPV_UST(SPVSRAB_U025) = 250;
+   1289            //уставка SPV возврата
+   1290            SPV_UST(SPVVOZV_U025) = 262;
+   1291          
+   1292            //уставка SPV сработки 0.05A
+   1293          //  SPV_UST(SPVSRAB_I005) = 50;
+   1294            //уставка SPV возврата
+   1295            //SPV_UST(SPVVOZV_I005) = 53;
+   1296          
+   1297            //уставка SPV сработки
+   1298            SPV_UST(SPVSRAB_ICM005) = 50;
+   1299            //уставка SPV возврата
+   1300            SPV_UST(SPVVOZV_ICM005) = 53;
+   1301            //уставка SPV сработки
+   1302            SPV_UST(SPVSRAB_UCM005) = 50;
+   1303            //уставка SPV возврата
+   1304            SPV_UST(SPVVOZV_UCM005) = 53;
+   1305            //уставка SPV сработки 20V
+   1306            SPV_UST(SPVSRAB_DZ_02UH) = 11540;//20000;
+   1307            //уставка SPV возврата UP
+   1308            SPV_UST(SPVVOZV_DZ_02UH) = 10963;//19000;
+   1309          
+   1310            short tmpOffsetT    =
+   1311              getOffsetTimersCnf(idxC);   //компонент в конфигурации
+   1312          
+   1313                   //таймер 1
+   1314            setTimerPorog(tmpOffsetT+ TIMER1_PRM1,
+   1315              getNativUstMngUSTAVKI(idxC, MNGVID_PRM1));
+   1316          
+   1317                   //таймер 2
+   1318            setTimerPorog(tmpOffsetT+ TIMER2_PRM1,
+   1319              getNativUstMngUSTAVKI(idxC, MNGVID_PRM1_V));
+   1320          
+   1321               //таймер сшивки SEAM
+   1322            setTimerPorog(tmpOffsetT+ TIMER_SEAM_PRM1, 5);
+   1323          
+   1324              //таймер DIS
+   1325            setTimerPorog(tmpOffsetT+ TIMERDIS_PRM1, 60000);
+   1326          
+   1327             //миним таймер DIS
+   1328            setTimerPorog(tmpOffsetT+ TIMER_MINDIS_PRM1, 20);
+   1329             //таймер БО
+   1330            setTimerPorog(tmpOffsetT+ TIMER_RELEBO, 22);
+   1331             //таймер БB
+   1332            setTimerPorog(tmpOffsetT+ TIMER_RELEBV, 33);
+   1333          
+   1334            //выдержкa UI НЦН ДЗ
+   1335            setTimerPorog(tmpOffsetT+ TIMER_UINCNDZ_PRM1, 
+   1336              getNativUstMngUSTAVKI(idxC, MNGVID_PRM1_UINCNDZ));
+   1337            //выдержка обрат последоват CM НЦН ДЗ
+   1338            setTimerPorog(tmpOffsetT+ TIMER_CMNCNDZ_PRM1, 
+   1339              getNativUstMngUSTAVKI(idxC, MNGVID_PRM1_CMNCNDZ));
+   1340            //05 НЦН ДЗ
+   1341            setTimerPorog(tmpOffsetT+ TIMER_05NCNDZ_PRM1, 500);
+   1342          
+   1343          }//prepareUstMTZ1(short idxC)
+   1344          
+   1345          int initIOCmd_PRM1()
+   1346          {
+   1347            //инициал IO команд
+   1348            offsetIOCmdPRM1 = IndexIO;//смещение для IO PRM1
+   1349            return commonInitIOCmd(IOCMD_PRM1_TOTAL);
+   1350          }//initIOCmd_PRM1()
+   1351          
+   1352          int initTLCmd_PRM1()
+   1353          {
+   1354            //инициал TL команд
+   1355            return commonInitTLCmd(TLCMD_PRM1_TOTAL);
+   1356          }//initTLCmd_PRM1()
+   1357          
+   1358          int initENACmd_PRM1()
+   1359          {
+   1360            //инициал ENA команд
+   1361            offsetENACmdPRM1 = IndexENA;//смещение для ENA PRM1
+   1362            return commonInitENACmd(ENACMD_PRM1_TOTAL);
+   1363          }//initENACmd_PRM1()
+   1364          
+   1365          void initTimersPRM1(short idxC)
+   1366          {
+   1367            //запрос и инициал таймеров
+   1368            offsetTimersPRM1 = IndexTIMERS;//смещение на таймерный индекс
+   1369            commonInitTimers(TIMERS_PRM1_TOTAL);
+   1370          
+   1371          }//initTimersPRM1()
+   1372          
+   1373          int codecUstPRM1(char codec, short offset, int ust)
+   1374          //codec=0-кодировать
+   1375          //codec=1-раскодировать
+   1376          {
+   1377            //кодировать-раскодировать уставку
+   1378            if(codec) return ust*1;
+   1379            return ust/1;
+   1380          }//codecUstPRM1(char *buf, short offset, int ust)
+   1381          
+   1382          int isDISactiv_PRM1(int idxC)
+   1383          {
+   1384          //таймерная активность Регистратора ДИС
+   1385              int tmpOffsetT    =
+   1386                          cnfCOMPONENT[idxC].offsetTimers;   //таймера компонента в конфигурации
+   1387            if( getTimerBUSY(tmpOffsetT+TIMER_MINDIS_PRM1) |
+   1388                getTimerFINISH(tmpOffsetT+TIMER_MINDIS_PRM1)
+   1389              ) return 1;//миним таймер DIS
+   1390            return 0;//нет активности
+   1391          }//isDISactiv_PRM1(int idxC)
+   1392          
+   1393          void SaveUprPRM1(short numBit)
+   1394          {
+   1395            /*
+   1396          //персональное сохр upr для PRM1
+   1397            UNS_32 tmpU = getCurrentMngUSTAVKI();//текущая уст упр
+   1398            short ibit = numBit;
+   1399            if(numBit>15) ibit = numBit-16;
+   1400            if(numBit>31) ibit = numBit-32;
+   1401              if(FvmenuDis->UprCheck->Checked)
+   1402              {
+   1403                NumBitSettingWord(ibit, &tmpU);//установка бита по его индексу
+   1404              }//if(FvmenuDis->UprCheck->Checked)
+   1405              else
+   1406              {
+   1407                NumBitClearingWord(ibit, &tmpU);//сброс бита по его индексу
+   1408              }
+   1409            setCurrentMngUSTAVKI(tmpU);//новая уст упр
+   1410            */
+   1411          }//SaveUprPRM1()
+   1412          
+   1413          char copyPRM1ToRepozitar(char packet)
+   1414          {
+   1415            memset(&rpzcomponent_obj, 0, sizeof(COMPONENT_OBJ));//стереть старое
+   1416          //копировать компонент в репозитарий
+   1417            rpzcomponent_obj.componentEnable = 1;//разрешение компонента
+   1418            rpzcomponent_obj.kodC   = KOD_COMPONENT;         //код компонента
+   1419            rpzcomponent_obj.packet = 0;    //номер пакетного компонента
+   1420            rpzcomponent_obj.permanent = 1; //перманентный компонент
+   1421          
+   1422            strcpy(rpzcomponent_obj.nameComponent,  PRM1_TITLE);       //имя компонента
+   1423            rpzcomponent_obj.sub_menu_component =  sub_menu_comp_PRM1;//меню компонента
+   1424          
+   1425            rpzcomponent_obj.cntClon     = CNT_STUPEN_PRM1;   //max к-во клонов
+   1426            rpzcomponent_obj.numClon     = 1;//номер клона
+   1427            rpzcomponent_obj.workToSignal = 0; //Работа на сигнал
+   1428          
+   1429            rpzcomponent_obj.initUstMng     = initUstPRM1;    //инициал уставок
+   1430            rpzcomponent_obj.prepareUstSpv  = prepareUstPRM1;//подготовка уставок
+   1431            rpzcomponent_obj.initIOCmd      = initIOCmd_PRM1;      //инициал IO команд
+   1432            rpzcomponent_obj.initTLCmd      = initTLCmd_PRM1;      //инициал TL команд
+   1433            rpzcomponent_obj.initENACmd     = initENACmd_PRM1;     //инициал ENA команд
+   1434            rpzcomponent_obj.bo_bvCmd       = NULL; //настройка БО БВ команд
+   1435            rpzcomponent_obj.isDISactiv     = isDISactiv_PRM1; //активность Регистратора ДИС
+   1436            rpzcomponent_obj.setBOBVtimer   = NULL; //инициал таймеров БО БВ
+   1437          
+   1438            rpzcomponent_obj.nameStatusIO = ionsPRM1;          //имена и статус команд IO
+   1439            rpzcomponent_obj.initTimers   = initTimersPRM1;    //запрос и инициал таймеров
+   1440            rpzcomponent_obj.logic        = logicPRM1;         //логика компонента
+   1441          
+   1442            rpzcomponent_obj.codecUst = codecUstPRM1;   //кодировать-раскодировать уставку
+   1443          
+   1444            return 0;//не пакетная регистрация
+   1445          }//
+   1446          
+   1447          #endif // _HIDE_COMPONENT
+   1448          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   EditUprCDI
+         8   -> UpravlRedactor
+       8   EditUprDV
+         8   -> UpravlRedactor
+       8   EditUprPRM1
+         8   -> UpravlRedactor
+       8   EditUprRELE
+         8   -> UpravlRedactor
+       8   EditUstPRM1
+         8   -> SystemEditUst
+       8   EditUstUVV
+         8   -> SystemEditUst
+       8   EditVidPRM1
+         8   -> SystemEditUst
+      24   KadrMenuFormat_upr_compCDI
+        24   -> getCurrentMngUSTAVKI
+        24   -> selectorUprStrRELE
+        24   -> strcpy
+      24   KadrMenuFormat_upr_compDV
+        24   -> getCurrentMngUSTAVKI
+        24   -> selectorUprStrDV
+        24   -> strcpy
+      24   KadrMenuFormat_upr_compPRM1
+        24   -> getCurrentMngUSTAVKI
+        24   -> selectorUprStrPRM1
+        24   -> strcpy
+      24   KadrMenuFormat_upr_compRELE
+        24   -> getCurrentMngUSTAVKI
+        24   -> selectorUprStrRELE
+        24   -> strcpy
+      72   KadrMenuFormat_ustvidPRM1
+        72   -> getUstOffsetMngUSTAVKI
+        72   -> sprintf
+        72   -> strcpy
+       8   PereinitUprListCompCDI
+         8   -> ListPStr
+         8   -> TxtStreamInit
+         8   -> TxtStreamSetEnd
+         8   -> ViewDiskrMenuList
+       8   PereinitUprListCompDV
+         8   -> ListPStr
+         8   -> TxtStreamInit
+         8   -> TxtStreamSetEnd
+         8   -> ViewDiskrMenuList
+       8   PereinitUprListCompPRM1
+         8   -> ListPStr
+         8   -> TxtStreamInit
+         8   -> TxtStreamSetEnd
+         8   -> ViewDiskrMenuList
+       8   PereinitUprListCompRELE
+         8   -> ListPStr
+         8   -> TxtStreamInit
+         8   -> TxtStreamSetEnd
+         8   -> ViewDiskrMenuList
+       8   PereinitUprListCompUVV
+         8   -> LanderPStr
+         8   -> TxtStreamInit
+         8   -> TxtStreamSetEnd
+         8   -> ViewDiskrMenuSub
+       8   PereinitUstListCompPRM1
+         8   -> ListPStr
+         8   -> TxtStreamInit
+         8   -> TxtStreamSetEnd
+         8   -> ViewDiskrMenuList
+       8   PereinitUstListCompUVV
+         8   -> ListPStr
+         8   -> TxtStreamInit
+         8   -> TxtStreamSetEnd
+         8   -> ViewDiskrMenuList
+       8   PereinitVidListCompPRM1
+         8   -> ListPStr
+         8   -> TxtStreamInit
+         8   -> TxtStreamSetEnd
+         8   -> ViewDiskrMenuList
+       0   SaveUprPRM1
+       8   UprCompCDI
+         8   -> PassWord
+         8   -> PrepareEditMenu
+         8   -> SelectorCRRLIGHTLINE
+       8   UprCompDVHi
+         8   -> PassWord
+         8   -> PrepareEditMenu
+         8   -> SelectorCRRLIGHTLINE
+         8   -> SelectorMNGBAZA
+       8   UprCompDVLow
+         8   -> PassWord
+         8   -> PrepareEditMenu
+         8   -> SelectorCRRLIGHTLINE
+         8   -> SelectorMNGBAZA
+       8   UprCompDVMidd
+         8   -> PassWord
+         8   -> PrepareEditMenu
+         8   -> SelectorCRRLIGHTLINE
+         8   -> SelectorMNGBAZA
+       8   UprCompPRM1
+         8   -> PassWord
+         8   -> PrepareEditMenu
+         8   -> SelectorCRRLIGHTLINE
+       8   UprCompRELE
+         8   -> PassWord
+         8   -> PrepareEditMenu
+         8   -> SelectorCRRLIGHTLINE
+       8   UprListCompCDI
+         8   -> InitFHOME
+         8   -> LanderUpDown
+         8   -> SelectorFHOME
+         8   -> SelectorMNGBAZA
+         8   -> SelectorSUBMENU
+         8   -> SelectorTEXTCONTROL
+       8   UprListCompDV
+         8   -> InitFHOME
+         8   -> LanderUpDown
+         8   -> SelectorFHOME
+         8   -> SelectorMNGBAZA
+         8   -> SelectorSUBMENU
+         8   -> SelectorTEXTCONTROL
+       8   UprListCompPRM1
+         8   -> InitFHOME
+         8   -> LanderUpDown
+         8   -> SelectorFHOME
+         8   -> SelectorMNGBAZA
+         8   -> SelectorSUBMENU
+         8   -> SelectorTEXTCONTROL
+       8   UprListCompRELE
+         8   -> InitFHOME
+         8   -> LanderUpDown
+         8   -> SelectorFHOME
+         8   -> SelectorMNGBAZA
+         8   -> SelectorSUBMENU
+         8   -> SelectorTEXTCONTROL
+       8   UprListCompUVV
+         8   -> InitFHOME
+         8   -> LanderUpDown
+         8   -> SelectorFHOME
+         8   -> SelectorSUBMENU
+         8   -> SelectorTEXTCONTROL
+       8   UstCompPRM1
+         8   -> PassWord
+         8   -> PrepareEditMenu
+         8   -> SelectorCRRLIGHTLINE
+       8   UstCompUVV
+         8   -> PassWord
+         8   -> PrepareEditMenu
+         8   -> SelectorCRRLIGHTLINE
+       8   UstListCompPRM1
+         8   -> InitFHOME
+         8   -> LanderUpDown
+         8   -> SelectorFHOME
+         8   -> SelectorMNGBAZA
+         8   -> SelectorSUBMENU
+         8   -> SelectorTEXTCONTROL
+       8   UstListCompUVV
+         8   -> InitFHOME
+         8   -> LanderUpDown
+         8   -> SelectorFHOME
+         8   -> SelectorMNGBAZA
+         8   -> SelectorSUBMENU
+         8   -> SelectorTEXTCONTROL
+       8   VidCompPRM1
+         8   -> EditVidPRM1
+         8   -> PrepareEditMenu
+         8   -> SelectorCRRLIGHTLINE
+       8   VidListCompPRM1
+         8   -> InitFHOME
+         8   -> LanderUpDown
+         8   -> SelectorFHOME
+         8   -> SelectorMNGBAZA
+         8   -> SelectorSUBMENU
+         8   -> SelectorTEXTCONTROL
+      12   codecUstPRM1
+        12 __aeabi_idiv
+      24   copyPRM1ToRepozitar
+        24   -> __aeabi_memset
+        24   -> strcpy
+       8   initENACmd_PRM1
+         8   -> commonInitENACmd
+       8   initIOCmd_PRM1
+         8   -> commonInitIOCmd
+       8   initTLCmd_PRM1
+         8   -> commonInitTLCmd
+       8   initTimersPRM1
+         8   -> commonInitTimers
+       0   initUstPRM1
+      16   isDISactiv_PRM1
+        16   -> getTimerBUSY
+        16   -> getTimerFINISH
+      24   prepareUstPRM1
+        24   -> CopyWideENAToENAcmd
+        24   -> PrepareENACmd
+        24   -> getClonOffsetMngUSTAVKI
+        24   -> getNativUstMngUSTAVKI
+        24   -> getOffsetSPVUstCnf
+        24   -> getOffsetTimersCnf
+        24   -> setTimerPorog
+      16   selectorUprStrDV
+        16   -> NumBitCheckWord
+      16   selectorUprStrPRM1
+        16   -> NumBitCheckWord
+      16   selectorUprStrRELE
+        16   -> NumBitCheckWord
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable40
+       4  ??DataTable40_1
+       4  ??DataTable40_10
+       4  ??DataTable40_11
+       4  ??DataTable40_12
+       4  ??DataTable40_13
+       4  ??DataTable40_14
+       4  ??DataTable40_15
+       4  ??DataTable40_16
+       4  ??DataTable40_17
+       4  ??DataTable40_18
+       4  ??DataTable40_19
+       4  ??DataTable40_2
+       4  ??DataTable40_20
+       4  ??DataTable40_21
+       4  ??DataTable40_22
+       4  ??DataTable40_23
+       4  ??DataTable40_24
+       4  ??DataTable40_25
+       4  ??DataTable40_26
+       4  ??DataTable40_27
+       4  ??DataTable40_28
+       4  ??DataTable40_29
+       4  ??DataTable40_3
+       4  ??DataTable40_30
+       4  ??DataTable40_31
+       4  ??DataTable40_32
+       4  ??DataTable40_33
+       4  ??DataTable40_34
+       4  ??DataTable40_35
+       4  ??DataTable40_4
+       4  ??DataTable40_5
+       4  ??DataTable40_6
+       4  ??DataTable40_7
+       4  ??DataTable40_8
+       4  ??DataTable40_9
+       4  ??DataTable46
+       4  ??DataTable46_1
+       4  ??DataTable46_10
+       4  ??DataTable46_11
+       4  ??DataTable46_12
+       4  ??DataTable46_13
+       4  ??DataTable46_14
+       4  ??DataTable46_15
+       4  ??DataTable46_16
+       4  ??DataTable46_17
+       4  ??DataTable46_18
+       4  ??DataTable46_19
+       4  ??DataTable46_2
+       4  ??DataTable46_20
+       4  ??DataTable46_21
+       4  ??DataTable46_22
+       4  ??DataTable46_23
+       4  ??DataTable46_24
+       4  ??DataTable46_25
+       4  ??DataTable46_26
+       4  ??DataTable46_27
+       4  ??DataTable46_28
+       4  ??DataTable46_3
+       4  ??DataTable46_4
+       4  ??DataTable46_5
+       4  ??DataTable46_6
+       4  ??DataTable46_7
+       4  ??DataTable46_8
+       4  ??DataTable46_9
+      16  ?_0
+      28  ?_1
+      16  ?_10
+      12  ?_11
+      12  ?_12
+      16  ?_13
+      24  ?_14
+      20  ?_15
+      12  ?_16
+      24  ?_17
+      24  ?_18
+      12  ?_19
+      12  ?_2
+      12  ?_20
+      12  ?_21
+      12  ?_22
+      12  ?_23
+       8  ?_24
+      12  ?_3
+      12  ?_4
+       8  ?_5
+      16  ?_6
+      12  ?_7
+      16  ?_8
+      16  ?_9
+       4  CDITrigger
+      52  EditUprCDI
+      52  EditUprDV
+      52  EditUprPRM1
+      52  EditUprRELE
+      16  EditUstPRM1
+      16  EditUstUVV
+      16  EditVidPRM1
+       4  GruppaUst
+     160  KadrMenuFormat_upr_compCDI
+     244  KadrMenuFormat_upr_compDV
+     160  KadrMenuFormat_upr_compPRM1
+     160  KadrMenuFormat_upr_compRELE
+     188  KadrMenuFormat_ustvidPRM1
+       8  PRM1_TITLE
+      68  PereinitUprListCompCDI
+      68  PereinitUprListCompDV
+      68  PereinitUprListCompPRM1
+      68  PereinitUprListCompRELE
+      68  PereinitUprListCompUVV
+      68  PereinitUstListCompPRM1
+      68  PereinitUstListCompUVV
+      68  PereinitVidListCompPRM1
+       4  ReleTrigger
+       4  SaveUprPRM1
+      28  UprCompCDI
+      36  UprCompDVHi
+      36  UprCompDVLow
+      36  UprCompDVMidd
+      28  UprCompPRM1
+      28  UprCompRELE
+      52  UprListCompCDI
+      52  UprListCompDV
+      52  UprListCompPRM1
+      52  UprListCompRELE
+      44  UprListCompUVV
+      28  UstCompPRM1
+      28  UstCompUVV
+      52  UstListCompPRM1
+      52  UstListCompUVV
+      24  VidCompPRM1
+      52  VidListCompPRM1
+      44  codecUstPRM1
+     296  copyPRM1ToRepozitar
+      32  initENACmd_PRM1
+      32  initIOCmd_PRM1
+      16  initTLCmd_PRM1
+      36  initTimersPRM1
+     636  initUstPRM1
+      48  ionsPRM1
+      72  isDISactiv_PRM1
+       4  offsetENACmdPRM1
+       4  offsetIOCmdPRM1
+       4  offsetSPVCmdPRM1
+       4  offsetTimersPRM1
+       4  offsetUstMngPRM1
+    2272  prepareUstPRM1
+      60  selectorUprStrDV
+      60  selectorUprStrPRM1
+      60  selectorUprStrRELE
+      96  sub_menu_comp_PRM1
+      36  sub_menu_upr_compCDI
+      36  sub_menu_upr_compDV
+      60  sub_menu_upr_compPRM1
+      36  sub_menu_upr_compRELE
+      72  sub_menu_upr_compUVV
+      60  sub_menu_ust_compPRM1
+      36  sub_menu_ust_compUVV
+      72  sub_menu_vid_compPRM1
+
+ 
+    32 bytes in section .bss
+   560 bytes in section .data
+   376 bytes in section .rodata
+ 6 272 bytes in section .text
+ 
+ 6 272 bytes of CODE  memory
+   376 bytes of CONST memory
+   592 bytes of DATA  memory
+
+Errors: none
+Warnings: none

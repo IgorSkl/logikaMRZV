@@ -1,0 +1,117 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  17:17:34
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\component\logicPF.c
+#    Command line =  
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\component\logicPF.c" -lcN
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\" -o "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\Obj\" --debug
+#        --endian=little --cpu=ARM926EJ-S -e --fpu=VFP9-S --dlib_config
+#        "D:\Program Files\IAR Systems\Embedded Workbench
+#        7.2\arm\INC\c\DLib_Config_Normal.h" -I "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\" --interwork
+#        --cpu_mode arm -Ohs --use_c++_inline
+#    List file    =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\logicPF.lst
+#    Object file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\logicPF.o
+#
+###############################################################################
+
+D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\component\logicPF.c
+      1          
+      2          #include <stdio.h>
+      3          #include <string.h>
+      4          
+      5          #include "psuperVisor\supermanager.h"
+      6          
+      7          #include "bazisdef.h"
+      8          #include "component\componentdef.h"
+      9          #include "psuperVisor\psvisor_helpdef.h"
+     10          
+     11          #include "logictimers\logictimersmac.h"
+     12          
+     13          #include "logictimers\logictimersfnc.h"
+     14          
+     15          #include "..\bazis.h"
+     16          
+     17          #include "toSpeedOptim.h"
+     18          
+     19          #define _HIDE_COMPONENT
+     20          #include "PFComponent.c"
+     21          
+     22          extern int GlobalPO1;
+     23          extern int GlobalPO2;
+     24          extern int GlobalPO3;
+     25          extern int GlobalPO4;
+     26          extern int GlobalLevelI_ABC[];
+     27          
+     28          extern COMPONENT_OBJ  cnfCOMPONENT[];//конфигурация
+     29          extern int  logMassTimer[];
+     30          extern int  ENAcmd[];
+     31          extern int  spvUSTAVKI[];//текущие уставки супервизора
+     32          extern int   WideCmdRTBuffer[];
+     33          extern int   tempLog[];
+     34          extern int offsetIOCmdPRM1;//смещение для IO PRM1
+     35          
+     36          void  logicPF(int idxC) @ "Fast_function"
+     37          {
+     38          //логика компонента
+     39          /*
+     40              int tmpOffsetT    =
+     41                          cnfCOMPONENT[idxC].offsetTimers;   //таймера компонента в конфигурации
+     42              int tmpOffsetIO   =
+     43                          cnfCOMPONENT[idxC].offsetIOCmd;    //IO команды
+     44              int tmpOffsetENA  =
+     45                          cnfCOMPONENT[idxC].offsetENACmd;    //ENA команды
+     46          */
+     47          }//logicPF(short idxC)
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   logicPF
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  logicPF
+
+ 
+ 4 bytes in section Fast_function
+ 
+ 4 bytes of CODE memory
+
+Errors: none
+Warnings: none

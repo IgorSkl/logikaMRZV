@@ -1,0 +1,610 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        12/Oct/2015  11:05:03
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\component\MTZ4Component.c
+#    Command line =  
+#        "D:\IAR projects\HR1_0100_00_I720_new2\component\MTZ4Component.c" -D
+#        _STATIC_MEMORY_BOOT -lcN "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\List\" -o "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "C:\Program Files\IAR Systems\Embedded
+#        Workbench 7.40\arm\INC\c\DLib_Config_Normal.h" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\Igor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\component\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\" --cpu_mode arm -On
+#        --use_c++_inline
+#    List file    =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\List\MTZ4Component.lst
+#    Object file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\Obj\MTZ4Component.o
+#
+###############################################################################
+
+D:\IAR projects\HR1_0100_00_I720_new2\component\MTZ4Component.c
+      1          #ifndef _HIDE_COMPONENT
+      2          /*
+      3          #include <vcl.h>
+      4          #include <strstrea.h>
+      5          #include <math.h>
+      6          #include <mem.h>
+      7          #include <fstream.h>
+      8          #include <strstrea.h>
+      9          #include <iomanip.h>
+     10          #pragma hdrstop
+     11          
+     12          #include "vmenuDis.h"
+     13          */
+     14          
+     15          #include <stdio.h>
+     16          #include <string.h>
+     17          
+     18          #include "bazisdef.h"
+     19          #include "component\componentdef.h"
+     20          #include "virtualMenu\systemmenudef.h"
+     21          #include "virtualMenu\ustmanagerdef.h"
+     22          #include "psuperVisor\psvisor_helpdef.h"
+     23          
+     24          #include "virtualMenu\textstreamfnc.h"
+     25          #include "virtualMenu\systemmenufnc.h"
+     26          #include "virtualMenu\ustmanagerfnc.h"
+     27          #include "psuperVisor\psvisor_helpfnc.h"
+     28          #include "virtualMenu\rangmanagerfnc.h"
+     29          
+     30          #include "virtualMenu\viewMenuList.h"
+     31          
+     32          #include "..\bazis.h"
+     33          
+     34          //код компонентов
+     35          #define KOD_COMPONENT  MTZ_COMP1
+     36          //к-во ступеней
+     37          #define CNT_STUPEN_MTZ  5
+     38          
+     39          #endif // _HIDE_COMPONENT
+     40          
+     41          #ifndef _HIDE_COMPONENT
+     42          
+     43          #define _HIDE_COMPONENT
+     44          #include "MTZ2Component.c"
+     45          
+     46          extern COMPONENT_OBJ rpzcomponent_obj;//обект компонента для репозитария
+     47          extern int  tmpUSTAVKI[];
+     48          
+     49          extern LineMenuItem sub_menu_cnf[];
+     50          extern LineMenuItem sub_menu_MTZ[];
+     51          extern LineMenuItem sub_menu_tmp[];
+     52          extern int  IndexUstSPV;//индекс уставок в супервизоре
+     53          
+     54          extern COMPONENT_OBJ  cnfCOMPONENT[];
+     55          extern int  spvUSTAVKI[];//текущие уставки супервизора
+     56          
+     57          void PereinitUstListCompMTZ4(short flg);
+     58          void UstListCompMTZ4();
+     59          void ustRedactorCompMTZ4();
+     60          void UstCompMTZ4();
+     61          short  KadrMenuFormat_ust_compMTZ4(void *workCntr);
+     62          
+     63          void PereinitVidListCompMTZ4(short flg);
+     64          void VidListCompMTZ4();
+     65          void vidRedactorCompMTZ4();
+     66          void VidCompMTZ4();
+     67          short  KadrMenuFormat_vid_compMTZ4(void *workCntr);
+     68          
+     69          void PereinitUprListCompMTZ4(short flg);
+     70          void UprListCompMTZ4();
+     71          void uprRedactorCompMTZ4();
+     72          void UprCompMTZ4();
+     73          short  KadrMenuFormat_upr_compMTZ4(void *workCntr);
+     74          int  initUstMTZ4(char init);
+     75          void  prepareUstMTZ2(short idxC);
+     76          void  prepareUstMTZ4(short idxC);
+     77          
+     78          //int ViewerEditUstMTZ4();
+     79          //int ViewerEditVidMTZ4();
+     80          void EditUstMTZ4();
+     81          void EditVidMTZ4();
+     82          void EditUprMTZ4();
+     83          int codecUstMTZ4(char codec, short offset, int ust);
+     84          int codecUstMTZ2(char codec, short offset, int ust);
+     85          int initUstMTZ2(char init);
+     86          
+     87          char *selectorUprStrMTZ2(short iBit, UNS_32 ustUpr);
+     88          void UpravlChooserMTZInKadr(char *nameUpr, short ibit, void *workCntr);
+     89          void UpravlRedactorChooseMTZ(char *nameUpr, short ibit);
+     90          short  KadrMenuFormat_ustvidMTZ(void *workCntr);
+     91          
+     92          char MTZ4_TITLE[] = "МТЗ4";
+     93          
+     94          IONAMESTATUS_COMPONENT ionsMTZ4[IOCMD_MTZ2to5_TOTAL] =
+     95          {
+     96            {
+     97              1,//статус iocmd1
+     98              "Стат блок МТЗ4"
+     99            },
+    100            {
+    101              1,//статус iocmd2
+    102              "Блок уск МТЗ4"
+    103            },
+    104            {
+    105              1,//статус iocmd3
+    106              "Операт уск МТЗ4"
+    107            },
+    108            {
+    109              1,//статус iocmd4
+    110              "Сраб ПО МТЗ4"
+    111            },
+    112            {                 
+    113              1,//статус iocmd5
+    114              "Сраб ПО МТЗ4 ВПД"
+    115            },
+    116            {
+    117              1,//статус iocmd6
+    118              "Сраб ПО МТЗ4 НЗД"
+    119            },
+    120            {
+    121              1,//статус iocmd7
+    122              "Сраб ПО МТЗ4 ПН"
+    123            },
+    124            {
+    125              1,//статус iocmd8
+    126              "Сраб МТЗ4"
+    127            },
+    128            {
+    129              1,//статус iocmd9
+    130              "Теле уск МТЗ4"
+    131            },
+    132            {
+    133              1,//статус iocmd10
+    134              "Сектор МТЗ4 ВПД"
+    135            },
+    136            {
+    137              1,//статус iocmd11
+    138              "Сектор МТЗ4 НЗД"
+    139            }
+    140          };
+    141          
+    142          LineMenuItem sub_menu_comp_MTZ4[8] =
+    143          {
+    144            { MTZ4_TITLE, NULL},//title
+    145            { &CONTROL1_COMP, &sub_menu_MTZ, typeMenuSub},//control_item, parent
+    146            { "Уставки МТЗ4",    (void *)&UstListCompMTZ4, typeMenuProg},
+    147            { "Выдержки МТЗ4",   (void *)&VidListCompMTZ4, typeMenuProg},
+    148            { "Управление МТЗ4", (void *)&UprListCompMTZ4, typeMenuProg},
+    149            { NULL, NULL}
+    150          };
+    151          
+    152          LineMenuItem sub_menu_ust_compMTZ4[] =
+    153          {
+    154            { "Уставки МТЗ4", NULL},//title
+    155            { &CONTROL2_COMP, sub_menu_comp_MTZ4, typeMenuList},//control_item, parent
+    156            { "Уст МТЗ4",         (void*)&UstCompMTZ4, typeMenuProg},
+    157            { "Уст МТЗ4 вперед",  (void*)&UstCompMTZ4, typeMenuProg},
+    158            { "Уст МТЗ4 назад",   (void*)&UstCompMTZ4, typeMenuProg},
+    159            { "Уст МТЗ4 ПМ",      (void*)&UstCompMTZ4, typeMenuProg},
+    160            { "Уст напр МТЗ4 ПH", (void*)&UstCompMTZ4, typeMenuProg},
+    161            { NULL, NULL}
+    162          
+    163          };
+    164          
+    165          LineMenuItem sub_menu_vid_compMTZ4[] =
+    166          {
+    167            { "Выдержки МТЗ4", NULL},//title
+    168            { &CONTROL2_COMP, sub_menu_comp_MTZ4, typeMenuList},//control_item, parent
+    169          /*
+    170            { "Выдержка МТЗ4",         (void*)&VidCompMTZ4, typeMenuProg},
+    171            { "Выдержка МТЗ4 вперед",  (void*)&VidCompMTZ4, typeMenuProg},
+    172            { "Выдержка МТЗ4 назад",   (void*)&VidCompMTZ4, typeMenuProg},
+    173            { "Выдержка МТЗ4 ПМ",      (void*)&VidCompMTZ4, typeMenuProg},
+    174            { "Ввод ускор МТЗ4",       (void*)&VidCompMTZ4, typeMenuProg},
+    175          
+    176            { "Ускор МТЗ4 ВВ",         (void*)&VidCompMTZ4, typeMenuProg},
+    177            { "Ускор МТЗ4 ОУ",         (void*)&VidCompMTZ4, typeMenuProg},
+    178            { "Ускор МТЗ4 ТУ",         (void*)&VidCompMTZ4, typeMenuProg},
+    179          
+    180            { "Ускор МТЗ4 ВВ ВПД",     (void*)&VidCompMTZ4, typeMenuProg},
+    181            { "Ускор МТЗ4 ОУ ВПД",     (void*)&VidCompMTZ4, typeMenuProg},
+    182            { "Ускор МТЗ4 ТУ ВПД",     (void*)&VidCompMTZ4, typeMenuProg},
+    183          
+    184            { "Ускор МТЗ4 ВВ НЗД",     (void*)&VidCompMTZ4, typeMenuProg},
+    185            { "Ускор МТЗ4 ОУ НЗД",     (void*)&VidCompMTZ4, typeMenuProg},
+    186            { "Ускор МТЗ4 ТУ НЗД",     (void*)&VidCompMTZ4, typeMenuProg},
+    187          
+    188            { "Ускор МТЗ4 ВВ ПН",      (void*)&VidCompMTZ4, typeMenuProg},
+    189            { "Ускор МТЗ4 ОУ ПН",      (void*)&VidCompMTZ4, typeMenuProg},
+    190            { "Ускор МТЗ4 ТУ НП",      (void*)&VidCompMTZ4, typeMenuProg},
+    191          */
+    192            { NULL, NULL}
+    193          
+    194          };
+    195          
+    196          LineMenuItem sub_menu_upr_compMTZ4[] =
+    197          {
+    198            { "Управл МТЗ4", NULL},//title
+    199            { &CONTROL2_COMP, sub_menu_comp_MTZ4, typeMenuList},//control_item, parent
+    200            { "Вид МТЗ4",           (void*)&UprCompMTZ4, typeMenuProg},
+    201            { "Управл МТЗ4",        (void*)&UprCompMTZ4, typeMenuProg},
+    202            { "МТЗ4 вперед",        (void*)&UprCompMTZ4, typeMenuProg},
+    203            { "МТЗ4 назад",         (void*)&UprCompMTZ4, typeMenuProg},
+    204            { "Ускорение МТЗ4",     (void*)&UprCompMTZ4, typeMenuProg},
+    205            { "МТЗ4 ускоренная",    (void*)&UprCompMTZ4, typeMenuProg},
+    206            { "Автомат уск МТЗ4",   (void*)&UprCompMTZ4, typeMenuProg},
+    207            { "Телеускор МТЗ4",     (void*)&UprCompMTZ4, typeMenuProg},
+    208            { NULL, NULL}
+    209          
+    210          };
+    211          
+    212          void PereinitUstListCompMTZ4(short flg)
+    213          {
+    214          //переиниц
+    215            //инит компонентного контроля
+    216            TxtStreamInit(&CONTROL2_COMP, &KadrMenuFormat_ustvidMTZ, sub_menu_ust_compMTZ4);//инит control и формир кадра
+    217            if(flg==0)//END
+    218            {
+    219              TxtStreamSetEnd(&CONTROL2_COMP, SIZE_PAGE_VIEW/2);//перейти на END
+    220            }//if
+    221          
+    222            ViewDiskrMenuList();//вывести окно отображения
+    223            ListPStr();//доступ к уставкам
+    224          }//PereinitUstListComp3()
+    225          
+    226          void UstListCompMTZ4()
+    227          {
+    228            SelectorMNGBAZA(0);//установка базу уставок
+    229          
+    230            SelectorSUBMENU(sub_menu_ust_compMTZ4);//уcтановить текущее субменю
+    231          
+    232            SelectorTEXTCONTROL(&CONTROL2_COMP);//текущий control
+    233          
+    234            SelectorFHOME(&PereinitUstListCompMTZ4);//указатель на ф-цию HOME
+    235            InitFHOME(1);//exe ф-цию HOME
+    236          
+    237            LanderUpDown();//wkl Up Down
+    238          }//UstListCompMTZ4()
+    239          
+    240          void UstCompMTZ4()
+    241          {
+    242            SelectorCRRLIGHTLINE();//найти подсвеченную строку текущего текст потока
+    243            PrepareEditMenu(sub_menu_ust_compMTZ4);
+    244            PassWord(EditUstMTZ4);
+    245          }//VidCompMTZ4()
+    246          
+    247          void EditUstMTZ4()
+    248          {
+    249          //редактировать уставку
+    250            SystemEditUst(sub_menu_ust_compMTZ4);//[LIGHTLINEMENU +1+SUBDATA].Line1, LIGHTLINEMENU);
+    251          }//UstCompMTZ4()
+    252          
+    253          //--------------------------------------------------
+    254          
+    255          void PereinitVidListCompMTZ4(short flg)
+    256          {
+    257          //переиниц
+    258            //инит компонентного контроля
+    259            TxtStreamInit(&CONTROL2_COMP, &KadrMenuFormat_ustvidMTZ, sub_menu_vid_compMTZ4);//инит control и формир кадра
+    260            if(flg==0)//END
+    261            {
+    262              TxtStreamSetEnd(&CONTROL2_COMP, SIZE_PAGE_VIEW/2);//перейти на END
+    263            }//if
+    264          
+    265            ViewDiskrMenuList();//вывести окно отображения
+    266            ListPStr();//доступ к уставкам
+    267          }//PereinitVidListCompMTZ4(short flg)
+    268          
+    269          void VidListCompMTZ4()
+    270          {
+    271            SelectorMNGBAZA(MNGVID_MTZ2to5);//установка базы уставок
+    272          
+    273            SelectorSUBMENU(sub_menu_vid_compMTZ4);//утановить текущее субменю
+    274          
+    275            SelectorTEXTCONTROL(&CONTROL2_COMP);//текущий control
+    276          
+    277            SelectorFHOME(&PereinitVidListCompMTZ4);//указатель на ф-цию HOME
+    278            InitFHOME(1);//exe ф-цию HOME
+    279          
+    280            LanderUpDown();//wkl Up Down
+    281          }//VidListCompMTZ4()
+    282          
+    283          void VidCompMTZ4()
+    284          {
+    285            SelectorCRRLIGHTLINE();//найти подсвеченную строку текущего текст потока
+    286            PrepareEditMenu(sub_menu_vid_compMTZ4);
+    287          //  PassWord(EditVidAPV);
+    288            EditVidMTZ4();
+    289          }//VidCompMTZ4()
+    290          
+    291          void EditVidMTZ4()
+    292          {
+    293          //редактировать уставку
+    294            SystemEditUst(sub_menu_vid_compMTZ4);//[LIGHTLINEMENU +1+SUBDATA].Line1, LIGHTLINEMENU);
+    295          }//
+    296          
+    297          //--------------------------------------------------
+    298          
+    299          void PereinitUprListCompMTZ4(short flg)
+    300          {
+    301          //переиниц
+    302            //инит компонентного контроля
+    303            TxtStreamInit(&CONTROL2_COMP, &KadrMenuFormat_upr_compMTZ4, NULL);//инит control и формир кадра
+    304            if(flg==0)//END
+    305            {
+    306              TxtStreamSetEnd(&CONTROL2_COMP, SIZE_PAGE_VIEW/2);//перейти на END
+    307            }//if
+    308          
+    309            ViewDiskrMenuList();//вывести окно отображения
+    310            ListPStr();//доступ к уставкам
+    311          }//PereinitUstListComp2()
+    312          
+    313          void UprListCompMTZ4()
+    314          {
+    315            SelectorMNGBAZA(MNGUPR_MTZ2to5);//установка базы уставок
+    316          
+    317            SelectorSUBMENU(sub_menu_upr_compMTZ4);//утановить текущее субменю
+    318          
+    319            SelectorTEXTCONTROL(&CONTROL2_COMP);//текущий control
+    320          
+    321            SelectorFHOME(&PereinitUprListCompMTZ4);//указатель на ф-цию HOME
+    322            InitFHOME(1);//exe ф-цию HOME
+    323          
+    324            LanderUpDown();//wkl Up Down
+    325          }//VidListCompMTZ4()
+    326          
+    327          void UprCompMTZ4()
+    328          {
+    329            SelectorCRRLIGHTLINE();//найти подсвеченную строку текущего текст потока
+    330            PrepareEditMenu(sub_menu_upr_compMTZ4);
+    331            PassWord(EditUprMTZ4);
+    332          }//VidCompMTZ4()
+    333          
+    334          void EditUprMTZ4()
+    335          {
+    336          //редактировать уставку упр
+    337            char *nameUpr = (char *)sub_menu_upr_compMTZ4[LIGHTLINEMENU +1+SUBDATA].Line1;
+    338          
+    339            switch(LIGHTLINEMENU)
+    340            {
+    341              case 0: UpravlRedactorChooseMTZ(nameUpr, LIGHTLINEMENU);//редактировать уставку управления
+    342              break;
+    343              default:UpravlRedactor(nameUpr, LIGHTLINEMENU+1, &selectorUprStrMTZ2);//редактировать уставку управления
+    344            }//switch
+    345          
+    346          }//EditVidMTZ4()
+    347          
+    348          short  KadrMenuFormat_upr_compMTZ4(void *pstr)
+    349          {
+    350           WorkControl *workCntr = (WorkControl *)pstr;
+    351          //формирователь кадра
+    352            short chooseBit = 2;//к-во бит в choose
+    353            RESET_COUNTER;//сброс счетчиков
+    354            for(int i=0;; i++)
+    355            {
+    356          //критерий терминатора
+    357              char *nameUpr = (char *)sub_menu_upr_compMTZ4[i+1+SUBDATA].Line1;
+    358              if(nameUpr==NULL) break;
+    359          
+    360              COMPARE_COUNTER
+    361              {
+    362                strcpy((char *)workCntr->twoString, nameUpr);
+    363          
+    364                if(i<(chooseBit-1))
+    365                  UpravlChooserMTZInKadr(nameUpr, i, workCntr);
+    366                else
+    367                  strcpy((char *)workCntr->twoString + sizeof(WorkVariantChar)/2,
+    368                  selectorUprStrMTZ2(i+(chooseBit-1), getCurrentMngUSTAVKI()));
+    369          
+    370                return 1;//сравнить счетчики кадров
+    371              }
+    372            }//for
+    373          
+    374            return 1;
+    375          }//KadrMenuFormat_upr_compMTZ4(WorkControl *workCntr)
+    376          
+    377          int initUstMTZ4(char init)
+    378          {
+    379           return initUstMTZ2(init);
+    380          }//initUstMTZ1(short mngUst, char init)
+    381          
+    382          void  prepareUstMTZ4(short idxC)
+    383          {
+    384             prepareUstMTZ2(idxC);
+    385          }//prepareUstMTZ4(short idxC)
+    386          
+    387          int codecUstMTZ4(char codec, short offset, int ust)
+    388          //codec=0-кодировать
+    389          //codec=1-раскодировать
+    390          {
+    391            //кодировать-раскодировать уставку
+    392            return codecUstMTZ2(codec, offset, ust);
+    393          }//codecUstMTZ4(char *buf, short offset, int ust)
+    394          
+    395          void diffMTZ4ToRepozitar()
+    396          {
+    397          //копировать изменения компонента в репозитарий
+    398            rpzcomponent_obj.componentEnable = 1;//разрешение компонента
+    399            rpzcomponent_obj.kodC   = KOD_COMPONENT;         //код компонента
+    400            rpzcomponent_obj.permanent = 0; //перманентный компонент
+    401          
+    402            strcpy(rpzcomponent_obj.nameComponent,  MTZ4_TITLE);       //имя компонента
+    403            rpzcomponent_obj.sub_menu_component =  sub_menu_comp_MTZ4;//sub_menu_component;
+    404          
+    405            rpzcomponent_obj.cntClon     = CNT_STUPEN_MTZ;   //к-во клонов
+    406            rpzcomponent_obj.numClon     = 4;//номер клона
+    407            rpzcomponent_obj.workToSignal = 0; //Работа на сигнал
+    408          
+    409            rpzcomponent_obj.initUstMng     = initUstMTZ4;    //инициал уставок
+    410            rpzcomponent_obj.prepareUstSpv  = prepareUstMTZ4;//подготовка уставок
+    411          
+    412            rpzcomponent_obj.nameStatusIO = ionsMTZ4;          //имена и статус команд IO
+    413          }//diffMTZ4ToRepozitar()
+    414          
+    415          #endif // _HIDE_COMPONENT
+    416          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   EditUprMTZ4
+         8   -> UpravlRedactor
+         8   -> UpravlRedactorChooseMTZ
+       8   EditUstMTZ4
+         8   -> SystemEditUst
+       8   EditVidMTZ4
+         8   -> SystemEditUst
+      24   KadrMenuFormat_upr_compMTZ4
+        24   -> UpravlChooserMTZInKadr
+        24   -> getCurrentMngUSTAVKI
+        24   -> selectorUprStrMTZ2
+        24   -> strcpy
+       8   PereinitUprListCompMTZ4
+         8   -> ListPStr
+         8   -> TxtStreamInit
+         8   -> TxtStreamSetEnd
+         8   -> ViewDiskrMenuList
+       8   PereinitUstListCompMTZ4
+         8   -> ListPStr
+         8   -> TxtStreamInit
+         8   -> TxtStreamSetEnd
+         8   -> ViewDiskrMenuList
+       8   PereinitVidListCompMTZ4
+         8   -> ListPStr
+         8   -> TxtStreamInit
+         8   -> TxtStreamSetEnd
+         8   -> ViewDiskrMenuList
+       8   UprCompMTZ4
+         8   -> PassWord
+         8   -> PrepareEditMenu
+         8   -> SelectorCRRLIGHTLINE
+       8   UprListCompMTZ4
+         8   -> InitFHOME
+         8   -> LanderUpDown
+         8   -> SelectorFHOME
+         8   -> SelectorMNGBAZA
+         8   -> SelectorSUBMENU
+         8   -> SelectorTEXTCONTROL
+       8   UstCompMTZ4
+         8   -> PassWord
+         8   -> PrepareEditMenu
+         8   -> SelectorCRRLIGHTLINE
+       8   UstListCompMTZ4
+         8   -> InitFHOME
+         8   -> LanderUpDown
+         8   -> SelectorFHOME
+         8   -> SelectorMNGBAZA
+         8   -> SelectorSUBMENU
+         8   -> SelectorTEXTCONTROL
+       8   VidCompMTZ4
+         8   -> EditVidMTZ4
+         8   -> PrepareEditMenu
+         8   -> SelectorCRRLIGHTLINE
+       8   VidListCompMTZ4
+         8   -> InitFHOME
+         8   -> LanderUpDown
+         8   -> SelectorFHOME
+         8   -> SelectorMNGBAZA
+         8   -> SelectorSUBMENU
+         8   -> SelectorTEXTCONTROL
+      16   codecUstMTZ4
+        16   -> codecUstMTZ2
+       8   diffMTZ4ToRepozitar
+         8   -> strcpy
+       8   initUstMTZ4
+         8   -> initUstMTZ2
+       8   prepareUstMTZ4
+         8   -> prepareUstMTZ2
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable13
+       4  ??DataTable13_1
+       4  ??DataTable13_10
+       4  ??DataTable13_11
+       4  ??DataTable13_2
+       4  ??DataTable13_3
+       4  ??DataTable13_4
+       4  ??DataTable13_5
+       4  ??DataTable13_6
+       4  ??DataTable13_7
+       4  ??DataTable13_8
+       4  ??DataTable13_9
+      16  ?_0
+      16  ?_1
+      16  ?_10
+      16  ?_11
+      16  ?_12
+      16  ?_13
+      12  ?_14
+      16  ?_15
+      16  ?_16
+      12  ?_17
+      20  ?_18
+      12  ?_19
+      16  ?_2
+      12  ?_20
+      12  ?_21
+      12  ?_22
+      16  ?_23
+      16  ?_24
+      20  ?_25
+      16  ?_26
+      16  ?_3
+      20  ?_4
+      20  ?_5
+      16  ?_6
+      12  ?_7
+      16  ?_8
+      16  ?_9
+     100  EditUprMTZ4
+      16  EditUstMTZ4
+      16  EditVidMTZ4
+     220  KadrMenuFormat_upr_compMTZ4
+       8  MTZ4_TITLE
+      68  PereinitUprListCompMTZ4
+      68  PereinitUstListCompMTZ4
+      68  PereinitVidListCompMTZ4
+      28  UprCompMTZ4
+      52  UprListCompMTZ4
+      28  UstCompMTZ4
+      52  UstListCompMTZ4
+      24  VidCompMTZ4
+      52  VidListCompMTZ4
+      48  codecUstMTZ4
+     140  diffMTZ4ToRepozitar
+      24  initUstMTZ4
+      88  ionsMTZ4
+      28  prepareUstMTZ4
+      96  sub_menu_comp_MTZ4
+     132  sub_menu_upr_compMTZ4
+      96  sub_menu_ust_compMTZ4
+      36  sub_menu_vid_compMTZ4
+
+ 
+   456 bytes in section .data
+   420 bytes in section .rodata
+ 1 080 bytes in section .text
+ 
+ 1 080 bytes of CODE  memory
+   420 bytes of CONST memory
+   456 bytes of DATA  memory
+
+Errors: none
+Warnings: none

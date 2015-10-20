@@ -1,0 +1,191 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        12/Oct/2015  11:05:03
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\IAR
+#        projects\HR1_0100_00_I720_new2\callbackElement\missionCollectionEEPROM2.c
+#    Command line =  
+#        "D:\IAR
+#        projects\HR1_0100_00_I720_new2\callbackElement\missionCollectionEEPROM2.c"
+#        -D _STATIC_MEMORY_BOOT -lcN "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\List\" -o "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "C:\Program Files\IAR Systems\Embedded
+#        Workbench 7.40\arm\INC\c\DLib_Config_Normal.h" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\Igor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\component\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\" --cpu_mode arm -On
+#        --use_c++_inline
+#    List file    =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\List\missionCollectionEEPROM2.lst
+#    Object file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\Obj\missionCollectionEEPROM2.o
+#
+###############################################################################
+
+D:\IAR projects\HR1_0100_00_I720_new2\callbackElement\missionCollectionEEPROM2.c
+      1          
+      2          #include "lpc_types.h"
+      3          
+      4          #include <stdio.h>
+      5          #include <string.h>
+      6          
+      7          #include "callbackelement\callbackelementdef.h"
+      8          #include "callbackelement\ustrangEEPROMdef.h"
+      9          
+     10          #include "callbackelement\callbackelementfnc.h"
+     11          #include "callbackelement\missionCollectionEEPROM.h"
+     12          
+     13          extern CALLBACK_MISSION cb_missionDEVICE2;
+     14          extern CALLBACK_MISSION *cb_mission_crrDEVICE2;//текущая миссия
+     15          extern short  missionSeparatorDEVICE2;//сепаратор миссии
+     16          
+     17          extern int missionCicling;//циклы одинаковых миссий
+     18          
+     19          void Build_cbMission_1BREAD_MASSIV_DEVICE2(char *massiv, int srcB64, int dstB64)
+     20          {
+     21          //сформировать миссию чтения массива из EEPROM 
+     22          int adrSrc = srcB64*64;//адрес чтения
+     23          int adrDst = dstB64*64;//адрес в EEPROM
+     24            if(cb_mission_crrDEVICE2->callBackMaxer<0)
+     25            {
+     26              missionSeparatorDEVICE2 = CBACK_MISSION_1BREAD_MASSIV;//номер миссии  EEPROM на 1 блок
+     27              //1 задача
+     28              OrderCallBack(cb_mission_crrDEVICE2, &callBackEEPROM_READ);//заказать новые задачи
+     29              TASKMISSION_DEFINE1 tmDefine1 =
+     30              {
+     31                (void *)adrSrc,   //source
+     32                &(massiv[adrDst]),//dest
+     33                64//к-во
+     34              };
+     35              SetTaskParam1CallBack(cb_mission_crrDEVICE2, &tmDefine1);//параметры
+     36            }//if(cb_mission_crrDEVICE2->callBackMaxer<0)
+     37          }//Build_cbMission_1BREAD_MASSIV_DEVICE2(char *massiv, int srcB64, int dstB64)
+     38          
+     39          void Build_cbMission_1BWRITE_MASSIV_DEVICE2(char *massiv, int srcB64, int dstB64)
+     40          {
+     41          //сформировать миссию записи массива в EEPROM 
+     42          int adrSrc = srcB64*64;//адрес источника
+     43          int adrDst = dstB64*64;//адрес в EEPROM
+     44            if(cb_mission_crrDEVICE2->callBackMaxer<0)
+     45            {
+     46              missionSeparatorDEVICE2 = CBACK_MISSION_1BWRITE_MASSIV;//номер миссии записи в EEPROM
+     47              //1 задача
+     48              OrderCallBack(cb_mission_crrDEVICE2, &callBackEEPROM_WRITE);//заказать новые задачи
+     49              TASKMISSION_DEFINE1 tmDefine1 =
+     50              {
+     51                &(massiv[adrSrc]), //source
+     52                (void *)adrDst,//dest
+     53                64//к-во
+     54              };
+     55              SetTaskParam1CallBack(cb_mission_crrDEVICE2, &tmDefine1);//параметры
+     56          
+     57            }//if(cb_mission_crrDEVICE2->callBackMaxer<0)
+     58          }//Build_cbMission_1BWRITE_MASSIV_DEVICE2(char *massiv, int srcB64, int dstB64)
+     59          
+     60          void Build_cbMission_WRITE_EXT1MASSIV_DEVICE2(char *massiv, int src, int dst)
+     61          {
+     62            //сформировать миссию записи первого массива ext в EEPROM 
+     63          int adrSrc = src;//B64*64;//адрес источника
+     64          int adrDst = dst;//B64*64;//адрес в EEPROM
+     65            if(cb_mission_crrDEVICE2->callBackMaxer<0)
+     66            {
+     67              missionSeparatorDEVICE2 = CBACK_MISSION_1BWRITE_MASSIV;//номер миссии записи в EEPROM 
+     68              //1 задача
+     69              OrderCallBack(cb_mission_crrDEVICE2, &callBackEEPROM_WRITE);//заказать новые задачи
+     70              TASKMISSION_DEFINE1 tmDefine1 =
+     71              {
+     72                &(massiv[adrSrc]), //source
+     73                (void *)adrDst,//dest
+     74                60//к-во
+     75              };
+     76              SetTaskParam1CallBack(cb_mission_crrDEVICE2, &tmDefine1);//параметры
+     77          
+     78            }//if(cb_mission_crrDEVICE2->callBackMaxer<0)
+     79          }//Build_cbMission_WRITE_EXT1MASSIV_DEVICE2(char *massiv, int src, int dst)
+     80          
+     81          void Build_cbMission_WRITE_EXTALTER_DEVICE2(char *massiv)
+     82          {
+     83          //сформировать миссию записи байта alter для ext
+     84            if(cb_mission_crrDEVICE2->callBackMaxer<0)
+     85            {
+     86              missionSeparatorDEVICE2 = CBACK_MISSION_WRITE_ALTER;//номер миссии записи в EEPROM на 1 байт
+     87              //1 задача
+     88              OrderCallBack(cb_mission_crrDEVICE2, &callBackEEPROM_WRITE);//заказать новые задачи
+     89              TASKMISSION_DEFINE1 tmDefine1 =
+     90              {
+     91                &(massiv[0]), //source
+     92                (void *)0x0, //adrDst,//dest
+     93                1//к-во
+     94              };
+     95              SetTaskParam1CallBack(cb_mission_crrDEVICE2, &tmDefine1);//параметры
+     96          
+     97            }//if(cb_mission_crrDEVICE2->callBackMaxer<0)
+     98          }//Build_cbMission_WRITE_EXTALTER_DEVICE2(char *massiv)
+     99          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      40   Build_cbMission_1BREAD_MASSIV_DEVICE2
+        40   -> OrderCallBack
+        40   -> SetTaskParam1CallBack
+      40   Build_cbMission_1BWRITE_MASSIV_DEVICE2
+        40   -> OrderCallBack
+        40   -> SetTaskParam1CallBack
+      40   Build_cbMission_WRITE_EXT1MASSIV_DEVICE2
+        40   -> OrderCallBack
+        40   -> SetTaskParam1CallBack
+      24   Build_cbMission_WRITE_EXTALTER_DEVICE2
+        24   -> OrderCallBack
+        24   -> SetTaskParam1CallBack
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable3
+       4  ??DataTable3_1
+       4  ??DataTable3_2
+       4  ??DataTable3_3
+       4  ??DataTable3_4
+       4  ??DataTable3_5
+       4  ??DataTable3_6
+       4  ??DataTable3_7
+      12  ?_0
+      12  ?_1
+      12  ?_2
+      12  ?_3
+     132  Build_cbMission_1BREAD_MASSIV_DEVICE2
+     132  Build_cbMission_1BWRITE_MASSIV_DEVICE2
+     132  Build_cbMission_WRITE_EXT1MASSIV_DEVICE2
+     108  Build_cbMission_WRITE_EXTALTER_DEVICE2
+
+ 
+  48 bytes in section .rodata
+ 536 bytes in section .text
+ 
+ 536 bytes of CODE  memory
+  48 bytes of CONST memory
+
+Errors: none
+Warnings: none

@@ -1,0 +1,859 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  14:36:03
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\LIB\source\lpc32xx_spi_driver.c
+#    Command line =  
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\LIB\source\lpc32xx_spi_driver.c"
+#        -lcN "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\List\" -o
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\" --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=ARM926EJ-S -e --fpu=VFP9-S --dlib_config "D:\Program Files\IAR
+#        Systems\Embedded Workbench 7.2\arm\INC\c\DLib_Config_Normal.h" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\" --interwork
+#        --cpu_mode arm -On --use_c++_inline
+#    List file    =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\lpc32xx_spi_driver.lst
+#    Object file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\lpc32xx_spi_driver.o
+#
+###############################################################################
+
+D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\LIB\source\lpc32xx_spi_driver.c
+      1          /***********************************************************************
+      2           * $Id: lpc32xx_spi_driver.c 35145 2010-03-19 18:10:17Z anderslu $
+      3           *
+      4           * Project: LPC3xxx SPI driver
+      5           *
+      6           * Description:
+      7           *     This file contains driver support for the SPI module on the
+      8           *     LPC3xxx
+      9           *
+     10           ***********************************************************************
+     11           * Software that is described herein is for illustrative purposes only
+     12           * which provides customers with programming information regarding the
+     13           * products. This software is supplied "AS IS" without any warranties.
+     14           * NXP Semiconductors assumes no responsibility or liability for the
+     15           * use of the software, conveys no license or title under any patent,
+     16           * copyright, or mask work right to the product. NXP Semiconductors
+     17           * reserves the right to make changes in the software without
+     18           * notification. NXP Semiconductors also make no representation or
+     19           * warranty that such application will be suitable for the specified
+     20           * use without further testing or modification.
+     21           **********************************************************************/
+     22          
+     23          #include "lpc32xx_clkpwr_driver.h"
+     24          #include "lpc32xx_gpio_driver.h"
+     25          #include "lpc32xx_spi_driver.h"
+     26          
+     27          /***********************************************************************
+     28           * SPI driver private data and types
+     29           **********************************************************************/
+     30          
+     31          /* SPI device configuration structure type */
+     32          typedef struct
+     33          {
+     34            BOOL_32 init;          /* Device initialized flag */
+     35            SPI_REGS_T *regptr;    /* Pointer to SPI registers */
+     36            SPI_CBS_T cbs;          /* Interrupt callbacks */
+     37            INT_32 thisdev;        /* 0 or 1, SPI number */
+     38            INT_32 dsize;          /* Size of data (in bytes) */
+     39          } SPI_DRVDAT_T;
+     40          
+     41          /* SPI device configuration structure */
+     42          static SPI_DRVDAT_T spidrv [2];
+     43          
+     44          /* Clocks for each SPI */
+     45          static const CLKPWR_CLK_T spiclks [2] =
+     46            {CLKPWR_SPI1_CLK, CLKPWR_SPI2_CLK};
+     47          
+     48          /***********************************************************************
+     49           * SPI driver private functions
+     50           **********************************************************************/
+     51          
+     52          /***********************************************************************
+     53           *
+     54           * Function: spi_set_clock
+     55           *
+     56           * Purpose: Sets or resets the serial clock rate of the SPI interface
+     57           *          (in Hz)
+     58           *
+     59           * Processing:
+     60           *     Determine the best dividers to generate the closest possible
+     61           *     target clock rate for the SPI.
+     62           *
+     63           * Parameters:
+     64           *     pspidrvdat   : Pointer to driver data
+     65           *     target_clock : The value in Hz for the new SPI serial clock
+     66           *
+     67           * Outputs: None
+     68           *
+     69           * Returns: _ERROR if the configuration setup failed, otherwise
+     70           *          _NO_ERROR
+     71           *
+     72           * Notes: None
+     73           *
+     74           **********************************************************************/
+     75          static STATUS spi_set_clock(SPI_DRVDAT_T *pspidrvdat,
+     76                                      UNS_32 target_clock)
+     77          {
+     78            UNS_32 control, rate, cmp_clk, spi_clk;
+     79          
+     80            /* The SPI clock is derived from the (HCLK / 2),
+     81               so compute the best divider from that clock */
+     82            spi_clk = clkpwr_get_clock_rate(spiclks [pspidrvdat->thisdev]);
+     83          
+     84            /* Find closest divider to get at or under the target frequency.
+     85               Use smallest prescaler possible and rely on the divider to get
+     86               the closest target frequency */
+     87            rate = 0;
+     88            cmp_clk = 0xFFFFFFFF;
+     89            while (cmp_clk > target_clock)
+     90            {
+     91              cmp_clk = spi_clk / ((rate + 1) * 2);
+     92              if (cmp_clk > target_clock)
+     93              {
+     94                rate++;
+     95              }
+     96            }
+     97          
+     98            /* Write computed divider back to register */
+     99            control = pspidrvdat->regptr->con &= ~(SPI_CON_RATE(0x7F));
+    100            pspidrvdat->regptr->con = control | SPI_CON_RATE(rate);
+    101          
+    102            return _NO_ERROR;
+    103          }
+    104          
+    105          /***********************************************************************
+    106           *
+    107           * Function: spi_configure
+    108           *
+    109           * Purpose: Configure SPI interface
+    110           *
+    111           * Processing:
+    112           *     Setup the general capabilities of the SPI controller.
+    113           *
+    114           * Parameters:
+    115           *     pspicfg : Pointer to an SPI_CONFIG_T structure
+    116           *     pspidrvdat: Pointer to driver data
+    117           *
+    118           * Outputs: None
+    119           *
+    120           * Returns:
+    121           *     _ERROR if the configuration setup failed, otherwise _NO_ERROR
+    122           *
+    123           * Notes: None
+    124           *
+    125           **********************************************************************/
+    126          static STATUS spi_configure(SPI_CONFIG_T *pspicfg,
+    127                                      SPI_DRVDAT_T *pspidrvdat)
+    128          {
+    129            UNS_32 tmp0;
+    130            STATUS setup = _NO_ERROR;
+    131            SPI_REGS_T *pspiregs = pspidrvdat->regptr;
+    132          
+    133            /* Setup data length */
+    134            tmp0 = 0;
+    135            if ((pspicfg->databits >= 1) && (pspicfg->databits <= 16))
+    136            {
+    137              tmp0 = SPI_CON_BITNUM(pspicfg->databits);
+    138            }
+    139            else
+    140            {
+    141              setup = _ERROR;
+    142            }
+    143            if (pspicfg->databits <= 8)
+    144            {
+    145              pspidrvdat->dsize = 1;
+    146            }
+    147            else
+    148            {
+    149              pspidrvdat->dsize = 2;
+    150            }
+    151          
+    152            /* SPI clock control */
+    153            if (pspicfg->highclk_spi_frames == TRUE)
+    154            {
+    155              tmp0 |= SPI_CON_CPOL;
+    156            }
+    157            if (pspicfg->usesecond_clk_spi == TRUE)
+    158            {
+    159              tmp0 |= SPI_CON_CPHA;
+    160            }
+    161          
+    162            /* Master mode by default */
+    163            tmp0 |= SPI_CON_MS;
+    164          
+    165            /* MSB/LSB control */
+    166            if (pspicfg->msb == TRUE)
+    167            {
+    168              tmp0 |= SPI_CON_MSB;
+    169            }
+    170          
+    171            /* Transmitter/receiver control */
+    172            if (pspicfg->transmitter == TRUE)
+    173            {
+    174              tmp0 |= SPI_CON_RXTX;
+    175            }
+    176          
+    177            /* Busy control */
+    178            if (pspicfg->busy_halt == TRUE)
+    179            {
+    180              tmp0 |= SPI_CON_BHALT;
+    181              if (pspicfg->busy_polarity == TRUE)
+    182              {
+    183                tmp0 |= SPI_CON_BPOL;
+    184              }
+    185            }
+    186          
+    187            /* Pin direction control */
+    188            if (pspicfg->unidirectional == TRUE)
+    189            {
+    190              tmp0 |= SPI_CON_UNIDIR;
+    191            }
+    192          
+    193            /* Setup clock */
+    194            if (setup == _NO_ERROR)
+    195            {
+    196              pspiregs->con = tmp0;
+    197              setup = spi_set_clock(pspidrvdat, pspicfg->spi_clk);
+    198            }
+    199          
+    200            return setup;
+    201          }
+    202          
+    203          /***********************************************************************
+    204           *
+    205           * Function: spi_standard_interrupt
+    206           *
+    207           * Purpose: SPI standard interrupt function
+    208           *
+    209           * Processing:
+    210           *     Handle the SPI interrupt from SPI1 or SPI2. Route to the
+    211           *     necessary callback function as needed. Disable interrupt if a
+    212           *     callback is not associated with it.
+    213           *
+    214           * Parameters:
+    215           *     pspidrvdat : Pointer to an SPI driver data
+    216           *
+    217           * Outputs: None
+    218           *
+    219           * Returns: Nothing
+    220           *
+    221           * Notes: None
+    222           *
+    223           **********************************************************************/
+    224          static void spi_standard_interrupt(SPI_DRVDAT_T *pspidrvdat)
+    225          {
+    226            SPI_REGS_T *pspiregs = pspidrvdat->regptr;
+    227          
+    228            /* Interrupt was due to a receive data FIFO service request */
+    229            if (((pspiregs->con & SPI_CON_RXTX) == 0) &&
+    230                ((pspiregs->stat & SPI_STAT_BE) != 0))
+    231            {
+    232              if (pspidrvdat->cbs.rxcb == NULL)
+    233              {
+    234                /* Disable interrupt, no support for it */
+    235                pspiregs->ier &= ~SPI_IER_INTTHR;
+    236              }
+    237              else
+    238              {
+    239                /* Handle callback */
+    240                pspidrvdat->cbs.rxcb();
+    241              }
+    242            }
+    243          
+    244            /* Interrupt was due to a transmit data FIFO service request */
+    245            if ((pspiregs->con & SPI_CON_RXTX) != 0)
+    246            {
+    247              if (pspidrvdat->cbs.txcb == NULL)
+    248              {
+    249                /* Disable interrupt, no support for it */
+    250                pspiregs->ier &= ~SPI_IER_INTTHR;
+    251              }
+    252              else
+    253              {
+    254                /* Handle callback */
+    255                pspidrvdat->cbs.txcb();
+    256              }
+    257            }
+    258          }
+    259          
+    260          /***********************************************************************
+    261           * SPI driver public functions
+    262           **********************************************************************/
+    263          
+    264          /***********************************************************************
+    265           *
+    266           * Function: spi_open
+    267           *
+    268           * Purpose: Open the SPI
+    269           *
+    270           * Processing:
+    271           *     Initializes the SPI clocks and default state.
+    272           *
+    273           * Parameters:
+    274           *     ipbase: SPI descriptor device address
+    275           *     arg   : Pointer to config structure, or NULL if not used
+    276           *
+    277           * Outputs: None
+    278           *
+    279           * Returns: The pointer to a SPI config structure or 0
+    280           *
+    281           * Notes: None
+    282           *
+    283           **********************************************************************/
+    284          INT_32 spi_open(void *ipbase,
+    285                          INT_32 arg)
+    286          {
+    287            SPI_CONFIG_T spi_cfg, *pspicfg;
+    288            volatile UNS_32 tmp;
+    289            SPI_REGS_T *pspiregs = (SPI_REGS_T *) ipbase;
+    290            SPI_DRVDAT_T *pspidrvdat = NULL;
+    291            INT_32 status = 0;
+    292          
+    293            /* Map SPI registers to data index */
+    294            if (pspiregs == SPI1)
+    295            {
+    296              pspidrvdat = (SPI_DRVDAT_T *) & spidrv [0];
+    297              pspidrvdat->thisdev = 0;
+    298            }
+    299            else if (pspiregs == SPI2)
+    300            {
+    301              pspidrvdat = (SPI_DRVDAT_T *) & spidrv [1];
+    302              pspidrvdat->thisdev = 1;
+    303            }
+    304          
+    305            if (pspidrvdat != NULL)
+    306            {
+    307              if (pspidrvdat->init == FALSE)
+    308              {
+    309                /* Save and return address of peripheral block */
+    310                pspidrvdat->regptr = (SPI_REGS_T *) ipbase;
+    311          
+    312                /* Enable SPI clock */
+    313                clkpwr_clk_en_dis(spiclks[pspidrvdat->thisdev], 1);
+    314          
+    315                /* Enable device */
+    316                pspidrvdat->regptr->global = SPI_GLOB_ENABLE;
+    317          
+    318                /* Reset the device */
+    319                pspidrvdat->regptr->global |= SPI_GLOB_RST;
+    320                pspidrvdat->regptr->global = SPI_GLOB_ENABLE;
+    321          
+    322                /* No initial callbacks */
+    323                pspidrvdat->cbs.txcb = NULL;
+    324                pspidrvdat->cbs.rxcb = NULL;
+    325          
+    326                /* Initialize device */
+    327                if (arg == 0)
+    328                {
+    329                  /* Create and use defaults */
+    330                  spi_cfg.databits = 8;
+    331                  spi_cfg.highclk_spi_frames = TRUE;
+    332                  spi_cfg.usesecond_clk_spi = FALSE;
+    333                  spi_cfg.spi_clk = 1000000;
+    334                  pspicfg = &spi_cfg;
+    335                }
+    336                else
+    337                {
+    338                  pspicfg = (SPI_CONFIG_T *) arg;
+    339                }
+    340                if (spi_configure(pspicfg, pspidrvdat) != _ERROR)
+    341                {
+    342                  /* Device is valid */
+    343                  pspidrvdat->init = TRUE;
+    344                  status = (INT_32) pspidrvdat;
+    345                }
+    346                else
+    347                {
+    348                  clkpwr_clk_en_dis(spiclks[pspidrvdat->thisdev], 0);
+    349                }
+    350          
+    351                /* Clear latched interrupts */
+    352                pspidrvdat->regptr->stat = SPI_STAT_INTCLR;
+    353          
+    354                /* Enable interrupts */
+    355                pspidrvdat->regptr->ier = SPI_IER_INTEOT | SPI_IER_INTTHR;
+    356              }
+    357            }
+    358          
+    359            return status;
+    360          }
+    361          
+    362          /***********************************************************************
+    363           *
+    364           * Function: spi_close
+    365           *
+    366           * Purpose: Close the SPI
+    367           *
+    368           * Processing:
+    369           *     Disable the SPI clock and device.
+    370           *
+    371           * Parameters:
+    372           *     devid: Pointer to SPI config structure
+    373           *
+    374           * Outputs: None
+    375           *
+    376           * Returns: The status of the close operation
+    377           *
+    378           * Notes: None
+    379           *
+    380           **********************************************************************/
+    381          STATUS spi_close(INT_32 devid)
+    382          {
+    383            SPI_DRVDAT_T *spidrvdat = (SPI_DRVDAT_T *) devid;
+    384            STATUS status = _ERROR;
+    385          
+    386            if (spidrvdat->init == TRUE)
+    387            {
+    388              /* 'Uninitialize' device */
+    389              spidrvdat->init = FALSE;
+    390              status = _NO_ERROR;
+    391          
+    392              /* Disable device */
+    393              spidrvdat->regptr->global &= ~SPI_GLOB_ENABLE;
+    394          
+    395              /* Disable clock */
+    396              clkpwr_clk_en_dis(spiclks[spidrvdat->thisdev], 0);
+    397            }
+    398          
+    399            return status;
+    400          }
+    401          
+    402          /***********************************************************************
+    403           *
+    404           * Function: spi_ioctl
+    405           *
+    406           * Purpose: SPI configuration block
+    407           *
+    408           * Processing:
+    409           *     This function is a large case block. Based on the passed function
+    410           *     and option values, set or get the appropriate SPI parameter.
+    411           *
+    412           * Parameters:
+    413           *     devid: Pointer to SPI config structure
+    414           *     cmd:   ioctl command
+    415           *     arg:   ioctl argument
+    416           *
+    417           * Outputs: None
+    418           *
+    419           * Returns: The status of the ioctl operation
+    420           *
+    421           * Notes: None
+    422           *
+    423           **********************************************************************/
+    424          STATUS spi_ioctl(INT_32 devid,
+    425                           INT_32 cmd,
+    426                           INT_32 arg)
+    427          {
+    428            SPI_REGS_T *spiregs;
+    429            SPI_CBS_T *pspicb;
+    430            UNS_32 spiclk, tmp;
+    431            SPI_DRVDAT_T *spidrvdat = (SPI_DRVDAT_T *) devid;
+    432            STATUS status = _ERROR;
+    433          
+    434            if (spidrvdat->init == TRUE)
+    435            {
+    436              status = _NO_ERROR;
+    437              spiregs = spidrvdat->regptr;
+    438          
+    439              switch (cmd)
+    440              {
+    441                case SPI_ENABLE:
+    442                  if (arg == 1)
+    443                  {
+    444                    /* Enable SPI */
+    445                    spiregs->global |= SPI_GLOB_ENABLE;
+    446                  }
+    447                  else
+    448                  {
+    449                    /* Disable SPI */
+    450                    spiregs->global &= ~SPI_GLOB_ENABLE;
+    451                  }
+    452                  break;
+    453          
+    454                case SPI_CONFIG:
+    455                  status = spi_configure((SPI_CONFIG_T *) arg,
+    456                                         spidrvdat);
+    457                  break;
+    458          
+    459                case SPI_TXRX:
+    460                  if ((((SPI_CONFIG_T *) arg)->transmitter) == TRUE)
+    461                  {
+    462                    spiregs->con |= SPI_CON_RXTX;
+    463                  }
+    464                  else
+    465                  {
+    466                    spiregs->con &= ~SPI_CON_RXTX;
+    467                  }
+    468                  break;
+    469          
+    470                case SPI_SET_CALLBACKS:
+    471                  pspicb = (SPI_CBS_T *) arg;
+    472                  spidrvdat->cbs.txcb = pspicb->txcb;
+    473                  spidrvdat->cbs.rxcb = pspicb->rxcb;
+    474                  break;
+    475          
+    476                case SPI_CLEAR_INTS:
+    477                  spiregs->stat |= SPI_STAT_INTCLR;
+    478                  break;
+    479          
+    480                case SPI_CLEAR_RX_BUFFER:
+    481                  spiregs->con |= SPI_CON_SHIFT_OFF;
+    482                  while ((spiregs->stat & SPI_STAT_BE) == 0x00)
+    483                  {
+    484                    tmp = spiregs->dat;
+    485                  }
+    486                  spiregs->con &= ~SPI_CON_SHIFT_OFF;
+    487                  break;
+    488          
+    489                case SPI_GET_STATUS:
+    490                  /* Return an SPI status */
+    491                  switch (arg)
+    492                  {
+    493                    case SPI_CLOCK_ST:
+    494                      /* Return clock speed of SPI interface */
+    495                      tmp = spiregs->con & SPI_CON_RATE(0x7F);
+    496          
+    497                      /* Compute SPI bit clock rate */
+    498                      spiclk = clkpwr_get_clock_rate(
+    499                                 spiclks [spidrvdat->thisdev]);
+    500                      status = spiclk / (2 * (tmp + 1));
+    501                      break;
+    502          
+    503                    case SPI_PENDING_INTS_ST:
+    504                      tmp = 0;
+    505                      if (((spiregs->ier & SPI_IER_INTEOT) != 0) &&
+    506                          ((spiregs->stat & SPI_STAT_EOT) != 0))
+    507                      {
+    508                        tmp |= SPI_STAT_EOT;
+    509                      }
+    510                      if (((spiregs->ier & SPI_IER_INTTHR) != 0) &&
+    511                          ((spiregs->stat & SPI_STAT_THR) != 0))
+    512                      {
+    513                        tmp |= SPI_STAT_THR;
+    514                      }
+    515                      status = tmp;
+    516                      break;
+    517          
+    518                    case SPI_RAW_INTS_ST:
+    519                      status = spiregs->stat & (SPI_STAT_EOT | SPI_STAT_BF | 
+    520                                                SPI_STAT_THR | SPI_STAT_BE);
+    521                      break;
+    522          
+    523                    default:
+    524                      /* Unsupported parameter */
+    525                      status = SMA_BAD_PARAMS;
+    526                      break;
+    527                  }
+    528                  break;
+    529          
+    530                case SPI_DRIVE_SSEL:
+    531                  if (spidrvdat->thisdev == 0)
+    532                  {
+    533                    if (arg == 0)
+    534                    {   //spi1_ssel = 0
+    535                      GPIO->p3_outp_clr = P3_STATE_GPIO(5);
+    536                    }
+    537                    else
+    538                    {   //spi1_ssel = 1
+    539                      GPIO->p3_outp_set = P3_STATE_GPIO(5);
+    540                    }
+    541                    //GPIO_05 is an output; select GPIO_05
+    542                    GPIO->p2_dir_set = P2_DIR_GPIO(5);
+    543                    GPIO->p2_mux_clr = P2_GPIO05_SSEL0;
+    544                  }
+    545                  else if (spidrvdat->thisdev == 1)
+    546                  {
+    547                    if (arg == 0)
+    548                    {   //spi2_ssel = 0
+    549                      GPIO->p3_outp_clr = P3_STATE_GPIO(4);
+    550                    }
+    551                    else
+    552                    {   //spi2_ssel = 1
+    553                      GPIO->p3_outp_set = P3_STATE_GPIO(4);
+    554                    }
+    555                    //GPIO_04 is an output; select GPIO_04
+    556                    GPIO->p2_dir_set = P2_DIR_GPIO(4);
+    557                    GPIO->p2_mux_clr = P2_GPIO04_SSEL1;
+    558                  }
+    559                  break;
+    560          
+    561                case SPI_DELAY:
+    562                  if ((spidrvdat->regptr->con & SPI_CON_RXTX) != 0x00)
+    563                  {
+    564                    while ((spidrvdat->regptr->stat&SPI_STAT_BE) == 0x00);
+    565                  }
+    566                  tmp = 2 * arg *
+    567                       ((spidrvdat->regptr->con & SPI_CON_RATE(0x7F)) + 1) *
+    568                       (((spidrvdat->regptr->con & SPI_CON_BITNUM(16)) >> 9) + 1);
+    569          
+    570                  while (tmp != 0)
+    571                  {
+    572                    tmp--;
+    573                  }
+    574                  break;
+    575          
+    576                default:
+    577                  /* Unsupported parameter */
+    578                  status = SMA_BAD_PARAMS;
+    579              }
+    580            }
+    581          
+    582            return status;
+    583          }
+    584          
+    585          /***********************************************************************
+    586           *
+    587           * Function: spi_read
+    588           *
+    589           * Purpose: SPI read function
+    590           *
+    591           * Processing:
+    592           *     Reads data from the SPI FIFO.
+    593           *
+    594           * Parameters:
+    595           *     devid:     Pointer to SPI config structure
+    596           *     buffer:    Pointer to data buffer to copy to (2 byte aligned)
+    597           *     max_fifo:  Number of items (of programmed data width) to read
+    598           *
+    599           * Outputs: None
+    600           *
+    601           * Returns: Number of items read from the SPI FIFO
+    602           *
+    603           * Notes: None
+    604           *
+    605           **********************************************************************/
+    606          INT_32 spi_read(INT_32 devid,
+    607                          void *buffer,
+    608                          INT_32 max_fifo)
+    609          {
+    610            volatile UNS_32 tmp1;
+    611            INT_32 count = 0;
+    612            SPI_DRVDAT_T *spicfgptr = (SPI_DRVDAT_T *) devid;
+    613            UNS_16 *data16 = (UNS_16 *) buffer;
+    614            UNS_8 *data8 = (UNS_8 *) buffer;
+    615          
+    616            if (spicfgptr->init == TRUE)
+    617            {
+    618              while ((max_fifo > 0) &&
+    619                     ((spicfgptr->regptr->stat & SPI_STAT_BE) == 0))
+    620              {
+    621                tmp1 = spicfgptr->regptr->dat;
+    622                if (spicfgptr->dsize == 1)
+    623                {
+    624                  *data8 = (UNS_8) tmp1;
+    625                  data8++;
+    626                }
+    627                else
+    628                {
+    629                  *data16 = (UNS_16) tmp1;
+    630                  data16++;
+    631                }
+    632          
+    633                /* Increment data count and decrement buffer size count */
+    634                count++;
+    635                max_fifo--;
+    636              }
+    637            }
+    638            return count;
+    639          }
+    640          
+    641          /***********************************************************************
+    642           *
+    643           * Function: spi_write
+    644           *
+    645           * Purpose: SPI write function
+    646           *
+    647           * Processing:
+    648           *     Write data to the SPI FIFO.
+    649           *
+    650           * Parameters:
+    651           *     devid:   Pointer to SPI config structure
+    652           *     buffer:  Pointer to data buffer to copy from (2 byte aligned)
+    653           *     n_fifo:  Number of times to write data to the transmit fifo
+    654           *
+    655           * Outputs: None
+    656           *
+    657           * Returns: Number of items written to the transmit fifo
+    658           *
+    659           * Notes: None
+    660           *
+    661           **********************************************************************/
+    662          INT_32 spi_write(INT_32 devid,
+    663                           void *buffer,
+    664                           INT_32 n_fifo)
+    665          {
+    666            volatile UNS_32 tmp1;
+    667            INT_32 count = 0;
+    668            SPI_DRVDAT_T *spicfgptr = (SPI_DRVDAT_T *) devid;
+    669            UNS_16 *data16 = (UNS_16 *) buffer;
+    670            UNS_8 *data8 = (UNS_8 *) buffer;
+    671          
+    672            if (spicfgptr->init == TRUE)
+    673            {
+    674              /* Loop until transmit ring buffer is full or until n_bytes
+    675                 expires */
+    676              while ((n_fifo > 0) &&
+    677                     ((spicfgptr->regptr->stat & SPI_STAT_BF) == 0))
+    678              {
+    679                if (spicfgptr->dsize == 1)
+    680                {
+    681                  spicfgptr->regptr->dat = (UNS_32) * data8;
+    682                  data8++;
+    683                }
+    684                else
+    685                {
+    686                  spicfgptr->regptr->dat = (UNS_32) * data16;
+    687                  data16++;
+    688                }
+    689          
+    690                /* Increment data count and decrement buffer size count */
+    691                count++;
+    692                n_fifo--;
+    693              }
+    694          
+    695              /* Enable transmit interrupt */
+    696              if (count > 0)
+    697              {
+    698                spicfgptr->regptr->ier |= SPI_IER_INTTHR;
+    699              }
+    700            }
+    701            return count;
+    702          }
+    703          
+    704          /***********************************************************************
+    705           *
+    706           * Function: spi1_int
+    707           *
+    708           * Purpose: SPI1 interrupt handler
+    709           *
+    710           * Processing:
+    711           *     Handle the SPI1 interrupt.
+    712           *
+    713           * Parameters: None
+    714           *
+    715           * Outputs: None
+    716           *
+    717           * Returns: Nothing
+    718           *
+    719           * Notes: None
+    720           *
+    721           **********************************************************************/
+    722          void spi1_int(void)
+    723          {
+    724            spi_standard_interrupt(&spidrv [0]);
+    725          }
+    726          
+    727          /***********************************************************************
+    728           *
+    729           * Function: spi2_int
+    730           *
+    731           * Purpose: SPI2 interrupt handler
+    732           *
+    733           * Processing:
+    734           *     Handle the SPI2 interrupt.
+    735           *
+    736           * Parameters: None
+    737           *
+    738           * Outputs: None
+    739           *
+    740           * Returns: Nothing
+    741           *
+    742           * Notes: None
+    743           *
+    744           **********************************************************************/
+    745          void spi2_int(void)
+    746          {
+    747            spi_standard_interrupt(&spidrv [1]);
+    748          }
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   spi1_int
+         8   -> spi_standard_interrupt
+       8   spi2_int
+         8   -> spi_standard_interrupt
+      16   spi_close
+        16   -> clkpwr_clk_en_dis
+      24   spi_configure
+        24   -> spi_set_clock
+      40   spi_ioctl
+        40   -> clkpwr_get_clock_rate
+        40   -> spi_configure
+        40 __aeabi_uidiv
+      64   spi_open
+        64   -> clkpwr_clk_en_dis
+        64   -> spi_configure
+      20   spi_read
+      32   spi_set_clock
+        32   -> clkpwr_get_clock_rate
+        32 __aeabi_uidiv
+      16   spi_standard_interrupt
+        16   -- Indirect call
+      16   spi_write
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable5
+       4  ??DataTable5_1
+       4  ??DataTable5_2
+      16  spi1_int
+      16  spi2_int
+      92  spi_close
+     268  spi_configure
+     760  spi_ioctl
+     352  spi_open
+     128  spi_read
+     140  spi_set_clock
+     124  spi_standard_interrupt
+     152  spi_write
+       2  spiclks
+      48  spidrv
+
+ 
+    48 bytes in section .bss
+     2 bytes in section .rodata
+ 2 060 bytes in section .text
+ 
+ 2 060 bytes of CODE  memory
+     2 bytes of CONST memory
+    48 bytes of DATA  memory
+
+Errors: none
+Warnings: 1

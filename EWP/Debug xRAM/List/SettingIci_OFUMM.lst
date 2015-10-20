@@ -1,0 +1,204 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  17:17:42
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\SettingIci\SettingIci_OFUMM.c
+#    Command line =  
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\SettingIci\SettingIci_OFUMM.c"
+#        -lcN "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\List\" -o
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\" --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=ARM926EJ-S -e --fpu=VFP9-S --dlib_config "D:\Program Files\IAR
+#        Systems\Embedded Workbench 7.2\arm\INC\c\DLib_Config_Normal.h" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\" --interwork
+#        --cpu_mode arm -On --use_c++_inline
+#    List file    =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\SettingIci_OFUMM.lst
+#    Object file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\SettingIci_OFUMM.o
+#
+###############################################################################
+
+D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\SettingIci\SettingIci_OFUMM.c
+      1          #include "lpc_types.h"
+      2          #include "lpc_irq_fiq.h"
+      3          #include "lpc_arm922t_cp15_driver.h"
+      4          
+      5          #include "lpc32xx_hstimer.h"
+      6          #include "lpc32xx_ssp.h"
+      7          #include "lpc32xx_gpio.h"
+      8          
+      9          #include "lpc32xx_intc_driver.h"
+     10          #include "lpc32xx_clkpwr_driver.h"
+     11          
+     12          #include "arm926ej_cp15_drv.h"
+     13          #include "ttbl.h"
+     14          
+     15          #include <stdio.h>
+     16          #include <string.h>
+     17          
+     18          #include "psuperVisor\supermanager.h"
+     19          
+     20          #include "component\componentdef.h"
+     21          #include "psuperVisor\psvisor_helpdef.h"
+     22          
+     23          #include "psuperVisor\psvisor_helpfnc.h"
+     24          #include "virtualMenu\rangmanagerfnc.h"
+     25          #include "virtualmenu\systemmenufnc.h"
+     26          #include "SettingIci\SettingIci.h"
+     27          
+     28          #include "toSpeedOptim.h"
+     29          #include "toSpeedDIS.h"
+     30          
+     31          #include "header.h"
+     32          #include "ici_r_ef.h"
+     33          
+     34          #define _HIDE_COMPONENT
+     35          #include "UMMComponent.c"
+     36          
+     37          extern char chProtectTableComeIn;
+     38          extern char chResultCallGetMeasPrt;
+     39          //extern tic long lDemo_IA,lDemo_IB,lDemo_IC;
+     40          extern  long lMtz1,lMtz1Tmr,lSt1,lSt2, lst3, lst4;
+     41          extern __MEASUREMENT_TO_PROTECTION TestMeasProtection;
+     42          
+     43          void  SettingIci_OFUMM(int typFUNC, int FlagMaska, int numOF)
+     44          {
+     45          //отранж МТЗ на Реле
+     46          //int numRele = nRele - RELE1_SM;//нормировка
+     47          //  int typRang
+     48          puskOFfunction *pntPuskOF;
+     49          
+     50            int typRang = PUSK1OF_SM;
+     51            if(typFUNC==0){//OF
+     52            typRang = typRang - numOF*3 - FlagMaska;
+     53          
+     54            switch(FlagMaska){
+     55             case 0://PLUS
+     56              pntPuskOF = &puskOFotZPLUS;
+     57             break;
+     58             case 1://MINUS
+     59              pntPuskOF = &puskOFotZMINUS;
+     60             break;
+     61             case 2://BLK
+     62              pntPuskOF = &puskOFotZBLK;
+     63             break;
+     64            }//switch
+     65            }//if(typFUNC==0)
+     66            if(typFUNC==1){//OT
+     67            typRang = PUSK1OT1_SM;
+     68            typRang = typRang - numOF*4 - FlagMaska;
+     69          
+     70            switch(FlagMaska){
+     71             case 0://PLUS Set
+     72              pntPuskOF = &puskSetOTotZPLUS;
+     73             break;
+     74             case 1://PLUS Rst
+     75              pntPuskOF = &puskRstOTotZPLUS;
+     76             break;
+     77             case 2://MINUS Set
+     78              pntPuskOF = &puskSetOTotZMINUS;
+     79             break;
+     80             case 3://MINUS Rst
+     81              pntPuskOF = &puskRstOTotZMINUS;
+     82             break;
+     83            }//switch
+     84            }//if(typFUNC==0)
+     85          
+     86          //отранж UMM на Реле
+     87          //int numRele = nRele - RELE1_SM;//нормировка
+     88          // Блокировка UMin1
+     89            lSt1 = pntPuskOF(BLOCK_UMIN1_DI_OEPRF_ONB, numOF);
+     90            if(lSt1)    SetCmdToUVV(UMM_COMP1,  1, IOCMD3_UMM, typRang);//работа с OF OT
+     91          // Блокировка UMin2
+     92            lSt1 = pntPuskOF(BLOCK_UMIN2_DI_OEPRF_ONB, numOF);
+     93            if(lSt1)    SetCmdToUVV(UMM_COMP1,  1, IOCMD4_UMM, typRang);//работа с OF OT
+     94          // ПО UMin1
+     95            lSt1 = pntPuskOF(STPDEV_UMIN1_OEPRF_ONB, numOF);
+     96             if(lSt1)   SetCmdToUVV(UMM_COMP1,  1, IOCMD9_UMM, typRang);//работа с OF OT
+     97          // UMin1
+     98            lSt1 = pntPuskOF(UMIN1_OEPRF_ONB, numOF);
+     99             if(lSt1)   SetCmdToUVV(UMM_COMP1,  1, IOCMD10_UMM, typRang);//работа с OF OT
+    100          
+    101          // ПО UMin2
+    102            lSt1 = pntPuskOF(STPDEV_UMIN2_OEPRF_ONB, numOF);
+    103            if(lSt1)    SetCmdToUVV(UMM_COMP1,  1, IOCMD11_UMM, typRang);//работа с OF OT
+    104          // UMin2
+    105            lSt1 = pntPuskOF(UMIN2_OEPRF_ONB, numOF);
+    106             if(lSt1)   SetCmdToUVV(UMM_COMP1,  1, IOCMD12_UMM, typRang);//работа с OF OT
+    107          
+    108          // Блокировка UMax1
+    109          // if(isActivCmdRele(, numRele))//проверка активности команды на Реле
+    110          //      SetCmdToUVV(UMM_COMP1,  1, IOCMD1_UMM, nRele);//отранж 
+    111          // Блокировка UMax2
+    112          // if(isActivCmdRele(, numRele))//проверка активности команды на Реле
+    113            //    SetCmdToUVV(UMM_COMP1,  1, IOCMD2_UMM, nRele);//отранж 
+    114            
+    115          // ПО UMax1
+    116            lSt1 = pntPuskOF(STPDEV_UMAX1_OEPRF_ONB, numOF);
+    117             if(lSt1)   SetCmdToUVV(UMM_COMP1,  1, IOCMD5_UMM, typRang);//работа с OF OT
+    118          // UMax1
+    119            lSt1 = pntPuskOF(UMAX1_OEPRF_ONB, numOF);
+    120             if(lSt1)   SetCmdToUVV(UMM_COMP1,  1, IOCMD6_UMM, typRang);//работа с OF OT
+    121          // ПО UMax2
+    122            lSt1 = pntPuskOF(STPDEV_UMAX2_OEPRF_ONB, numOF);
+    123             if(lSt1)   SetCmdToUVV(UMM_COMP1,  1, IOCMD7_UMM, typRang);//работа с OF OT
+    124          // UMax2
+    125            lSt1 = pntPuskOF(UMAX2_OEPRF_ONB, numOF);
+    126             if(lSt1)   SetCmdToUVV(UMM_COMP1,  1, IOCMD8_UMM, typRang);//работа с OF OT
+    127          
+    128          
+    129          }//SettingIci_OFUMM(int FlagMaska, int numOF)
+    130          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      24   SettingIci_OFUMM
+        24   -- Indirect call
+        24   -> SetCmdToUVV
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+     868  SettingIci_OFUMM
+
+ 
+ 868 bytes in section .text
+ 
+ 868 bytes of CODE memory
+
+Errors: none
+Warnings: none

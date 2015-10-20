@@ -1,0 +1,862 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        12/Oct/2015  11:05:10
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\component\UROVComponent.c
+#    Command line =  
+#        "D:\IAR projects\HR1_0100_00_I720_new2\component\UROVComponent.c" -D
+#        _STATIC_MEMORY_BOOT -lcN "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\List\" -o "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "C:\Program Files\IAR Systems\Embedded
+#        Workbench 7.40\arm\INC\c\DLib_Config_Normal.h" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\Igor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\component\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\" --cpu_mode arm -On
+#        --use_c++_inline
+#    List file    =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\List\UROVComponent.lst
+#    Object file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\Obj\UROVComponent.o
+#
+###############################################################################
+
+D:\IAR projects\HR1_0100_00_I720_new2\component\UROVComponent.c
+      1          #ifndef _HIDE_COMPONENT
+      2          /*
+      3          #include <vcl.h>
+      4          #include <strstrea.h>
+      5          #include <math.h>
+      6          #include <mem.h>
+      7          #include <fstream.h>
+      8          #include <strstrea.h>
+      9          #include <iomanip.h>
+     10          #pragma hdrstop
+     11          
+     12          #include "vmenuDis.h"
+     13          */
+     14          
+     15          #include <stdio.h>
+     16          #include <string.h>
+     17          
+     18          #include "bazisdef.h"
+     19          #include "component\componentdef.h"
+     20          #include "virtualMenu\systemmenudef.h"
+     21          #include "virtualMenu\ustmanagerdef.h"
+     22          
+     23          #include "virtualMenu\textstreamfnc.h"
+     24          #include "virtualMenu\systemmenufnc.h"
+     25          #include "virtualMenu\ustmanagerfnc.h"
+     26          #include "psuperVisor\psvisor_helpfnc.h"
+     27          #include "logictimers\logictimersfnc.h"
+     28          #include "psuperVisor\psvisor_helpdef.h"
+     29          
+     30          #include "virtualMenu\viewMenuList.h"
+     31          
+     32          #include "psupervisor\psupervisor.h"
+     33          
+     34          #include "toSpeedOptim.h"
+     35          
+     36          #include "..\bazis.h"
+     37          
+     38          
+     39          //код компонентов
+     40          #define KOD_COMPONENT  UROV_COMP1
+     41          //к-во ступеней
+     42          #define CNT_STUPEN_UROV  1
+     43          
+     44          #endif // _HIDE_COMPONENT
+     45          
+     46          //РАСПРЕДЕЛЕНИЕ УСТАВОК  в менеджере уставок
+     47          //уставка сработки
+     48          #define MNGUST_UROV    0
+     49          
+     50          //уставка выдержки
+     51          //1 ступень УРОВ
+     52          #define MNGVID_UROV1   1
+     53          //2 ступень УРОВ
+     54          #define MNGVID_UROV2   2
+     55          
+     56          //уставка управления
+     57          #define MNGUPR_UROV    3
+     58          //к-во уставок в менеджере уставок
+     59          #define MNGUST_UROV_TOTAL  4
+     60          
+     61          //РАСПРЕДЕЛЕНИЕ ENA команд
+     62          //Управл УРОВ
+     63          #define ENA_UROV_1  0
+     64          //к-во ENA команд
+     65          #define ENACMD_UROV_TOTAL 1
+     66          
+     67          //РАСПРЕДЕЛЕНИЕ УСТАВОК в супервизоре
+     68          //уставка сработки
+     69          #define SPVSRABUST_UROV    0
+     70          //уставка возврата
+     71          #define SPVVOZVUST_UROV    1
+     72          //уставка SPV выход ROV
+     73          #define SPV_OUTA_UROV      2
+     74          #define SPV_OUTB_UROV      3
+     75          #define SPV_OUTC_UROV      4
+     76          //к-во уставок в супервизоре
+     77          #define SPVUST_UROV_TOTAL  5
+     78          
+     79          //---------------IO COMMAND------------------
+     80          //РАСПРЕДЕЛЕНИЕ IO КОМАНД ДЛЯ UROV
+     81          //Стат блок УРОВ
+     82          #define IOCMD1_UROV 0
+     83          //Пуск УРОВ
+     84          #define IOCMD2_UROV 1
+     85          //Сраб УРОВ1
+     86          #define IOCMD3_UROV 2
+     87          //Сраб УРОВ2
+     88          #define IOCMD4_UROV 3
+     89          //к-во IO команд
+     90          #define IOCMD_UROV_TOTAL    4
+     91          
+     92          //---------------TL COMMAND------------------
+     93          //РАСПРЕДЕЛЕНИЕ TL КОМАНД ДЛЯ UROV
+     94          //PO_UROV
+     95          #define TLCMD2_UROV 0
+     96          //ELOLDTRG_UROV
+     97          #define TLCMD3_UROV 1
+     98          //ELOUTTRG_UROV
+     99          #define TLCMD4_UROV 2
+    100          //к-во TL команд
+    101          #define TLCMD_UROV_TOTAL    3
+    102          
+    103          //--------------- TIMERS ------------------
+    104          //РАСПРЕДЕЛЕНИЕ ТАЙМЕРОВ ДЛЯ UROV
+    105          //таймер UROV_TIM1
+    106          #define TIMER1_UROV    0
+    107          //таймер BO UROV_TIM1
+    108          #define TIMER1_BOUROV1 1
+    109          //таймер UROV_TIM2
+    110          #define TIMER2_UROV    2
+    111          //таймер BO UROV_TIM2
+    112          #define TIMER2_BOUROV2 3
+    113          //к-во таймеров
+    114          #define TIMERS_UROV_TOTAL   4
+    115          
+    116          #ifndef _HIDE_COMPONENT
+    117          
+    118          #define _HIDE_COMPONENT
+    119          //#include "PRM1Component.c"
+    120          
+    121          extern COMPONENT_OBJ rpzcomponent_obj;//обект компонента для репозитария
+    122          extern int  tmpUSTAVKI[];
+    123          
+    124          extern LineMenuItem sub_menu_cnf[];
+    125          extern LineMenuItem sub_menu_tmp[];
+    126          extern int  IndexUstSPV;//индекс уставок в супервизоре
+    127          extern int  IndexIO;//индекс IO
+    128          
+    129          extern COMPONENT_OBJ  cnfCOMPONENT[];
+    130          extern char *bitStringUNI[];
+    131          extern int offsetUstMngPRM1;//смещение на уставки PRM1
+    132          extern int  spvUSTAVKI[];//текущие уставки супервизора
+    133          
+    134          void UstListCompUROV();
+    135          void ustRedactorCompUROV();
+    136          void UstCompUROV();
+    137          short  KadrMenuFormat_ust_compUROV(void *workCntr);//(WorkControl *workCntr);
+    138          
+    139          void PereinitVidListCompUROV(short flg);
+    140          void VidListCompUROV();
+    141          void vidRedactorCompUROV();
+    142          void VidCompUROV();
+    143          short  KadrMenuFormat_vid_compUROV(void *workCntr);//(WorkControl *workCntr);
+    144          
+    145          void PereinitUprListCompUROV(short flg);
+    146          void UprListCompUROV();
+    147          void uprRedactorCompUROV();
+    148          void UprCompUROV();
+    149          short  KadrMenuFormat_upr_compUROV(void *workCntr);//(WorkControl *workCntr);
+    150          int  initUstUROV(char init);
+    151          void  prepareUstUROV(short idxC);
+    152          char *selectorUprStrUROV(short iBit, UNS_32 ustUpr);
+    153          
+    154          short  KadrMenuFormat_UROV(void *workCntr);//(WorkControl *workCntr);
+    155          
+    156          void EditUstUROV();
+    157          void EditVidUROV();
+    158          void EditUprUROV();
+    159          int codecUstUROV(char codec, short offset, int ust);
+    160          void  logicUROV(int idxC);
+    161          int isDISactiv_UROV(int idxC);
+    162          
+    163          int  offsetIOCmdUROV;//смещение для IO UROV
+    164          
+    165          char UROV_TITLE[] = "УРОВ";
+    166          
+    167          IONAMESTATUS_COMPONENT ionsUROV[IOCMD_UROV_TOTAL] =
+    168          {
+    169            {
+    170              1,//статус iocmd1
+    171              "Стат блок УРОВ"
+    172            },
+    173            {
+    174              1,//статус iocmd2
+    175              "Пуск УРОВ"
+    176            },
+    177            {
+    178              1,//статус iocmd3
+    179              "Сраб УРОВ1"
+    180            },
+    181            {
+    182              1,//статус iocmd4
+    183              "Сраб УРОВ2"
+    184            }
+    185          };
+    186          
+    187          LineMenuItem sub_menu_comp_UROV[8] =
+    188          {
+    189            { UROV_TITLE, NULL},//title
+    190            { &CONTROL1_COMP, &sub_menu_cnf, typeMenuSub},//control_item, parent
+    191            { "Уставки УРОВ",    (void*)&UstListCompUROV, typeMenuProg},
+    192            { "Выдержки УРОВ",   (void*)&VidListCompUROV, typeMenuProg},
+    193            { "Управление УРОВ", (void*)&UprListCompUROV, typeMenuProg},
+    194            { NULL, NULL}
+    195          };
+    196          
+    197          LineMenuItem sub_menu_ust_compUROV[] =
+    198          {
+    199            { "Уставки УРОВ", NULL},//title
+    200            { &CONTROL2_COMP, &sub_menu_comp_UROV, typeMenuList},//control_item, parent
+    201            { "Уст тока УРОВ",        (void*)&UstCompUROV, typeMenuProg},
+    202            { NULL, NULL}
+    203          
+    204          };
+    205          
+    206          LineMenuItem sub_menu_vid_compUROV[] =
+    207          {
+    208            { "Выдержки УРОВ", NULL},//title
+    209            { &CONTROL2_COMP, &sub_menu_comp_UROV, typeMenuList},//control_item, parent
+    210            { "Выдержка УРОВ1",  (void*)&VidCompUROV, typeMenuProg},
+    211            { "Выдержка УРОВ2",  (void*)&VidCompUROV, typeMenuProg},
+    212            { NULL, NULL}
+    213          
+    214          };
+    215          
+    216          LineMenuItem sub_menu_upr_compUROV[] =
+    217          {
+    218            { "Управл УРОВ", NULL},//title
+    219            { &CONTROL2_COMP, &sub_menu_comp_UROV, typeMenuList},//control_item, parent
+    220            { "Управл УРОВ",      (void*)&UprCompUROV, typeMenuProg},
+    221            { NULL, NULL}
+    222          
+    223          };
+    224          
+    225          void PereinitUstListCompUROV(short flg)
+    226          {
+    227          //переиниц
+    228            //инит компонентного контроля
+    229            TxtStreamInit(&CONTROL2_COMP, &KadrMenuFormat_ust_compUROV, NULL);//инит control и формир кадра
+    230            if(flg==0)//END
+    231            {
+    232              TxtStreamSetEnd(&CONTROL2_COMP, SIZE_PAGE_VIEW/2);//перейти на END
+    233            }//if
+    234          
+    235            ViewDiskrMenuList();//вывести окно отображения
+    236            ListPStr();//доступ к уставкам
+    237          }//PereinitUstListComp2()
+    238          /*
+    239          void UstListCompUROV()
+    240          {
+    241            LIGHTMNGUBAZA = 0;
+    242          
+    243            CRR_SUBMENU = sub_menu_ust_compUROV;//текущее субменю
+    244          
+    245            CRR_TEXTSTREAM = &CONTROL2_COMP;//текущий control
+    246            CRR_FHOME = &PereinitUstListCompUROV;//указатель на ф-цию HOME
+    247          
+    248            CRR_FHOME(1);//переиниц
+    249            LanderUpDown();//wkl Up Down
+    250          }//UstListCompUROV()
+    251          
+    252          void UstCompUROV()
+    253          {
+    254            ViewToEditUst(ViewerEditUstUROV);
+    255          }//VidCompUROV()
+    256          
+    257          int ViewerEditUstUROV()
+    258          {
+    259          //редактировать уставку
+    260            LIGHTLINEMENU = TxtStreamIdxKadr(CRR_TEXTSTREAM);
+    261          
+    262            sub_menu_tmp[SUBDATA].Line2 = &sub_menu_ust_compUROV;// parent
+    263          
+    264            ViewerEditorUst(sub_menu_ust_compUROV[LIGHTLINEMENU +1+SUBDATA].Line1);//редактировать уставку
+    265          
+    266            return getCurrentMngUSTAVKI();
+    267          }//UstCompUROV()
+    268          */
+    269          void UstListCompUROV()
+    270          {
+    271            SelectorMNGBAZA(0);//установка базу уставок
+    272          
+    273            SelectorSUBMENU(sub_menu_ust_compUROV);//уcтановить текущее субменю
+    274          
+    275            SelectorTEXTCONTROL(&CONTROL2_COMP);//текущий control
+    276          
+    277            SelectorFHOME(&PereinitUstListCompUROV);//указатель на ф-цию HOME
+    278            InitFHOME(1);//exe ф-цию HOME
+    279          
+    280            LanderUpDown();//wkl Up Down
+    281          }//UstListCompUROV()
+    282          
+    283          void UstCompUROV()
+    284          {
+    285            SelectorCRRLIGHTLINE();//найти подсвеченную строку текущего текст потока
+    286            PrepareEditMenu(sub_menu_ust_compUROV);
+    287            PassWord(EditUstUROV);
+    288          }//VidCompUROV()
+    289          
+    290          void EditUstUROV()
+    291          {
+    292          //редактировать уставку
+    293            SystemEditUst(sub_menu_ust_compUROV);//[LIGHTLINEMENU +1+SUBDATA].Line1, LIGHTLINEMENU);
+    294          }//UstCompUROV()
+    295          
+    296          short  KadrMenuFormat_ust_compUROV(void *pstr)//(WorkControl *workCntr)
+    297          {
+    298           WorkControl *workCntr = (WorkControl *)pstr;
+    299          //формирователь кадра
+    300            char locTxt[50];
+    301            RESET_COUNTER;//сброс счетчиков
+    302            for(int i=0;; i++)
+    303            {
+    304              if(sub_menu_ust_compUROV[i+1+SUBDATA].Line1==NULL)break;
+    305          
+    306              COMPARE_COUNTER
+    307              {
+    308                strcpy((char *)workCntr->twoString, (char *)sub_menu_ust_compUROV[i+1+SUBDATA].Line1);
+    309                sprintf(locTxt, "   %d", getUstOffsetMngUSTAVKI(i));
+    310                strcpy((char *)workCntr->twoString + sizeof(WorkVariantChar)/2, locTxt);
+    311                return 1;
+    312              }//COMPARE_COUNTER
+    313            }//for
+    314          
+    315            return 1;
+    316          }//KadrMenuFormat
+    317          
+    318          //--------------------------------------------------
+    319          
+    320          void PereinitVidListCompUROV(short flg)
+    321          {
+    322          //переиниц
+    323            //инит компонентного контроля
+    324            TxtStreamInit(&CONTROL2_COMP, &KadrMenuFormat_vid_compUROV, NULL);//инит control и формир кадра
+    325            if(flg==0)//END
+    326            {
+    327              TxtStreamSetEnd(&CONTROL2_COMP, SIZE_PAGE_VIEW/2);//перейти на END
+    328            }//if
+    329          
+    330            ViewDiskrMenuList();//вывести окно отображения
+    331            ListPStr();//доступ к уставкам
+    332          }//PereinitUstListComp2()
+    333          
+    334          /*
+    335          void VidListCompUROV()
+    336          {
+    337            LIGHTMNGUBAZA = MNGVID_UROV1;
+    338          
+    339            CRR_SUBMENU = sub_menu_vid_compUROV;//текущее субменю
+    340          
+    341            CRR_TEXTSTREAM = &CONTROL2_COMP;//текущий control
+    342            CRR_FHOME = &PereinitVidListCompUROV;//указатель на ф-цию HOME
+    343          
+    344            CRR_FHOME(1);//переиниц
+    345            LanderUpDown();//wkl Up Down
+    346          }//VidListCompUROV()
+    347          
+    348          void VidCompUROV()
+    349          {
+    350            ViewToEditUst(ViewerEditVidUROV);
+    351          }//VidCompUROV()
+    352          
+    353          int ViewerEditVidUROV()
+    354          {
+    355          //редактировать уставку
+    356            LIGHTLINEMENU = TxtStreamIdxKadr(CRR_TEXTSTREAM);
+    357          
+    358            sub_menu_tmp[SUBDATA].Line2 = &sub_menu_vid_compUROV;// parent
+    359          
+    360            ViewerEditorUst(sub_menu_vid_compUROV[LIGHTLINEMENU +1+SUBDATA].Line1);//редактировать уставку
+    361          
+    362            return getCurrentMngUSTAVKI();
+    363          }//
+    364          */
+    365          void VidListCompUROV()
+    366          {
+    367            SelectorMNGBAZA(MNGVID_UROV1);//установка базы уставок
+    368          
+    369            SelectorSUBMENU(sub_menu_vid_compUROV);//утановить текущее субменю
+    370          
+    371            SelectorTEXTCONTROL(&CONTROL2_COMP);//текущий control
+    372          
+    373            SelectorFHOME(&PereinitVidListCompUROV);//указатель на ф-цию HOME
+    374            InitFHOME(1);//exe ф-цию HOME
+    375          
+    376            LanderUpDown();//wkl Up Down
+    377          }//VidListCompUROV()
+    378          
+    379          void VidCompUROV()
+    380          {
+    381            SelectorCRRLIGHTLINE();//найти подсвеченную строку текущего текст потока
+    382            PrepareEditMenu(sub_menu_vid_compUROV);
+    383          //  PassWord(EditVidAPV);
+    384            EditVidUROV();
+    385          }//VidCompUROV()
+    386          
+    387          void EditVidUROV()
+    388          {
+    389          //редактировать уставку
+    390            SystemEditUst(sub_menu_vid_compUROV);//[LIGHTLINEMENU +1+SUBDATA].Line1, LIGHTLINEMENU);
+    391          }//
+    392          
+    393          short  KadrMenuFormat_vid_compUROV(void *pstr)
+    394          {
+    395           WorkControl *workCntr = (WorkControl *)pstr;
+    396          //формирователь кадра
+    397            char locTxt[50];
+    398            RESET_COUNTER;//сброс счетчиков
+    399            for(int i=0;; i++)
+    400            {
+    401              if(sub_menu_vid_compUROV[i+1+SUBDATA].Line1==NULL)break;
+    402          
+    403              COMPARE_COUNTER
+    404              {
+    405                strcpy((char *)workCntr->twoString, (char *)sub_menu_vid_compUROV[i+1+SUBDATA].Line1);
+    406                sprintf(locTxt, "   %d", getUstOffsetMngUSTAVKI(i));
+    407                strcpy((char *)workCntr->twoString + sizeof(WorkVariantChar)/2, locTxt);
+    408                return 1;
+    409              }//COMPARE_COUNTER
+    410            }//for
+    411          
+    412            return 1;
+    413          }//KadrMenuFormat_vid_compUROV(WorkControl *workCntr)
+    414          
+    415          //--------------------------------------------------
+    416          
+    417          void PereinitUprListCompUROV(short flg)
+    418          {
+    419          //переиниц
+    420            //инит компонентного контроля
+    421            TxtStreamInit(&CONTROL2_COMP, &KadrMenuFormat_upr_compUROV, NULL);//инит control и формир кадра
+    422            if(flg==0)//END
+    423            {
+    424              TxtStreamSetEnd(&CONTROL2_COMP, SIZE_PAGE_VIEW/2);//перейти на END
+    425            }//if
+    426          
+    427            ViewDiskrMenuList();//вывести окно отображения
+    428            ListPStr();//доступ к уставкам
+    429          }//PereinitUstList
+    430          /*
+    431          void UprListCompUROV()
+    432          {
+    433            LIGHTMNGUBAZA = MNGUPR_UROV;
+    434          
+    435            CRR_SUBMENU = sub_menu_upr_compUROV;//текущее субменю
+    436          
+    437            CRR_TEXTSTREAM = &CONTROL2_COMP;//текущий control
+    438            CRR_FHOME = &PereinitUprListCompUROV;//указатель на ф-цию HOME
+    439          
+    440            CRR_FHOME(1);//переиниц
+    441            LanderUpDown();//wkl Up Down
+    442          }//VidListCompUROV()
+    443          
+    444          void UprCompUROV()
+    445          {
+    446            LIGHTLINEMENU = TxtStreamIdxKadr(CRR_TEXTSTREAM);
+    447          //редактировать уставку управления
+    448            sub_menu_tmp[SUBDATA].Line2 = &sub_menu_upr_compUROV;// parent
+    449            char *nameUpr = (char *)sub_menu_upr_compUROV[LIGHTLINEMENU +1+SUBDATA].Line1;
+    450          
+    451            UpravlRedactor(nameUpr, LIGHTLINEMENU, &selectorUprStrUROV);//редактировать уставку управления
+    452          
+    453          }//UprCompMTZ1()
+    454          */
+    455          void UprListCompUROV()
+    456          {
+    457            SelectorMNGBAZA(MNGUPR_UROV);//установка базы уставок
+    458          
+    459            SelectorSUBMENU(sub_menu_upr_compUROV);//утановить текущее субменю
+    460          
+    461            SelectorTEXTCONTROL(&CONTROL2_COMP);//текущий control
+    462          
+    463            SelectorFHOME(&PereinitUprListCompUROV);//указатель на ф-цию HOME
+    464            InitFHOME(1);//exe ф-цию HOME
+    465          
+    466            LanderUpDown();//wkl Up Down
+    467          }//VidListCompUROV()
+    468          
+    469          void UprCompUROV()
+    470          {
+    471            SelectorCRRLIGHTLINE();//найти подсвеченную строку текущего текст потока
+    472            PrepareEditMenu(sub_menu_upr_compUROV);
+    473            PassWord(EditUprUROV);
+    474          
+    475          }//UprCompUROV()
+    476          
+    477          void EditUprUROV()
+    478          {
+    479          //редактировать уставку упр
+    480            char *nameUpr = (char *)sub_menu_upr_compUROV[LIGHTLINEMENU +1+SUBDATA].Line1;
+    481            UpravlRedactor(nameUpr, LIGHTLINEMENU, &selectorUprStrUROV);//редактировать уставку управления
+    482          }//EditUprUROV()
+    483          
+    484          short  KadrMenuFormat_upr_compUROV(void *pstr)
+    485          {
+    486           WorkControl *workCntr = (WorkControl *)pstr;
+    487          //формирователь кадра
+    488            RESET_COUNTER;//сброс счетчиков
+    489            for(int i=0;; i++)
+    490            {
+    491              char *nameUpr = (char *)sub_menu_upr_compUROV[i+1+SUBDATA].Line1;
+    492              if(nameUpr==NULL) break;
+    493          
+    494              COMPARE_COUNTER
+    495              {
+    496                strcpy((char *)workCntr->twoString, nameUpr);
+    497          
+    498                strcpy((char *)workCntr->twoString + sizeof(WorkVariantChar)/2,
+    499                selectorUprStrUROV(i, getCurrentMngUSTAVKI()));
+    500          
+    501                return 1;//сравнить счетчики кадров
+    502              }
+    503            }//for
+    504          
+    505            return 1;
+    506          }//KadrMenuFormat_upr_compUROV(WorkControl *workCntr)
+    507          
+    508          char *selectorUprStrUROV(short iBit, UNS_32 ustUpr)
+    509          {
+    510            switch(iBit)
+    511            {
+    512          
+    513            default:;
+    514            }//switch
+    515              if(NumBitCheckWord(iBit, &ustUpr)) return bitStringUNI[UNIUPR_WKL];
+    516              return bitStringUNI[UNIUPR_OTKL];
+    517          }//selectorUprStrUROV(short ibit, UNS_32 ustUpr)
+    518          
+    519          int initUstUROV(char init)
+    520          {
+    521            //инициал уставок
+    522            if (init)
+    523            {
+    524          //уставка сработки
+    525              tmpUSTAVKI[MNGUST_UROV] = 10;
+    526          //уставка выдержки
+    527              tmpUSTAVKI[MNGVID_UROV1] = 50;
+    528              tmpUSTAVKI[MNGVID_UROV2] = 60;
+    529          //уставка управления
+    530              tmpUSTAVKI[MNGUPR_UROV] = 0;
+    531          
+    532            }//if
+    533          
+    534            IndexUstSPV += SPVUST_UROV_TOTAL;//индекс уставок в супервизоре
+    535            return MNGUST_UROV_TOTAL;//к-во уставок в менеджере уставок
+    536          }//initUstMTZ1(short mngUst, char init)
+    537          
+    538          void  prepareUstUROV(short idxC)
+    539          {
+    540            //подготовка ENA команд для клона
+    541            //копировать ENA из WideENA в ENAcmd
+    542            CopyWideENAToENAcmd(PrepareENACmd(idxC, MNGUPR_UROV), ENACMD_UROV_TOTAL);
+    543            //подготовка уставок
+    544              int tmpOffsetUSpv = getOffsetSPVUstCnf(idxC);//смещение уставок внутри супервизора
+    545          
+    546              //уставка SPV сработки
+    547            int tmp1 = 
+    548            SPV_UST(SPVSRABUST_UROV) = codecUstUROV(1, MNGUST_UROV, getNativUstMngUSTAVKI(idxC, MNGUST_UROV));
+    549            //уставка SPV возврата
+    550            SPV_UST(SPVVOZVUST_UROV) = tmp1 - tmp1/20;//5%
+    551          
+    552            short tmpOffsetT    =
+    553              getOffsetTimersCnf(idxC);   //компонент в конфигурации
+    554                //1 ступень УРОВ
+    555            setTimerPorog(tmpOffsetT+ TIMER1_UROV,
+    556                    codecUstUROV(1, MNGVID_UROV1, getNativUstMngUSTAVKI(idxC, MNGVID_UROV1)));
+    557          //таймер BO UROV_TIM1
+    558            setTimerPorog(tmpOffsetT+ TIMER1_BOUROV1, 10);
+    559          
+    560               //2 ступень УРОВ
+    561            setTimerPorog(tmpOffsetT+ TIMER2_UROV,
+    562                    codecUstUROV(1, MNGVID_UROV2, getNativUstMngUSTAVKI(idxC, MNGVID_UROV2)));
+    563          //таймер BO UROV_TIM1
+    564            setTimerPorog(tmpOffsetT+ TIMER2_BOUROV2 ,10);
+    565          }//prepareUstMTZ1(short idxC)
+    566          
+    567          int initIOCmd_UROV()
+    568          {
+    569            //инициал IO команд
+    570            offsetIOCmdUROV = IndexIO;//смещение для IO UROV
+    571            return commonInitIOCmd(IOCMD_UROV_TOTAL);
+    572          }//initIOCmd_UROV()
+    573          
+    574          int initTLCmd_UROV()
+    575          {
+    576            //инициал TL команд
+    577            return commonInitTLCmd(TLCMD_UROV_TOTAL);
+    578          }//initTLCmd_UROV()
+    579          
+    580          int initENACmd_UROV()
+    581          {
+    582            //инициал ENA команд
+    583            return commonInitENACmd(ENACMD_UROV_TOTAL);
+    584          }//initENACmd_UROV()
+    585          
+    586          void initTimersUROV(short idxC)
+    587          {
+    588            //запрос и инициал таймеров
+    589            commonInitTimers(TIMERS_UROV_TOTAL);
+    590          }//initTimersUROV()
+    591          
+    592          int codecUstUROV(char codec, short offset, int ust)
+    593          //codec=0-кодировать
+    594          //codec=1-раскодировать
+    595          {
+    596            //кодировать-раскодировать уставку
+    597            if(codec) return ust*1;
+    598            return ust/1;
+    599          }//codecUstUROV(char *buf, short offset, int ust)
+    600          
+    601          int isDISactiv_UROV(int idxC)
+    602          {
+    603           //активность Регистратора ДИС
+    604            return 0;//нет активности
+    605          }//isDISactiv_UROV(int idxC)
+    606          
+    607          char copyUROVToRepozitar(char packet)
+    608          {
+    609            memset(&rpzcomponent_obj, 0, sizeof(COMPONENT_OBJ));//стереть старое
+    610          //копировать компонент в репозитарий
+    611            rpzcomponent_obj.componentEnable = 1;//разрешение компонента
+    612            rpzcomponent_obj.kodC   = KOD_COMPONENT;         //код компонента
+    613            rpzcomponent_obj.packet = 0;    //номер пакетного компонента
+    614            rpzcomponent_obj.permanent = 0; //перманентный компонент
+    615          
+    616            strcpy(rpzcomponent_obj.nameComponent,  UROV_TITLE);       //имя компонента
+    617            rpzcomponent_obj.sub_menu_component =  sub_menu_comp_UROV;//меню компонента
+    618          
+    619            rpzcomponent_obj.cntClon     = CNT_STUPEN_UROV;   //max к-во клонов
+    620            rpzcomponent_obj.numClon     = 1;//номер клона
+    621            rpzcomponent_obj.workToSignal = 0; //Работа на сигнал
+    622          
+    623            rpzcomponent_obj.initUstMng     = initUstUROV;    //инициал уставок
+    624            rpzcomponent_obj.prepareUstSpv  = prepareUstUROV;//подготовка уставок
+    625            rpzcomponent_obj.initIOCmd      = initIOCmd_UROV;      //инициал IO команд
+    626            rpzcomponent_obj.initTLCmd      = initTLCmd_UROV;      //инициал TL команд
+    627            rpzcomponent_obj.initENACmd     = initENACmd_UROV;     //инициал ENA команд
+    628            rpzcomponent_obj.bo_bvCmd       = NULL; //настройка БО БВ команд
+    629            rpzcomponent_obj.isDISactiv     = isDISactiv_UROV; //активность Регистратора ДИС
+    630            rpzcomponent_obj.setBOBVtimer   = NULL; //инициал таймеров БО БВ
+    631          
+    632            rpzcomponent_obj.nameStatusIO = ionsUROV;          //имена и статус команд IO
+    633            rpzcomponent_obj.initTimers   = initTimersUROV;    //запрос и инициал таймеров
+    634            rpzcomponent_obj.logic        = logicUROV;         //логика компонента
+    635          
+    636            rpzcomponent_obj.codecUst = codecUstUROV;   //кодировать-раскодировать уставку
+    637          
+    638            return 0;//не пакетная регистрация
+    639          }//
+    640          
+    641          #endif // _HIDE_COMPONENT
+    642          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   EditUprUROV
+         8   -> UpravlRedactor
+       8   EditUstUROV
+         8   -> SystemEditUst
+       8   EditVidUROV
+         8   -> SystemEditUst
+      24   KadrMenuFormat_upr_compUROV
+        24   -> getCurrentMngUSTAVKI
+        24   -> selectorUprStrUROV
+        24   -> strcpy
+      72   KadrMenuFormat_ust_compUROV
+        72   -> getUstOffsetMngUSTAVKI
+        72   -> sprintf
+        72   -> strcpy
+      72   KadrMenuFormat_vid_compUROV
+        72   -> getUstOffsetMngUSTAVKI
+        72   -> sprintf
+        72   -> strcpy
+       8   PereinitUprListCompUROV
+         8   -> ListPStr
+         8   -> TxtStreamInit
+         8   -> TxtStreamSetEnd
+         8   -> ViewDiskrMenuList
+       8   PereinitUstListCompUROV
+         8   -> ListPStr
+         8   -> TxtStreamInit
+         8   -> TxtStreamSetEnd
+         8   -> ViewDiskrMenuList
+       8   PereinitVidListCompUROV
+         8   -> ListPStr
+         8   -> TxtStreamInit
+         8   -> TxtStreamSetEnd
+         8   -> ViewDiskrMenuList
+       8   UprCompUROV
+         8   -> PassWord
+         8   -> PrepareEditMenu
+         8   -> SelectorCRRLIGHTLINE
+       8   UprListCompUROV
+         8   -> InitFHOME
+         8   -> LanderUpDown
+         8   -> SelectorFHOME
+         8   -> SelectorMNGBAZA
+         8   -> SelectorSUBMENU
+         8   -> SelectorTEXTCONTROL
+       8   UstCompUROV
+         8   -> PassWord
+         8   -> PrepareEditMenu
+         8   -> SelectorCRRLIGHTLINE
+       8   UstListCompUROV
+         8   -> InitFHOME
+         8   -> LanderUpDown
+         8   -> SelectorFHOME
+         8   -> SelectorMNGBAZA
+         8   -> SelectorSUBMENU
+         8   -> SelectorTEXTCONTROL
+       8   VidCompUROV
+         8   -> EditVidUROV
+         8   -> PrepareEditMenu
+         8   -> SelectorCRRLIGHTLINE
+       8   VidListCompUROV
+         8   -> InitFHOME
+         8   -> LanderUpDown
+         8   -> SelectorFHOME
+         8   -> SelectorMNGBAZA
+         8   -> SelectorSUBMENU
+         8   -> SelectorTEXTCONTROL
+      12   codecUstUROV
+        12 __aeabi_idiv
+      24   copyUROVToRepozitar
+        24   -> __aeabi_memset
+        24   -> strcpy
+       8   initENACmd_UROV
+         8   -> commonInitENACmd
+       8   initIOCmd_UROV
+         8   -> commonInitIOCmd
+       8   initTLCmd_UROV
+         8   -> commonInitTLCmd
+       8   initTimersUROV
+         8   -> commonInitTimers
+       0   initUstUROV
+       0   isDISactiv_UROV
+      24   prepareUstUROV
+        24   -> CopyWideENAToENAcmd
+        24   -> PrepareENACmd
+        24   -> codecUstUROV
+        24   -> getNativUstMngUSTAVKI
+        24   -> getOffsetSPVUstCnf
+        24   -> getOffsetTimersCnf
+        24   -> setTimerPorog
+        24 __aeabi_idiv
+      16   selectorUprStrUROV
+        16   -> NumBitCheckWord
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable19
+       4  ??DataTable19_1
+       4  ??DataTable19_10
+       4  ??DataTable19_11
+       4  ??DataTable19_12
+       4  ??DataTable19_13
+       4  ??DataTable19_14
+       4  ??DataTable19_15
+       4  ??DataTable19_16
+       4  ??DataTable19_17
+       4  ??DataTable19_18
+       4  ??DataTable19_2
+       4  ??DataTable19_3
+       4  ??DataTable19_4
+       4  ??DataTable19_5
+       4  ??DataTable19_6
+       4  ??DataTable19_7
+       4  ??DataTable19_8
+       4  ??DataTable19_9
+      16  ?_0
+      12  ?_1
+      12  ?_10
+       8  ?_11
+      12  ?_2
+      12  ?_3
+      16  ?_4
+      16  ?_5
+      16  ?_6
+      16  ?_7
+      16  ?_8
+      16  ?_9
+      52  EditUprUROV
+      16  EditUstUROV
+      16  EditVidUROV
+     160  KadrMenuFormat_upr_compUROV
+     188  KadrMenuFormat_ust_compUROV
+     188  KadrMenuFormat_vid_compUROV
+      68  PereinitUprListCompUROV
+      68  PereinitUstListCompUROV
+      68  PereinitVidListCompUROV
+       8  UROV_TITLE
+      28  UprCompUROV
+      52  UprListCompUROV
+      28  UstCompUROV
+      52  UstListCompUROV
+      24  VidCompUROV
+      52  VidListCompUROV
+      44  codecUstUROV
+     296  copyUROVToRepozitar
+      16  initENACmd_UROV
+      32  initIOCmd_UROV
+      16  initTLCmd_UROV
+      20  initTimersUROV
+      96  initUstUROV
+      32  ionsUROV
+      12  isDISactiv_UROV
+       4  offsetIOCmdUROV
+     336  prepareUstUROV
+      60  selectorUprStrUROV
+      96  sub_menu_comp_UROV
+      48  sub_menu_upr_compUROV
+      48  sub_menu_ust_compUROV
+      60  sub_menu_vid_compUROV
+
+ 
+     4 bytes in section .bss
+   292 bytes in section .data
+   168 bytes in section .rodata
+ 2 064 bytes in section .text
+ 
+ 2 064 bytes of CODE  memory
+   168 bytes of CONST memory
+   296 bytes of DATA  memory
+
+Errors: none
+Warnings: none

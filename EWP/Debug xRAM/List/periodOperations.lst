@@ -1,0 +1,481 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  17:17:37
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\periodOperations.c
+#    Command line =  
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\periodOperations.c" -lcN
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\" -o "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "D:\Program Files\IAR Systems\Embedded
+#        Workbench 7.2\arm\INC\c\DLib_Config_Normal.h" -I "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\" --interwork
+#        --cpu_mode arm -On --use_c++_inline
+#    List file    =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\periodOperations.lst
+#    Object file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\periodOperations.o
+#
+###############################################################################
+
+D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\periodOperations.c
+      1          
+      2          #include "lpc_types.h"
+      3          
+      4          #include <stdio.h>
+      5          #include <string.h>
+      6          
+      7          #include "psuperVisor\supermanager.h"
+      8          
+      9          #include "component\componentdef.h"
+     10          #include "callbackelement\callbackelementdef.h"
+     11          #include "psuperVisor\psvisor_helpdef.h"
+     12          #include "virtualMenu\wideLogManagerdef.h"
+     13          //#include "zonaVRT\zonaVRTdef.h"
+     14          
+     15          #include "callbackelement\callbackelementfnc.h"
+     16          #include "psuperVisor\psvisor_helpfnc.h"
+     17          #include "virtualMenu\systemmenufnc.h"
+     18          
+     19          #include "toSpeedOptim.h"
+     20          #include "toSpeedDIS.h"
+     21          
+     22          #include "periodOperations.h"
+     23          
+     24          #include "header.h"
+     25          #include "ici_r_ef.h"
+     26          
+     27          #define _HIDE_COMPONENT
+     28          #include "PRM1Component.c"
+     29          
+     30          #include "APVComponent.c"
+     31          #include "DZ1Component.c"
+     32          #include "DZ2Component.c"
+     33          
+     34          #include "MTZ1Component.c"
+     35          #include "MTZ2Component.c"
+     36          
+     37          #include "NZOP1Component.c"
+     38          
+     39          extern CALLBACK_MISSION cb_missionDEVICE1;
+     40          extern CALLBACK_MISSION *cb_mission_crrDEVICE1;//текущая миссия
+     41          extern short  missionSeparatorDEVICE1;//сепаратор миссии
+     42          extern int    WideCmdBuffer[];//широкий ком массив
+     43          extern UNS_32 pActualCMD[];//текущие
+     44          extern UNS_32 ArrayRANGIR[];
+     45          extern int  spvUSTAVKI[];//текущие уставки супервизора
+     46          
+     47          //глобальный сброс всех таймеров
+     48          extern int  globalTimerReset;
+     49          extern int ReleTrigger;//тригг реле
+     50          extern int CDITrigger;//тригг СДИ
+     51          extern int offsetSPVCmdPRM1;//смещение для SPV PRM1
+     52          extern int    TypLE[];
+     53          extern UNS_32 *WideLogActual;//командный массив расшир логики
+     54          extern UNS_32 PlusCircleCmd[];//командный массив плюсовых команд LE
+     55          extern UNS_32 InputLECmd[];//входной командный массив LE
+     56          extern UNS_32 EXEOutputCmd[];//выходной командный массив компонентов
+     57          extern int    isTimeSection;//критическая секция с двойным доступом
+     58          
+     59          extern UNS_32 dataCmdStateINTERFACE[];//INTERFACE CmdState
+     60          extern UNS_32 dataTrgCmdStateINTERFACE[];//INTERFACE Trg CmdState
+     61          extern UNS_32 buffTrgCmdStateINTERFACE[];//INTERFACE CmdState
+     62          extern UNS_32 buffCmdStateINTERFACE[];//INTERFACE CmdState
+     63          extern UNS_32 buffInStateINTERFACE;//INTERFACE  In
+     64          extern UNS_32 buffOutStateINTERFACE;//INTERFACE Out
+     65          extern UNS_32 buffLedStateINTERFACE;//INTERFACE Led
+     66          extern UNS_32 buffTrgOutStateINTERFACE;//INTERFACE Trg Out
+     67          extern UNS_32 buffTrgLedStateINTERFACE;//INTERFACE Trg Led
+     68          extern UNS_32 buffGruppaUstINTERFACE;//группа уставок
+     69          extern UNS_32 GruppaUst;//группа уставок
+     70          
+     71          //флаги уставок
+     72          //extern char chbrCfgTblState;
+     73          
+     74          typedef struct
+     75          {
+     76            volatile UNS_8 bdvv_unisost1;  //0 рег сост БДВВ1
+     77            volatile UNS_8 bdvv_in1;       //1 рег входов БДВВ1
+     78            volatile UNS_8 bdvv_out1;      //2 рег выходов БДВВ1
+     79            volatile UNS_8 bdvv_outsost1;  //3 рег сост выходов БДВВ1
+     80            volatile UNS_8 bdvv_outena1;   //4 разрешение выходов БДВВ1
+     81            volatile UNS_8 bdvv_rezerv1;   //5 резерв
+     82            volatile UNS_8 bdvv_rezerv2;   //6 резерв
+     83            volatile UNS_8 bdvv_rezerv3;   //7 резерв
+     84            volatile UNS_8 bdvv_unisost2;  //8 рег сост БДВВ2
+     85            volatile UNS_8 bdvv_in2;       //9 рег входов БДВВ2
+     86            volatile UNS_8 bdvv_out2;      //A рег выходов БДВВ2
+     87            volatile UNS_8 bdvv_outsost2;  //B рег сост выходов БДВВ2
+     88            volatile UNS_8 bdvv_outena2;   //C разрешение выходов БДВВ2
+     89          } BDVV_REGS_T;
+     90          
+     91          typedef struct
+     92          {
+     93            volatile UNS_8 bdvv_unisost_new;  //0 рег сост БДВВ _new
+     94            volatile UNS_8 bdvv_in_new;       //1 рег входов БДВВ _new
+     95            volatile UNS_8 bdvv_out_new;      //2 рег выходов БДВВ _new
+     96            volatile UNS_8 bdvv_outsost_new;  //3 рег сост выходов БДВВ _new
+     97            volatile UNS_8 bdvv_outena_new;   //4 разрешение выходов БДВВ _new
+     98          } BDVVNEW_REGS_T;
+     99          
+    100          typedef struct
+    101          {
+    102            volatile UNS_8 bdv_unisost;  //0 рег сост БД
+    103            volatile UNS_8 bdv_in1;          //1 рег входов БДВ
+    104            volatile UNS_8 bdv_in2;          //2 рег входов БДВ
+    105          } BDV_REGS_T;
+    106          
+    107          #define BDVV_BASE  0xE3000000
+    108          #define BDVV_PNT ((BDVV_REGS_T *)(BDVV_BASE))
+    109          #define BDV_BASE  0xE3000010
+    110          #define BDV_PNT ((BDV_REGS_T *)(BDV_BASE))
+    111          #define BDVVNEW_BASE  0xE3000020
+    112          #define BDVVNEW_PNT ((BDVVNEW_REGS_T *)(BDVVNEW_BASE))
+    113          
+    114          
+    115          //UNS_8 arrayEEPROM[100];//массив EEPROM для чтения
+    116          extern int timing;  
+    117          extern int timingLoad;  
+    118          extern int cicling;  
+    119          
+    120          extern int trigReg;//заполнить дискр рег
+    121          
+    122          extern int IndexTIMERS;
+    123          extern int IndexTLog;
+    124          extern int IndexIO;
+    125          extern int IndexENA;
+    126          extern int IndexUstSPV;//индекс уставок в супервизоре
+    127          extern int GlobalLevelI_ABC[];//уровни фазных токов Фурье
+    128          extern int GlobalLevelUL_ABC[];//уровни напр лин
+    129          extern int GlobalLevelUF_ABC[];//уровни напр фаз
+    130          extern int GlobalLevel_3I0;
+    131          extern int GlobalLevel_3U0;
+    132          extern UNS_32 rawDVLow;//сырые ДВ
+    133          
+    134          int indexLgm=0;//индекс исполняемого ЛЭ
+    135          int isRunWL=1;//исполнение РЛ
+    136          
+    137          UNS_32 rele_bdvv1;//селекция реле
+    138          UNS_32 cdi_bdvv1;//селекция CDI
+    139          
+    140          UNS_32 selectorDVLow;//селекция ДВ активный-неактивный для мл 16 DV
+    141          UNS_32 selectorDVMidd;//селекция ДВ активный-неактивный для cp 16 DV
+    142          UNS_32 selectorDVHi;//селекция ДВ активный-неактивный для ct 16 DV
+    143          
+    144          #include "ici_r_ef.h"
+    145          
+    146          int cntToBC=0;//обмен с BC
+    147          void periodical_operations(void)
+    148          {
+    149           UNS_32 dvUnion[DQUADRO];//DV
+    150           UNS_32 tmpUnion[2*DQUADRO];//временное
+    151           UNS_32 tmpUnion2[2*DQUADRO];//временное
+    152          
+    153          
+    154           switch(trigReg)//заполнить регистратор
+    155           {
+    156            case 1: DiskrRegList();//первые 50 строк дискр регистратора
+    157            break;
+    158          
+    159            case 2: ActualRegList();//первые 50 строк текущих
+    160            break;
+    161          
+    162            case 3: ActualDVList();//первые 50 строк текущих DV
+    163            break;
+    164          
+    165            case 4: ActualReleList();//первые 50 строк текущих Реле
+    166            break;
+    167          
+    168            default:;
+    169           }//switch
+    170            trigReg  = 0;//заполнить регистратор
+    171          
+    172          
+    173           #define TEST_PIN_1          0
+    174          
+    175                  UNS_32 set = 0, clr = 0, maska = P3_STATE_GPO(TEST_PIN_1);
+    176                  if ((GPIO->p3_outp_state & maska) != 0) clr = maska; 
+    177                  else set = maska;
+    178                  gpio_set_gpo_state(set, clr);
+    179          
+    180            JLINKDCC_Process();
+    181            
+    182          //операции реального времени
+    183            Scan_Ici_Event_Req(); //межпроцессорный обмен
+    184            Scan_Ici_Entry_Data();//межпроцессорный обмен
+    185          
+    186            dataAccessICI();//доступ к данным ICI
+    187          
+    188            UNS_8 test1 = BDVV_PNT->bdvv_unisost1;  //0 рег сост БДВВ1
+    189          //  BDVV_PNT->bdvv_outena1 = 0xA5;   //4 разрешение выходов БДВВ1
+    190          //  BDVV_PNT->bdvv_out1    = 0xff;      //2 рег выходов БДВВ1
+    191            UNS_8 test2 = BDVV_PNT->bdvv_outsost1;  //3 рег сост выходов БДВВ1
+    192            UNS_8 test3 = BDVV_PNT->bdvv_in1;       //1 рег входов БДВВ1
+    193          
+    194              UNS_8 test1_v = BDV_PNT->bdv_unisost;  //0 рег сост БДВ
+    195            UNS_8 test3_v = BDV_PNT->bdv_in1;       //1 рег входов БДВ
+    196            UNS_8 test4_v = BDV_PNT->bdv_in2;       //1 рег входов БДВ
+    197          
+    198            UNS_8 test1_new = BDVVNEW_PNT->bdvv_unisost_new;  //0 рег сост БДВВ _new
+    199          //  BDVVNEW_PNT->bdvv_outena_new = 0xA5;   //4 разрешение выходов БДВВ _new
+    200          //  BDVVNEW_PNT->bdvv_out_new    = 0xff;      //2 рег выходов БДВВ _new
+    201            UNS_8 test2_new = BDVVNEW_PNT->bdvv_outsost_new;  //3 рег сост выходов БДВВ _new
+    202            UNS_8 test3_new = BDVVNEW_PNT->bdvv_in_new;       //1 рег входов БДВВ _new
+    203            
+    204           rawDVLow = test3_new;
+    205          
+    206           //BDV_PNT->bdv_unisost = 0x00;  //0 рег сост БДВ
+    207          
+    208          //операции раз в оборот
+    209           memset(dvUnion, 0, 4*DQUADRO);//обнулить DV
+    210          
+    211            isTimeSection = 1;//критическая секция с двойным доступом
+    212            selectorDVLow = SelectorDVdriverLow();//селекция ДВ активный-неактивный для мл 16 DV
+    213            //уставка ДВ -ПрямойИнверсный
+    214            UNS_32 upr_dvLow  =   SPV_USTOUT(offsetSPVCmdPRM1+ SPV_UPR_DVLOW);
+    215            selectorDVLow ^= upr_dvLow;
+    216            dvUnionMakerLow(selectorDVLow, dvUnion);//получить массив dvUnion для мл 16 DV
+    217          
+    218            selectorDVMidd = SelectorDVdriverMidd();//селекция ДВ активный-неактивный для cp 16 DV
+    219            //уставка ДВ -ПрямойИнверсный
+    220            UNS_32 upr_dvMidd =   SPV_USTOUT(offsetSPVCmdPRM1+ SPV_UPR_DVMIDD);
+    221            selectorDVMidd ^= upr_dvMidd;
+    222            dvUnionMakerMidd(selectorDVMidd, dvUnion);//получить массив dvUnion для cp 16 DV
+    223          
+    224            selectorDVHi = SelectorDVdriverHi();//селекция ДВ активный-неактивный для ct DV
+    225            UNS_32 upr_dvHi   =   SPV_USTOUT(offsetSPVCmdPRM1+ SPV_UPR_DVHI);
+    226            selectorDVHi ^= upr_dvHi;
+    227            dvUnionMakerHi(selectorDVHi, dvUnion);//получить массив dvUnion для ct  DV
+    228            isTimeSection = 0;//критическая секция с двойным доступом
+    229            buffInStateINTERFACE = selectorDVLow + selectorDVMidd*65536;
+    230          /*
+    231            FDVForm1->VisualDVdriver(selectorDVHi);//визуализация ДВ активный-неактивный
+    232          
+    233           if(DV1Box->Checked)
+    234             for(int i=0; i<DQUADRO; i++) dvUnion[i] |= ArrayRANGIR[DV1_SM*DQUADRO+ i];
+    235           if(DV2Box->Checked)
+    236             for(int i=0; i<DQUADRO; i++) dvUnion[i] |= ArrayRANGIR[DV2_SM*DQUADRO+ i];
+    237           if(DV3Box->Checked)
+    238             for(int i=0; i<DQUADRO; i++) dvUnion[i] |= ArrayRANGIR[DV3_SM*DQUADRO+ i];
+    239           if(DV4Box->Checked)
+    240             for(int i=0; i<DQUADRO; i++) dvUnion[i] |= ArrayRANGIR[DV4_SM*DQUADRO+ i];
+    241           if(DV5Box->Checked)
+    242             for(int i=0; i<DQUADRO; i++) dvUnion[i] |= ArrayRANGIR[DV5_SM*DQUADRO+ i];
+    243          */
+    244          
+    245           //общая логика измерений
+    246           CommonMeasureLogic();
+    247          
+    248            if(TypLE[indexLgm]==0){
+    249                     indexLgm=0;//индекс исполняемого ЛЭ
+    250                     }//if
+    251          
+    252          //получить входные для ЛЭ
+    253           for (int i=0; i<2*DQUADRO; i++) InputLECmd[i] = PlusCircleCmd[i] | EXEOutputCmd[i] | dvUnion[i];
+    254          
+    255          //исполнить массив ЛЭ 
+    256            switch(TypLE[indexLgm])//индекс исполняемого ЛЭ
+    257            {
+    258             case typeLE_OR:{
+    259               elementOR(indexLgm);//OR
+    260               }
+    261             break;
+    262             case typeLE_AND:
+    263               elementAND(indexLgm);//AND
+    264             break;
+    265             case typeLE_XOR:
+    266               elementXOR(indexLgm);//XOR
+    267             break;
+    268             default:;
+    269          
+    270            }//switch
+    271          
+    272            indexLgm++;//индекс исполняемого ЛЭ
+    273            if(indexLgm==LE_TOTAL) indexLgm=0;
+    274          
+    275          
+    276           //сформировать текущие(первую половину) как выход схемы ЛЭ и ДВ
+    277           for (int i=0; i<DQUADRO; i++) pActualCMD[i] = PlusCircleCmd[i] | dvUnion[i];
+    278           //спрятать текущие pActualCMD (первую половину)
+    279           memcpy(tmpUnion, pActualCMD, 4*DQUADRO);
+    280          
+    281          //Превратить ком массив(первую половину) в широкий ком массив RT
+    282           TranslateQuadroToWideRTCmd(pActualCMD);
+    283          
+    284           EXElogicCOMPONENT();//СУПЕРВИЗОР Логика компонентов из конфиг
+    285          
+    286           memset(pActualCMD, 0, 4*DQUADRO);//обнулить текущие (первую половину)
+    287           CompressorToActualCMD();//получить текущие (первую половину) из WideCmdRTBuffer
+    288          
+    289           //получить новые cmd от компонентов(первую половину)
+    290           for (int i=0; i<DQUADRO; i++) EXEOutputCmd[i] = pActualCMD[i] & ~tmpUnion[i];
+    291          
+    292          //---------КОМПОНЕНТЫ РЛ--------------------------
+    293           //спрятать текущие pActualCMD (первую половину)
+    294           memcpy(tmpUnion2, pActualCMD, 4*DQUADRO);
+    295          ///*
+    296           //сформировать текущие(первую половину) как выход схемы ЛЭ(вторая половина)
+    297           memcpy(pActualCMD, PlusCircleCmd, 2* 4*DQUADRO);
+    298          // for (int i=0; i<DQUADRO; i++) pActualCMD[i +DQUADRO] = PlusCircleCmd[i +DQUADRO];
+    299           //спрятать текущие pActualCMD (вторую половину)
+    300           memcpy(tmpUnion, WideLogActual, 4*DQUADRO);
+    301          
+    302           //спрятать текущие pActualCMD (вторую половину)
+    303          // memcpy(tmpUnion, WideLogActual, 4*DQUADRO);
+    304          //Превратить текущие(вторая половина) в широкий ком массив RT
+    305           TranslateQuadroToWideRTCmd(WideLogActual);
+    306          
+    307           EXElogicCOMPONENT_WL();//СУПЕРВИЗОР Логика компонентов из конфиг РЛ
+    308          
+    309           memset(pActualCMD, 0, 4*DQUADRO);//обнулить текущие (первую половину)
+    310           CompressorToActualCMD();//получить текущие из WideCmdRTBuffer
+    311          
+    312           //получить новые cmd от компонентов(вторую половину)
+    313           for (int i=0; i<DQUADRO; i++) EXEOutputCmd[i +DQUADRO] = pActualCMD[i] & ~tmpUnion[i];
+    314          //*/
+    315           //восстановить pActualCMD (первую половину)
+    316           memcpy(pActualCMD, tmpUnion2, 4*DQUADRO);
+    317          //-------------------------------------------------------------------------------------
+    318          
+    319           globalTimerReset = 0;//глобальный сброс всех таймеров
+    320           DiskretRegWorking();//работа дискр регистратора
+    321           PuskAPV_UROV_OFWorking();//пуск АПВ УРОВ ОФ
+    322          
+    323           isTimeSection = 1;//критическая секция с двойным доступом
+    324           TranslateINTERFACE();//перетранслировать широкий ком массив
+    325          
+    326          //исполнить ранжирование реле
+    327            rele_bdvv1 = WorkRangirRele();
+    328            if((rele_bdvv1&0x40)!=0){
+    329              int tt1=0;
+    330            }//if
+    331          //исполнить ранжирование СДИ
+    332            cdi_bdvv1 = WorkRangirCDI();
+    333            isTimeSection = 0;//критическая секция с двойным доступом
+    334          
+    335            buffOutStateINTERFACE = rele_bdvv1;//INTERFACE Out
+    336            buffLedStateINTERFACE = cdi_bdvv1;//INTERFACE Led
+    337            buffTrgOutStateINTERFACE = ReleTrigger;//INTERFACE Trg Out
+    338            buffTrgLedStateINTERFACE = CDITrigger;//INTERFACE Trg Led
+    339            buffGruppaUstINTERFACE = GruppaUst;//группа уставок
+    340            memcpy(buffCmdStateINTERFACE, dataCmdStateINTERFACE, 4*DQUADRO);//INTERFACE CmdState
+    341            memcpy(buffTrgCmdStateINTERFACE, dataTrgCmdStateINTERFACE, 4*DQUADRO);//INTERFACE Trg CmdState
+    342          
+    343            BDVV_PNT->bdvv_outena1 = 0xA5;   //4 разрешение выходов БДВВ1
+    344          //  BDVV_PNT->bdvv_out1    = 0x00;//rele_bdvv1;//0xff;      //2 рег выходов БДВВ1
+    345            
+    346            BDVVNEW_PNT->bdvv_outena_new = 0xA5;   //4 разрешение выходов БДВВ1
+    347            BDVVNEW_PNT->bdvv_out_new    = rele_bdvv1;      //2 рег выходов БДВВ1
+    348            
+    349          //  dataAccessEEPROM();//доступ к данным EEPROM 
+    350           
+    351           cicling ++;  
+    352           
+    353           if(cicling==100000){
+    354                int tt0 = timingLoad;  
+    355                int tt1 = timing;  
+    356                int tt2 = cicling;  
+    357                
+    358                int tt3 = IndexTIMERS;
+    359                int tt4 = IndexTLog;
+    360                int tt5 = IndexIO;
+    361                int tt6 = IndexENA;
+    362                int tt7 = IndexUstSPV;//индекс уставок в супервизоре
+    363                    tt7 = IndexUstSPV;//индекс уставок в супервизоре
+    364                
+    365           }//if
+    366           
+    367           
+    368           
+    369          }//periodical_operations(void)
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+     280   periodical_operations
+       280   -> ActualDVList
+       280   -> ActualRegList
+       280   -> ActualReleList
+       280   -> CommonMeasureLogic
+       280   -> CompressorToActualCMD
+       280   -> DiskrRegList
+       280   -> DiskretRegWorking
+       280   -> EXElogicCOMPONENT
+       280   -> EXElogicCOMPONENT_WL
+       280   -> JLINKDCC_Process
+       280   -> PuskAPV_UROV_OFWorking
+       280   -> Scan_Ici_Entry_Data
+       280   -> Scan_Ici_Event_Req
+       280   -> SelectorDVdriverHi
+       280   -> SelectorDVdriverLow
+       280   -> SelectorDVdriverMidd
+       280   -> TranslateINTERFACE
+       280   -> TranslateQuadroToWideRTCmd
+       280   -> WorkRangirCDI
+       280   -> WorkRangirRele
+       280   -> __aeabi_memcpy
+       280   -> __aeabi_memset
+       280   -> dataAccessICI
+       280   -> dvUnionMakerHi
+       280   -> dvUnionMakerLow
+       280   -> dvUnionMakerMidd
+       280   -> elementAND
+       280   -> elementOR
+       280   -> elementXOR
+       280   -> gpio_set_gpo_state
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  cdi_bdvv1
+       4  cntToBC
+       4  indexLgm
+       4  isRunWL
+    1888  periodical_operations
+       4  rele_bdvv1
+       4  selectorDVHi
+       4  selectorDVLow
+       4  selectorDVMidd
+
+ 
+    28 bytes in section .bss
+     4 bytes in section .data
+ 1 888 bytes in section .text
+ 
+ 1 888 bytes of CODE memory
+    32 bytes of DATA memory
+
+Errors: none
+Warnings: 11

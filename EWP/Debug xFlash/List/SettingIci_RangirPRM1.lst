@@ -1,0 +1,139 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        12/Oct/2015  11:05:07
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\IAR
+#        projects\HR1_0100_00_I720_new2\SettingIci\SettingIci_RangirPRM1.c
+#    Command line =  
+#        "D:\IAR
+#        projects\HR1_0100_00_I720_new2\SettingIci\SettingIci_RangirPRM1.c" -D
+#        _STATIC_MEMORY_BOOT -lcN "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\List\" -o "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xFlash\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "C:\Program Files\IAR Systems\Embedded
+#        Workbench 7.40\arm\INC\c\DLib_Config_Normal.h" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\Igor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\component\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\" --cpu_mode arm -On
+#        --use_c++_inline
+#    List file    =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\List\SettingIci_RangirPRM1.lst
+#    Object file  =  
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
+#        xFlash\Obj\SettingIci_RangirPRM1.o
+#
+###############################################################################
+
+D:\IAR projects\HR1_0100_00_I720_new2\SettingIci\SettingIci_RangirPRM1.c
+      1          #include "lpc_types.h"
+      2          #include "lpc_irq_fiq.h"
+      3          #include "lpc_arm922t_cp15_driver.h"
+      4          
+      5          #include "lpc32xx_hstimer.h"
+      6          #include "lpc32xx_ssp.h"
+      7          #include "lpc32xx_gpio.h"
+      8          
+      9          #include "lpc32xx_intc_driver.h"
+     10          #include "lpc32xx_clkpwr_driver.h"
+     11          
+     12          #include "arm926ej_cp15_drv.h"
+     13          #include "ttbl.h"
+     14          
+     15          #include <stdio.h>
+     16          #include <string.h>
+     17          
+     18          #include "psuperVisor\supermanager.h"
+     19          
+     20          #include "component\componentdef.h"
+     21          #include "psuperVisor\psvisor_helpdef.h"
+     22          
+     23          #include "psuperVisor\psvisor_helpfnc.h"
+     24          #include "virtualMenu\rangmanagerfnc.h"
+     25          #include "virtualmenu\systemmenufnc.h"
+     26          #include "SettingIci\SettingIci.h"
+     27          
+     28          #include "toSpeedOptim.h"
+     29          #include "toSpeedDIS.h"
+     30          
+     31          #include "header.h"
+     32          #include "ici_r_ef.h"
+     33          
+     34          #define _HIDE_COMPONENT
+     35          #include "PRM1Component.c"
+     36          
+     37          void SettingIci_RangirPRM1ToDV(int nDV)
+     38          {
+     39            int numDV = nDV - DV1_SM;//нормировка
+     40                // Положение ВВ (выключателя)
+     41            if(isActivCmdDV(SWITCH_STATE_DI_IEPRF_ONB, numDV))//проверка активности команды на ДВ
+     42                SetCmdToUVV(PRM1_COMP1,  1, IOCMD1_PRM1, nDV);//отранж CMD_POL_VV на ДВ
+     43                //Ручное откл ВВ
+     44          //HVSW_OFF_DI_IEPRF_ONB                ,// Откл. ВВ 
+     45            if(isActivCmdDV(HVSW_OFF_DI_IEPRF_ONB, numDV))//проверка активности команды на ДВ
+     46                SetCmdToUVV(PRM1_COMP1,  1, IOCMD3_PRM1, nDV);//отранж CMD_HANDOTKL_VV на ДВ
+     47          //IOCMD3_PRM1
+     48          }//SettingIci_RangirPRM2DV(int nDV)
+     49          
+     50          void SettingIci_RangirPRM1ToRele(int nRele)
+     51          {
+     52          //отранж PRM1 на Реле
+     53          int numRele = nRele - RELE1_SM;//нормировка
+     54          // Неисправность цепйй напр ДистЗ
+     55           if(isActivCmdRele(FLT_U_DSTP_OEPRF_ONB, numRele))//проверка активности команды на Rele
+     56                SetCmdToUVV(PRM1_COMP1,  1, IOCMD2_PRM1, nRele);//отранж 
+     57          }// SettingIci_RangirUMM2Rele(int nRele)
+     58          
+     59          void SettingIci_RangirPRM1ToLed(int nLed)
+     60          {
+     61          //отранж DZ1 на СДИ
+     62          int numLed = nLed - CDI1_SM;//нормировка
+     63          // Блокировка UMin1
+     64          // if(isActivCmdLed(BLOCK_UMIN1_DI_OEPRF_ONB, numLed))//проверка активности команды на Реле
+     65            //    SetCmdToUVV(UMM_COMP1,  1, IOCMD3_UMM, nLed);//отранж 
+     66          
+     67          }// SettingIci_RangirPRM1ToRele(int nLed)
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      16   SettingIci_RangirPRM1ToDV
+        16   -> SetCmdToUVV
+        16   -> isActivCmdDV
+       0   SettingIci_RangirPRM1ToLed
+      16   SettingIci_RangirPRM1ToRele
+        16   -> SetCmdToUVV
+        16   -> isActivCmdRele
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+     112  SettingIci_RangirPRM1ToDV
+       8  SettingIci_RangirPRM1ToLed
+      64  SettingIci_RangirPRM1ToRele
+
+ 
+ 184 bytes in section .text
+ 
+ 184 bytes of CODE memory
+
+Errors: none
+Warnings: 1

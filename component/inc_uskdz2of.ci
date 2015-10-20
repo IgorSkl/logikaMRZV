@@ -1,0 +1,163 @@
+
+//{
+//*******USKDZ2OF********
+/*
+//L1
+//POL_VV
+  TL_LOGIC(TLCMD6_DZ2to5) =
+  //таймер VUSKOR_DZ2to5MF_TIM
+  LSIGNAL_TIMER(TIMER4_DZ2to5MF) =
+     //ENA_USK_DZ2to5_VV
+     ENA_LOGIC(ENA_DZ2to5_3) & 
+     IO_LOGICOUT(offsetIOCmdPRM1 +IOCMD1_PRM1);//CMD_POL_VV
+*/
+
+//L2
+   tmp1 = 
+      //DZ2to5_PO3
+      TL_LOGIC(TLCMD30_DZ2to5OF);
+
+/*
+  //L3
+  //AU_DZ2to5MF
+  TL_LOGIC(TLCMD5_DZ2to5) =
+          //таймер VUSKOR_DZ2to5_TIM
+          FLOG_TIMER(TIMER4_DZ2to5MF) | 
+          //ENA_AUSK_DZ2to5
+	  ENA_LOGIC(ENA_DZ2to5_4);
+*/
+
+//int tt3 =  ENA_LOGIC(ENA_DZ2to5_5);
+/*
+  //L4
+  //TU_DZ2to5MF
+  TL_LOGIC(TLCMD4_DZ2to5) =
+    //ENA_TUSK_DZ2to5
+    ENA_LOGIC(ENA_DZ2to5_5);
+*/
+
+//--------KANAL DZ2OF_OU--------------------------------------------------------
+//L5
+   tmp2 =
+          //OU_DZ2to5
+          TL_LOGIC(TLCMDOU_DZ2to5) &
+	  tmp1;
+
+
+//триг по восх фронту
+//TRG_FRONT(set, clr, old, out)
+//ELOLDTRG_OUSKOR_DZ2to5OF  ELOUTTRG_OUSKOR_DZ2to5OF
+  TRG_FRONT(tmp2, tmp1, TLCMD9_DZ2to5OF, TLCMD10_DZ2to5OF)
+
+  //L8
+  tmp4 =
+  //таймер USKOR_DZ2to5OF_OU_TIM
+  LSIGNAL_TIMER(TIMER7_DZ2to5OF)  =
+	  //ELOUTTRG_OUSKOR_DZ2to5OF
+	  TL_LOGIC(TLCMD10_DZ2to5OF) &
+          TL_LOGIC(TL8_DZ2TO5OF) &
+          TL_LOGIC(TL10_DZ2TO5OF) &
+	  tmp1;
+
+//if(tmp4)
+//{
+// int tt1=0;
+//}
+
+//--------KANAL DZ2OF_AU--------------------------------------------------------
+  //L6
+  tmp2 =
+	  //AU_DZ2to5OF
+	  TL_LOGIC(TLCMD5_DZ2to5) &
+	  tmp1;
+
+//триг по восх фронту
+//TRG_FRONT(set, clr, old, out)
+//ELOLDTRG_AUSKOR_DZ2to5OF  ELOUTTRG_AUSKOR_DZ2to5OF
+  TRG_FRONT(tmp2, tmp1, TLCMD11_DZ2to5OF, TLCMD12_DZ2to5OF)
+
+  //L9
+  tmp5 =
+  //таймер USKOR_DZ2to5OF_AU_TIM
+  LSIGNAL_TIMER(TIMER6_DZ2to5OF)  =
+	  //ELOUTTRG_AUSKOR_DZ2to5OF
+	  TL_LOGIC(TLCMD12_DZ2to5OF) &
+          TL_LOGIC(TL9_DZ2TO5OF) &
+          TL_LOGIC(TL10_DZ2TO5OF) &
+	  tmp1;
+
+//--------KANAL DZ2OF_TU--------------------------------------------------------
+//L7
+  tmp2 =
+	  //TU_DZ2to5
+	  TL_LOGIC(TLCMD4_DZ2to5) &
+	  tmp1;
+
+//триг по восх фронту
+//TRG_FRONT(set, clr, old, out)
+//ELOLDTRG_TUSKOR_DZ2to5OF  ELOUTTRG_TUSKOR_DZ2to5OF
+  TRG_FRONT(tmp2, tmp1, TLCMD13_DZ2to5OF, TLCMD14_DZ2to5OF)
+
+  //L10
+  tmp6 =
+  //таймер USKOR_DZ2to5OF_TU_TIM
+  LSIGNAL_TIMER(TIMER8_DZ2to5OF)  =
+	  //ELOUTTRG_TUSKOR_DZ2to5OF
+	  TL_LOGIC(TLCMD14_DZ2to5OF) &
+          TL_LOGIC(TL7_DZ2TO5OF) &
+          TL_LOGIC(TL10_DZ2TO5OF) &
+	  tmp1;
+
+//----------------------------------------------------------------
+
+//L11
+//DZ2to5OF_USKOR
+  TL_LOGIC(TLCMD27_DZ2to5OF) =
+       //таймер USKOR_DZ2to5OF_OU_TIM
+       PLOG_TIMER(TIMER6_DZ2to5OF)|
+       //таймер USKOR_DZ2to5OF_AU_TIM
+       PLOG_TIMER(TIMER7_DZ2to5OF)|
+       //таймер USKOR_DZ2to5OF_TU_TIM
+       PLOG_TIMER(TIMER8_DZ2to5OF);
+
+//L12
+//RES_DZ2OF
+  TL_LOGIC(TLCMD1_DZ2to5OF)  =
+	  (
+	  tmp4 |
+	  tmp5 |
+	  tmp6)^1;
+
+
+//  if(TL_LOGIC(TLCMD1_DZ2to5OF)==0)
+//{
+// int tt1=0;
+//}
+
+  //L13
+   TL_LOGIC(TL8_DZ2TO5OF) =
+            (
+             //tmp5 |
+             IS_TIMER_DELTA6(TIMER6_DZ2to5OF) |
+             //tmp6
+             IS_TIMER_DELTA9(TIMER8_DZ2to5OF)
+             )^1;
+  //L14
+   TL_LOGIC(TL9_DZ2TO5OF) =
+            (
+             //tmp4 |
+             IS_TIMER_DELTA3(TIMER7_DZ2to5OF) |
+             //tmp6
+             IS_TIMER_DELTA9(TIMER8_DZ2to5OF)
+             )^1;
+  //L15
+   TL_LOGIC(TL7_DZ2TO5OF) =
+            (
+             //tmp5 |
+             IS_TIMER_DELTA6(TIMER6_DZ2to5OF) |
+             //tmp4
+             IS_TIMER_DELTA3(TIMER7_DZ2to5OF)
+             )^1;
+
+
+//}

@@ -1,0 +1,375 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  17:17:32
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\component\logicMTZ1.c
+#    Command line =  
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\component\logicMTZ1.c" -lcN
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\" -o "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "D:\Program Files\IAR Systems\Embedded
+#        Workbench 7.2\arm\INC\c\DLib_Config_Normal.h" -I "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\" --interwork
+#        --cpu_mode arm -On --use_c++_inline
+#    List file    =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\logicMTZ1.lst
+#    Object file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\logicMTZ1.o
+#
+###############################################################################
+
+D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\component\logicMTZ1.c
+      1          
+      2          #include <stdio.h>
+      3          #include <string.h>
+      4          
+      5          #include "bazisdef.h"
+      6          #include "component\componentdef.h"
+      7          #include "psuperVisor\psvisor_helpdef.h"
+      8          
+      9          #include "logictimers\logictimersmac.h"
+     10          
+     11          #include "logictimers\logictimersfnc.h"
+     12          
+     13          #include "..\bazis.h"
+     14          
+     15          #include "toSpeedOptim.h"
+     16          
+     17          #define _HIDE_COMPONENT
+     18          #include "MTZ1Component.c"
+     19          #include "PRM1Component.c"
+     20          
+     21          extern int GlobalPO1;
+     22          extern int GlobalPO2;
+     23          extern int GlobalPO3;
+     24          extern int GlobalPO4;
+     25          extern int GlobalLevelI_ABC[];
+     26          extern int GlobalLevelUL_ABC[];
+     27          //сектора направл МТЗ
+     28          extern int sectorMTZ_IA_V, sectorMTZ_IA_N;
+     29          extern int sectorMTZ_IB_V, sectorMTZ_IB_N;
+     30          extern int sectorMTZ_IC_V, sectorMTZ_IC_N;
+     31          
+     32          extern COMPONENT_OBJ  cnfCOMPONENT[];//конфигурация
+     33          extern int  logMassTimer[];
+     34          extern int  ENAcmd[];
+     35          extern int  spvUSTAVKI[];//текущие уставки супервизора
+     36          extern int   WideCmdRTBuffer[];
+     37          extern int   tempLog[];
+     38          //неисправность цепей напр
+     39          extern int  isFAILU_COMMON_MTZ;
+     40          extern int offsetSPVCmdPRM1;//смещение для SPV PRM1
+     41          
+     42          //extern int timing;
+     43          
+     44          void  logicMTZ1(int idxC) @ "Fast_function"
+     45          {
+     46          //логика компонента
+     47              int tmpOffsetT    =
+     48                          cnfCOMPONENT[idxC].offsetTimers;   //таймера компонента в конфигурации
+     49              int tmpOffsetIO   =
+     50                          cnfCOMPONENT[idxC].offsetIOCmd;    //IO команды
+     51              int tmpOffsetENA  =
+     52                          cnfCOMPONENT[idxC].offsetENACmd;    //ENA команды
+     53              int tmpOffsetUSpv =
+     54                          cnfCOMPONENT[idxC].offsetUstSpv;    //уставки SPV
+     55              int tmpOffsetTL   =
+     56                          cnfCOMPONENT[idxC].offsetTLCmd;    //TL команды
+     57          
+     58          //неисправность цепей напр MTZ
+     59          //isFAILU_INVERT
+     60          //если в момент активизации ПО МТЗ сигнала НЦН не было, то после активизации ПО
+     61          //сигнал НЦН уже не учитывается
+     62          
+     63          // TL_LOGIC(TLCMDFU_MTZ1) =
+     64                  //ELOUTTRG_NCN_MTZ1
+     65            //      TL_LOGIC(TLCMDOUTNCN_MTZ1)^1;
+     66          
+     67              //SPV_UST(
+     68          
+     69            int tt1 = SPV_UST(SPVSRABUST_MTZ1);
+     70            int tt2 = SPV_UST(SPVVOZVUST_MTZ1);
+     71          
+     72            detectorLevelUP3F(GlobalLevelI_ABC,
+     73                                               tmpOffsetUSpv+SPVSRABUST_MTZ1,
+     74                                               tmpOffsetUSpv+SPVVOZVUST_MTZ1,
+     75                                               tmpOffsetUSpv+SPV_OUTA_MTZ1);
+     76          
+     77           int LocalPO_MTZ1 = SPV_UST(SPV_OUTA_MTZ1) |
+     78                              SPV_UST(SPV_OUTB_MTZ1) |
+     79                              SPV_UST(SPV_OUTC_MTZ1);
+     80          
+     81            detectorLevelUP3F(GlobalLevelI_ABC, 
+     82                                               tmpOffsetUSpv+SPVSRABUST_MTZ1_V,
+     83                                               tmpOffsetUSpv+SPVVOZVUST_MTZ1_V,
+     84                                               tmpOffsetUSpv+SPV_OUTA_MTZ1_V);
+     85          
+     86           int LocalPO_MTZ1_V =    (
+     87          	                 (sectorMTZ_IA_V & 
+     88                                    SPV_UST(SPV_OUTA_MTZ1_V) &
+     89                                    (SPV_USTOUT(offsetSPVCmdPRM1+SPV_OUTA_U005)^1)
+     90                                    ) |
+     91          	                 (sectorMTZ_IB_V &
+     92                                    SPV_UST(SPV_OUTB_MTZ1_V) &
+     93                                    (SPV_USTOUT(offsetSPVCmdPRM1+SPV_OUTB_U005)^1)
+     94                                    )|
+     95          	                 (sectorMTZ_IC_V &
+     96                                    SPV_UST(SPV_OUTC_MTZ1_V) &
+     97                                    (SPV_USTOUT(offsetSPVCmdPRM1+SPV_OUTC_U005)^1)
+     98                                    )
+     99                                    );
+    100                              //isFAILU_INVERT
+    101          //                    TL_LOGIC(TLCMDFU_MTZ1);
+    102          
+    103          
+    104            detectorLevelUP3F(GlobalLevelI_ABC,
+    105                                               tmpOffsetUSpv+SPVSRABUST_MTZ1_N,
+    106                                               tmpOffsetUSpv+SPVVOZVUST_MTZ1_N,
+    107                                               tmpOffsetUSpv+SPV_OUTA_MTZ1_N);
+    108          
+    109           int LocalPO_MTZ1_N =    (
+    110          	                 (sectorMTZ_IA_N & 
+    111                                    SPV_UST(SPV_OUTA_MTZ1_N) &
+    112                                    (SPV_USTOUT(offsetSPVCmdPRM1+SPV_OUTA_U005)^1)
+    113                                    ) |
+    114          	                 (sectorMTZ_IB_N &
+    115                                    SPV_UST(SPV_OUTB_MTZ1_N) &
+    116                                    (SPV_USTOUT(offsetSPVCmdPRM1+SPV_OUTB_U005)^1)
+    117                                    )|
+    118          	                 (sectorMTZ_IC_N &
+    119                                    SPV_UST(SPV_OUTC_MTZ1_N) &
+    120                                    (SPV_USTOUT(offsetSPVCmdPRM1+SPV_OUTC_U005)^1)
+    121                                    )
+    122                                    );
+    123                              //isFAILU_INVERT
+    124          //                    TL_LOGIC(TLCMDFU_MTZ1);
+    125          
+    126          
+    127          //MTZ1_PN
+    128          //токи
+    129            detectorLevelUP3F(GlobalLevelI_ABC,
+    130                                               tmpOffsetUSpv+SPVSRABUST_MTZ1_PN,
+    131                                               tmpOffsetUSpv+SPVVOZVUST_MTZ1_PN,
+    132                                               tmpOffsetUSpv+SPV_OUTA_MTZ1_PN);
+    133          
+    134          //напряж
+    135            detectorLevelDOWN3F(GlobalLevelUL_ABC,
+    136                                               tmpOffsetUSpv+SPVSRABUST_MTZ1_UPN,
+    137                                               tmpOffsetUSpv+SPVVOZVUST_MTZ1_UPN,
+    138                                               tmpOffsetUSpv+SPV_OUTA_MTZ1_UPN);
+    139          
+    140          //если одно из напряжений UA UB UC больше уставки то MTZ1_PN запрещается
+    141           int LocalPO_MTZ1_PN =   (
+    142                                   (SPV_UST(SPV_OUTA_MTZ1_PN) &
+    143                                    SPV_UST(SPV_OUTA_MTZ1_UPN)) |
+    144                                    (SPV_UST(SPV_OUTB_MTZ1_PN) &
+    145                                     SPV_UST(SPV_OUTB_MTZ1_UPN)) |
+    146                                    (SPV_UST(SPV_OUTC_MTZ1_PN) &
+    147                                     SPV_UST(SPV_OUTC_MTZ1_UPN))
+    148                                    );
+    149                              //isFAILU_INVERT
+    150          //                    TL_LOGIC(TLCMDFU_MTZ1);
+    151          
+    152              //*******MTZ1********
+    153              int commonMTZ1 =
+    154                               //CMD1_MTZ1
+    155                               (IO_LOGIC(IOCMD1_MTZ1)^1) &
+    156                               ENA_LOGIC(ENA_MTZ1_1);// ENA_MTZ1;
+    157          
+    158             int locPO_MTZ1 = 
+    159                           commonMTZ1 &
+    160                           //ПО МТЗ1
+    161                           (GlobalPO1 | LocalPO_MTZ1) &
+    162                           //MTZ1_PROSTAJA
+    163                           (((ENA_LOGIC(ENA_MTZ1_HALF1) |
+    164                             ENA_LOGIC(ENA_MTZ1_HALF2))^1) |
+    165                           //разрешить если все UL меньше 005
+    166                            (
+    167                               SPV_USTOUT(offsetSPVCmdPRM1+SPV_OUTA_U005) &
+    168                               SPV_USTOUT(offsetSPVCmdPRM1+SPV_OUTB_U005) &
+    169                               SPV_USTOUT(offsetSPVCmdPRM1+SPV_OUTC_U005)
+    170                             ) |
+    171                           //разрешить если НЦН
+    172                  //ELOUTTRG_NCN_MTZ1
+    173                  TL_LOGIC(TLCMDOUTNCN_MTZ1)
+    174          //                   (
+    175                              //isFAILU_INVERT
+    176            //                  TL_LOGIC(TLCMDFU_MTZ1)^1
+    177              //               )
+    178                            );
+    179          
+    180             int locPO_MTZ1_V = 
+    181                           commonMTZ1 &
+    182                           //ПО МТЗ2 ВПД
+    183                           (GlobalPO2 | LocalPO_MTZ1_V)&
+    184                           //MTZ1_NAPRAVL
+    185                           ENA_LOGIC(ENA_MTZ1_HALF1) &
+    186                           //MTZ1 WPERED
+    187                           ENA_LOGIC(ENA_MTZ1_2) &
+    188                  //ELOUTTRG_NCN_MTZ1
+    189                  (TL_LOGIC(TLCMDOUTNCN_MTZ1)^1);
+    190          
+    191             int locPO_MTZ1_N = 
+    192                           commonMTZ1 &
+    193                           //ПО МТЗ2 НЗД
+    194                           (GlobalPO3 | LocalPO_MTZ1_N)&
+    195                           //MTZ1_NAPRAVL
+    196                           ENA_LOGIC(ENA_MTZ1_HALF1) &
+    197                           //MTZ1 NAZAD
+    198                           ENA_LOGIC(ENA_MTZ1_3) &
+    199                  //ELOUTTRG_NCN_MTZ1
+    200                  (TL_LOGIC(TLCMDOUTNCN_MTZ1)^1);
+    201          
+    202             int locPO_MTZ1_PN = 
+    203                           commonMTZ1 &
+    204                           //ПО МТЗ2 ПН
+    205                           (GlobalPO4 | LocalPO_MTZ1_PN)&
+    206                           //MTZ1_PUSKN
+    207                           ENA_LOGIC(ENA_MTZ1_HALF2) &
+    208                  //ELOUTTRG_NCN_MTZ1
+    209                  (TL_LOGIC(TLCMDOUTNCN_MTZ1)^1);
+    210          
+    211           int tmp1 =
+    212              locPO_MTZ1_V | 
+    213              locPO_MTZ1_N | 
+    214              locPO_MTZ1_PN;
+    215               //MTZ1_PO2
+    216              // TL_LOGIC(TLCMD1_MTZ1) |
+    217               //MTZ1_PO3
+    218              // TL_LOGIC(TLCMD2_MTZ1) |
+    219               //MTZ1_PO4
+    220              // TL_LOGIC(TLCMD3_MTZ1);
+    221          
+    222          // int tmp2 =
+    223            //  isFAILU_COMMON_MTZ;
+    224          
+    225          //триг по восх фронту
+    226          //TRG_FRONT(set, clr, old, out)
+    227          //                                    ELOLDTRG_NCN_MTZ1  ELOUTTRG_NCN_MTZ1
+    228            TRG_FRONT(tmp1, isFAILU_COMMON_MTZ, TLCMDOLDNCN_MTZ1, TLCMDOUTNCN_MTZ1)
+    229          
+    230            locPO_MTZ1_V &=
+    231                  //ELOUTTRG_NCN_MTZ1
+    232                  (TL_LOGIC(TLCMDOUTNCN_MTZ1)^1);
+    233          
+    234            locPO_MTZ1_N &=
+    235                  //ELOUTTRG_NCN_MTZ1
+    236                  (TL_LOGIC(TLCMDOUTNCN_MTZ1)^1);
+    237          
+    238            locPO_MTZ1_PN &=
+    239                  //ELOUTTRG_NCN_MTZ1
+    240                  (TL_LOGIC(TLCMDOUTNCN_MTZ1)^1);
+    241          
+    242              int max_tmp =
+    243              //L1 MTZ1
+    244              LSIGNAL_TIMER(TIMER1_MTZ1)  = //MTZ1_TIM1
+    245              //Сраб ПО МТЗ1
+    246              IO_LOGIC(IOCMD2_MTZ1) =
+    247              locPO_MTZ1;
+    248          
+    249             // if(max_tmp) flag_max_monitoring |= MAXMONITORING_COLLECT;//макс параметры сработки
+    250          
+    251              max_tmp =
+    252              //L2 MTZ1_V
+    253              LSIGNAL_TIMER(TIMER2_MTZ1)  = //MTZ1_TIM2
+    254              //MTZ1_PO2
+    255              TL_LOGIC(TLCMD1_MTZ1) =
+    256              //Сраб ПО МТЗ1 ВПД
+    257              IO_LOGIC(IOCMD3_MTZ1) =
+    258              locPO_MTZ1_V;
+    259          
+    260              //if(max_tmp) flag_max_monitoring |= MAXMONITORING_COLLECT;//макс параметры сработки
+    261          
+    262              max_tmp =
+    263              //L3 MTZ1_N
+    264              LSIGNAL_TIMER(TIMER3_MTZ1)  = //MTZ1_TIM3
+    265              //MTZ1_PO3
+    266              TL_LOGIC(TLCMD2_MTZ1) = 
+    267              //Сраб ПО МТЗ1 НЗД
+    268              IO_LOGIC(IOCMD4_MTZ1) =
+    269              locPO_MTZ1_N;
+    270          
+    271              //if(max_tmp) flag_max_monitoring |= MAXMONITORING_COLLECT;//макс параметры сработки
+    272          
+    273              max_tmp =
+    274              //L4 MTZ1_PN
+    275              LSIGNAL_TIMER(TIMER4_MTZ1)  = //MTZ1_TIM4
+    276              //MTZ1_PO4
+    277              TL_LOGIC(TLCMD3_MTZ1) = 
+    278              //Сраб ПО МТЗ1 ПН
+    279              IO_LOGIC(IOCMD5_MTZ1) =
+    280              locPO_MTZ1_PN;
+    281          
+    282          //    if(max_tmp) flag_max_monitoring |= MAXMONITORING_COLLECT;//макс параметры сработки
+    283          
+    284           int tmp = //L5
+    285              LSIGNAL_TIMER(TIMER_BO_MTZ1)  =
+    286                  PLOG_TIMER(TIMER1_MTZ1)| //MTZ1_TIM1
+    287                  PLOG_TIMER(TIMER2_MTZ1)| //MTZ1_TIM2
+    288                  PLOG_TIMER(TIMER3_MTZ1)| //MTZ1_TIM3
+    289                  PLOG_TIMER(TIMER4_MTZ1); //MTZ1_TIM4
+    290          
+    291              max_tmp =
+    292              //Сраб МТЗ1
+    293              IO_LOGIC(IOCMD6_MTZ1) =
+    294                    ILOG_TIMER(TIMER_BO_MTZ1)|tmp;
+    295          
+    296            //  if(max_tmp) flag_max_monitoring |= MAXMONITORING_FIX;//макс параметры сработки
+    297          
+    298          }//logicMTZ1(short idxC)
+    299          
+    300          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      96   logicMTZ1
+        96   -> ILogTimer
+        96   -> PLogTimer
+        96   -> detectorLevelDOWN3F
+        96   -> detectorLevelUP3F
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+    1888  logicMTZ1
+
+ 
+ 1 888 bytes in section Fast_function
+ 
+ 1 888 bytes of CODE memory
+
+Errors: none
+Warnings: 2

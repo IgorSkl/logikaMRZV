@@ -1,0 +1,74 @@
+/*------------------------------------------------------------------------------
+* Created (c) 2014 - Factory “KyivPrylad”
+* 
+* Permission to use, copy, modify, and distribute this software for any
+* purpose with or without fee is hereby granted, provided that the above
+* copyright notice and this permission notice appear in all copies.
+* 
+* THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+* WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+* MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+* ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+* WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+* ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+* OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+* 
+*------------------------------------------------------------------------------
+*
+* Processor       : Lpc_3240
+* File Name       : ssp0_dma.h
+* Description     : support for the ssp1L.c
+                    BM BR
+
+*  Version        : 1.00
+*
+*       +----- (NEW | MODify | ADD | DELete)
+*       |
+*  No   |   When       Who                What
+*-----+---+----------+------------------+--------------------------------------
+* 000  NEW  __/06/14   Markovsky A       Creation
+*----------------------------------------------------------------------------*/
+
+#ifndef SSP_DMA_h
+#define SSP_DMA_h
+
+//""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+//``````````````````````````````````````````````````````````````````````````````````
+//..................................................................................
+//""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+//~~~        ~~~
+/* NO_ERROR macro */
+//#define _NO_ERROR_SSP           (long)(0)
+/* ERROR macro */
+//#define _ERROR_SSP              (long)(-1)
+//"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+//'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+//~~~~~~~~~~~~~~~~    Define Layer T         ~~~~~~~~~~~~~~~~~
+//,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+//~~~~~~~~~~~~~~~~ 
+typedef struct StateDmaDsc_tag
+{
+	char   IdxChnl;
+	char   chActivatePDC;
+	short      shCtrPR;
+	short      shCtrNPR;
+	long   lPR;
+	long   lNPR;
+	long   lCS_SR;
+}StateDmaDsc;
+//"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+
+//'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+//~~~~~~~~~~~~~~~~    Define Layer T         ~~~~~~~~~~~~~~~~~
+//,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+//~~~~~~~~~~~~~~~~ 
+
+//"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+long IciSsp0_ReadBuf (AT91S_SPI *p_spi,void *buffer,long size)   @ "Fast_function"//Fastest_function";
+long IciSsp0_WriteBuf(AT91S_SPI *p_spi,void *buffer,long size)   @ "Fast_function"//Fastest_function";
+
+//extern void Ssp0Init(void);
+#endif 
+/* SSP_DMA_h */

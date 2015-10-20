@@ -1,0 +1,249 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  14:32:18
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\logictimers\FLogTimer.c
+#    Command line =  
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\logictimers\FLogTimer.c" -lcN
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\" -o "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\Obj\" --debug
+#        --endian=little --cpu=ARM926EJ-S -e --fpu=VFP9-S --dlib_config
+#        "D:\Program Files\IAR Systems\Embedded Workbench
+#        7.2\arm\INC\c\DLib_Config_Normal.h" -I "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\"
+#        --interwork --cpu_mode arm -Ohs --use_c++_inline
+#    List file    =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\FLogTimer.lst
+#    Object file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\FLogTimer.o
+#
+###############################################################################
+
+D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\logictimers\FLogTimer.c
+      1          
+      2          #include "bazisdef.h"
+      3          #include "logictimersdef.h"
+      4          #include "logictimersfnc.h"
+      5          
+      6          //массив EL триггеров дл€ лог таймеров
+      7          extern int  elTrgOldTimer[];
+      8          extern int  elTrgOutTimer[];
+      9          //лог массив запуска таймеров
+     10          extern int  logMassTimer[];
+     11          //главный массив лог таймеров
+     12          extern BAZIS_TIMER_MEM  bazisTimerMem[];
+     13          
+     14          extern int  elTrgOldTimer_WL[];
+     15          extern int  elTrgOutTimer_WL[];
+     16          //лог массив запуска таймеров
+     17          extern int  logMassTimer_WL[];
+     18          //главный массив лог таймеров
+     19          extern BAZIS_TIMER_MEM  bazisTimerMem_WL[];
+     20          
+     21          //глобальный сброс всех таймеров
+     22          extern int  globalTimerReset;
+     23          
+     24          /**********************************************
+     25          ѕ–яћќ… ‘ќ–ћ»–ќ¬ј“≈Ћ№
+     26          tNumber - номер таймера
+     27          ¬ыход - флаг работы
+     28          **********************************************/
+     29          int FLogTimer(int tNumber) @ "Fast_function"
+     30          {
+     31          //  bazisTimerMem[tNumber].TYP = 0;//по фронту
+     32            if (globalTimerReset)
+     33            {
+     34          //    return LogTimerRES(tNumber,);//, 0, 1);
+     35              int tmp = *bazisTimerMem[tNumber].pntInputSignal;
+     36          //if (RES)
+     37          //{
+     38              elTrgOldTimer[tNumber] = tmp;
+     39              elTrgOutTimer[tNumber] = 0;//выход триг ускор переноса
+     40              bazisTimerMem[tNumber].RESET = 1;
+     41          //}//if
+     42          
+     43          //#ifndef  _ILOGTIMER_
+     44          //поймать фронт
+     45              if ((tmp^elTrgOldTimer[tNumber])&tmp)  elTrgOutTimer[tNumber] = 1;
+     46              /*
+     47              #else
+     48              //поймать фронт
+     49              if ((tmp^elTrgOldTimer[tNumber])&(tmp^1))  elTrgOutTimer[tNumber] = 1;
+     50          
+     51              #endif // _ILOGTIMER_
+     52              */
+     53          
+     54              elTrgOldTimer[tNumber] = tmp;
+     55          
+     56          //если таймер досчитал
+     57              if (bazisTimerMem[tNumber].FINISCH)
+     58              {
+     59                bazisTimerMem[tNumber].RESET = 1;
+     60                elTrgOutTimer[tNumber] = 0;
+     61              }//if
+     62              /*
+     63              else
+     64              {
+     65                if (!RES)
+     66                  bazisTimerMem[tNumber].RESET = 0;
+     67          
+     68              }
+     69              */
+     70              return elTrgOutTimer[tNumber];
+     71          
+     72          //#include "logTimerRES.ci"
+     73            }//if (globalTimerReset)
+     74          
+     75          //  return LogTimer(tNumber, 0);
+     76          //#include "logTimer.ci"
+     77            int tmp = *bazisTimerMem[tNumber].pntInputSignal;
+     78          //поймать фронт
+     79            if ((tmp^elTrgOldTimer[tNumber])&
+     80                tmp
+     81               )  elTrgOutTimer[tNumber] = 1;
+     82          
+     83            elTrgOldTimer[tNumber] = tmp;
+     84          
+     85          //если таймер досчитал
+     86            if (bazisTimerMem[tNumber].FINISCH)
+     87            {
+     88              bazisTimerMem[tNumber].RESET = 1;
+     89              elTrgOutTimer[tNumber] = 0;
+     90            }//if
+     91            else
+     92            {
+     93              bazisTimerMem[tNumber].RESET = 0;
+     94            }
+     95            return elTrgOutTimer[tNumber];
+     96          
+     97          }//char FLogTimer(char tNumber)
+     98          
+     99          /**********************************************
+    100          ѕ–яћќ… ‘ќ–ћ»–ќ¬ј“≈Ћ№ –Ћ
+    101          tNumber - номер таймера
+    102          ¬ыход - флаг работы
+    103          **********************************************/
+    104          int FLogTimer_WL(int tNumber) @ "Fast_function"
+    105          {
+    106            if (globalTimerReset)
+    107            {
+    108          //    return LogTimerRES(tNumber,);//, 0, 1);
+    109              int tmp = *bazisTimerMem_WL[tNumber].pntInputSignal;
+    110          //if (RES)
+    111          //{
+    112              elTrgOldTimer_WL[tNumber] = tmp;
+    113              elTrgOutTimer_WL[tNumber] = 0;//выход триг ускор переноса
+    114              bazisTimerMem_WL[tNumber].RESET = 1;
+    115          //}//if
+    116          
+    117          //#ifndef  _ILOGTIMER_
+    118          //поймать фронт
+    119              if ((tmp^elTrgOldTimer_WL[tNumber])&tmp)  elTrgOutTimer_WL[tNumber] = 1;
+    120              /*
+    121              #else
+    122              //поймать фронт
+    123              if ((tmp^elTrgOldTimer[tNumber])&(tmp^1))  elTrgOutTimer[tNumber] = 1;
+    124          
+    125              #endif // _ILOGTIMER_
+    126              */
+    127          
+    128              elTrgOldTimer_WL[tNumber] = tmp;
+    129          
+    130          //если таймер досчитал
+    131              if (bazisTimerMem_WL[tNumber].FINISCH)
+    132              {
+    133                bazisTimerMem_WL[tNumber].RESET = 1;
+    134                elTrgOutTimer_WL[tNumber] = 0;
+    135              }//if
+    136              /*
+    137              else
+    138              {
+    139                if (!RES)
+    140                  bazisTimerMem[tNumber].RESET = 0;
+    141          
+    142              }
+    143              */
+    144              return elTrgOutTimer_WL[tNumber];
+    145          
+    146          //#include "logTimerRES.ci"
+    147            }//if (globalTimerReset)
+    148          
+    149          //  return LogTimer(tNumber, 0);
+    150          //#include "logTimer.ci"
+    151            int tmp = *bazisTimerMem_WL[tNumber].pntInputSignal;
+    152          //поймать фронт
+    153            if ((tmp^elTrgOldTimer_WL[tNumber])&
+    154                tmp
+    155               )  elTrgOutTimer_WL[tNumber] = 1;
+    156          
+    157            elTrgOldTimer_WL[tNumber] = tmp;
+    158          
+    159          //если таймер досчитал
+    160            if (bazisTimerMem_WL[tNumber].FINISCH)
+    161            {
+    162              bazisTimerMem_WL[tNumber].RESET = 1;
+    163              elTrgOutTimer_WL[tNumber] = 0;
+    164            }//if
+    165            else
+    166            {
+    167              bazisTimerMem_WL[tNumber].RESET = 0;
+    168            }
+    169            return elTrgOutTimer_WL[tNumber];
+    170          
+    171          }//FLogTimer_WL(char tNumber)
+    172          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   FLogTimer
+       8   FLogTimer_WL
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable1
+       4  ??DataTable1_1
+       4  ??DataTable1_2
+       4  ??DataTable1_3
+       4  ??DataTable1_4
+       4  ??DataTable1_5
+       4  ??DataTable1_6
+     176  FLogTimer
+     176  FLogTimer_WL
+
+ 
+ 380 bytes in section Fast_function
+ 
+ 380 bytes of CODE memory
+
+Errors: none
+Warnings: none

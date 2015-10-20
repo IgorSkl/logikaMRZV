@@ -1,0 +1,738 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  17:17:40
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\SettingIci\SettingIci_MTZ.c
+#    Command line =  
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\SettingIci\SettingIci_MTZ.c" -lcN
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\" -o "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "D:\Program Files\IAR Systems\Embedded
+#        Workbench 7.2\arm\INC\c\DLib_Config_Normal.h" -I "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\" --interwork
+#        --cpu_mode arm -On --use_c++_inline
+#    List file    =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\SettingIci_MTZ.lst
+#    Object file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\SettingIci_MTZ.o
+#
+###############################################################################
+
+D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\SettingIci\SettingIci_MTZ.c
+      1          #include "lpc_types.h"
+      2          #include "lpc_irq_fiq.h"
+      3          #include "lpc_arm922t_cp15_driver.h"
+      4          
+      5          #include "lpc32xx_hstimer.h"
+      6          #include "lpc32xx_ssp.h"
+      7          #include "lpc32xx_gpio.h"
+      8          
+      9          #include "lpc32xx_intc_driver.h"
+     10          #include "lpc32xx_clkpwr_driver.h"
+     11          
+     12          #include "arm926ej_cp15_drv.h"
+     13          #include "ttbl.h"
+     14          
+     15          #include <stdio.h>
+     16          #include <string.h>
+     17          
+     18          #include "psuperVisor\supermanager.h"
+     19          
+     20          #include "component\componentdef.h"
+     21          #include "psuperVisor\psvisor_helpdef.h"
+     22          
+     23          #include "psuperVisor\psvisor_helpfnc.h"
+     24          #include "SettingIci\SettingIci.h"
+     25          #include "virtualmenu\systemmenufnc.h"
+     26          
+     27          #include "toSpeedOptim.h"
+     28          #include "toSpeedDIS.h"
+     29          
+     30          #include "header.h"
+     31          #include "ici_r_ef.h"
+     32          
+     33          #define _HIDE_COMPONENT
+     34          #include "MTZ1Component.c"
+     35          #include "MTZ2Component.c"
+     36          
+     37          extern char chProtectTableComeIn;
+     38          extern char chResultCallGetMeasPrt;
+     39          extern  long lMtz1,lMtz1Tmr,lSt1,lSt2, lst3, lst4;
+     40          extern __MEASUREMENT_TO_PROTECTION TestMeasProtection;
+     41          
+     42          void  SettingIci_MTZ()
+     43          {
+     44          //установки ICI МТЗ 
+     45          //-------------MTZ1-----------------------    
+     46              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage1DrOcp1Pickup.mcp1_I_ov_range;
+     47              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage1DrOcp1StageParam.mcp1_time_stage;
+     48              
+     49            SetUstToClon(MTZ_COMP1,  1, MNGUST_MTZ1, lMtz1);//уставка МТЗ1 отсечка
+     50            SetUstToClon(MTZ_COMP1,  1, MNGVID_MTZ1, lMtz1Tmr*10);//выдержка МТЗ1 отсечка
+     51          
+     52          //.ПО МТЗПН1
+     53          //.	 уставка по току
+     54          //.	 1 ед = 1 мA
+     55              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage1DrOcp1Pickup.mcp1_IstpU_ov_range;
+     56            SetUstToClon(MTZ_COMP1,  1, MNGUST_MTZ1_PN, lMtz1);//уставка МТЗ1 ПН 
+     57          //.ПО U МТЗПН1
+     58          //.	 уставка по пуска по напряжению
+     59              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage1DrOcp1Pickup.mcp1_Ustp_ov_range;
+     60            SetUstToClon(MTZ_COMP1,  1, MNGUST_MTZ1_UPN, lMtz1);//уставка МТЗ1 ПН 
+     61          //.T МТЗПН1
+     62          //.	выдержка 1- ступени МТЗ
+     63          //.	1 ед =10мсе
+     64              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage1DrOcp1StageParam.mcp1_Ustp_time_stage;
+     65            SetUstToClon(MTZ_COMP1,  1, MNGVID_MTZ1_PN, lMtz1Tmr*10);//выдержка МТЗ1 ПН
+     66          
+     67          //.ПО МТЗ1 направл
+     68          //.	 уставка по току
+     69          //.	 1 ед = 1 мA
+     70              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage1DrOcp1Pickup.mcp1_s1_Ias_ov_range;
+     71            SetUstToClon(MTZ_COMP1,  1, MNGUST_MTZ1_V, lMtz1);//уставка МТЗН1 вперед
+     72          
+     73              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage1DrOcp1Pickup.mcp1_s2_Iabk_ov_range;
+     74            SetUstToClon(MTZ_COMP1,  1, MNGUST_MTZ1_N, lMtz1);//уставка МТЗН1 назад
+     75          //.	выдержка МТЗ1 вперед
+     76          //.	1 ед =10мсе
+     77              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage1DrOcp1StageParam.mcp1_s1_time_stage;
+     78            SetUstToClon(MTZ_COMP1,  1, MNGVID_MTZ1_V, lMtz1Tmr*10);//выдержка МТЗ1 вперед
+     79          //.	выдержка МТЗ1 назад
+     80          //.	1 ед =10мсе
+     81              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage1DrOcp1StageParam.mcp1_s2_time_stage;
+     82            SetUstToClon(MTZ_COMP1,  1, MNGVID_MTZ1_N, lMtz1Tmr*10);//выдержка МТЗ1 вперед
+     83          
+     84            int uprMTZ1=0;
+     85            //меню  Состояние МТЗ1    
+     86          //.	Состояние
+     87          //.	1 -вкл
+     88          //.	0 - выкл
+     89              lSt1 = brCfgTbl.ownrStg1DrOcp1Mng.state_mcp1;
+     90            if(lSt1>0) uprMTZ1 |= 4; //МТЗ1 отсечка WKL
+     91            else  uprMTZ1 &= ~4; //МТЗ1 отсечка OTKL 
+     92              //Селектор МТЗ1
+     93          //.	Состояние
+     94          //.	0 - Простая
+     95          //.	1 - Пуск по направленности
+     96          //.	2 - Пуск по напряжению
+     97              lSt2 = brCfgTbl.ownrStg1DrOcp1Mng.select_prt_mcp1;  
+     98            if(lSt2==2) uprMTZ1 |= 2; //МТЗ1 ПН WKL
+     99            else  uprMTZ1 &= ~2; //МТЗ1 ПН OTKL 
+    100            if(lSt2==1) uprMTZ1 |= 1; //МТЗ1 направл WKL
+    101            else  uprMTZ1 &= ~1; //МТЗ1 направл OTKL 
+    102              
+    103              //меню  МТЗ1 Напрвление Вперед Состояние 
+    104          //.	Состояние
+    105          //.	1 -вкл
+    106          //.	0 - выкл
+    107              lst3 = brCfgTbl.ownrStg1DrOcp1Mng.DirectionStraight_mcp1;
+    108            if(lst3>0) uprMTZ1 |= 8; //МТЗ1 вперед WKL
+    109            else  uprMTZ1 &= ~8; //МТЗ1 вперед OTKL 
+    110          
+    111              //меню  МТЗ1 Напрвление Назад Состояние 
+    112          //.	Состояние
+    113          //.	1 -вкл
+    114          //.	0 - выкл
+    115              lst4 = brCfgTbl.ownrStg1DrOcp1Mng.DirectionBack_mcp1;
+    116            if(lst4>0) uprMTZ1 |= 16; //МТЗ1 назад WKL
+    117            else  uprMTZ1 &= ~16; //МТЗ1 назад OTKL 
+    118          
+    119          
+    120            SetUstToClon(MTZ_COMP1,  1, MNGUPR_MTZ1, uprMTZ1);//управление МТЗ1
+    121          //    lst2 = brCfgTbl.ownrStg1DrOcp1Mng.select_prt_mcp1;  
+    122            
+    123          //-------------MTZ2-----------------------    
+    124              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage2DrOcp2Pickup.mcp_I_ov_range;
+    125              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage2DrOcp2StageParam.mcp_time_stage;
+    126            SetUstToClon(MTZ_COMP1,  2, MNGUST_MTZ2to5, lMtz1);//уставка МТЗ2 отсечка
+    127            SetUstToClon(MTZ_COMP1,  2, MNGVID_MTZ2to5, lMtz1Tmr*10);//выдержка МТЗ2 отсечка
+    128            
+    129          //.ПО МТЗПН
+    130          //.	 уставка по току
+    131          //.	 1 ед = 1 мA
+    132              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage2DrOcp2Pickup.mcp_IstpU_ov_range;
+    133            SetUstToClon(MTZ_COMP1,  2, MNGUST_MTZ2to5_PN, lMtz1);//уставка МТЗ2 ПН
+    134          //.ПО U МТЗПН
+    135          //.	 уставка по пуска по напряжению
+    136              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage2DrOcp2Pickup.mcp_Ustp_ov_range;
+    137            SetUstToClon(MTZ_COMP1,  2, MNGUST_MTZ2to5_UPN, lMtz1);//уставка МТЗ2 ПН
+    138          
+    139              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage2DrOcp2StageParam.mcp_Ustp_time_stage;
+    140            SetUstToClon(MTZ_COMP1,  2, MNGVID_MTZ2to5_PN, lMtz1Tmr*10);//выдержка МТЗ2 ПН
+    141          
+    142          //.ПО МТЗ2 направл
+    143          //.	 уставка по току
+    144          //.	 1 ед = 1 мA
+    145              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage2DrOcp2Pickup.mcp_s1_Ias_ov_range;
+    146            SetUstToClon(MTZ_COMP1,  2, MNGUST_MTZ2to5_V, lMtz1);//уставка МТЗН2 вперед
+    147          
+    148              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage2DrOcp2Pickup.mcp_s2_Iabk_ov_range;
+    149            SetUstToClon(MTZ_COMP1,  2, MNGUST_MTZ2to5_N, lMtz1);//уставка МТЗН2 назад
+    150            
+    151          //.	выдержка МТЗ2 вперед
+    152          //.	1 ед =10мсе
+    153              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage2DrOcp2StageParam.mcp_s1_time_stage;
+    154            SetUstToClon(MTZ_COMP1,  2, MNGVID_MTZ2to5_V, lMtz1Tmr*10);//выдержка МТЗ2 вперед
+    155          //.	выдержка МТЗ2 назад
+    156          //.	1 ед =10мсе
+    157              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage2DrOcp2StageParam.mcp_s2_time_stage;
+    158            SetUstToClon(MTZ_COMP1,  2, MNGVID_MTZ2to5_N, lMtz1Tmr*10);//выдержка МТЗ2 назад
+    159            
+    160          //Ускорение
+    161            //- выдержка ускорения МТЗ2 BB
+    162              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage2DrOcp2StageParam.mcp_time_stage_Aclt;
+    163            SetUstToClon(MTZ_COMP1,  2, MNGUSK_MTZ2to5, lMtz1Tmr*10);//ускорение МТЗ2 BB
+    164            //- выдержка ускорения МТЗ2 ОУ
+    165              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage2DrOcp2StageParam.mcp_T_op_aclt;
+    166            SetUstToClon(MTZ_COMP1,  2, MNGUSK_MTZ2to5_OU, lMtz1Tmr*10);//ускорение МТЗ2 ОУ
+    167            //- выдержка ускорения МТЗ2 TУ
+    168              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage2DrOcp2StageParam.mcp_T_tele_aclt;
+    169            SetUstToClon(MTZ_COMP1,  2, MNGUSK_MTZ2to5_TU, lMtz1Tmr*10);//ускорение МТЗ2 TУ
+    170            
+    171          //- выдержка ускорения ступени МТЗН2 вперед  
+    172              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage2DrOcp2StageParam.mcp_s1_T_aclt;
+    173            SetUstToClon(MTZ_COMP1,  2, MNGUSK_MTZ2to5_V, lMtz1Tmr*10);//ускорение МТЗН2 вперед
+    174            //- выдержка ускорения МТЗH2 вперед ОУ
+    175              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage2DrOcp2StageParam.mcp_s1_T_op_aclt;
+    176            SetUstToClon(MTZ_COMP1,  2, MNGUSK_MTZ2to5_V_OU, lMtz1Tmr*10);//ускорение МТЗH2 вперед ОУ
+    177            //- выдержка ускорения МТЗH2 вперед TУ
+    178              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage2DrOcp2StageParam.mcp_s1_T_tele_aclt;
+    179            SetUstToClon(MTZ_COMP1,  2, MNGUSK_MTZ2to5_V_TU, lMtz1Tmr*10);//ускорение МТЗH2 вперед TУ
+    180            
+    181          //- выдержка ускорения ступени МТЗН2 назад
+    182              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage2DrOcp2StageParam.mcp_s2_T_aclt;
+    183            SetUstToClon(MTZ_COMP1,  2, MNGUSK_MTZ2to5_N, lMtz1Tmr*10);//ускорение МТЗН2 назад
+    184            //- выдержка ускорения МТЗH2 назад ОУ
+    185              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage2DrOcp2StageParam.mcp_s2_T_op_aclt;
+    186            SetUstToClon(MTZ_COMP1,  2, MNGUSK_MTZ2to5_N_OU, lMtz1Tmr*10);//ускорение МТЗH2 назад ОУ
+    187            //- выдержка ускорения МТЗH2 назад TУ
+    188              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage2DrOcp2StageParam.mcp_s2_T_tele_aclt;
+    189            SetUstToClon(MTZ_COMP1,  2, MNGUSK_MTZ2to5_N_TU, lMtz1Tmr*10);//ускорение МТЗH2 назад TУ
+    190            
+    191          //- выдержка ускорения ступени МТЗ2ПН
+    192              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage2DrOcp2StageParam.mcp_Ustp_T_aclt;
+    193            SetUstToClon(MTZ_COMP1,  2, MNGUSK_MTZ2to5_PN, lMtz1Tmr*10);//ускорение МТЗ2ПН
+    194            //- выдержка ускорения МТЗ2ПН ОУ
+    195              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage2DrOcp2StageParam.mcp_Ustp_T_op_aclt;
+    196            SetUstToClon(MTZ_COMP1,  2, MNGUSK_MTZ2to5_PN_OU, lMtz1Tmr*10);//ускорение МТЗ2ПН  ОУ
+    197            //- выдержка ускорения МТЗ2ПН TУ
+    198              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage2DrOcp2StageParam.mcp_Ustp_T_tele_aclt;
+    199            SetUstToClon(MTZ_COMP1,  2, MNGUSK_MTZ2to5_PN_TU, lMtz1Tmr*10);//ускорение МТЗ2ПН  TУ
+    200            
+    201          //- выдержка ввод ускорения МТЗ2
+    202              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage2DrOcp2StageParam.mcp_Tau_AcltImp;
+    203            SetUstToClon(MTZ_COMP1,  2, MNGVUSK_MTZ2to5, lMtz1Tmr*10);//ввод ускорения МТЗ2
+    204            
+    205              int uprMTZ2=0;
+    206            //меню  Состояние МТЗ2    
+    207          //.	Состояние
+    208          //.	1 -вкл
+    209          //.	0 - выкл
+    210              lSt1 = brCfgTbl.ownrStg2DrOcp2Mng.state_mcp;
+    211            if(lSt1>0) uprMTZ2 |= 4; //МТЗ1  WKL
+    212            else  uprMTZ2 &= ~4; //МТЗ1  OTKL 
+    213              //Селектор МТЗ2
+    214          //.	Состояние
+    215          //.	0 - Простая
+    216          //.	1 - Пуск по направленности
+    217          //.	2 - Пуск по напряжению
+    218              lSt2 = brCfgTbl.ownrStg2DrOcp2Mng.select_prt_mcp;  
+    219            if(lSt2==2) uprMTZ2 |= 2; //МТЗ2 ПН WKL
+    220            else  uprMTZ2 &= ~2; //МТЗ2 ПН OTKL 
+    221            if(lSt2==1) uprMTZ2 |= 1; //МТЗ2 направл WKL
+    222            else  uprMTZ2 &= ~1; //МТЗ2 направл OTKL 
+    223              
+    224              //меню  МТЗ2 Напрвление Вперед Состояние 
+    225          //.	Состояние
+    226          //.	1 -вкл
+    227          //.	0 - выкл
+    228              lst3 = brCfgTbl.ownrStg2DrOcp2Mng.DirectionStraight_mcp;
+    229            if(lst3>0) uprMTZ2 |= 8; //МТЗ2 вперед WKL
+    230            else  uprMTZ2 &= ~8; //МТЗ2 вперед OTKL 
+    231          
+    232              //меню  МТЗ2 Напрвление Назад Состояние 
+    233          //.	Состояние
+    234          //.	1 -вкл
+    235          //.	0 - выкл
+    236              lst4 = brCfgTbl.ownrStg2DrOcp2Mng.DirectionBack_mcp;
+    237            if(lst4>0) uprMTZ2 |= 16; //МТЗ2 назад WKL
+    238            else  uprMTZ2 &= ~16; //МТЗ2 назад OTKL 
+    239          
+    240          //ускорение МТЗ2 BB
+    241              lSt1 = brCfgTbl.ownrStg2DrOcp2Mng.aclt_mcp_sw;  
+    242            if(lSt1>0) uprMTZ2 |= 32; //уск МТЗ2 BB WKL
+    243            else  uprMTZ2 &= ~32; //уск МТЗ2 BB OTKL 
+    244          
+    245          //ускорение МТЗ2 AU
+    246              lSt1 = brCfgTbl.ownrStg2DrOcp2Mng.state_Auto_aclt_mcp;  
+    247            if(lSt1>0) uprMTZ2 |= 64; //уск МТЗ2 AU WKL
+    248            else  uprMTZ2 &= ~64; //уск МТЗ2 AU OTKL 
+    249          
+    250          //ускорение МТЗ2 TU
+    251              lSt1 = brCfgTbl.ownrStg2DrOcp2Mng.state_Tele_aclt_mcp;  
+    252            if(lSt1>0) uprMTZ2 |= 128; //уск МТЗ2 TU WKL
+    253            else  uprMTZ2 &= ~128; //уск МТЗ2 TU OTKL 
+    254            
+    255            SetUstToClon(MTZ_COMP1,  2, MNGUPR_MTZ2to5, uprMTZ2);//управление МТЗ2 
+    256            
+    257          //-------------MTZ3-----------------------    
+    258              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage3DrOcp2Pickup.mcp_I_ov_range;
+    259              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage3DrOcp2StageParam.mcp_time_stage;
+    260            SetUstToClon(MTZ_COMP1,  3, MNGUST_MTZ2to5, lMtz1);//уставка МТЗ3 отсечка
+    261            SetUstToClon(MTZ_COMP1,  3, MNGVID_MTZ2to5, lMtz1Tmr*10);//выдержка МТЗ3 отсечка
+    262            
+    263          //.ПО МТЗПН
+    264          //.	 уставка по току
+    265          //.	 1 ед = 1 мA
+    266              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage3DrOcp2Pickup.mcp_IstpU_ov_range;
+    267            SetUstToClon(MTZ_COMP1,  3, MNGUST_MTZ2to5_PN, lMtz1);//уставка МТЗ3 ПН
+    268          //.ПО U МТЗПН
+    269          //.	 уставка по пуска по напряжению
+    270              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage3DrOcp2Pickup.mcp_Ustp_ov_range;
+    271            SetUstToClon(MTZ_COMP1,  3, MNGUST_MTZ2to5_UPN, lMtz1);//уставка МТЗ3 ПН
+    272          
+    273              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage3DrOcp2StageParam.mcp_Ustp_time_stage;
+    274            SetUstToClon(MTZ_COMP1,  3, MNGVID_MTZ2to5_PN, lMtz1Tmr*10);//выдержка МТЗ3 ПН
+    275          
+    276          //.ПО МТЗ3 направл
+    277          //.	 уставка по току
+    278          //.	 1 ед = 1 мA
+    279              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage3DrOcp2Pickup.mcp_s1_Ias_ov_range;
+    280            SetUstToClon(MTZ_COMP1,  3, MNGUST_MTZ2to5_V, lMtz1);//уставка МТЗН3 вперед
+    281          
+    282              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage3DrOcp2Pickup.mcp_s2_Iabk_ov_range;
+    283            SetUstToClon(MTZ_COMP1,  3, MNGUST_MTZ2to5_N, lMtz1);//уставка МТЗН3 назад
+    284            
+    285          //.	выдержка МТЗ3 вперед
+    286          //.	1 ед =10мсе
+    287              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage3DrOcp2StageParam.mcp_s1_time_stage;
+    288            SetUstToClon(MTZ_COMP1,  3, MNGVID_MTZ2to5_V, lMtz1Tmr*10);//выдержка МТЗ3 вперед
+    289          //.	выдержка МТЗ3 назад
+    290          //.	1 ед =10мсе
+    291              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage3DrOcp2StageParam.mcp_s2_time_stage;
+    292            SetUstToClon(MTZ_COMP1,  3, MNGVID_MTZ2to5_N, lMtz1Tmr*10);//выдержка МТЗ3 назад
+    293            
+    294          //Ускорение
+    295            //- выдержка ускорения МТЗ3 BB
+    296              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage3DrOcp2StageParam.mcp_time_stage_Aclt;
+    297            SetUstToClon(MTZ_COMP1,  3, MNGUSK_MTZ2to5, lMtz1Tmr*10);//ускорение МТЗ3 BB
+    298            //- выдержка ускорения МТЗ3 ОУ
+    299              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage3DrOcp2StageParam.mcp_T_op_aclt;
+    300            SetUstToClon(MTZ_COMP1,  3, MNGUSK_MTZ2to5_OU, lMtz1Tmr*10);//ускорение МТЗ3 ОУ
+    301            //- выдержка ускорения МТЗ3 TУ
+    302              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage3DrOcp2StageParam.mcp_T_tele_aclt;
+    303            SetUstToClon(MTZ_COMP1,  3, MNGUSK_MTZ2to5_TU, lMtz1Tmr*10);//ускорение МТЗ3 TУ
+    304            
+    305          //- выдержка ускорения ступени МТЗН3 вперед  
+    306              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage3DrOcp2StageParam.mcp_s1_T_aclt;
+    307            SetUstToClon(MTZ_COMP1,  3, MNGUSK_MTZ2to5_V, lMtz1Tmr*10);//ускорение МТЗН3 вперед
+    308            //- выдержка ускорения МТЗH3 вперед ОУ
+    309              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage3DrOcp2StageParam.mcp_s1_T_op_aclt;
+    310            SetUstToClon(MTZ_COMP1,  3, MNGUSK_MTZ2to5_V_OU, lMtz1Tmr*10);//ускорение МТЗH3 вперед ОУ
+    311            //- выдержка ускорения МТЗH3 вперед TУ
+    312              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage3DrOcp2StageParam.mcp_s1_T_tele_aclt;
+    313            SetUstToClon(MTZ_COMP1,  3, MNGUSK_MTZ2to5_V_TU, lMtz1Tmr*10);//ускорение МТЗH3 вперед TУ
+    314            
+    315          //- выдержка ускорения ступени МТЗН3 назад
+    316              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage3DrOcp2StageParam.mcp_s2_T_aclt;
+    317            SetUstToClon(MTZ_COMP1,  3, MNGUSK_MTZ2to5_N, lMtz1Tmr*10);//ускорение МТЗН3 назад
+    318            //- выдержка ускорения МТЗH3 назад ОУ
+    319              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage3DrOcp2StageParam.mcp_s2_T_op_aclt;
+    320            SetUstToClon(MTZ_COMP1,  3, MNGUSK_MTZ2to5_N_OU, lMtz1Tmr*10);//ускорение МТЗH3 назад ОУ
+    321            //- выдержка ускорения МТЗH3 назад TУ
+    322              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage3DrOcp2StageParam.mcp_s2_T_tele_aclt;
+    323            SetUstToClon(MTZ_COMP1,  3, MNGUSK_MTZ2to5_N_TU, lMtz1Tmr*10);//ускорение МТЗH3 назад TУ
+    324            
+    325          //- выдержка ускорения ступени МТЗ3ПН
+    326              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage3DrOcp2StageParam.mcp_Ustp_T_aclt;
+    327            SetUstToClon(MTZ_COMP1,  3, MNGUSK_MTZ2to5_PN, lMtz1Tmr*10);//ускорение МТЗ3ПН
+    328            //- выдержка ускорения МТЗ3ПН ОУ
+    329              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage3DrOcp2StageParam.mcp_Ustp_T_op_aclt;
+    330            SetUstToClon(MTZ_COMP1,  3, MNGUSK_MTZ2to5_PN_OU, lMtz1Tmr*10);//ускорение МТЗ3ПН  ОУ
+    331            //- выдержка ускорения МТЗ3ПН TУ
+    332              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage3DrOcp2StageParam.mcp_Ustp_T_tele_aclt;
+    333            SetUstToClon(MTZ_COMP1,  3, MNGUSK_MTZ2to5_PN_TU, lMtz1Tmr*10);//ускорение МТЗ3ПН  TУ
+    334            
+    335          //- выдержка ввод ускорения МТЗ3
+    336              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage3DrOcp2StageParam.mcp_Tau_AcltImp;
+    337            SetUstToClon(MTZ_COMP1,  3, MNGVUSK_MTZ2to5, lMtz1Tmr*10);//ввод ускорения МТЗ3
+    338            
+    339              int uprMTZ3=0;
+    340            //меню  Состояние МТЗ3
+    341          //.	Состояние
+    342          //.	1 -вкл
+    343          //.	0 - выкл
+    344              lSt1 = brCfgTbl.ownrStg3DrOcp2Mng.state_mcp;
+    345            if(lSt1>0) uprMTZ3 |= 4; //МТЗ3  WKL
+    346            else  uprMTZ3 &= ~4; //МТЗ3  OTKL 
+    347              //Селектор МТЗ3
+    348          //.	Состояние
+    349          //.	0 - Простая
+    350          //.	1 - Пуск по направленности
+    351          //.	2 - Пуск по напряжению
+    352              lSt2 = brCfgTbl.ownrStg3DrOcp2Mng.select_prt_mcp;  
+    353            if(lSt2==2) uprMTZ3 |= 2; //МТЗ3 ПН WKL
+    354            else  uprMTZ3 &= ~2; //МТЗ3 ПН OTKL 
+    355            if(lSt2==1) uprMTZ3 |= 1; //МТЗ3 направл WKL
+    356            else  uprMTZ3 &= ~1; //МТЗ3 направл OTKL 
+    357              
+    358              //меню  МТЗ3 Напрвление Вперед Состояние 
+    359          //.	Состояние
+    360          //.	1 -вкл
+    361          //.	0 - выкл
+    362              lst3 = brCfgTbl.ownrStg3DrOcp2Mng.DirectionStraight_mcp;
+    363            if(lst3>0) uprMTZ3 |= 8; //МТЗ3 вперед WKL
+    364            else  uprMTZ3 &= ~8; //МТЗ3 вперед OTKL 
+    365          
+    366              //меню  МТЗ3 Напрвление Назад Состояние 
+    367          //.	Состояние
+    368          //.	1 -вкл
+    369          //.	0 - выкл
+    370              lst4 = brCfgTbl.ownrStg3DrOcp2Mng.DirectionBack_mcp;
+    371            if(lst4>0) uprMTZ3 |= 16; //МТЗ3 назад WKL
+    372            else  uprMTZ3 &= ~16; //МТЗ3 назад OTKL 
+    373          
+    374          //ускорение МТЗ3 BB
+    375              lSt1 = brCfgTbl.ownrStg3DrOcp2Mng.aclt_mcp_sw;  
+    376            if(lSt1>0) uprMTZ3 |= 32; //уск МТЗ3 BB WKL
+    377            else  uprMTZ3 &= ~32; //уск МТЗ3 BB OTKL 
+    378          
+    379          //ускорение МТЗ3 AU
+    380              lSt1 = brCfgTbl.ownrStg3DrOcp2Mng.state_Auto_aclt_mcp;  
+    381            if(lSt1>0) uprMTZ3 |= 64; //уск МТЗ3 AU WKL
+    382            else  uprMTZ3 &= ~64; //уск МТЗ3 AU OTKL 
+    383          
+    384          //ускорение МТЗ3 TU
+    385              lSt1 = brCfgTbl.ownrStg3DrOcp2Mng.state_Tele_aclt_mcp;  
+    386            if(lSt1>0) uprMTZ3 |= 128; //уск МТЗ3 TU WKL
+    387            else  uprMTZ3 &= ~128; //уск МТЗ3 TU OTKL 
+    388            
+    389            SetUstToClon(MTZ_COMP1,  3, MNGUPR_MTZ2to5, uprMTZ3);//управление МТЗ3
+    390          
+    391          //-------------MTZ4-----------------------    
+    392              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage4DrOcp2Pickup.mcp_I_ov_range;
+    393              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage4DrOcp2StageParam.mcp_time_stage;
+    394            SetUstToClon(MTZ_COMP1,  4, MNGUST_MTZ2to5, lMtz1);//уставка МТЗ4 отсечка
+    395            SetUstToClon(MTZ_COMP1,  4, MNGVID_MTZ2to5, lMtz1Tmr*10);//выдержка МТЗ4 отсечка
+    396            
+    397          //.ПО МТЗПН
+    398          //.	 уставка по току
+    399          //.	 1 ед = 1 мA
+    400              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage4DrOcp2Pickup.mcp_IstpU_ov_range;
+    401            SetUstToClon(MTZ_COMP1,  4, MNGUST_MTZ2to5_PN, lMtz1);//уставка МТЗ4 ПН
+    402          //.ПО U МТЗПН
+    403          //.	 уставка по пуска по напряжению
+    404              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage4DrOcp2Pickup.mcp_Ustp_ov_range;
+    405            SetUstToClon(MTZ_COMP1,  4, MNGUST_MTZ2to5_UPN, lMtz1);//уставка МТЗ4 ПН
+    406          
+    407              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage4DrOcp2StageParam.mcp_Ustp_time_stage;
+    408            SetUstToClon(MTZ_COMP1,  4, MNGVID_MTZ2to5_PN, lMtz1Tmr*10);//выдержка МТЗ4 ПН
+    409          
+    410          //.ПО МТЗ3 направл
+    411          //.	 уставка по току
+    412          //.	 1 ед = 1 мA
+    413              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage4DrOcp2Pickup.mcp_s1_Ias_ov_range;
+    414            SetUstToClon(MTZ_COMP1,  4, MNGUST_MTZ2to5_V, lMtz1);//уставка МТЗН4 вперед
+    415          
+    416              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage4DrOcp2Pickup.mcp_s2_Iabk_ov_range;
+    417            SetUstToClon(MTZ_COMP1,  4, MNGUST_MTZ2to5_N, lMtz1);//уставка МТЗН4 назад
+    418            
+    419          //.	выдержка МТЗ4 вперед
+    420          //.	1 ед =10мсе
+    421              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage4DrOcp2StageParam.mcp_s1_time_stage;
+    422            SetUstToClon(MTZ_COMP1,  4, MNGVID_MTZ2to5_V, lMtz1Tmr*10);//выдержка МТЗ4 вперед
+    423          //.	выдержка МТЗ4 назад
+    424          //.	1 ед =10мсе
+    425              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage4DrOcp2StageParam.mcp_s2_time_stage;
+    426            SetUstToClon(MTZ_COMP1,  4, MNGVID_MTZ2to5_N, lMtz1Tmr*10);//выдержка МТЗ4 назад
+    427            
+    428          //Ускорение
+    429            //- выдержка ускорения МТЗ4 BB
+    430              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage4DrOcp2StageParam.mcp_time_stage_Aclt;
+    431            SetUstToClon(MTZ_COMP1,  4, MNGUSK_MTZ2to5, lMtz1Tmr*10);//ускорение МТЗ4 BB
+    432            //- выдержка ускорения МТЗ4 ОУ
+    433              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage4DrOcp2StageParam.mcp_T_op_aclt;
+    434            SetUstToClon(MTZ_COMP1,  4, MNGUSK_MTZ2to5_OU, lMtz1Tmr*10);//ускорение МТЗ4 ОУ
+    435            //- выдержка ускорения МТЗ4 TУ
+    436              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage4DrOcp2StageParam.mcp_T_tele_aclt;
+    437            SetUstToClon(MTZ_COMP1,  4, MNGUSK_MTZ2to5_TU, lMtz1Tmr*10);//ускорение МТЗ4 TУ
+    438            
+    439          //- выдержка ускорения ступени МТЗН4 вперед  
+    440              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage4DrOcp2StageParam.mcp_s1_T_aclt;
+    441            SetUstToClon(MTZ_COMP1,  4, MNGUSK_MTZ2to5_V, lMtz1Tmr*10);//ускорение МТЗН4 вперед
+    442            //- выдержка ускорения МТЗH4 вперед ОУ
+    443              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage4DrOcp2StageParam.mcp_s1_T_op_aclt;
+    444            SetUstToClon(MTZ_COMP1,  4, MNGUSK_MTZ2to5_V_OU, lMtz1Tmr*10);//ускорение МТЗH4 вперед ОУ
+    445            //- выдержка ускорения МТЗH4 вперед TУ
+    446              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage4DrOcp2StageParam.mcp_s1_T_tele_aclt;
+    447            SetUstToClon(MTZ_COMP1,  4, MNGUSK_MTZ2to5_V_TU, lMtz1Tmr*10);//ускорение МТЗH4 вперед TУ
+    448            
+    449          //- выдержка ускорения ступени МТЗН4 назад
+    450              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage4DrOcp2StageParam.mcp_s2_T_aclt;
+    451            SetUstToClon(MTZ_COMP1,  4, MNGUSK_MTZ2to5_N, lMtz1Tmr*10);//ускорение МТЗН4 назад
+    452            //- выдержка ускорения МТЗH4 назад ОУ
+    453              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage4DrOcp2StageParam.mcp_s2_T_op_aclt;
+    454            SetUstToClon(MTZ_COMP1,  4, MNGUSK_MTZ2to5_N_OU, lMtz1Tmr*10);//ускорение МТЗH4 назад ОУ
+    455            //- выдержка ускорения МТЗH4 назад TУ
+    456              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage4DrOcp2StageParam.mcp_s2_T_tele_aclt;
+    457            SetUstToClon(MTZ_COMP1,  4, MNGUSK_MTZ2to5_N_TU, lMtz1Tmr*10);//ускорение МТЗH4 назад TУ
+    458            
+    459          //- выдержка ускорения ступени МТЗ4ПН
+    460              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage4DrOcp2StageParam.mcp_Ustp_T_aclt;
+    461            SetUstToClon(MTZ_COMP1,  4, MNGUSK_MTZ2to5_PN, lMtz1Tmr*10);//ускорение МТЗ4ПН
+    462            //- выдержка ускорения МТЗ4ПН ОУ
+    463              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage4DrOcp2StageParam.mcp_Ustp_T_op_aclt;
+    464            SetUstToClon(MTZ_COMP1,  4, MNGUSK_MTZ2to5_PN_OU, lMtz1Tmr*10);//ускорение МТЗ4ПН  ОУ
+    465            //- выдержка ускорения МТЗ4ПН TУ
+    466              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage4DrOcp2StageParam.mcp_Ustp_T_tele_aclt;
+    467            SetUstToClon(MTZ_COMP1,  4, MNGUSK_MTZ2to5_PN_TU, lMtz1Tmr*10);//ускорение МТЗ4ПН  TУ
+    468            
+    469          //- выдержка ввод ускорения МТЗ4
+    470              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage4DrOcp2StageParam.mcp_Tau_AcltImp;
+    471            SetUstToClon(MTZ_COMP1,  4, MNGVUSK_MTZ2to5, lMtz1Tmr*10);//ввод ускорения МТЗ4
+    472            
+    473              int uprMTZ4=0;
+    474            //меню  Состояние МТЗ4
+    475          //.	Состояние
+    476          //.	1 -вкл
+    477          //.	0 - выкл
+    478              lSt1 = brCfgTbl.ownrStg4DrOcp2Mng.state_mcp;
+    479            if(lSt1>0) uprMTZ4 |= 4; //МТЗ4  WKL
+    480            else  uprMTZ4 &= ~4; //МТЗ4  OTKL 
+    481              //Селектор МТЗ4
+    482          //.	Состояние
+    483          //.	0 - Простая
+    484          //.	1 - Пуск по направленности
+    485          //.	2 - Пуск по напряжению
+    486              lSt2 = brCfgTbl.ownrStg4DrOcp2Mng.select_prt_mcp;  
+    487            if(lSt2==2) uprMTZ4 |= 2; //МТЗ4 ПН WKL
+    488            else  uprMTZ4 &= ~2; //МТЗ4 ПН OTKL 
+    489            if(lSt2==1) uprMTZ4 |= 1; //МТЗ4 направл WKL
+    490            else  uprMTZ4 &= ~1; //МТЗ4 направл OTKL 
+    491              
+    492              //меню  МТЗ4 Напрвление Вперед Состояние 
+    493          //.	Состояние
+    494          //.	1 -вкл
+    495          //.	0 - выкл
+    496              lst3 = brCfgTbl.ownrStg4DrOcp2Mng.DirectionStraight_mcp;
+    497            if(lst3>0) uprMTZ4 |= 8; //МТЗ4 вперед WKL
+    498            else  uprMTZ4 &= ~8; //МТЗ4 вперед OTKL 
+    499          
+    500              //меню  МТЗ4 Напрвление Назад Состояние 
+    501          //.	Состояние
+    502          //.	1 -вкл
+    503          //.	0 - выкл
+    504              lst4 = brCfgTbl.ownrStg4DrOcp2Mng.DirectionBack_mcp;
+    505            if(lst4>0) uprMTZ4 |= 16; //МТЗ3 назад WKL
+    506            else  uprMTZ4 &= ~16; //МТЗ3 назад OTKL 
+    507          
+    508          //ускорение МТЗ4 BB
+    509              lSt1 = brCfgTbl.ownrStg4DrOcp2Mng.aclt_mcp_sw;  
+    510            if(lSt1>0) uprMTZ4 |= 32; //уск МТЗ4 BB WKL
+    511            else  uprMTZ4 &= ~32; //уск МТЗ4 BB OTKL 
+    512          
+    513          //ускорение МТЗ4 AU
+    514              lSt1 = brCfgTbl.ownrStg4DrOcp2Mng.state_Auto_aclt_mcp;  
+    515            if(lSt1>0) uprMTZ4 |= 64; //уск МТЗ4 AU WKL
+    516            else  uprMTZ4 &= ~64; //уск МТЗ4 AU OTKL 
+    517          
+    518          //ускорение МТЗ4 TU
+    519              lSt1 = brCfgTbl.ownrStg4DrOcp2Mng.state_Tele_aclt_mcp;  
+    520            if(lSt1>0) uprMTZ4 |= 128; //уск МТЗ4 TU WKL
+    521            else  uprMTZ4 &= ~128; //уск МТЗ4 TU OTKL 
+    522            
+    523            SetUstToClon(MTZ_COMP1,  4, MNGUPR_MTZ2to5, uprMTZ4);//управление МТЗ4
+    524          
+    525          //-------------MTZ5-----------------------    
+    526              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage5DrOcp2Pickup.mcp_I_ov_range;
+    527              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage5DrOcp2StageParam.mcp_time_stage;
+    528            SetUstToClon(MTZ_COMP1,  5, MNGUST_MTZ2to5, lMtz1);//уставка МТЗ5 отсечка
+    529            SetUstToClon(MTZ_COMP1,  5, MNGVID_MTZ2to5, lMtz1Tmr*10);//выдержка МТЗ5 отсечка
+    530            
+    531          //.ПО МТЗПН
+    532          //.	 уставка по току
+    533          //.	 1 ед = 1 мA
+    534              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage5DrOcp2Pickup.mcp_IstpU_ov_range;
+    535            SetUstToClon(MTZ_COMP1,  5, MNGUST_MTZ2to5_PN, lMtz1);//уставка МТЗ5 ПН
+    536          //.ПО U МТЗПН
+    537          //.	 уставка по пуска по напряжению
+    538              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage5DrOcp2Pickup.mcp_Ustp_ov_range;
+    539            SetUstToClon(MTZ_COMP1,  5, MNGUST_MTZ2to5_UPN, lMtz1);//уставка МТЗ5 ПН
+    540          
+    541              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage5DrOcp2StageParam.mcp_Ustp_time_stage;
+    542            SetUstToClon(MTZ_COMP1,  5, MNGVID_MTZ2to5_PN, lMtz1Tmr*10);//выдержка МТЗ5 ПН
+    543          
+    544          //.ПО МТЗ5 направл
+    545          //.	 уставка по току
+    546          //.	 1 ед = 1 мA
+    547              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage5DrOcp2Pickup.mcp_s1_Ias_ov_range;
+    548            SetUstToClon(MTZ_COMP1,  5, MNGUST_MTZ2to5_V, lMtz1);//уставка МТЗН5 вперед
+    549          
+    550              lMtz1 = brCfgTbl.arPckpStpmStngStore[0].ownrStage5DrOcp2Pickup.mcp_s2_Iabk_ov_range;
+    551            SetUstToClon(MTZ_COMP1,  5, MNGUST_MTZ2to5_N, lMtz1);//уставка МТЗН5 назад
+    552            
+    553          //.	выдержка МТЗ5 вперед
+    554          //.	1 ед =10мсе
+    555              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage5DrOcp2StageParam.mcp_s1_time_stage;
+    556            SetUstToClon(MTZ_COMP1,  5, MNGVID_MTZ2to5_V, lMtz1Tmr*10);//выдержка МТЗ5 вперед
+    557          //.	выдержка МТЗ5 назад
+    558          //.	1 ед =10мсе
+    559              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage5DrOcp2StageParam.mcp_s2_time_stage;
+    560            SetUstToClon(MTZ_COMP1,  5, MNGVID_MTZ2to5_N, lMtz1Tmr*10);//выдержка МТЗ5 назад
+    561            
+    562          //Ускорение
+    563            //- выдержка ускорения МТЗ5 BB
+    564              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage5DrOcp2StageParam.mcp_time_stage_Aclt;
+    565            SetUstToClon(MTZ_COMP1,  5, MNGUSK_MTZ2to5, lMtz1Tmr*10);//ускорение МТЗ5 BB
+    566            //- выдержка ускорения МТЗ4 ОУ
+    567              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage5DrOcp2StageParam.mcp_T_op_aclt;
+    568            SetUstToClon(MTZ_COMP1,  5, MNGUSK_MTZ2to5_OU, lMtz1Tmr*10);//ускорение МТЗ5 ОУ
+    569            //- выдержка ускорения МТЗ5 TУ
+    570              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage5DrOcp2StageParam.mcp_T_tele_aclt;
+    571            SetUstToClon(MTZ_COMP1,  5, MNGUSK_MTZ2to5_TU, lMtz1Tmr*10);//ускорение МТЗ5 TУ
+    572            
+    573          //- выдержка ускорения ступени МТЗН5 вперед  
+    574              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage5DrOcp2StageParam.mcp_s1_T_aclt;
+    575            SetUstToClon(MTZ_COMP1,  5, MNGUSK_MTZ2to5_V, lMtz1Tmr*10);//ускорение МТЗН5 вперед
+    576            //- выдержка ускорения МТЗH5 вперед ОУ
+    577              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage5DrOcp2StageParam.mcp_s1_T_op_aclt;
+    578            SetUstToClon(MTZ_COMP1,  5, MNGUSK_MTZ2to5_V_OU, lMtz1Tmr*10);//ускорение МТЗH5 вперед ОУ
+    579            //- выдержка ускорения МТЗH5 вперед TУ
+    580              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage5DrOcp2StageParam.mcp_s1_T_tele_aclt;
+    581            SetUstToClon(MTZ_COMP1,  5, MNGUSK_MTZ2to5_V_TU, lMtz1Tmr*10);//ускорение МТЗH5 вперед TУ
+    582            
+    583          //- выдержка ускорения ступени МТЗН5 назад
+    584              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage5DrOcp2StageParam.mcp_s2_T_aclt;
+    585            SetUstToClon(MTZ_COMP1,  5, MNGUSK_MTZ2to5_N, lMtz1Tmr*10);//ускорение МТЗН5 назад
+    586            //- выдержка ускорения МТЗH5 назад ОУ
+    587              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage5DrOcp2StageParam.mcp_s2_T_op_aclt;
+    588            SetUstToClon(MTZ_COMP1,  5, MNGUSK_MTZ2to5_N_OU, lMtz1Tmr*10);//ускорение МТЗH5 назад ОУ
+    589            //- выдержка ускорения МТЗH5 назад TУ
+    590              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage5DrOcp2StageParam.mcp_s2_T_tele_aclt;
+    591            SetUstToClon(MTZ_COMP1,  5, MNGUSK_MTZ2to5_N_TU, lMtz1Tmr*10);//ускорение МТЗH5 назад TУ
+    592            
+    593          //- выдержка ускорения ступени МТЗ5ПН
+    594              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage5DrOcp2StageParam.mcp_Ustp_T_aclt;
+    595            SetUstToClon(MTZ_COMP1,  5, MNGUSK_MTZ2to5_PN, lMtz1Tmr*10);//ускорение МТЗ5ПН
+    596            //- выдержка ускорения МТЗ5ПН ОУ
+    597              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage5DrOcp2StageParam.mcp_Ustp_T_op_aclt;
+    598            SetUstToClon(MTZ_COMP1,  5, MNGUSK_MTZ2to5_PN_OU, lMtz1Tmr*10);//ускорение МТЗ5ПН  ОУ
+    599            //- выдержка ускорения МТЗ5ПН TУ
+    600              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage5DrOcp2StageParam.mcp_Ustp_T_tele_aclt;
+    601            SetUstToClon(MTZ_COMP1,  5, MNGUSK_MTZ2to5_PN_TU, lMtz1Tmr*10);//ускорение МТЗ5ПН  TУ
+    602            
+    603          //- выдержка ввод ускорения МТЗ5
+    604              lMtz1Tmr = brCfgTbl.arPckpStpmStngStore[0].ownrStage5DrOcp2StageParam.mcp_Tau_AcltImp;
+    605            SetUstToClon(MTZ_COMP1,  5, MNGVUSK_MTZ2to5, lMtz1Tmr*10);//ввод ускорения МТЗ5
+    606            
+    607              int uprMTZ5=0;
+    608            //меню  Состояние МТЗ5
+    609          //.	Состояние
+    610          //.	1 -вкл
+    611          //.	0 - выкл
+    612              lSt1 = brCfgTbl.ownrStg5DrOcp2Mng.state_mcp;
+    613            if(lSt1>0) uprMTZ5 |= 4; //МТЗ5  WKL
+    614            else  uprMTZ5 &= ~4; //МТЗ5  OTKL 
+    615              //Селектор МТЗ5
+    616          //.	Состояние
+    617          //.	0 - Простая
+    618          //.	1 - Пуск по направленности
+    619          //.	2 - Пуск по напряжению
+    620              lSt2 = brCfgTbl.ownrStg5DrOcp2Mng.select_prt_mcp;  
+    621            if(lSt2==2) uprMTZ5 |= 2; //МТЗ5 ПН WKL
+    622            else  uprMTZ5 &= ~2; //МТЗ5 ПН OTKL 
+    623            if(lSt2==1) uprMTZ5 |= 1; //МТЗ5 направл WKL
+    624            else  uprMTZ5 &= ~1; //МТЗ5 направл OTKL 
+    625              
+    626              //меню  МТЗ5 Напрвление Вперед Состояние 
+    627          //.	Состояние
+    628          //.	1 -вкл
+    629          //.	0 - выкл
+    630              lst3 = brCfgTbl.ownrStg5DrOcp2Mng.DirectionStraight_mcp;
+    631            if(lst3>0) uprMTZ5 |= 8; //МТЗ5 вперед WKL
+    632            else  uprMTZ5 &= ~8; //МТЗ5 вперед OTKL 
+    633          
+    634              //меню  МТЗ5 Напрвление Назад Состояние 
+    635          //.	Состояние
+    636          //.	1 -вкл
+    637          //.	0 - выкл
+    638              lst4 = brCfgTbl.ownrStg5DrOcp2Mng.DirectionBack_mcp;
+    639            if(lst4>0) uprMTZ5 |= 16; //МТЗ5 назад WKL
+    640            else  uprMTZ5 &= ~16; //МТЗ5 назад OTKL 
+    641          
+    642          //ускорение МТЗ5 BB
+    643              lSt1 = brCfgTbl.ownrStg5DrOcp2Mng.aclt_mcp_sw;  
+    644            if(lSt1>0) uprMTZ5 |= 32; //уск МТЗ5 BB WKL
+    645            else  uprMTZ5 &= ~32; //уск МТЗ5 BB OTKL 
+    646          
+    647          //ускорение МТЗ5 AU
+    648              lSt1 = brCfgTbl.ownrStg5DrOcp2Mng.state_Auto_aclt_mcp;  
+    649            if(lSt1>0) uprMTZ5 |= 64; //уск МТЗ5 AU WKL
+    650            else  uprMTZ5 &= ~64; //уск МТЗ5 AU OTKL 
+    651          
+    652          //ускорение МТЗ5 TU
+    653              lSt1 = brCfgTbl.ownrStg5DrOcp2Mng.state_Tele_aclt_mcp;  
+    654            if(lSt1>0) uprMTZ5 |= 128; //уск МТЗ5 TU WKL
+    655            else  uprMTZ5 &= ~128; //уск МТЗ5 TU OTKL 
+    656            
+    657            SetUstToClon(MTZ_COMP1,  5, MNGUPR_MTZ2to5, uprMTZ5);//управление МТЗ5
+    658          /*  
+    659            int uprPRM1 = 0;
+    660              lSt1 = brCfgTbl.state_FaultU_Ocp;//Неиспр цепей напр
+    661            if(lSt1>0) uprPRM1 |= 1; // WKL
+    662            else  uprPRM1 &= ~1; // OTKL 
+    663            
+    664            SetUstToClon(PRM1_COMP1,  1, MNGUPR_PRM1, uprPRM1);//управление PRM1
+    665          */
+    666          }//SettingIci_MTZ()
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      24   SettingIci_MTZ
+        24   -> SetUstToClon
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+    6696  SettingIci_MTZ
+
+ 
+ 6 696 bytes in section .text
+ 
+ 6 696 bytes of CODE memory
+
+Errors: none
+Warnings: none

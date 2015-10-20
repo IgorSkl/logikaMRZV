@@ -1,0 +1,182 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  17:17:35
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\component\logicUROV.c
+#    Command line =  
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\component\logicUROV.c" -lcN
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\" -o "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
+#        --fpu=VFP9-S --dlib_config "D:\Program Files\IAR Systems\Embedded
+#        Workbench 7.2\arm\INC\c\DLib_Config_Normal.h" -I "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\" --interwork
+#        --cpu_mode arm -On --use_c++_inline
+#    List file    =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\logicUROV.lst
+#    Object file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\logicUROV.o
+#
+###############################################################################
+
+D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\component\logicUROV.c
+      1          
+      2          #include <stdio.h>
+      3          #include <string.h>
+      4          
+      5          #include "bazisdef.h"
+      6          #include "component\componentdef.h"
+      7          #include "psuperVisor\psvisor_helpdef.h"
+      8          
+      9          #include "logictimers\logictimersmac.h"
+     10          
+     11          #include "logictimers\logictimersfnc.h"
+     12          
+     13          #include "..\bazis.h"
+     14          
+     15          #include "toSpeedOptim.h"
+     16          
+     17          #define _HIDE_COMPONENT
+     18          #include "UROVComponent.c"
+     19          
+     20          extern int GlobalPO1;
+     21          extern int GlobalPO2;
+     22          extern int GlobalPO3;
+     23          extern int GlobalPO4;
+     24          extern int GlobalLevelI_ABC[];
+     25          
+     26          extern COMPONENT_OBJ  cnfCOMPONENT[];//конфигурация
+     27          extern int  logMassTimer[];
+     28          extern int  ENAcmd[];
+     29          extern int  spvUSTAVKI[];//текущие уставки супервизора
+     30          extern int   WideCmdRTBuffer[];
+     31          extern int   tempLog[];
+     32          extern int offsetIOCmdPRM1;//смещение для IO PRM1
+     33          extern int puskUROV;//Пуск УРОВ
+     34          
+     35          void  logicUROV(int idxC) @ "Fast_function"
+     36          {
+     37             //return;//123456
+     38          //логика компонента
+     39              int tmpOffsetT    =
+     40                          cnfCOMPONENT[idxC].offsetTimers;   //таймера компонента в конфигурации
+     41              int tmpOffsetIO   =
+     42                          cnfCOMPONENT[idxC].offsetIOCmd;    //IO команды
+     43              int tmpOffsetENA  =
+     44                          cnfCOMPONENT[idxC].offsetENACmd;    //ENA команды
+     45              int tmpOffsetUSpv =
+     46                          cnfCOMPONENT[idxC].offsetUstSpv;    //уставки SPV
+     47              int tmpOffsetTL   =
+     48                          cnfCOMPONENT[idxC].offsetTLCmd;    //TL команды
+     49          
+     50            detectorLevelUP3F(GlobalLevelI_ABC,
+     51                                               tmpOffsetUSpv+SPVSRABUST_UROV,
+     52                                               tmpOffsetUSpv+SPVVOZVUST_UROV,
+     53                                               tmpOffsetUSpv+SPV_OUTA_UROV);
+     54          
+     55           int LocalPO_UROV = SPV_UST(SPV_OUTA_UROV) |
+     56                              SPV_UST(SPV_OUTB_UROV) |
+     57                              SPV_UST(SPV_OUTC_UROV);
+     58          
+     59              //PUSK_UROV
+     60          //    TL_LOGIC(TLCMD1_UROV) =
+     61                       //Пуск УРОВ
+     62              int tmp1 = 
+     63                       IO_LOGIC(IOCMD2_UROV) |
+     64                       puskUROV;
+     65          
+     66              int tmp2 = 
+     67              //PO_UROV
+     68              TL_LOGIC(TLCMD2_UROV) = 
+     69                 //PO1_UROV
+     70                 (GlobalPO1 | LocalPO_UROV);
+     71          
+     72          //триг по восх фронту
+     73          //TRG_FRONT(set, clr, old, out)
+     74          //ELOLDTRG_UROV  ELOUTTRG_UROV
+     75          //  TRG_FRONT(tmp1, tmp2, TLCMD3_UROV, TLCMD4_UROV)
+     76          
+     77              //L1
+     78            LSIGNAL_TIMER(TIMER1_UROV) =
+     79            LSIGNAL_TIMER(TIMER2_UROV) =
+     80                       //Стат блок УРОВ
+     81                       (IO_LOGIC(IOCMD1_UROV)^1) &
+     82                       //PO_UROV
+     83                       tmp2 &
+     84                       //ELOUTTRG_UROV
+     85          //             TL_LOGIC(TLCMD4_UROV) &
+     86                       //Пуск УРОВ
+     87                       tmp1 &
+     88                       //Управл УРОВ
+     89                       ENA_LOGIC(ENA_UROV_1);
+     90          
+     91            tmp1 =
+     92            LSIGNAL_TIMER(TIMER1_BOUROV1) =
+     93                PLOG_TIMER(TIMER1_UROV) ; //UROV1_TIM1
+     94          
+     95            tmp2 =
+     96            LSIGNAL_TIMER(TIMER2_BOUROV2) =
+     97                PLOG_TIMER(TIMER2_UROV) ; //UROV2_TIM2
+     98          
+     99            //1ст УРОВ
+    100            IO_LOGIC(IOCMD3_UROV) =
+    101              ILOG_TIMER(TIMER1_BOUROV1)|tmp1;
+    102          
+    103            //2ст УРОВ
+    104            IO_LOGIC(IOCMD4_UROV) =
+    105              ILOG_TIMER(TIMER2_BOUROV2)|tmp2;
+    106          
+    107          }//logicUROV(short idxC)
+    108          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      40   logicUROV
+        40   -> ILogTimer
+        40   -> PLogTimer
+        40   -> detectorLevelUP3F
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+     472  logicUROV
+
+ 
+ 472 bytes in section Fast_function
+ 
+ 472 bytes of CODE memory
+
+Errors: none
+Warnings: none

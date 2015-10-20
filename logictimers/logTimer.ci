@@ -1,0 +1,37 @@
+/**********************************************
+ЛОГИЧЕСКИЙ ТАЙМЕР
+tNumber - номер таймера
+invers - 0-восх фронт 1-срез
+RES - сброс таймера
+Выход - флаг работы
+**********************************************/
+#ifndef  _ILOGTIMER_
+//char LogTimer(char tNumber, char invers)
+//{
+int tmp = *bazisTimerMem[tNumber].pntInputSignal;
+//поймать фронт
+if ((tmp^elTrgOldTimer[tNumber])&
+    tmp
+   )  elTrgOutTimer[tNumber] = 1;
+#else
+int tmp = *bazisTimerMem[tNumber].pntInputSignal;
+//поймать фронт
+if ((tmp^elTrgOldTimer[tNumber])&
+    (tmp^1)
+   )  elTrgOutTimer[tNumber] = 1;
+#endif // _ILOGTIMER_
+
+elTrgOldTimer[tNumber] = tmp;
+
+//если таймер досчитал
+if (bazisTimerMem[tNumber].FINISCH)
+{
+  bazisTimerMem[tNumber].RESET = 1;
+  elTrgOutTimer[tNumber] = 0;
+}//if
+else
+{
+  bazisTimerMem[tNumber].RESET = 0;
+}
+return elTrgOutTimer[tNumber];
+//}

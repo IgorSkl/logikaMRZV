@@ -1,0 +1,38 @@
+$          $
+
+Hr1 Board Support Package version 1.0
+
+See the documentation included in the DOC directory for how to use
+this BSP.
+
+************************************************************************
+************************************************************************
+* Tested tools
+************************************************************************
+************************************************************************
+
+
+
+Tool    | DRV        | Startup code
+--------+------------+-------------
+IAR 6.5 | All        |		Yes
+IAR 6.6 | Untested   |		Untested
+        | All        |		Yes
+IAR     | Untested   |		Untested(1)
+
+(1) Although drv provide support for IAR, the startup code does
+not yet support .
+
+************************************************************************
+************************************************************************
+* Package history
+************************************************************************
+************************************************************************
+Version 1.00
+ Initial release
+
+Version 1.01
+ Corrected an ..... issue with...read/write commands
+ Moved ...
+ Revised .... layout
+ Fixed an issue with interrupts and.... that could cause ....

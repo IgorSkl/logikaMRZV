@@ -1,0 +1,230 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  17:17:46
+# Copyright 1999-2015 IAR Systems AB.
+#
+#    Cpu mode     =  arm
+#    Endian       =  little
+#    Source file  =  
+#        D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\SettingIci\SettingIci_RangirUMM.c
+#    Command line =  
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\SettingIci\SettingIci_RangirUMM.c"
+#        -lcN "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\List\" -o
+#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\" --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=ARM926EJ-S -e --fpu=VFP9-S --dlib_config "D:\Program Files\IAR
+#        Systems\Embedded Workbench 7.2\arm\INC\c\DLib_Config_Normal.h" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
+#        "D:\Program Files\IAR
+#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\Program
+#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\" --interwork
+#        --cpu_mode arm -On --use_c++_inline
+#    List file    =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\List\SettingIci_RangirUMM.lst
+#    Object file  =  
+#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        xRAM\Obj\SettingIci_RangirUMM.o
+#
+###############################################################################
+
+D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\SettingIci\SettingIci_RangirUMM.c
+      1          #include "lpc_types.h"
+      2          #include "lpc_irq_fiq.h"
+      3          #include "lpc_arm922t_cp15_driver.h"
+      4          
+      5          #include "lpc32xx_hstimer.h"
+      6          #include "lpc32xx_ssp.h"
+      7          #include "lpc32xx_gpio.h"
+      8          
+      9          #include "lpc32xx_intc_driver.h"
+     10          #include "lpc32xx_clkpwr_driver.h"
+     11          
+     12          #include "arm926ej_cp15_drv.h"
+     13          #include "ttbl.h"
+     14          
+     15          #include <stdio.h>
+     16          #include <string.h>
+     17          
+     18          #include "psuperVisor\supermanager.h"
+     19          
+     20          #include "component\componentdef.h"
+     21          #include "psuperVisor\psvisor_helpdef.h"
+     22          
+     23          #include "psuperVisor\psvisor_helpfnc.h"
+     24          #include "virtualMenu\rangmanagerfnc.h"
+     25          #include "virtualmenu\systemmenufnc.h"
+     26          #include "SettingIci\SettingIci.h"
+     27          
+     28          #include "toSpeedOptim.h"
+     29          #include "toSpeedDIS.h"
+     30          
+     31          #include "header.h"
+     32          #include "ici_r_ef.h"
+     33          
+     34          #define _HIDE_COMPONENT
+     35          #include "UMMComponent.c"
+     36          
+     37          void SettingIci_RangirUMM2DV(int nDV)
+     38          {
+     39          //отранж UMM на ДВ
+     40          int numDV = nDV - DV1_SM;//нормировка
+     41          // Блокировка UMin1
+     42           if(isActivCmdDV(BLOCK_UMIN1_DI_IEPRF_ONB, numDV))//проверка активности команды на ДВ
+     43                SetCmdToUVV(UMM_COMP1,  1, IOCMD3_UMM, nDV);//отранж 
+     44          // Блокировка UMin2
+     45           if(isActivCmdDV(BLOCK_UMIN2_DI_IEPRF_ONB, numDV))//проверка активности команды на ДВ
+     46                SetCmdToUVV(UMM_COMP1,  1, IOCMD4_UMM, nDV);//отранж 
+     47          
+     48          // Блокировка UMax1
+     49          // if(isActivCmdDV(, numDV))//проверка активности команды на ДВ
+     50          //      SetCmdToUVV(UMM_COMP1,  1, IOCMD1_UMM, nDV);//отранж 
+     51          // Блокировка UMax2
+     52          // if(isActivCmdDV(, numDV))//проверка активности команды на ДВ
+     53          //      SetCmdToUVV(UMM_COMP1,  1, IOCMD2_UMM, nDV);//отранж 
+     54          }// SettingIci_RangirUMM2DV(int nDV)
+     55          
+     56          void SettingIci_RangirUMM2Rele(int nRele)
+     57          {
+     58          //отранж UMM на Реле
+     59          int numRele = nRele - RELE1_SM;//нормировка
+     60          // Блокировка UMin1
+     61           if(isActivCmdRele(BLOCK_UMIN1_DI_OEPRF_ONB, numRele))//проверка активности команды на Реле
+     62                SetCmdToUVV(UMM_COMP1,  1, IOCMD3_UMM, nRele);//отранж 
+     63          // Блокировка UMin2
+     64           if(isActivCmdRele(BLOCK_UMIN2_DI_OEPRF_ONB, numRele))//проверка активности команды на Реле
+     65                SetCmdToUVV(UMM_COMP1,  1, IOCMD4_UMM, nRele);//отранж 
+     66          // ПО UMin1
+     67           if(isActivCmdRele(STPDEV_UMIN1_OEPRF_ONB, numRele))//проверка активности команды на Реле
+     68                SetCmdToUVV(UMM_COMP1,  1, IOCMD9_UMM, nRele);//отранж 
+     69          // UMin1
+     70           if(isActivCmdRele(UMIN1_OEPRF_ONB, numRele))//проверка активности команды на Реле
+     71                SetCmdToUVV(UMM_COMP1,  1, IOCMD10_UMM, nRele);//отранж 
+     72          
+     73          // ПО UMin2
+     74           if(isActivCmdRele(STPDEV_UMIN2_OEPRF_ONB, numRele))//проверка активности команды на Реле
+     75                SetCmdToUVV(UMM_COMP1,  1, IOCMD11_UMM, nRele);//отранж 
+     76          // UMin2
+     77           if(isActivCmdRele(UMIN2_OEPRF_ONB, numRele))//проверка активности команды на Реле
+     78                SetCmdToUVV(UMM_COMP1,  1, IOCMD12_UMM, nRele);//отранж 
+     79          
+     80          // Блокировка UMax1
+     81          // if(isActivCmdRele(, numRele))//проверка активности команды на Реле
+     82          //      SetCmdToUVV(UMM_COMP1,  1, IOCMD1_UMM, nRele);//отранж 
+     83          // Блокировка UMax2
+     84          // if(isActivCmdRele(, numRele))//проверка активности команды на Реле
+     85            //    SetCmdToUVV(UMM_COMP1,  1, IOCMD2_UMM, nRele);//отранж 
+     86            
+     87          // ПО UMax1
+     88           if(isActivCmdRele(STPDEV_UMAX1_OEPRF_ONB, numRele))//проверка активности команды на Реле
+     89                SetCmdToUVV(UMM_COMP1,  1, IOCMD5_UMM, nRele);//отранж 
+     90          // UMax1
+     91           if(isActivCmdRele(UMAX1_OEPRF_ONB, numRele))//проверка активности команды на Реле
+     92                SetCmdToUVV(UMM_COMP1,  1, IOCMD6_UMM, nRele);//отранж 
+     93          // ПО UMax2
+     94           if(isActivCmdRele(STPDEV_UMAX2_OEPRF_ONB, numRele))//проверка активности команды на Реле
+     95                SetCmdToUVV(UMM_COMP1,  1, IOCMD7_UMM, nRele);//отранж 
+     96          // UMax2
+     97           if(isActivCmdRele(UMAX2_OEPRF_ONB, numRele))//проверка активности команды на Реле
+     98                SetCmdToUVV(UMM_COMP1,  1, IOCMD8_UMM, nRele);//отранж 
+     99          
+    100          
+    101          }// SettingIci_RangirUMM2Rele(int nRele)
+    102          
+    103          void SettingIci_RangirUMM2Led(int nLed)
+    104          {
+    105          //отранж UMM на СДИ
+    106          int numLed = nLed - CDI1_SM;//нормировка
+    107          // Блокировка UMin1
+    108           if(isActivCmdLed(BLOCK_UMIN1_DI_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    109                SetCmdToUVV(UMM_COMP1,  1, IOCMD3_UMM, nLed);//отранж 
+    110          // Блокировка UMin2
+    111           if(isActivCmdLed(BLOCK_UMIN2_DI_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    112                SetCmdToUVV(UMM_COMP1,  1, IOCMD4_UMM, nLed);//отранж 
+    113          // ПО UMin1
+    114           if(isActivCmdLed(STPDEV_UMIN1_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    115                SetCmdToUVV(UMM_COMP1,  1, IOCMD9_UMM, nLed);//отранж 
+    116          // UMin1
+    117           if(isActivCmdLed(UMIN1_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    118                SetCmdToUVV(UMM_COMP1,  1, IOCMD10_UMM, nLed);//отранж 
+    119          
+    120          // ПО UMin2
+    121           if(isActivCmdLed(STPDEV_UMIN2_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    122                SetCmdToUVV(UMM_COMP1,  1, IOCMD11_UMM, nLed);//отранж 
+    123          // UMin2
+    124           if(isActivCmdLed(STPDEV_UMIN2_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    125                SetCmdToUVV(UMM_COMP1,  1, IOCMD12_UMM, nLed);//отранж 
+    126          
+    127          // Блокировка UMax1
+    128          // if(isActivCmdLed(, numLed))//проверка активности команды на Реле
+    129          //      SetCmdToUVV(UMM_COMP1,  1, IOCMD1_UMM, nLed);//отранж 
+    130          // Блокировка UMax2
+    131          // if(isActivCmdLed(, numLed))//проверка активности команды на Реле
+    132            //    SetCmdToUVV(UMM_COMP1,  1, IOCMD2_UMM, nLed);//отранж 
+    133            
+    134          // ПО UMax1
+    135           if(isActivCmdLed(STPDEV_UMAX1_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    136                SetCmdToUVV(UMM_COMP1,  1, IOCMD5_UMM, nLed);//отранж 
+    137          // UMax1
+    138           if(isActivCmdLed(UMAX1_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    139                SetCmdToUVV(UMM_COMP1,  1, IOCMD6_UMM, nLed);//отранж 
+    140          // ПО UMax2
+    141           if(isActivCmdLed(STPDEV_UMAX2_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    142                SetCmdToUVV(UMM_COMP1,  1, IOCMD7_UMM, nLed);//отранж 
+    143          // UMax2
+    144           if(isActivCmdLed(UMAX2_OEPRF_ONB, numLed))//проверка активности команды на Реле
+    145                SetCmdToUVV(UMM_COMP1,  1, IOCMD8_UMM, nLed);//отранж 
+    146          
+    147          
+    148          }// SettingIci_RangirUMM2Led(int nLed)
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      16   SettingIci_RangirUMM2DV
+        16   -> SetCmdToUVV
+        16   -> isActivCmdDV
+      16   SettingIci_RangirUMM2Led
+        16   -> SetCmdToUVV
+        16   -> isActivCmdLed
+      16   SettingIci_RangirUMM2Rele
+        16   -> SetCmdToUVV
+        16   -> isActivCmdRele
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+     112  SettingIci_RangirUMM2DV
+     496  SettingIci_RangirUMM2Led
+     496  SettingIci_RangirUMM2Rele
+
+ 
+ 1 104 bytes in section .text
+ 
+ 1 104 bytes of CODE memory
+
+Errors: none
+Warnings: none
