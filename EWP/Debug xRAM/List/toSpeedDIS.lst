@@ -1,52 +1,41 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  17:17:48
+# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        20/Oct/2015  12:47:28
 # Copyright 1999-2015 IAR Systems AB.
 #
 #    Cpu mode     =  arm
 #    Endian       =  little
-#    Source file  =  
-#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\toSpeedDIS.c
+#    Source file  =  D:\IAR projects\HR1_0100_00_I720_new2\toSpeedDIS.c
 #    Command line =  
-#        "D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\toSpeedDIS.c" -lcN "D:\Program
-#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\List\"
-#        -o "D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\Obj\" --no_cse
+#        "D:\IAR projects\HR1_0100_00_I720_new2\toSpeedDIS.c" -lcN "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xRAM\List\" -o "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xRAM\Obj\" --no_cse
 #        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
 #        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
-#        --fpu=VFP9-S --dlib_config "D:\Program Files\IAR Systems\Embedded
-#        Workbench 7.2\arm\INC\c\DLib_Config_Normal.h" -I "D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
-#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
-#        "D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
-#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
-#        "D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
-#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
-#        "D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
-#        "D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
-#        "D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
-#        "D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
-#        "D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\Program
-#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\" --interwork
-#        --cpu_mode arm -On --use_c++_inline
+#        --fpu=VFP9-S --dlib_config "C:\Program Files\IAR Systems\Embedded
+#        Workbench 7.40\arm\INC\c\DLib_Config_Normal.h" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\Igor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\component\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\" --interwork --cpu_mode arm -On
+#        --use_c++_inline
 #    List file    =  
-#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
 #        xRAM\List\toSpeedDIS.lst
 #    Object file  =  
-#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
-#        xRAM\Obj\toSpeedDIS.o
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug xRAM\Obj\toSpeedDIS.o
 #
 ###############################################################################
 
-D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\toSpeedDIS.c
+D:\IAR projects\HR1_0100_00_I720_new2\toSpeedDIS.c
       1          
       2          //#include <TCHAR.H >
       3          
@@ -118,470 +107,492 @@ D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\toSpeedDIS.c
      69          int pusk1OT7, pusk2OT7;
      70          int pusk1OT8, pusk2OT8;
      71          
-     72          int pusk1OT1_old, pusk2OT1_old;
-     73          int pusk1OT2_old, pusk2OT2_old;
-     74          int pusk1OT3_old, pusk2OT3_old;
-     75          int pusk1OT4_old, pusk2OT4_old;
-     76          int pusk1OT5_old, pusk2OT5_old;
-     77          int pusk1OT6_old, pusk2OT6_old;
-     78          int pusk1OT7_old, pusk2OT7_old;
-     79          int pusk1OT8_old, pusk2OT8_old;
-     80          
-     81          int rst1OT1, rst2OT1;
-     82          int rst1OT2, rst2OT2;
-     83          int rst1OT3, rst2OT3;
-     84          int rst1OT4, rst2OT4;
-     85          int rst1OT5, rst2OT5;
-     86          int rst1OT6, rst2OT6;
-     87          int rst1OT7, rst2OT7;
-     88          int rst1OT8, rst2OT8;
-     89          
-     90          int rst1OT1_old, rst2OT1_old;
-     91          int rst1OT2_old, rst2OT2_old;
-     92          int rst1OT3_old, rst2OT3_old;
-     93          int rst1OT4_old, rst2OT4_old;
-     94          int rst1OT5_old, rst2OT5_old;
-     95          int rst1OT6_old, rst2OT6_old;
-     96          int rst1OT7_old, rst2OT7_old;
-     97          int rst1OT8_old, rst2OT8_old;
-     98          
-     99          int OTout[8];//Выходы OT
-    100          
-    101          UNS_32 pRDIScmdMaska[DQUADRO];//РегистрацияДИС
-    102          UNS_32 pRDIScmdActual[DQUADRO];//РегистрацияДИС AND Текущие
-    103          UNS_32 pRDIScmdOld[DQUADRO];//РегистрацияДИС AND Текущие old
-    104          UNS_32 oldDIS[DQUADRO];
-    105          UNS_32 act_oldDIS[DQUADRO];
-    106          
-    107          int activityDISold=0;//TRG DIS
-    108          int activitySEAMold=0;//TRG SEAM
-    109          REGISTRATOR_DIS registrator_dis;//массив ДИС
+     72          /*
+     73          int pusk1OT1_old, pusk2OT1_old;
+     74          int pusk1OT2_old, pusk2OT2_old;
+     75          int pusk1OT3_old, pusk2OT3_old;
+     76          int pusk1OT4_old, pusk2OT4_old;
+     77          int pusk1OT5_old, pusk2OT5_old;
+     78          int pusk1OT6_old, pusk2OT6_old;
+     79          int pusk1OT7_old, pusk2OT7_old;
+     80          int pusk1OT8_old, pusk2OT8_old;
+     81          */
+     82          
+     83          int rst1OT1, rst2OT1;
+     84          int rst1OT2, rst2OT2;
+     85          int rst1OT3, rst2OT3;
+     86          int rst1OT4, rst2OT4;
+     87          int rst1OT5, rst2OT5;
+     88          int rst1OT6, rst2OT6;
+     89          int rst1OT7, rst2OT7;
+     90          int rst1OT8, rst2OT8;
+     91          
+     92          /*
+     93          int rst1OT1_old, rst2OT1_old;
+     94          int rst1OT2_old, rst2OT2_old;
+     95          int rst1OT3_old, rst2OT3_old;
+     96          int rst1OT4_old, rst2OT4_old;
+     97          int rst1OT5_old, rst2OT5_old;
+     98          int rst1OT6_old, rst2OT6_old;
+     99          int rst1OT7_old, rst2OT7_old;
+    100          int rst1OT8_old, rst2OT8_old;
+    101          
+    102          int setOT1DV_old;
+    103          int setOT2DV_old;
+    104          int setOT3DV_old;
+    105          int setOT4DV_old;
+    106          int setOT5DV_old;
+    107          int setOT6DV_old;
+    108          int setOT7DV_old;
+    109          int setOT8DV_old;
     110          
-    111          void pullReleBO() @ "Fast_function"
-    112          {
-    113          //тянуть реле на БО
-    114          extern UNS_32 rele_bdvv1;//селекция реле
-    115          extern UNS_32 rele_bdbo_old;//селекция реле
-    116          extern UNS_32 maskaReleBO;
-    117          
-    118           int tmpOffsetT = offsetTimersPRM1;//смещение на таймерный индекс PRM1
-    119          
-    120           //нисходящий фронт
-    121            int focusReleBO =(
-    122              (rele_bdvv1^rele_bdbo_old)&rele_bdbo_old//селекция реле
-    123               )&maskaReleBO;
-    124            rele_bdbo_old = rele_bdvv1;
-    125          
-    126           int tmp=0;
-    127           if(focusReleBO){
-    128             tmp = 1;
-    129           }//if
-    130          
-    131           LSIGNAL_TIMER(TIMER_RELEBO) = tmp;//таймер БО
-    132           int timlog = FLOG_TIMER(TIMER_RELEBO);
-    133           if(timlog){
-    134            //таймер активный - тянуть
-    135            rele_bdvv1 |= maskaReleBO;
-    136           }//if
-    137          }//pullReleBO()
-    138          
-    139          void pullReleBV() @ "Fast_function"
-    140          {
-    141          //тянуть реле на БB
-    142          extern UNS_32 rele_bdvv1;//селекция реле
-    143          extern UNS_32 rele_bdbv_old;//селекция реле
-    144          extern UNS_32 maskaReleBO, maskaReleBV;
-    145          
-    146           int tmpOffsetT = offsetTimersPRM1;//смещение на таймерный индекс PRM1
+    111          int resOT1DV_old;
+    112          int resOT2DV_old;
+    113          int resOT3DV_old;
+    114          int resOT4DV_old;
+    115          int resOT5DV_old;
+    116          int resOT6DV_old;
+    117          int resOT7DV_old;
+    118          int resOT8DV_old;
+    119          */
+    120          
+    121          int OTout[8];//Выходы OT
+    122          
+    123          UNS_32 pRDIScmdMaska[DQUADRO];//РегистрацияДИС
+    124          UNS_32 pRDIScmdActual[DQUADRO];//РегистрацияДИС AND Текущие
+    125          UNS_32 pRDIScmdOld[DQUADRO];//РегистрацияДИС AND Текущие old
+    126          UNS_32 oldDIS[DQUADRO];
+    127          UNS_32 act_oldDIS[DQUADRO];
+    128          
+    129          int activityDISold=0;//TRG DIS
+    130          int activitySEAMold=0;//TRG SEAM
+    131          REGISTRATOR_DIS registrator_dis;//массив ДИС
+    132          
+    133          void pullReleBO() @ "Fast_function"
+    134          {
+    135          //тянуть реле на БО
+    136          extern UNS_32 rele_bdvv1;//селекция реле
+    137          extern UNS_32 rele_bdbo_old;//селекция реле
+    138          extern UNS_32 maskaReleBO;
+    139          
+    140           int tmpOffsetT = offsetTimersPRM1;//смещение на таймерный индекс PRM1
+    141          
+    142           //нисходящий фронт
+    143            int focusReleBO =(
+    144              (rele_bdvv1^rele_bdbo_old)&rele_bdbo_old//селекция реле
+    145               )&maskaReleBO;
+    146            rele_bdbo_old = rele_bdvv1;
     147          
-    148           //восходящий фронт
-    149            int focusReleBV =(
-    150              (rele_bdvv1^rele_bdbv_old)&rele_bdvv1//селекция реле
-    151               )&maskaReleBV;
-    152            rele_bdbv_old = rele_bdvv1;
-    153          
-    154           int tmp=0;
-    155           if(focusReleBV){
-    156             tmp = 1;
-    157           }//if
-    158          
-    159           LSIGNAL_TIMER(TIMER_RELEBV) = tmp;//таймер БB
-    160           int timlog = FLOG_TIMER(TIMER_RELEBV);
-    161           if(timlog){
-    162            //таймер активный - тянуть
-    163            rele_bdvv1 |= maskaReleBV;
-    164           }//if
-    165          }//pullReleBV()
-    166          
-    167          void PuskAPV_UROV_OFWorking() @ "Fast_function"
-    168          {
-    169          //пуск АПВ УРОВ ОФ
-    170           puskAPV = puskUROV = pusk1OF = pusk2OF = pusk3OF = 0;
-    171          pusk1OF2 = pusk2OF2 = pusk3OF2 = 0;
-    172          pusk1OF3 = pusk2OF3 = pusk3OF3 = 0;
-    173          pusk1OF4 = pusk2OF4 = pusk3OF4 = 0;
-    174          pusk1OF5 = pusk2OF5 = pusk3OF5 = 0;
-    175          pusk1OF6 = pusk2OF6 = pusk3OF6 = 0;
-    176          pusk1OF7 = pusk2OF7 = pusk3OF7 = 0;
-    177          pusk1OF8 = pusk2OF8 = pusk3OF8 = 0;
-    178          pusk1OF9 = pusk2OF9 = pusk3OF9 = 0;
-    179          pusk1OF10 = pusk2OF10 = pusk3OF10 = 0;
-    180          pusk1OF11 = pusk2OF11 = pusk3OF11 = 0;
-    181          pusk1OF12 = pusk2OF12 = pusk3OF12 = 0;
-    182          pusk1OF13 = pusk2OF13 = pusk3OF13 = 0;
-    183          pusk1OF14 = pusk2OF14 = pusk3OF14 = 0;
-    184          pusk1OF15 = pusk2OF15 = pusk3OF15 = 0;
-    185          pusk1OF16 = pusk2OF16 = pusk3OF16 = 0;
-    186          
-    187          pusk1OT1 = pusk2OT1 = 0;
-    188          pusk1OT2 = pusk2OT2 = 0;
-    189          pusk1OT3 = pusk2OT3 = 0;
-    190          pusk1OT4 = pusk2OT4 = 0;
-    191          pusk1OT5 = pusk2OT5 = 0;
-    192          pusk1OT6 = pusk2OT6 = 0;
-    193          pusk1OT7 = pusk2OT7 = 0;
-    194          pusk1OT8 = pusk2OT8 = 0;
-    195          
-    196          rst1OT1 = rst2OT1 = 0;
-    197          rst1OT2 = rst2OT2 = 0;
-    198          rst1OT3 = rst2OT3 = 0;
-    199          rst1OT4 = rst2OT4 = 0;
-    200          rst1OT5 = rst2OT5 = 0;
-    201          rst1OT6 = rst2OT6 = 0;
-    202          rst1OT7 = rst2OT7 = 0;
-    203          rst1OT8 = rst2OT8 = 0;
-    204          
-    205           //ЗапускАПВ big EL
-    206          // if(MakeAPVcmdPusk())
-    207             if(CheckActualCMD(pAPVcmdMaska))
-    208                  puskAPV = 1;
-    209           //ЗапускУРОВ big EL
-    210             if(CheckActualCMD(pUROVcmdMaska)) puskUROV = 1;
+    148           int tmp=0;
+    149           if(focusReleBO){
+    150             tmp = 1;
+    151           }//if
+    152          
+    153           LSIGNAL_TIMER(TIMER_RELEBO) = tmp;//таймер БО
+    154           int timlog = FLOG_TIMER(TIMER_RELEBO);
+    155           if(timlog){
+    156            //таймер активный - тянуть
+    157            rele_bdvv1 |= maskaReleBO;
+    158           }//if
+    159          }//pullReleBO()
+    160          
+    161          void pullReleBV() @ "Fast_function"
+    162          {
+    163          //тянуть реле на БB
+    164          extern UNS_32 rele_bdvv1;//селекция реле
+    165          extern UNS_32 rele_bdbv_old;//селекция реле
+    166          extern UNS_32 maskaReleBO, maskaReleBV;
+    167          
+    168           int tmpOffsetT = offsetTimersPRM1;//смещение на таймерный индекс PRM1
+    169          
+    170           //восходящий фронт
+    171            int focusReleBV =(
+    172              (rele_bdvv1^rele_bdbv_old)&rele_bdvv1//селекция реле
+    173               )&maskaReleBV;
+    174            rele_bdbv_old = rele_bdvv1;
+    175          
+    176           int tmp=0;
+    177           if(focusReleBV){
+    178             tmp = 1;
+    179           }//if
+    180          
+    181           LSIGNAL_TIMER(TIMER_RELEBV) = tmp;//таймер БB
+    182           int timlog = FLOG_TIMER(TIMER_RELEBV);
+    183           if(timlog){
+    184            //таймер активный - тянуть
+    185            rele_bdvv1 |= maskaReleBV;
+    186           }//if
+    187          }//pullReleBV()
+    188          
+    189          void PuskAPV_UROV_OFWorking() @ "Fast_function"
+    190          {
+    191          //пуск АПВ УРОВ ОФ
+    192           puskAPV = puskUROV = pusk1OF = pusk2OF = pusk3OF = 0;
+    193          pusk1OF2 = pusk2OF2 = pusk3OF2 = 0;
+    194          pusk1OF3 = pusk2OF3 = pusk3OF3 = 0;
+    195          pusk1OF4 = pusk2OF4 = pusk3OF4 = 0;
+    196          pusk1OF5 = pusk2OF5 = pusk3OF5 = 0;
+    197          pusk1OF6 = pusk2OF6 = pusk3OF6 = 0;
+    198          pusk1OF7 = pusk2OF7 = pusk3OF7 = 0;
+    199          pusk1OF8 = pusk2OF8 = pusk3OF8 = 0;
+    200          pusk1OF9 = pusk2OF9 = pusk3OF9 = 0;
+    201          pusk1OF10 = pusk2OF10 = pusk3OF10 = 0;
+    202          pusk1OF11 = pusk2OF11 = pusk3OF11 = 0;
+    203          pusk1OF12 = pusk2OF12 = pusk3OF12 = 0;
+    204          pusk1OF13 = pusk2OF13 = pusk3OF13 = 0;
+    205          pusk1OF14 = pusk2OF14 = pusk3OF14 = 0;
+    206          pusk1OF15 = pusk2OF15 = pusk3OF15 = 0;
+    207          pusk1OF16 = pusk2OF16 = pusk3OF16 = 0;
+    208          
+    209          pusk1OT1  = pusk2OT1 = 0;//set PLUS MINUS
+    210          rst1OT1  = rst2OT1 = 0;//rst PLUS MINUS
     211          
-    212           //Запуск1ОФ
-    213           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OFcmdMaska))  pusk1OF  = 1;
-    214           //Запуск2ОФ
-    215           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OFcmdMaska))  pusk2OF  = 1;
-    216           //Запуск3ОФ
-    217           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OFcmdMaska))  pusk3OF  = 1;
-    218          
-    219           //Запуск1ОФ2
-    220           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OF2cmdMaska))  pusk1OF2  = 1;
-    221           //Запуск2ОФ2
-    222           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OF2cmdMaska))  pusk2OF2  = 1;
-    223           //Запуск3ОФ2
-    224           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OF2cmdMaska))  pusk3OF2  = 1;
-    225          
-    226           //Запуск1ОФ3
-    227           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OF3cmdMaska))  pusk1OF3  = 1;
-    228           //Запуск2ОФ3
-    229           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OF3cmdMaska))  pusk2OF3  = 1;
-    230           //Запуск3ОФ3
-    231           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OF3cmdMaska))  pusk3OF3  = 1;
-    232          
-    233           //Запуск1ОФ4
-    234           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OF4cmdMaska))  pusk1OF4  = 1;
-    235           //Запуск2ОФ4
-    236           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OF4cmdMaska))  pusk2OF4  = 1;
-    237           //Запуск3ОФ4
-    238           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OF4cmdMaska))  pusk3OF4  = 1;
-    239          
-    240           //Запуск1ОФ5
-    241           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OF5cmdMaska))  pusk1OF5  = 1;
-    242           //Запуск2ОФ5
-    243           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OF5cmdMaska))  pusk2OF5  = 1;
-    244           //Запуск3ОФ5
-    245           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OF5cmdMaska))  pusk3OF5  = 1;
-    246          
-    247           //Запуск1ОФ6
-    248           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OF6cmdMaska))  pusk1OF6  = 1;
-    249           //Запуск2ОФ6
-    250           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OF6cmdMaska))  pusk2OF6  = 1;
-    251           //Запуск3ОФ6
-    252           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OF6cmdMaska))  pusk3OF6  = 1;
-    253          
-    254           //Запуск1ОФ7
-    255           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OF7cmdMaska))  pusk1OF7  = 1;
-    256           //Запуск2ОФ7
-    257           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OF7cmdMaska))  pusk2OF7  = 1;
-    258           //Запуск3ОФ7
-    259           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OF7cmdMaska))  pusk3OF7  = 1;
-    260          
-    261           //Запуск1ОФ8
-    262           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OF8cmdMaska))  pusk1OF8  = 1;
-    263           //Запуск2ОФ8
-    264           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OF8cmdMaska))  pusk2OF8  = 1;
-    265           //Запуск3ОФ8
-    266           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OF8cmdMaska))  pusk3OF8  = 1;
-    267          
-    268           //Запуск1ОФ9
-    269           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OF9cmdMaska))  pusk1OF9  = 1;
-    270           //Запуск2ОФ9
-    271           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OF9cmdMaska))  pusk2OF9  = 1;
-    272           //Запуск3ОФ9
-    273           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OF9cmdMaska))  pusk3OF9  = 1;
-    274          
-    275           //Запуск1ОФ10
-    276           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OF10cmdMaska))  pusk1OF10  = 1;
-    277           //Запуск2ОФ10
-    278           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OF10cmdMaska))  pusk2OF10  = 1;
-    279           //Запуск3ОФ10
-    280           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OF10cmdMaska))  pusk3OF10  = 1;
-    281          
-    282           //Запуск1ОФ11
-    283           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OF11cmdMaska))  pusk1OF11  = 1;
-    284           //Запуск2ОФ11
-    285           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OF11cmdMaska))  pusk2OF11  = 1;
-    286           //Запуск3ОФ11
-    287           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OF11cmdMaska))  pusk3OF11  = 1;
-    288          
-    289           //Запуск1ОФ12
-    290           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OF12cmdMaska))  pusk1OF12  = 1;
-    291           //Запуск2ОФ12
-    292           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OF12cmdMaska))  pusk2OF12  = 1;
-    293           //Запуск3ОФ12
-    294           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OF12cmdMaska))  pusk3OF12  = 1;
-    295          
-    296           //Запуск1ОФ13
-    297           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OF13cmdMaska))  pusk1OF13  = 1;
-    298           //Запуск2ОФ13
-    299           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OF13cmdMaska))  pusk2OF13  = 1;
-    300           //Запуск3ОФ13
-    301           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OF13cmdMaska))  pusk3OF13  = 1;
-    302          
-    303           //Запуск1ОФ14
-    304           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OF14cmdMaska))  pusk1OF14  = 1;
-    305           //Запуск2ОФ14
-    306           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OF14cmdMaska))  pusk2OF14  = 1;
-    307           //Запуск3ОФ14
-    308           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OF14cmdMaska))  pusk3OF14  = 1;
-    309          
-    310           //Запуск1ОФ15
-    311           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OF15cmdMaska))  pusk1OF15  = 1;
-    312           //Запуск2ОФ15
-    313           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OF15cmdMaska))  pusk2OF15  = 1;
-    314           //Запуск3ОФ15
-    315           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OF15cmdMaska))  pusk3OF15  = 1;
-    316          
-    317           //Запуск1ОФ16
-    318           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OF16cmdMaska))  pusk1OF16  = 1;
-    319           //Запуск2ОФ16
-    320           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OF16cmdMaska))  pusk2OF16  = 1;
-    321           //Запуск3ОФ16
-    322           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OF16cmdMaska))  pusk3OF16  = 1;
-    323          
-    324           //Запуск1ОT1
-    325           if(CheckActualCMD(struct_maskaOTcmd.pP1OT1cmdMaska))  pusk1OT1  = 1;
-    326           //Запуск2ОT1
-    327           if(CheckActualCMD(struct_maskaOTcmd.pP2OT1cmdMaska))  pusk2OT1  = 1;
-    328           //rst1ОT1
-    329           if(CheckActualCMD(struct_maskaOTcmd.pP3OT1cmdMaska))  rst1OT1  = 1;
-    330           //rst2ОT1
-    331           if(CheckActualCMD(struct_maskaOTcmd.pP4OT1cmdMaska))  rst2OT1  = 1;
-    332          
-    333           //Запуск1ОT2
-    334           if(CheckActualCMD(struct_maskaOTcmd.pP1OT2cmdMaska))  pusk1OT2  = 1;
-    335           //Запуск2ОT2
-    336           if(CheckActualCMD(struct_maskaOTcmd.pP2OT2cmdMaska))  pusk2OT2  = 1;
-    337           //rst1ОT2
-    338           if(CheckActualCMD(struct_maskaOTcmd.pP3OT2cmdMaska))  rst1OT2  = 1;
-    339           //rst2ОT2
-    340           if(CheckActualCMD(struct_maskaOTcmd.pP4OT2cmdMaska))  rst2OT2  = 1;
-    341          
-    342           //Запуск1ОT3
-    343           if(CheckActualCMD(struct_maskaOTcmd.pP1OT3cmdMaska))  pusk1OT3  = 1;
-    344           //Запуск2ОT3
-    345           if(CheckActualCMD(struct_maskaOTcmd.pP2OT3cmdMaska))  pusk2OT3  = 1;
-    346           //rst1ОT3
-    347           if(CheckActualCMD(struct_maskaOTcmd.pP3OT3cmdMaska))  rst1OT3  = 1;
-    348           //rst2ОT3
-    349           if(CheckActualCMD(struct_maskaOTcmd.pP4OT3cmdMaska))  rst2OT3  = 1;
-    350          
-    351           //Запуск1ОT4
-    352           if(CheckActualCMD(struct_maskaOTcmd.pP1OT4cmdMaska))  pusk1OT4  = 1;
-    353           //Запуск2ОT4
-    354           if(CheckActualCMD(struct_maskaOTcmd.pP2OT4cmdMaska))  pusk2OT4  = 1;
-    355           //rst1ОT4
-    356           if(CheckActualCMD(struct_maskaOTcmd.pP3OT4cmdMaska))  rst1OT4  = 1;
-    357           //rst2ОT4
-    358           if(CheckActualCMD(struct_maskaOTcmd.pP4OT4cmdMaska))  rst2OT4  = 1;
-    359          
-    360           //Запуск1ОT5
-    361           if(CheckActualCMD(struct_maskaOTcmd.pP1OT5cmdMaska))  pusk1OT5  = 1;
-    362           //Запуск2ОT5
-    363           if(CheckActualCMD(struct_maskaOTcmd.pP2OT5cmdMaska))  pusk2OT5  = 1;
-    364           //rst1ОT5
-    365           if(CheckActualCMD(struct_maskaOTcmd.pP3OT5cmdMaska))  rst1OT5  = 1;
-    366           //rst2ОT5
-    367           if(CheckActualCMD(struct_maskaOTcmd.pP4OT5cmdMaska))  rst2OT5  = 1;
-    368          
-    369           //Запуск1ОT6
-    370           if(CheckActualCMD(struct_maskaOTcmd.pP1OT6cmdMaska))  pusk1OT6  = 1;
-    371           //Запуск2ОT6
-    372           if(CheckActualCMD(struct_maskaOTcmd.pP2OT6cmdMaska))  pusk2OT6  = 1;
-    373           //rst1ОT6
-    374           if(CheckActualCMD(struct_maskaOTcmd.pP3OT6cmdMaska))  rst1OT6  = 1;
-    375           //rst2ОT6
-    376           if(CheckActualCMD(struct_maskaOTcmd.pP4OT6cmdMaska))  rst2OT6  = 1;
-    377          
-    378           //Запуск1ОT7
-    379           if(CheckActualCMD(struct_maskaOTcmd.pP1OT7cmdMaska))  pusk1OT7  = 1;
-    380           //Запуск2ОT7
-    381           if(CheckActualCMD(struct_maskaOTcmd.pP2OT7cmdMaska))  pusk2OT7  = 1;
-    382           //rst1ОT7
-    383           if(CheckActualCMD(struct_maskaOTcmd.pP3OT7cmdMaska))  rst1OT7  = 1;
-    384           //rst2ОT7
-    385           if(CheckActualCMD(struct_maskaOTcmd.pP4OT7cmdMaska))  rst2OT7  = 1;
-    386          
-    387           //Запуск1ОT8
-    388           if(CheckActualCMD(struct_maskaOTcmd.pP1OT8cmdMaska))  pusk1OT8  = 1;
-    389           //Запуск2ОT8
-    390           if(CheckActualCMD(struct_maskaOTcmd.pP2OT8cmdMaska))  pusk2OT8  = 1;
-    391           //rst1ОT8
-    392           if(CheckActualCMD(struct_maskaOTcmd.pP3OT8cmdMaska))  rst1OT8  = 1;
-    393           //rst2ОT8
-    394           if(CheckActualCMD(struct_maskaOTcmd.pP4OT8cmdMaska))  rst2OT8  = 1;
-    395          
-    396          }//PuskAPV_UROV_OFWorking()
-    397          
-    398          void DiskretRegWorking() @ "Fast_function"
-    399          {
-    400          //работа дискр регистратора
-    401           int tmpOffsetT = offsetTimersPRM1;//смещение на таймерный индекс PRM1
-    402           LSIGNAL_TIMER(TIMERDIS_PRM1) = 0;//таймер ДИС
-    403           //запускающий сигнал для миним таймер DIS
-    404           LSIGNAL_TIMER(TIMER_MINDIS_PRM1) = 0;//миним таймер DIS
-    405           int isDISbusy = getTimerBUSY(tmpOffsetT+TIMERDIS_PRM1);//есть активность DIS
-    406          
-    407           if(MakeRDIScmdPusk()){//проверить РегистрацияДИС на запускbig EL
-    408             if(isDISbusy);//есть активность DIS
-    409             else {
-    410                    //запускающий сигнал для миним таймер DIS
-    411                    LSIGNAL_TIMER(TIMER_MINDIS_PRM1) = 1;//миним таймер DIS
-    412                    StartDiscretReg();//процедура старта Рег ДИС
-    413                   }
-    414             //запускающий сигнал для таймера num
-    415             LSIGNAL_TIMER(TIMERDIS_PRM1) = 1;//запустить таймер ДИС
-    416           }//if(MakeRDIScmdActual())
-    417             else {
-    418             //нет активности DIS
-    419              memcpy(act_oldDIS, pActualCMD, 4*DQUADRO);//запомнить текущие
-    420             }
-    421             int activityDISact = isActivityDIS();//проверка таймерной активности ДИС
-    422             //EL TRG down front
-    423             int activityDIStrg = (activityDISact^activityDISold)&activityDISold;
-    424             activityDISold = activityDISact;
-    425             LSIGNAL_TIMER(TIMER_SEAM_PRM1) = activityDIStrg;//таймер сшивки SEAM
-    426             int activitySEAMact = FLOG_TIMER(TIMER_SEAM_PRM1);//таймер сшивки SEAM
-    427             //EL TRG down front
-    428             int activitySEAMtrg = (activitySEAMact^activitySEAMold)&activitySEAMold;
-    429             activitySEAMold = activitySEAMact;
-    430             int activitySEAMstop = (activityDISact^1) & activitySEAMtrg;
-    431             if(registrator_dis.title_dis.len_dis>(SIZE_DIS-2)) activitySEAMstop = 1;//принуд стоп
-    432          //таймер формирователь со сбросом - по восх фронту
-    433             FLOG_TIMERRES(TIMERDIS_PRM1, activitySEAMstop);
-    434          //таймер формирователь по восх фронту
-    435             FLOG_TIMER(TIMER_MINDIS_PRM1);//миним таймер DIS
-    436          
-    437             if(getTimerBUSY(tmpOffsetT+TIMERDIS_PRM1)){//bazisTimerMem[tmpOffsetT+TIMERDIS_PRM1].BUSY){//есть активность DIS
-    438               //сравнить текущие и старые
-    439               if(memcmp(oldDIS, pActualCMD, 4*DQUADRO)){
-    440                //есть различия
-    441                registrator_dis.bodyDIS[registrator_dis.title_dis.len_dis].reltime =
-    442                       //относит время
-    443                       getTimerCrr(tmpOffsetT+TIMERDIS_PRM1);
-    444                       //bazisTimerMem[tmpOffsetT+TIMERDIS_PRM1].crrCNT;
-    445                memcpy(registrator_dis.bodyDIS[registrator_dis.title_dis.len_dis].pActualCMD, 
-    446                          pActualCMD, 4*DQUADRO);//копировать текущие
-    447                registrator_dis.title_dis.len_dis++;//размер массив ДИС
-    448               }//if(memcmp(oldDIS, pActualCMD, 4*DQUADRO))
-    449               memcpy(oldDIS, pActualCMD, 4*DQUADRO);//запомнить текущие
-    450             }//if(isDISbusy)
-    451          
-    452          }//DiskretRegWorking()
-    453          
-    454          int isActivityDIS() @ "Fast_function"
-    455          {
-    456          //проверка активности ДИС
-    457            int tmp = 0;
-    458            while (cnfCOMPONENT[tmp].componentEnable)
-    459            {
-    460              if(cnfCOMPONENT[tmp].isDISactiv(tmp)) return 1;
-    461              tmp++;
-    462            }//while
-    463            return 0;
-    464          }//isActivityDIS()
-    465          
-    466          void StartDiscretReg() @ "Fast_function"
-    467          {
-    468          //процедура старта Рег ДИС
-    469           registrator_dis.title_dis.len_dis=0;//длина масс ДИС
-    470           memcpy(registrator_dis.title_dis.oldDIS, act_oldDIS, 4*DQUADRO);//перекопировать текущие
-    471           memset(oldDIS, 0, 4*DQUADRO);//обнулить
-    472          
-    473           registrator_dis.title_dis.title_year = 1;
-    474           registrator_dis.title_dis.title_mon  = 1;
-    475           registrator_dis.title_dis.title_date = 1;
-    476           registrator_dis.title_dis.title_hour = 1;
-    477           registrator_dis.title_dis.title_min  = 1;
-    478           registrator_dis.title_dis.title_sec  = 1;
-    479          
-    480          }//StartDiscretReg()
-    481          
-    482          int MakeRDIScmdPusk()  @ "Fast_function"
-    483          {
-    484          //проверить РегистрацияДИС на запуск
-    485            UNS_32 tmpM[DQUADRO];
-    486            UNS_32 tmpI=0;
-    487            for(int i=0; i<DQUADRO; i++) 
-    488                    pRDIScmdActual[i]=pRDIScmdMaska[i]&pActualCMD[i];//РегистрацияДИС AND Текущие
-    489            //Большой EL
-    490            for(int i=0; i<DQUADRO; i++) 
-    491                    tmpM[i]=(pRDIScmdActual[i]^pRDIScmdOld[i])&pRDIScmdActual[i];
-    492            for(int i=0; i<DQUADRO; i++) 
-    493                    pRDIScmdOld[i]=pRDIScmdActual[i];
+    212          pusk1OT2  = pusk2OT2 = 0;//set PLUS MINUS
+    213          rst1OT2  = rst2OT2 = 0;//rst PLUS MINUS
+    214          pusk1OT3  = pusk2OT3 = 0;//set PLUS MINUS
+    215          rst1OT3  = rst2OT3 = 0;//rst PLUS MINUS
+    216          pusk1OT4  = pusk2OT4 = 0;//set PLUS MINUS
+    217          rst1OT4  = rst2OT4 = 0;//rst PLUS MINUS
+    218          pusk1OT5  = pusk2OT5 = 0;//set PLUS MINUS
+    219          rst1OT5  = rst2OT5 = 0;//rst PLUS MINUS
+    220          pusk1OT6  = pusk2OT6 = 0;//set PLUS MINUS
+    221          rst1OT6  = rst2OT6 = 0;//rst PLUS MINUS
+    222          pusk1OT7  = pusk2OT7 = 0;//set PLUS MINUS
+    223          rst1OT7  = rst2OT7 = 0;//rst PLUS MINUS
+    224          pusk1OT8  = pusk2OT8 = 0;//set PLUS MINUS8
+    225          rst1OT8  = rst2OT8 = 0;//rst PLUS MINUS
+    226          
+    227           //ЗапускАПВ big EL
+    228          // if(MakeAPVcmdPusk())
+    229             if(CheckActualCMD(pAPVcmdMaska))
+    230                  puskAPV = 1;
+    231           //ЗапускУРОВ big EL
+    232             if(CheckActualCMD(pUROVcmdMaska)) puskUROV = 1;
+    233          
+    234           //Запуск1ОФ
+    235           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OFcmdMaska))  pusk1OF  = 1;
+    236           //Запуск2ОФ
+    237           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OFcmdMaska))  pusk2OF  = 1;
+    238           //Запуск3ОФ
+    239           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OFcmdMaska))  pusk3OF  = 1;
+    240          
+    241           //Запуск1ОФ2
+    242           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OF2cmdMaska))  pusk1OF2  = 1;
+    243           //Запуск2ОФ2
+    244           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OF2cmdMaska))  pusk2OF2  = 1;
+    245           //Запуск3ОФ2
+    246           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OF2cmdMaska))  pusk3OF2  = 1;
+    247          
+    248           //Запуск1ОФ3
+    249           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OF3cmdMaska))  pusk1OF3  = 1;
+    250           //Запуск2ОФ3
+    251           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OF3cmdMaska))  pusk2OF3  = 1;
+    252           //Запуск3ОФ3
+    253           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OF3cmdMaska))  pusk3OF3  = 1;
+    254          
+    255           //Запуск1ОФ4
+    256           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OF4cmdMaska))  pusk1OF4  = 1;
+    257           //Запуск2ОФ4
+    258           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OF4cmdMaska))  pusk2OF4  = 1;
+    259           //Запуск3ОФ4
+    260           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OF4cmdMaska))  pusk3OF4  = 1;
+    261          
+    262           //Запуск1ОФ5
+    263           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OF5cmdMaska))  pusk1OF5  = 1;
+    264           //Запуск2ОФ5
+    265           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OF5cmdMaska))  pusk2OF5  = 1;
+    266           //Запуск3ОФ5
+    267           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OF5cmdMaska))  pusk3OF5  = 1;
+    268          
+    269           //Запуск1ОФ6
+    270           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OF6cmdMaska))  pusk1OF6  = 1;
+    271           //Запуск2ОФ6
+    272           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OF6cmdMaska))  pusk2OF6  = 1;
+    273           //Запуск3ОФ6
+    274           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OF6cmdMaska))  pusk3OF6  = 1;
+    275          
+    276           //Запуск1ОФ7
+    277           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OF7cmdMaska))  pusk1OF7  = 1;
+    278           //Запуск2ОФ7
+    279           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OF7cmdMaska))  pusk2OF7  = 1;
+    280           //Запуск3ОФ7
+    281           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OF7cmdMaska))  pusk3OF7  = 1;
+    282          
+    283           //Запуск1ОФ8
+    284           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OF8cmdMaska))  pusk1OF8  = 1;
+    285           //Запуск2ОФ8
+    286           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OF8cmdMaska))  pusk2OF8  = 1;
+    287           //Запуск3ОФ8
+    288           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OF8cmdMaska))  pusk3OF8  = 1;
+    289          
+    290           //Запуск1ОФ9
+    291           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OF9cmdMaska))  pusk1OF9  = 1;
+    292           //Запуск2ОФ9
+    293           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OF9cmdMaska))  pusk2OF9  = 1;
+    294           //Запуск3ОФ9
+    295           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OF9cmdMaska))  pusk3OF9  = 1;
+    296          
+    297           //Запуск1ОФ10
+    298           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OF10cmdMaska))  pusk1OF10  = 1;
+    299           //Запуск2ОФ10
+    300           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OF10cmdMaska))  pusk2OF10  = 1;
+    301           //Запуск3ОФ10
+    302           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OF10cmdMaska))  pusk3OF10  = 1;
+    303          
+    304           //Запуск1ОФ11
+    305           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OF11cmdMaska))  pusk1OF11  = 1;
+    306           //Запуск2ОФ11
+    307           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OF11cmdMaska))  pusk2OF11  = 1;
+    308           //Запуск3ОФ11
+    309           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OF11cmdMaska))  pusk3OF11  = 1;
+    310          
+    311           //Запуск1ОФ12
+    312           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OF12cmdMaska))  pusk1OF12  = 1;
+    313           //Запуск2ОФ12
+    314           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OF12cmdMaska))  pusk2OF12  = 1;
+    315           //Запуск3ОФ12
+    316           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OF12cmdMaska))  pusk3OF12  = 1;
+    317          
+    318           //Запуск1ОФ13
+    319           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OF13cmdMaska))  pusk1OF13  = 1;
+    320           //Запуск2ОФ13
+    321           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OF13cmdMaska))  pusk2OF13  = 1;
+    322           //Запуск3ОФ13
+    323           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OF13cmdMaska))  pusk3OF13  = 1;
+    324          
+    325           //Запуск1ОФ14
+    326           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OF14cmdMaska))  pusk1OF14  = 1;
+    327           //Запуск2ОФ14
+    328           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OF14cmdMaska))  pusk2OF14  = 1;
+    329           //Запуск3ОФ14
+    330           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OF14cmdMaska))  pusk3OF14  = 1;
+    331          
+    332           //Запуск1ОФ15
+    333           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OF15cmdMaska))  pusk1OF15  = 1;
+    334           //Запуск2ОФ15
+    335           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OF15cmdMaska))  pusk2OF15  = 1;
+    336           //Запуск3ОФ15
+    337           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OF15cmdMaska))  pusk3OF15  = 1;
+    338          
+    339           //Запуск1ОФ16
+    340           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP1OF16cmdMaska))  pusk1OF16  = 1;
+    341           //Запуск2ОФ16
+    342           if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OF16cmdMaska))  pusk2OF16  = 1;
+    343           //Запуск3ОФ16
+    344           if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OF16cmdMaska))  pusk3OF16  = 1;
+    345          //------------OT---------------
+    346           //Запуск1SetOT1
+    347           if(CheckActualCMD(struct_maskaOTcmd.pP1OT1cmdMaska))  pusk1OT1  = 1;//set PLUS
+    348           //Запуск2SetOT1
+    349           if(CheckActualCMD(struct_maskaOTcmd.pP2OT1cmdMaska))  rst1OT1  = 1;//res PLUS
+    350           //Запуск3SetOT1
+    351           if(CheckActualCMD(struct_maskaOTcmd.pP3OT1cmdMaska))  pusk2OT1  = 1;//set MINUS
+    352           //Запуск4SetOT1
+    353           if(CheckActualCMD(struct_maskaOTcmd.pP4OT1cmdMaska))  rst2OT1  = 1;//res MINUS
+    354          
+    355           //Запуск1SetOT2
+    356           if(CheckActualCMD(struct_maskaOTcmd.pP1OT2cmdMaska))  pusk1OT2  = 1;//set PLUS
+    357           //Запуск2SetOT2
+    358           if(CheckActualCMD(struct_maskaOTcmd.pP2OT2cmdMaska))  rst1OT2  = 1;//res PLUS
+    359           //Запуск3SetOT2
+    360           if(CheckActualCMD(struct_maskaOTcmd.pP3OT2cmdMaska))  pusk2OT2  = 1;//set MINUS
+    361           //Запуск4SetOT2
+    362           if(CheckActualCMD(struct_maskaOTcmd.pP4OT2cmdMaska))  rst2OT2  = 1;//res MINUS
+    363          
+    364            //Запуск1SetOT3
+    365           if(CheckActualCMD(struct_maskaOTcmd.pP1OT3cmdMaska))  pusk1OT3  = 1;//set PLUS
+    366           //Запуск2SetOT3
+    367           if(CheckActualCMD(struct_maskaOTcmd.pP2OT3cmdMaska))  rst1OT3  = 1;//res PLUS
+    368           //Запуск3SetOT3
+    369           if(CheckActualCMD(struct_maskaOTcmd.pP3OT3cmdMaska))  pusk2OT3  = 1;//set MINUS
+    370           //Запуск4SetOT1
+    371           if(CheckActualCMD(struct_maskaOTcmd.pP4OT3cmdMaska))  rst2OT3  = 1;//res MINUS
+    372          
+    373            //Запуск1SetOT4
+    374           if(CheckActualCMD(struct_maskaOTcmd.pP1OT4cmdMaska))  pusk1OT4  = 1;//set PLUS
+    375           //Запуск2SetOT4
+    376           if(CheckActualCMD(struct_maskaOTcmd.pP2OT4cmdMaska))  rst1OT4  = 1;//res PLUS
+    377           //Запуск3SetOT4
+    378           if(CheckActualCMD(struct_maskaOTcmd.pP3OT4cmdMaska))  pusk2OT4  = 1;//set MINUS
+    379           //Запуск4SetOT4
+    380           if(CheckActualCMD(struct_maskaOTcmd.pP4OT4cmdMaska))  rst2OT4  = 1;//res MINUS
+    381          
+    382           //Запуск1SetOT5
+    383           if(CheckActualCMD(struct_maskaOTcmd.pP1OT5cmdMaska))  pusk1OT5  = 1;//set PLUS
+    384           //Запуск2SetOT5
+    385           if(CheckActualCMD(struct_maskaOTcmd.pP2OT5cmdMaska))  rst1OT5  = 1;//res PLUS
+    386           //Запуск3SetOT5
+    387           if(CheckActualCMD(struct_maskaOTcmd.pP3OT5cmdMaska))  pusk2OT5  = 1;//set MINUS
+    388           //Запуск4SetOT5
+    389           if(CheckActualCMD(struct_maskaOTcmd.pP4OT5cmdMaska))  rst2OT5  = 1;//res MINUS
+    390          
+    391           //Запуск1SetOT6
+    392           if(CheckActualCMD(struct_maskaOTcmd.pP1OT6cmdMaska))  pusk1OT6  = 1;//set PLUS
+    393           //Запуск2SetOT6
+    394           if(CheckActualCMD(struct_maskaOTcmd.pP2OT6cmdMaska))  rst1OT6  = 1;//res PLUS
+    395           //Запуск3SetOT6
+    396           if(CheckActualCMD(struct_maskaOTcmd.pP3OT6cmdMaska))  pusk2OT6  = 1;//set MINUS
+    397           //Запуск4SetOT6
+    398           if(CheckActualCMD(struct_maskaOTcmd.pP4OT6cmdMaska))  rst2OT6  = 1;//res MINUS
+    399           
+    400            //Запуск1SetOT7
+    401           if(CheckActualCMD(struct_maskaOTcmd.pP1OT7cmdMaska))  pusk1OT7  = 1;//set PLUS
+    402           //Запуск2SetOT7
+    403           if(CheckActualCMD(struct_maskaOTcmd.pP2OT7cmdMaska))  rst1OT7  = 1;//res PLUS
+    404           //Запуск3SetOT7
+    405           if(CheckActualCMD(struct_maskaOTcmd.pP3OT7cmdMaska))  pusk2OT7  = 1;//set MINUS
+    406           //Запуск4SetOT7
+    407           if(CheckActualCMD(struct_maskaOTcmd.pP4OT7cmdMaska))  rst2OT7  = 1;//res MINUS
+    408          
+    409            //Запуск1SetOT8
+    410           if(CheckActualCMD(struct_maskaOTcmd.pP1OT8cmdMaska))  pusk1OT8  = 1;//set PLUS
+    411           //Запуск2SetOT8
+    412           if(CheckActualCMD(struct_maskaOTcmd.pP2OT8cmdMaska))  rst1OT8  = 1;//res PLUS
+    413           //Запуск3SetOT8
+    414           if(CheckActualCMD(struct_maskaOTcmd.pP3OT8cmdMaska))  pusk2OT8  = 1;//set MINUS
+    415           //Запуск4SetOT8
+    416           if(CheckActualCMD(struct_maskaOTcmd.pP4OT8cmdMaska))  rst2OT8  = 1;//res MINUS
+    417          
+    418          }//PuskAPV_UROV_OFWorking()
+    419          
+    420          void DiskretRegWorking() @ "Fast_function"
+    421          {
+    422          //работа дискр регистратора
+    423           int tmpOffsetT = offsetTimersPRM1;//смещение на таймерный индекс PRM1
+    424           LSIGNAL_TIMER(TIMERDIS_PRM1) = 0;//таймер ДИС
+    425           //запускающий сигнал для миним таймер DIS
+    426           LSIGNAL_TIMER(TIMER_MINDIS_PRM1) = 0;//миним таймер DIS
+    427           int isDISbusy = getTimerBUSY(tmpOffsetT+TIMERDIS_PRM1);//есть активность DIS
+    428          
+    429           if(MakeRDIScmdPusk()){//проверить РегистрацияДИС на запускbig EL
+    430             if(isDISbusy);//есть активность DIS
+    431             else {
+    432                    //запускающий сигнал для миним таймер DIS
+    433                    LSIGNAL_TIMER(TIMER_MINDIS_PRM1) = 1;//миним таймер DIS
+    434                    StartDiscretReg();//процедура старта Рег ДИС
+    435                   }
+    436             //запускающий сигнал для таймера num
+    437             LSIGNAL_TIMER(TIMERDIS_PRM1) = 1;//запустить таймер ДИС
+    438           }//if(MakeRDIScmdActual())
+    439             else {
+    440             //нет активности DIS
+    441              memcpy(act_oldDIS, pActualCMD, 4*DQUADRO);//запомнить текущие
+    442             }
+    443             int activityDISact = isActivityDIS();//проверка таймерной активности ДИС
+    444             //EL TRG down front
+    445             int activityDIStrg = (activityDISact^activityDISold)&activityDISold;
+    446             activityDISold = activityDISact;
+    447             LSIGNAL_TIMER(TIMER_SEAM_PRM1) = activityDIStrg;//таймер сшивки SEAM
+    448             int activitySEAMact = FLOG_TIMER(TIMER_SEAM_PRM1);//таймер сшивки SEAM
+    449             //EL TRG down front
+    450             int activitySEAMtrg = (activitySEAMact^activitySEAMold)&activitySEAMold;
+    451             activitySEAMold = activitySEAMact;
+    452             int activitySEAMstop = (activityDISact^1) & activitySEAMtrg;
+    453             if(registrator_dis.title_dis.len_dis>(SIZE_DIS-2)) activitySEAMstop = 1;//принуд стоп
+    454          //таймер формирователь со сбросом - по восх фронту
+    455             FLOG_TIMERRES(TIMERDIS_PRM1, activitySEAMstop);
+    456          //таймер формирователь по восх фронту
+    457             FLOG_TIMER(TIMER_MINDIS_PRM1);//миним таймер DIS
+    458          
+    459             if(getTimerBUSY(tmpOffsetT+TIMERDIS_PRM1)){//bazisTimerMem[tmpOffsetT+TIMERDIS_PRM1].BUSY){//есть активность DIS
+    460               //сравнить текущие и старые
+    461               if(memcmp(oldDIS, pActualCMD, 4*DQUADRO)){
+    462                //есть различия
+    463                registrator_dis.bodyDIS[registrator_dis.title_dis.len_dis].reltime =
+    464                       //относит время
+    465                       getTimerCrr(tmpOffsetT+TIMERDIS_PRM1);
+    466                       //bazisTimerMem[tmpOffsetT+TIMERDIS_PRM1].crrCNT;
+    467                memcpy(registrator_dis.bodyDIS[registrator_dis.title_dis.len_dis].pActualCMD, 
+    468                          pActualCMD, 4*DQUADRO);//копировать текущие
+    469                registrator_dis.title_dis.len_dis++;//размер массив ДИС
+    470               }//if(memcmp(oldDIS, pActualCMD, 4*DQUADRO))
+    471               memcpy(oldDIS, pActualCMD, 4*DQUADRO);//запомнить текущие
+    472             }//if(isDISbusy)
+    473          
+    474          }//DiskretRegWorking()
+    475          
+    476          int isActivityDIS() @ "Fast_function"
+    477          {
+    478          //проверка активности ДИС
+    479            int tmp = 0;
+    480            while (cnfCOMPONENT[tmp].componentEnable)
+    481            {
+    482              if(cnfCOMPONENT[tmp].isDISactiv(tmp)) return 1;
+    483              tmp++;
+    484            }//while
+    485            return 0;
+    486          }//isActivityDIS()
+    487          
+    488          void StartDiscretReg() @ "Fast_function"
+    489          {
+    490          //процедура старта Рег ДИС
+    491           registrator_dis.title_dis.len_dis=0;//длина масс ДИС
+    492           memcpy(registrator_dis.title_dis.oldDIS, act_oldDIS, 4*DQUADRO);//перекопировать текущие
+    493           memset(oldDIS, 0, 4*DQUADRO);//обнулить
     494          
-    495            for(int i=0; i<DQUADRO; i++) 
-    496                    tmpI|=tmpM[i];
-    497            return tmpI;
-    498          }//MakeRDIScmdPusk
-    499          /*
-    500          int MakeAPVcmdPusk() @ "Fast_function"
-    501          {
-    502          //проверить APV на запуск
-    503            UNS_32 tmpM[DQUADRO];
-    504            UNS_32 tmpI=0;
-    505            for(int i=0; i<DQUADRO; i++) 
-    506                    pAPVcmdActual[i]=pAPVcmdMaska[i]&pActualCMD[i];//РегистрацияДИС AND Текущие
-    507            //Большой EL инверсный
-    508            for(int i=0; i<DQUADRO; i++) 
-    509                    tmpM[i]=(pAPVcmdActual[i]^pAPVcmdOld[i])&pAPVcmdOld[i];
-    510            for(int i=0; i<DQUADRO; i++) 
-    511                    pAPVcmdOld[i]=pAPVcmdActual[i];
-    512          
-    513            for(int i=0; i<DQUADRO; i++) 
-    514                    tmpI|=tmpM[i];
-    515            return tmpI;
-    516          }//MakeAPVcmdPusk
-    517          
-    518          int MakeUROVcmdPusk() @ "Fast_function"
-    519          {
-    520          //проверить UROV на запуск
-    521            UNS_32 tmpM[DQUADRO];
-    522            UNS_32 tmpI=0;
-    523            for(int i=0; i<DQUADRO; i++) 
-    524                    pUROVcmdActual[i]=pUROVcmdMaska[i]&pActualCMD[i];//РегистрацияДИС AND Текущие
-    525            //Большой EL
-    526            for(int i=0; i<DQUADRO; i++) 
-    527                    tmpM[i]=(pUROVcmdActual[i]^pUROVcmdOld[i])&pUROVcmdActual[i];
-    528            for(int i=0; i<DQUADRO; i++) 
-    529                    pUROVcmdOld[i]=pUROVcmdActual[i];
-    530          
-    531            for(int i=0; i<DQUADRO; i++) 
-    532                    tmpI|=tmpM[i];
-    533            return tmpI;
-    534          }//MakeUROVcmdPusk
-    535          */
+    495           registrator_dis.title_dis.title_year = 1;
+    496           registrator_dis.title_dis.title_mon  = 1;
+    497           registrator_dis.title_dis.title_date = 1;
+    498           registrator_dis.title_dis.title_hour = 1;
+    499           registrator_dis.title_dis.title_min  = 1;
+    500           registrator_dis.title_dis.title_sec  = 1;
+    501          
+    502          }//StartDiscretReg()
+    503          
+    504          int MakeRDIScmdPusk()  @ "Fast_function"
+    505          {
+    506          //проверить РегистрацияДИС на запуск
+    507            UNS_32 tmpM[DQUADRO];
+    508            UNS_32 tmpI=0;
+    509            for(int i=0; i<DQUADRO; i++) 
+    510                    pRDIScmdActual[i]=pRDIScmdMaska[i]&pActualCMD[i];//РегистрацияДИС AND Текущие
+    511            //Большой EL
+    512            for(int i=0; i<DQUADRO; i++) 
+    513                    tmpM[i]=(pRDIScmdActual[i]^pRDIScmdOld[i])&pRDIScmdActual[i];
+    514            for(int i=0; i<DQUADRO; i++) 
+    515                    pRDIScmdOld[i]=pRDIScmdActual[i];
+    516          
+    517            for(int i=0; i<DQUADRO; i++) 
+    518                    tmpI|=tmpM[i];
+    519            return tmpI;
+    520          }//MakeRDIScmdPusk
+    521          /*
+    522          int MakeAPVcmdPusk() @ "Fast_function"
+    523          {
+    524          //проверить APV на запуск
+    525            UNS_32 tmpM[DQUADRO];
+    526            UNS_32 tmpI=0;
+    527            for(int i=0; i<DQUADRO; i++) 
+    528                    pAPVcmdActual[i]=pAPVcmdMaska[i]&pActualCMD[i];//РегистрацияДИС AND Текущие
+    529            //Большой EL инверсный
+    530            for(int i=0; i<DQUADRO; i++) 
+    531                    tmpM[i]=(pAPVcmdActual[i]^pAPVcmdOld[i])&pAPVcmdOld[i];
+    532            for(int i=0; i<DQUADRO; i++) 
+    533                    pAPVcmdOld[i]=pAPVcmdActual[i];
+    534          
+    535            for(int i=0; i<DQUADRO; i++) 
+    536                    tmpI|=tmpM[i];
+    537            return tmpI;
+    538          }//MakeAPVcmdPusk
+    539          
+    540          int MakeUROVcmdPusk() @ "Fast_function"
+    541          {
+    542          //проверить UROV на запуск
+    543            UNS_32 tmpM[DQUADRO];
+    544            UNS_32 tmpI=0;
+    545            for(int i=0; i<DQUADRO; i++) 
+    546                    pUROVcmdActual[i]=pUROVcmdMaska[i]&pActualCMD[i];//РегистрацияДИС AND Текущие
+    547            //Большой EL
+    548            for(int i=0; i<DQUADRO; i++) 
+    549                    tmpM[i]=(pUROVcmdActual[i]^pUROVcmdOld[i])&pUROVcmdActual[i];
+    550            for(int i=0; i<DQUADRO; i++) 
+    551                    pUROVcmdOld[i]=pUROVcmdActual[i];
+    552          
+    553            for(int i=0; i<DQUADRO; i++) 
+    554                    tmpI|=tmpM[i];
+    555            return tmpI;
+    556          }//MakeUROVcmdPusk
+    557          */
 
    Maximum stack usage in bytes:
 
@@ -670,6 +681,9 @@ D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\toSpeedDIS.c
        4  ??DataTable3_1
        4  ??DataTable3_10
        4  ??DataTable3_11
+       4  ??DataTable3_12
+       4  ??DataTable3_13
+       4  ??DataTable3_14
        4  ??DataTable3_2
        4  ??DataTable3_3
        4  ??DataTable3_4
@@ -688,8 +702,6 @@ D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\toSpeedDIS.c
        4  ??DataTable4_15
        4  ??DataTable4_16
        4  ??DataTable4_17
-       4  ??DataTable4_18
-       4  ??DataTable4_19
        4  ??DataTable4_2
        4  ??DataTable4_3
        4  ??DataTable4_4
@@ -717,7 +729,6 @@ D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\toSpeedDIS.c
        4  ??DataTable5_23
        4  ??DataTable5_24
        4  ??DataTable5_25
-       4  ??DataTable5_26
        4  ??DataTable5_3
        4  ??DataTable5_4
        4  ??DataTable5_5
@@ -834,21 +845,13 @@ D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\toSpeedDIS.c
        4  pusk1OF8
        4  pusk1OF9
        4  pusk1OT1
-       4  pusk1OT1_old
        4  pusk1OT2
-       4  pusk1OT2_old
        4  pusk1OT3
-       4  pusk1OT3_old
        4  pusk1OT4
-       4  pusk1OT4_old
        4  pusk1OT5
-       4  pusk1OT5_old
        4  pusk1OT6
-       4  pusk1OT6_old
        4  pusk1OT7
-       4  pusk1OT7_old
        4  pusk1OT8
-       4  pusk1OT8_old
        4  pusk2OF
        4  pusk2OF10
        4  pusk2OF11
@@ -866,21 +869,13 @@ D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\toSpeedDIS.c
        4  pusk2OF8
        4  pusk2OF9
        4  pusk2OT1
-       4  pusk2OT1_old
        4  pusk2OT2
-       4  pusk2OT2_old
        4  pusk2OT3
-       4  pusk2OT3_old
        4  pusk2OT4
-       4  pusk2OT4_old
        4  pusk2OT5
-       4  pusk2OT5_old
        4  pusk2OT6
-       4  pusk2OT6_old
        4  pusk2OT7
-       4  pusk2OT7_old
        4  pusk2OT8
-       4  pusk2OT8_old
        4  pusk3OF
        4  pusk3OF10
        4  pusk3OF11
@@ -901,46 +896,30 @@ D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\toSpeedDIS.c
        4  puskUROV
     4456  registrator_dis
        4  rst1OT1
-       4  rst1OT1_old
        4  rst1OT2
-       4  rst1OT2_old
        4  rst1OT3
-       4  rst1OT3_old
        4  rst1OT4
-       4  rst1OT4_old
        4  rst1OT5
-       4  rst1OT5_old
        4  rst1OT6
-       4  rst1OT6_old
        4  rst1OT7
-       4  rst1OT7_old
        4  rst1OT8
-       4  rst1OT8_old
        4  rst2OT1
-       4  rst2OT1_old
        4  rst2OT2
-       4  rst2OT2_old
        4  rst2OT3
-       4  rst2OT3_old
        4  rst2OT4
-       4  rst2OT4_old
        4  rst2OT5
-       4  rst2OT5_old
        4  rst2OT6
-       4  rst2OT6_old
        4  rst2OT7
-       4  rst2OT7_old
        4  rst2OT8
-       4  rst2OT8_old
     1920  struct_maskaOTAPVUROVOFcmd
     1280  struct_maskaOTcmd
 
  
- 8 432 bytes in section .bss
+ 8 304 bytes in section .bss
  5 232 bytes in section Fast_function
  
  5 232 bytes of CODE memory
- 8 432 bytes of DATA memory
+ 8 304 bytes of DATA memory
 
 Errors: none
 Warnings: none

@@ -1,53 +1,42 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  14:42:23
+# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        20/Oct/2015  12:12:04
 # Copyright 1999-2015 IAR Systems AB.
 #
 #    Cpu mode     =  arm
 #    Endian       =  little
-#    Source file  =  
-#        D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\start_settings.c
+#    Source file  =  D:\IAR projects\HR1_0100_00_I720_new2\start_settings.c
 #    Command line =  
-#        "D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\start_settings.c" -lcN
-#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
-#        xRAM\List\" -o "D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\Obj\" --no_cse
+#        "D:\IAR projects\HR1_0100_00_I720_new2\start_settings.c" -lcN "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xRAM\List\" -o "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\Debug xRAM\Obj\" --no_cse
 #        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
 #        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
-#        --fpu=VFP9-S --dlib_config "D:\Program Files\IAR Systems\Embedded
-#        Workbench 7.2\arm\INC\c\DLib_Config_Normal.h" -I "D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
-#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
-#        "D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
-#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
-#        "D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
-#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
-#        "D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
-#        "D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
-#        "D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
-#        "D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
-#        "D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\Program
-#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\" --interwork
-#        --cpu_mode arm -On --use_c++_inline
+#        --fpu=VFP9-S --dlib_config "C:\Program Files\IAR Systems\Embedded
+#        Workbench 7.40\arm\INC\c\DLib_Config_Normal.h" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\Igor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\component\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\" --interwork --cpu_mode arm -On
+#        --use_c++_inline
 #    List file    =  
-#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
 #        xRAM\List\start_settings.lst
 #    Object file  =  
-#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
 #        xRAM\Obj\start_settings.o
 #
 ###############################################################################
 
-D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\start_settings.c
+D:\IAR projects\HR1_0100_00_I720_new2\start_settings.c
       1          #include "header.h"
       2          
       3          /*************************************************************************

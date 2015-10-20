@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        12/Oct/2015  11:05:06
+# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        20/Oct/2015  12:49:43
 # Copyright 1999-2015 IAR Systems AB.
 #
 #    Cpu mode     =  arm
@@ -241,52 +241,69 @@ D:\IAR projects\HR1_0100_00_I720_new2\SettingIci\SettingIci_Rangir.c
     200             SettingIci_RangirOFToRele(RELE5_SM);
     201             SettingIci_RangirOFToRele(RELE6_SM);
     202          
-    203          }//SettingIci_Rangir()
-    204          
-    205          int isActivCmdDV(int numCmd, int numDV)
-    206          {
-    207          //проверка активности команды на ДВ
-    208           //найти байт
-    209           int numByte = numCmd/8;
-    210           //найти бит
-    211           int numBit  = numCmd%8;
-    212           int rData = brCfgTbl.uc_ar_di_rank_cfg[numDV*AMOUNT_BYTE_FOR_IEPRF +numByte];
-    213           //найти маску
-    214           int Maska = 1<<numBit;
-    215           //найти активность
-    216           if(rData&Maska) return 1;
-    217           return 0;
-    218          }//isActivCmdDV(int numCmd, int numDV)
+    203          //-----------OT--------------------
+    204             SettingIci_RangirOTToDV(DV1_SM);//уст сброс триг
+    205             SettingIci_RangirOTToDV(DV2_SM);//уст сброс триг
+    206             SettingIci_RangirOTToDV(DV3_SM);//уст сброс триг
+    207             SettingIci_RangirOTToDV(DV4_SM);//уст сброс триг
+    208             SettingIci_RangirOTToDV(DV5_SM);//уст сброс триг
+    209             SettingIci_RangirOTToDV(DV6_SM);//уст сброс триг
+    210          
+    211          //void SettingIci_RangirOTToRele(int nRele)
+    212          
+    213             SettingIci_RangirOutOTToRele(RELE1_SM);//Выход триг
+    214             SettingIci_RangirOutOTToRele(RELE2_SM);//Выход триг
+    215             SettingIci_RangirOutOTToRele(RELE3_SM);//Выход триг
+    216             SettingIci_RangirOutOTToRele(RELE4_SM);//Выход триг
+    217             SettingIci_RangirOutOTToRele(RELE5_SM);//Выход триг
+    218             SettingIci_RangirOutOTToRele(RELE6_SM);//Выход триг
     219          
-    220          int isActivCmdRele(int numCmd, int numRele)
-    221          {
-    222          //проверка активности команды на Реле
-    223           //найти байт
-    224           int numByte = numCmd/8;
-    225           //найти бит
-    226           int numBit  = numCmd%8;
-    227           int rData = brCfgTbl.uc_ar_do_rank_cfg[numRele*AMOUNT_BYTE_FOR_OEPRF +numByte];
-    228           //найти маску
-    229           int Maska = 1<<numBit;
-    230           //найти активность
-    231           if(rData&Maska) return 1;
-    232           return 0;
-    233          }//isActivCmdRele(int numCmd, int numRele)
-    234          
-    235          int isActivCmdLed(int numCmd, int numLed)
-    236          {
-    237          //проверка активности команды на СДИ
-    238           //найти байт
-    239           int numByte = numCmd/8;
-    240           //найти бит
-    241           int numBit  = numCmd%8;
-    242           int rData = brCfgTbl.uc_ar_led_rank_cfg[numLed*AMOUNT_BYTE_FOR_OEPRF +numByte];
-    243           //найти маску
-    244           int Maska = 1<<numBit;
-    245           //найти активность
-    246           if(rData&Maska) return 1;
-    247           return 0;
-    248          }//isActivCmdLed(int numCmd, int numLed)
+    220          }//SettingIci_Rangir()
+    221          
+    222          int isActivCmdDV(int numCmd, int numDV)
+    223          {
+    224          //проверка активности команды на ДВ
+    225           //найти байт
+    226           int numByte = numCmd/8;
+    227           //найти бит
+    228           int numBit  = numCmd%8;
+    229           int rData = brCfgTbl.uc_ar_di_rank_cfg[numDV*AMOUNT_BYTE_FOR_IEPRF +numByte];
+    230           //найти маску
+    231           int Maska = 1<<numBit;
+    232           //найти активность
+    233           if(rData&Maska) return 1;
+    234           return 0;
+    235          }//isActivCmdDV(int numCmd, int numDV)
+    236          
+    237          int isActivCmdRele(int numCmd, int numRele)
+    238          {
+    239          //проверка активности команды на Реле
+    240           //найти байт
+    241           int numByte = numCmd/8;
+    242           //найти бит
+    243           int numBit  = numCmd%8;
+    244           int rData = brCfgTbl.uc_ar_do_rank_cfg[numRele*AMOUNT_BYTE_FOR_OEPRF +numByte];
+    245           //найти маску
+    246           int Maska = 1<<numBit;
+    247           //найти активность
+    248           if(rData&Maska) return 1;
+    249           return 0;
+    250          }//isActivCmdRele(int numCmd, int numRele)
+    251          
+    252          int isActivCmdLed(int numCmd, int numLed)
+    253          {
+    254          //проверка активности команды на СДИ
+    255           //найти байт
+    256           int numByte = numCmd/8;
+    257           //найти бит
+    258           int numBit  = numCmd%8;
+    259           int rData = brCfgTbl.uc_ar_led_rank_cfg[numLed*AMOUNT_BYTE_FOR_OEPRF +numByte];
+    260           //найти маску
+    261           int Maska = 1<<numBit;
+    262           //найти активность
+    263           if(rData&Maska) return 1;
+    264           return 0;
+    265          }//isActivCmdLed(int numCmd, int numLed)
 
    Maximum stack usage in bytes:
 
@@ -305,6 +322,8 @@ D:\IAR projects\HR1_0100_00_I720_new2\SettingIci\SettingIci_Rangir.c
          8   -> SettingIci_RangirNZOPToRele
          8   -> SettingIci_RangirOFToDV
          8   -> SettingIci_RangirOFToRele
+         8   -> SettingIci_RangirOTToDV
+         8   -> SettingIci_RangirOutOTToRele
          8   -> SettingIci_RangirPRM1ToDV
          8   -> SettingIci_RangirPRM1ToRele
          8   -> SettingIci_RangirTZNP2DV
@@ -330,15 +349,15 @@ D:\IAR projects\HR1_0100_00_I720_new2\SettingIci\SettingIci_Rangir.c
    Bytes  Function/Label
    -----  --------------
        4  ??DataTable2
-     988  SettingIci_Rangir
+    1084  SettingIci_Rangir
       92  isActivCmdDV
       92  isActivCmdLed
       92  isActivCmdRele
 
  
- 1 268 bytes in section .text
+ 1 364 bytes in section .text
  
- 1 268 bytes of CODE memory
+ 1 364 bytes of CODE memory
 
 Errors: none
-Warnings: none
+Warnings: 1

@@ -143,6 +143,15 @@ UNS_32 selectorDVHi;//селекция ДВ активный-неактивный для ct 16 DV
 
 #include "ici_r_ef.h"
 
+int flag_max_monitoring;//макс параметры сработки
+int IA_maxMonitoring;//сбор данных макс сраб по IA
+int IB_maxMonitoring;//сбор данных макс сраб по IB
+int IC_maxMonitoring;//сбор данных макс сраб по IC
+
+int IA_maxFix;//фиксация данных макс сраб по IA
+int IB_maxFix;//фиксация данных макс сраб по IB
+int IC_maxFix;//фиксация данных макс сраб по IC
+
 int cntToBC=0;//обмен с BC
 void periodical_operations(void)
 {
@@ -182,6 +191,8 @@ void periodical_operations(void)
 //операции реального времени
   Scan_Ici_Event_Req(); //межпроцессорный обмен
   Scan_Ici_Entry_Data();//межпроцессорный обмен
+
+  flag_max_monitoring = 0;//макс параметры сработки
 
   dataAccessICI();//доступ к данным ICI
 
@@ -364,6 +375,28 @@ void periodical_operations(void)
       
  }//if
  
+
+ if(flag_max_monitoring==0)//макс параметры сработки
+ {
+   //нет ни сбора данных ни фиксации
+   IA_maxMonitoring = 0;//сбор данных макс сраб по IA
+   IB_maxMonitoring = 0;//сбор данных макс сраб по IB
+   IC_maxMonitoring = 0;//сбор данных макс сраб по IC
+
+   IA_maxFix = 0;//фиксация данных макс сраб по IA
+   IB_maxFix = 0;//фиксация данных макс сраб по IB
+   IC_maxFix = 0;//фиксация данных макс сраб по IC
+ }//if(flag_max_monitoring==0)//макс параметры сработки
+//  case MAXMONITORING_COLLECT:
+ if(flag_max_monitoring&MAXMONITORING_COLLECT){//макс параметры сработки
+  //сбор данных макс параметров
+   }//if(flag_max_monitoring&MAXMONITORING_COLLECT){//макс параметры сработки
+//  case MAXMONITORING_FIX:
+
+ if(flag_max_monitoring&MAXMONITORING_FIX){//макс параметры сработки
+  //фиксация данных макс параметров
+  //применение формулы
+  }//if(flag_max_monitoring&MAXMONITORING_FIX){//макс параметры сработки
  
  
 }//periodical_operations(void)

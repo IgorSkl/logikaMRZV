@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        12/Oct/2015  11:05:05
+# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        20/Oct/2015  12:49:42
 # Copyright 1999-2015 IAR Systems AB.
 #
 #    Cpu mode     =  arm
@@ -84,167 +84,188 @@ D:\IAR projects\HR1_0100_00_I720_new2\SettingIci\SettingIci_OFDZ.c
      43          
      44          //extern  puskOFfunction *pntPuskOF;//указатель на ф-цию
      45          
-     46          void  SettingIci_OFDZ(int FlagMaska, int numOF)//puskOFfunction *pntPuskOF, int typRang)
+     46          void  SettingIci_OFDZ(int typFUNC, int FlagMaska, int numOF)//puskOFfunction *pntPuskOF, int typRang)
      47          {
      48          
      49          puskOFfunction *pntPuskOF;
      50          
      51            int typRang = PUSK1OF_SM;
-     52            typRang = typRang - numOF*3 - FlagMaska;
-     53          
-     54            switch(FlagMaska){
-     55             case 0://PLUS
-     56              pntPuskOF = &puskOFotZPLUS;
-     57             break;
-     58             case 1://MINUS
-     59              pntPuskOF = &puskOFotZMINUS;
-     60             break;
-     61             case 2://BLK
-     62              pntPuskOF = &puskOFotZBLK;
-     63             break;
-     64            }//switch
-     65          
-     66          //----------------------------DZ------------------------------
-     67          //  lSt1 = pntPuskOF(HVSW_ON_DI_OEPRF_ONB );// Вкл. ВВ от ДВ 
-     68            //if(lSt1) SetCmdToUVV(PRM1_COMP1,  1, IOCMD6_MTZ1, typRang);//работа с OF OT
-     69          // Блокировка DZ1
-     70            lSt1 = pntPuskOF(BLOCK_DSTP1_DI_OEPRF_ONB, numOF);
-     71              if(lSt1)  SetCmdToUVV(DZ_COMP1,  1, IOCMD1_DZ1, typRang);//работа с OF OT
-     72          // ПО ДЗ1 МФ
-     73            lSt1 = pntPuskOF(STPDEV_DSTP1_MF_OEPRF_ONB, numOF);
-     74              if(lSt1)  SetCmdToUVV(DZ_COMP1,  1, IOCMD2_DZ1, typRang);//работа с OF OT
-     75          // Cраб ДЗ1 МФ
-     76            lSt1 = pntPuskOF(DSTP1_MF_OEPRF_ONB, numOF);
-     77              if(lSt1)  SetCmdToUVV(DZ_COMP1,  1, IOCMD3_DZ1, typRang);//работа с OF OT
-     78          // ПО МТЗ ДЗ1
-     79            lSt1 = pntPuskOF(STPDEV_MCP_DSTP1_OEPRF_ONB, numOF);
-     80              if(lSt1)  SetCmdToUVV(DZ_COMP1,  1, IOCMD4_DZ1, typRang);//работа с OF OT
-     81          // Сраб МТЗ ДЗ1
-     82            lSt1 = pntPuskOF(MCP_DSTP1_OEPRF_ONB, numOF);
-     83               if(lSt1) SetCmdToUVV(DZ_COMP1,  1, IOCMD5_DZ1, typRang);//работа с OF OT
-     84          // ПО ДЗ1 ОФ
-     85            lSt1 = pntPuskOF(STPDEV_DSTP1_OF_OEPRF_ONB, numOF);
-     86              if(lSt1)  SetCmdToUVV(DZ_COMP1,  1, IOCMD6_DZ1, typRang);//работа с OF OT
-     87          // сраб ДЗ1 ОФ
-     88            lSt1 = pntPuskOF(DSTP1_OF_OEPRF_ONB, numOF);
-     89              if(lSt1)  SetCmdToUVV(DZ_COMP1,  1, IOCMD7_DZ1, typRang);//работа с OF OT
-     90          
-     91          // Блокировка DZ2
-     92            lSt1 = pntPuskOF(BLOCK_DSTP2_DI_OEPRF_ONB, numOF);
-     93              if(lSt1)  SetCmdToUVV(DZ_COMP1,  2, IOCMD1_DZ2to5, typRang);//работа с OF OT
-     94          //Блокировка ускор Дист З2
-     95            lSt1 = pntPuskOF(BLOCK_ACCLT_DSTP2_DI_OEPRF_ONB, numOF);
-     96              if(lSt1)  SetCmdToUVV(DZ_COMP1,  2, IOCMD2_DZ2to5, typRang);//работа с OF OT
-     97          //Оперативное ускорение Дист З2
-     98            lSt1 = pntPuskOF(ACCLT_DSTP2_DI_OEPRF_ONB, numOF);
-     99              if(lSt1)  SetCmdToUVV(DZ_COMP1,  2, IOCMD3_DZ2to5, typRang);//работа с OF OT
-    100          // ПО ДЗ2 МФ
-    101            lSt1 = pntPuskOF(STPDEV_DSTP2_MF_OEPRF_ONB, numOF);
-    102              if(lSt1)  SetCmdToUVV(DZ_COMP1,  2, IOCMD4_DZ2to5MF, typRang);//работа с OF OT
-    103          // Cраб ДЗ2 МФ
-    104            lSt1 = pntPuskOF(DSTP2_MF_OEPRF_ONB, numOF);
-    105               if(lSt1) SetCmdToUVV(DZ_COMP1,  2, IOCMD5_DZ2to5MF, typRang);//работа с OF OT
-    106          // ПО МТЗ ДЗ2
-    107            lSt1 = pntPuskOF(STPDEV_MCP_DSTP2_OEPRF_ONB, numOF);
-    108              if(lSt1)  SetCmdToUVV(DZ_COMP1,  2, IOCMD4_MDZ2to5MF, typRang);//работа с OF OT
-    109          // Сраб МТЗ ДЗ2
-    110            lSt1 = pntPuskOF(MCP_DSTP2_OEPRF_ONB, numOF);
-    111              if(lSt1)  SetCmdToUVV(DZ_COMP1,  2, IOCMD5_MDZ2to5MF, typRang);//работа с OF OT
-    112          // ПО ДЗ2 ОФ
-    113            lSt1 = pntPuskOF(STPDEV_DSTP2_OF_OEPRF_ONB, numOF);
-    114              if(lSt1)  SetCmdToUVV(DZ_COMP1,  2, IOCMD4_DZ2to5OF, typRang);//работа с OF OT
-    115          // сраб ДЗ2 ОФ
-    116            lSt1 = pntPuskOF(DSTP2_OF_OEPRF_ONB, numOF);
-    117              if(lSt1)  SetCmdToUVV(DZ_COMP1,  2, IOCMD5_DZ2to5OF, typRang);//работа с OF OT
-    118          
-    119          
-    120          // Блокировка DZ3
-    121            lSt1 = pntPuskOF(BLOCK_DSTP3_DI_OEPRF_ONB, numOF);
-    122              if(lSt1)  SetCmdToUVV(DZ_COMP1,  3, IOCMD1_DZ2to5, typRang);//работа с OF OT
-    123          //Блокировка ускор Дист З3
-    124            lSt1 = pntPuskOF(BLOCK_ACCLT_DSTP3_DI_OEPRF_ONB, numOF);
-    125              if(lSt1)  SetCmdToUVV(DZ_COMP1,  3, IOCMD2_DZ2to5, typRang);//работа с OF OT
-    126          //Оперативное ускорение Дист З3
-    127            lSt1 = pntPuskOF(ACCLT_DSTP3_DI_OEPRF_ONB, numOF);
-    128              if(lSt1)  SetCmdToUVV(DZ_COMP1,  3, IOCMD3_DZ2to5, typRang);//работа с OF OT
-    129          // ПО ДЗ3 МФ
-    130            lSt1 = pntPuskOF(STPDEV_DSTP3_MF_OEPRF_ONB, numOF);
-    131              if(lSt1)  SetCmdToUVV(DZ_COMP1,  3, IOCMD4_DZ2to5MF, typRang);//работа с OF OT
-    132          // Cраб ДЗ3 МФ
-    133            lSt1 = pntPuskOF(DSTP3_MF_OEPRF_ONB, numOF);
-    134              if(lSt1)  SetCmdToUVV(DZ_COMP1,  3, IOCMD5_DZ2to5MF, typRang);//работа с OF OT
-    135          // ПО МТЗ ДЗ3
-    136            lSt1 = pntPuskOF(STPDEV_MCP_DSTP3_OEPRF_ONB, numOF);
-    137              if(lSt1)  SetCmdToUVV(DZ_COMP1,  3, IOCMD4_MDZ2to5MF, typRang);//работа с OF OT
-    138          // Сраб МТЗ ДЗ3
-    139            lSt1 = pntPuskOF(MCP_DSTP3_OEPRF_ONB, numOF);
-    140              if(lSt1)  SetCmdToUVV(DZ_COMP1,  3, IOCMD5_MDZ2to5MF, typRang);//работа с OF OT
-    141          // ПО ДЗ3 ОФ
-    142            lSt1 = pntPuskOF(STPDEV_DSTP3_OF_OEPRF_ONB, numOF);
-    143              if(lSt1)  SetCmdToUVV(DZ_COMP1,  3, IOCMD4_DZ2to5OF, typRang);//работа с OF OT
-    144          // сраб ДЗ3 ОФ
-    145            lSt1 = pntPuskOF(DSTP3_OF_OEPRF_ONB, numOF);
-    146              if(lSt1)  SetCmdToUVV(DZ_COMP1,  3, IOCMD5_DZ2to5OF, typRang);//работа с OF OT
-    147          
-    148          // Блокировка DZ4
-    149            lSt1 = pntPuskOF(BLOCK_DSTP4_DI_OEPRF_ONB, numOF);
-    150              if(lSt1)  SetCmdToUVV(DZ_COMP1,  4, IOCMD1_DZ2to5, typRang);//работа с OF OT
-    151          //Блокировка ускор Дист З4
-    152            lSt1 = pntPuskOF(BLOCK_ACCLT_DSTP4_DI_OEPRF_ONB, numOF);
-    153              if(lSt1)  SetCmdToUVV(DZ_COMP1,  4, IOCMD2_DZ2to5, typRang);//работа с OF OT
-    154          //Оперативное ускорение Дист З4
-    155            lSt1 = pntPuskOF(ACCLT_DSTP4_DI_OEPRF_ONB, numOF);
-    156              if(lSt1)  SetCmdToUVV(DZ_COMP1,  4, IOCMD3_DZ2to5, typRang);//работа с OF OT
-    157          // ПО ДЗ4 МФ
-    158            lSt1 = pntPuskOF(STPDEV_DSTP4_MF_OEPRF_ONB, numOF);
-    159              if(lSt1)  SetCmdToUVV(DZ_COMP1,  4, IOCMD4_DZ2to5MF, typRang);//работа с OF OT
-    160          // Cраб ДЗ4 МФ
-    161            lSt1 = pntPuskOF(DSTP4_MF_OEPRF_ONB, numOF);
-    162              if(lSt1)  SetCmdToUVV(DZ_COMP1,  4, IOCMD5_DZ2to5MF, typRang);//работа с OF OT
-    163          // ПО МТЗ ДЗ4
-    164            lSt1 = pntPuskOF(STPDEV_MCP_DSTP4_OEPRF_ONB, numOF);
-    165              if(lSt1)  SetCmdToUVV(DZ_COMP1,  4, IOCMD4_MDZ2to5MF, typRang);//работа с OF OT
-    166          // Сраб МТЗ ДЗ4
-    167            lSt1 = pntPuskOF(MCP_DSTP4_OEPRF_ONB, numOF);
-    168              if(lSt1)  SetCmdToUVV(DZ_COMP1,  4, IOCMD5_MDZ2to5MF, typRang);//работа с OF OT
-    169          // ПО ДЗ4 ОФ
-    170            lSt1 = pntPuskOF(STPDEV_DSTP4_OF_OEPRF_ONB, numOF);
-    171              if(lSt1)  SetCmdToUVV(DZ_COMP1,  4, IOCMD4_DZ2to5OF, typRang);//работа с OF OT
-    172          // сраб ДЗ4 ОФ
-    173            lSt1 = pntPuskOF(DSTP4_OF_OEPRF_ONB, numOF);
-    174              if(lSt1)  SetCmdToUVV(DZ_COMP1,  4, IOCMD5_DZ2to5OF, typRang);//работа с OF OT
-    175          
-    176          // Блокировка DZ5
-    177            lSt1 = pntPuskOF(BLOCK_DSTP5_DI_OEPRF_ONB, numOF);
-    178              if(lSt1)  SetCmdToUVV(DZ_COMP1,  5, IOCMD1_DZ2to5, typRang);//работа с OF OT
-    179          //Блокировка ускор Дист З5
-    180            lSt1 = pntPuskOF(BLOCK_ACCLT_DSTP5_DI_OEPRF_ONB, numOF);
-    181              if(lSt1)  SetCmdToUVV(DZ_COMP1,  5, IOCMD2_DZ2to5, typRang);//работа с OF OT
-    182          //Оперативное ускорение Дист З5
-    183            lSt1 = pntPuskOF(ACCLT_DSTP5_DI_OEPRF_ONB, numOF);
-    184              if(lSt1)  SetCmdToUVV(DZ_COMP1,  5, IOCMD3_DZ2to5, typRang);//работа с OF OT
-    185          // ПО ДЗ5 МФ
-    186            lSt1 = pntPuskOF(STPDEV_DSTP5_MF_OEPRF_ONB, numOF);
-    187              if(lSt1)  SetCmdToUVV(DZ_COMP1,  5, IOCMD4_DZ2to5MF, typRang);//работа с OF OT
-    188          // Cраб ДЗ5 МФ
-    189            lSt1 = pntPuskOF(DSTP5_MF_OEPRF_ONB, numOF);
-    190              if(lSt1)  SetCmdToUVV(DZ_COMP1,  5, IOCMD5_DZ2to5MF, typRang);//работа с OF OT
-    191          // ПО МТЗ ДЗ5
-    192            lSt1 = pntPuskOF(STPDEV_MCP_DSTP5_OEPRF_ONB, numOF);
-    193              if(lSt1)  SetCmdToUVV(DZ_COMP1,  5, IOCMD4_MDZ2to5MF, typRang);//работа с OF OT
-    194          // Сраб МТЗ ДЗ5
-    195            lSt1 = pntPuskOF(MCP_DSTP5_OEPRF_ONB, numOF);
-    196              if(lSt1)  SetCmdToUVV(DZ_COMP1,  5, IOCMD5_MDZ2to5MF, typRang);//работа с OF OT
-    197          // ПО ДЗ5 ОФ
-    198            lSt1 = pntPuskOF(STPDEV_DSTP5_OF_OEPRF_ONB, numOF);
-    199              if(lSt1)  SetCmdToUVV(DZ_COMP1,  5, IOCMD4_DZ2to5OF, typRang);//работа с OF OT
-    200          // сраб ДЗ5 ОФ
-    201            lSt1 = pntPuskOF(DSTP5_OF_OEPRF_ONB, numOF);
-    202              if(lSt1)  SetCmdToUVV(DZ_COMP1,  5, IOCMD5_DZ2to5OF, typRang);//работа с OF OT
-    203          
-    204          
-    205          }
-    206          
+     52            if(typFUNC==0){//OF
+     53            typRang = typRang - numOF*3 - FlagMaska;
+     54          
+     55            switch(FlagMaska){
+     56             case 0://PLUS
+     57              pntPuskOF = &puskOFotZPLUS;
+     58             break;
+     59             case 1://MINUS
+     60              pntPuskOF = &puskOFotZMINUS;
+     61             break;
+     62             case 2://BLK
+     63              pntPuskOF = &puskOFotZBLK;
+     64             break;
+     65            }//switch
+     66            }//if(typFUNC==0)
+     67            if(typFUNC==1){//OT
+     68            typRang = PUSK1OT1_SM;
+     69            typRang = typRang - numOF*4 - FlagMaska;
+     70          
+     71            switch(FlagMaska){
+     72             case 0://PLUS Set
+     73              pntPuskOF = &puskSetOTotZPLUS;
+     74             break;
+     75             case 1://PLUS Rst
+     76              pntPuskOF = &puskRstOTotZPLUS;
+     77             break;
+     78             case 2://MINUS Set
+     79              pntPuskOF = &puskSetOTotZMINUS;
+     80             break;
+     81             case 3://MINUS Rst
+     82              pntPuskOF = &puskRstOTotZMINUS;
+     83             break;
+     84            }//switch
+     85            }//if(typFUNC==0)
+     86          
+     87          //----------------------------DZ------------------------------
+     88          //  lSt1 = pntPuskOF(HVSW_ON_DI_OEPRF_ONB );// Вкл. ВВ от ДВ 
+     89            //if(lSt1) SetCmdToUVV(PRM1_COMP1,  1, IOCMD6_MTZ1, typRang);//работа с OF OT
+     90          // Блокировка DZ1
+     91            lSt1 = pntPuskOF(BLOCK_DSTP1_DI_OEPRF_ONB, numOF);
+     92              if(lSt1)  SetCmdToUVV(DZ_COMP1,  1, IOCMD1_DZ1, typRang);//работа с OF OT
+     93          // ПО ДЗ1 МФ
+     94            lSt1 = pntPuskOF(STPDEV_DSTP1_MF_OEPRF_ONB, numOF);
+     95              if(lSt1)  SetCmdToUVV(DZ_COMP1,  1, IOCMD2_DZ1, typRang);//работа с OF OT
+     96          // Cраб ДЗ1 МФ
+     97            lSt1 = pntPuskOF(DSTP1_MF_OEPRF_ONB, numOF);
+     98              if(lSt1)  SetCmdToUVV(DZ_COMP1,  1, IOCMD3_DZ1, typRang);//работа с OF OT
+     99          // ПО МТЗ ДЗ1
+    100            lSt1 = pntPuskOF(STPDEV_MCP_DSTP1_OEPRF_ONB, numOF);
+    101              if(lSt1)  SetCmdToUVV(DZ_COMP1,  1, IOCMD4_DZ1, typRang);//работа с OF OT
+    102          // Сраб МТЗ ДЗ1
+    103            lSt1 = pntPuskOF(MCP_DSTP1_OEPRF_ONB, numOF);
+    104               if(lSt1) SetCmdToUVV(DZ_COMP1,  1, IOCMD5_DZ1, typRang);//работа с OF OT
+    105          // ПО ДЗ1 ОФ
+    106            lSt1 = pntPuskOF(STPDEV_DSTP1_OF_OEPRF_ONB, numOF);
+    107              if(lSt1)  SetCmdToUVV(DZ_COMP1,  1, IOCMD6_DZ1, typRang);//работа с OF OT
+    108          // сраб ДЗ1 ОФ
+    109            lSt1 = pntPuskOF(DSTP1_OF_OEPRF_ONB, numOF);
+    110              if(lSt1)  SetCmdToUVV(DZ_COMP1,  1, IOCMD7_DZ1, typRang);//работа с OF OT
+    111          
+    112          // Блокировка DZ2
+    113            lSt1 = pntPuskOF(BLOCK_DSTP2_DI_OEPRF_ONB, numOF);
+    114              if(lSt1)  SetCmdToUVV(DZ_COMP1,  2, IOCMD1_DZ2to5, typRang);//работа с OF OT
+    115          //Блокировка ускор Дист З2
+    116            lSt1 = pntPuskOF(BLOCK_ACCLT_DSTP2_DI_OEPRF_ONB, numOF);
+    117              if(lSt1)  SetCmdToUVV(DZ_COMP1,  2, IOCMD2_DZ2to5, typRang);//работа с OF OT
+    118          //Оперативное ускорение Дист З2
+    119            lSt1 = pntPuskOF(ACCLT_DSTP2_DI_OEPRF_ONB, numOF);
+    120              if(lSt1)  SetCmdToUVV(DZ_COMP1,  2, IOCMD3_DZ2to5, typRang);//работа с OF OT
+    121          // ПО ДЗ2 МФ
+    122            lSt1 = pntPuskOF(STPDEV_DSTP2_MF_OEPRF_ONB, numOF);
+    123              if(lSt1)  SetCmdToUVV(DZ_COMP1,  2, IOCMD4_DZ2to5MF, typRang);//работа с OF OT
+    124          // Cраб ДЗ2 МФ
+    125            lSt1 = pntPuskOF(DSTP2_MF_OEPRF_ONB, numOF);
+    126               if(lSt1) SetCmdToUVV(DZ_COMP1,  2, IOCMD5_DZ2to5MF, typRang);//работа с OF OT
+    127          // ПО МТЗ ДЗ2
+    128            lSt1 = pntPuskOF(STPDEV_MCP_DSTP2_OEPRF_ONB, numOF);
+    129              if(lSt1)  SetCmdToUVV(DZ_COMP1,  2, IOCMD4_MDZ2to5MF, typRang);//работа с OF OT
+    130          // Сраб МТЗ ДЗ2
+    131            lSt1 = pntPuskOF(MCP_DSTP2_OEPRF_ONB, numOF);
+    132              if(lSt1)  SetCmdToUVV(DZ_COMP1,  2, IOCMD5_MDZ2to5MF, typRang);//работа с OF OT
+    133          // ПО ДЗ2 ОФ
+    134            lSt1 = pntPuskOF(STPDEV_DSTP2_OF_OEPRF_ONB, numOF);
+    135              if(lSt1)  SetCmdToUVV(DZ_COMP1,  2, IOCMD4_DZ2to5OF, typRang);//работа с OF OT
+    136          // сраб ДЗ2 ОФ
+    137            lSt1 = pntPuskOF(DSTP2_OF_OEPRF_ONB, numOF);
+    138              if(lSt1)  SetCmdToUVV(DZ_COMP1,  2, IOCMD5_DZ2to5OF, typRang);//работа с OF OT
+    139          
+    140          
+    141          // Блокировка DZ3
+    142            lSt1 = pntPuskOF(BLOCK_DSTP3_DI_OEPRF_ONB, numOF);
+    143              if(lSt1)  SetCmdToUVV(DZ_COMP1,  3, IOCMD1_DZ2to5, typRang);//работа с OF OT
+    144          //Блокировка ускор Дист З3
+    145            lSt1 = pntPuskOF(BLOCK_ACCLT_DSTP3_DI_OEPRF_ONB, numOF);
+    146              if(lSt1)  SetCmdToUVV(DZ_COMP1,  3, IOCMD2_DZ2to5, typRang);//работа с OF OT
+    147          //Оперативное ускорение Дист З3
+    148            lSt1 = pntPuskOF(ACCLT_DSTP3_DI_OEPRF_ONB, numOF);
+    149              if(lSt1)  SetCmdToUVV(DZ_COMP1,  3, IOCMD3_DZ2to5, typRang);//работа с OF OT
+    150          // ПО ДЗ3 МФ
+    151            lSt1 = pntPuskOF(STPDEV_DSTP3_MF_OEPRF_ONB, numOF);
+    152              if(lSt1)  SetCmdToUVV(DZ_COMP1,  3, IOCMD4_DZ2to5MF, typRang);//работа с OF OT
+    153          // Cраб ДЗ3 МФ
+    154            lSt1 = pntPuskOF(DSTP3_MF_OEPRF_ONB, numOF);
+    155              if(lSt1)  SetCmdToUVV(DZ_COMP1,  3, IOCMD5_DZ2to5MF, typRang);//работа с OF OT
+    156          // ПО МТЗ ДЗ3
+    157            lSt1 = pntPuskOF(STPDEV_MCP_DSTP3_OEPRF_ONB, numOF);
+    158              if(lSt1)  SetCmdToUVV(DZ_COMP1,  3, IOCMD4_MDZ2to5MF, typRang);//работа с OF OT
+    159          // Сраб МТЗ ДЗ3
+    160            lSt1 = pntPuskOF(MCP_DSTP3_OEPRF_ONB, numOF);
+    161              if(lSt1)  SetCmdToUVV(DZ_COMP1,  3, IOCMD5_MDZ2to5MF, typRang);//работа с OF OT
+    162          // ПО ДЗ3 ОФ
+    163            lSt1 = pntPuskOF(STPDEV_DSTP3_OF_OEPRF_ONB, numOF);
+    164              if(lSt1)  SetCmdToUVV(DZ_COMP1,  3, IOCMD4_DZ2to5OF, typRang);//работа с OF OT
+    165          // сраб ДЗ3 ОФ
+    166            lSt1 = pntPuskOF(DSTP3_OF_OEPRF_ONB, numOF);
+    167              if(lSt1)  SetCmdToUVV(DZ_COMP1,  3, IOCMD5_DZ2to5OF, typRang);//работа с OF OT
+    168          
+    169          // Блокировка DZ4
+    170            lSt1 = pntPuskOF(BLOCK_DSTP4_DI_OEPRF_ONB, numOF);
+    171              if(lSt1)  SetCmdToUVV(DZ_COMP1,  4, IOCMD1_DZ2to5, typRang);//работа с OF OT
+    172          //Блокировка ускор Дист З4
+    173            lSt1 = pntPuskOF(BLOCK_ACCLT_DSTP4_DI_OEPRF_ONB, numOF);
+    174              if(lSt1)  SetCmdToUVV(DZ_COMP1,  4, IOCMD2_DZ2to5, typRang);//работа с OF OT
+    175          //Оперативное ускорение Дист З4
+    176            lSt1 = pntPuskOF(ACCLT_DSTP4_DI_OEPRF_ONB, numOF);
+    177              if(lSt1)  SetCmdToUVV(DZ_COMP1,  4, IOCMD3_DZ2to5, typRang);//работа с OF OT
+    178          // ПО ДЗ4 МФ
+    179            lSt1 = pntPuskOF(STPDEV_DSTP4_MF_OEPRF_ONB, numOF);
+    180              if(lSt1)  SetCmdToUVV(DZ_COMP1,  4, IOCMD4_DZ2to5MF, typRang);//работа с OF OT
+    181          // Cраб ДЗ4 МФ
+    182            lSt1 = pntPuskOF(DSTP4_MF_OEPRF_ONB, numOF);
+    183              if(lSt1)  SetCmdToUVV(DZ_COMP1,  4, IOCMD5_DZ2to5MF, typRang);//работа с OF OT
+    184          // ПО МТЗ ДЗ4
+    185            lSt1 = pntPuskOF(STPDEV_MCP_DSTP4_OEPRF_ONB, numOF);
+    186              if(lSt1)  SetCmdToUVV(DZ_COMP1,  4, IOCMD4_MDZ2to5MF, typRang);//работа с OF OT
+    187          // Сраб МТЗ ДЗ4
+    188            lSt1 = pntPuskOF(MCP_DSTP4_OEPRF_ONB, numOF);
+    189              if(lSt1)  SetCmdToUVV(DZ_COMP1,  4, IOCMD5_MDZ2to5MF, typRang);//работа с OF OT
+    190          // ПО ДЗ4 ОФ
+    191            lSt1 = pntPuskOF(STPDEV_DSTP4_OF_OEPRF_ONB, numOF);
+    192              if(lSt1)  SetCmdToUVV(DZ_COMP1,  4, IOCMD4_DZ2to5OF, typRang);//работа с OF OT
+    193          // сраб ДЗ4 ОФ
+    194            lSt1 = pntPuskOF(DSTP4_OF_OEPRF_ONB, numOF);
+    195              if(lSt1)  SetCmdToUVV(DZ_COMP1,  4, IOCMD5_DZ2to5OF, typRang);//работа с OF OT
+    196          
+    197          // Блокировка DZ5
+    198            lSt1 = pntPuskOF(BLOCK_DSTP5_DI_OEPRF_ONB, numOF);
+    199              if(lSt1)  SetCmdToUVV(DZ_COMP1,  5, IOCMD1_DZ2to5, typRang);//работа с OF OT
+    200          //Блокировка ускор Дист З5
+    201            lSt1 = pntPuskOF(BLOCK_ACCLT_DSTP5_DI_OEPRF_ONB, numOF);
+    202              if(lSt1)  SetCmdToUVV(DZ_COMP1,  5, IOCMD2_DZ2to5, typRang);//работа с OF OT
+    203          //Оперативное ускорение Дист З5
+    204            lSt1 = pntPuskOF(ACCLT_DSTP5_DI_OEPRF_ONB, numOF);
+    205              if(lSt1)  SetCmdToUVV(DZ_COMP1,  5, IOCMD3_DZ2to5, typRang);//работа с OF OT
+    206          // ПО ДЗ5 МФ
+    207            lSt1 = pntPuskOF(STPDEV_DSTP5_MF_OEPRF_ONB, numOF);
+    208              if(lSt1)  SetCmdToUVV(DZ_COMP1,  5, IOCMD4_DZ2to5MF, typRang);//работа с OF OT
+    209          // Cраб ДЗ5 МФ
+    210            lSt1 = pntPuskOF(DSTP5_MF_OEPRF_ONB, numOF);
+    211              if(lSt1)  SetCmdToUVV(DZ_COMP1,  5, IOCMD5_DZ2to5MF, typRang);//работа с OF OT
+    212          // ПО МТЗ ДЗ5
+    213            lSt1 = pntPuskOF(STPDEV_MCP_DSTP5_OEPRF_ONB, numOF);
+    214              if(lSt1)  SetCmdToUVV(DZ_COMP1,  5, IOCMD4_MDZ2to5MF, typRang);//работа с OF OT
+    215          // Сраб МТЗ ДЗ5
+    216            lSt1 = pntPuskOF(MCP_DSTP5_OEPRF_ONB, numOF);
+    217              if(lSt1)  SetCmdToUVV(DZ_COMP1,  5, IOCMD5_MDZ2to5MF, typRang);//работа с OF OT
+    218          // ПО ДЗ5 ОФ
+    219            lSt1 = pntPuskOF(STPDEV_DSTP5_OF_OEPRF_ONB, numOF);
+    220              if(lSt1)  SetCmdToUVV(DZ_COMP1,  5, IOCMD4_DZ2to5OF, typRang);//работа с OF OT
+    221          // сраб ДЗ5 ОФ
+    222            lSt1 = pntPuskOF(DSTP5_OF_OEPRF_ONB, numOF);
+    223              if(lSt1)  SetCmdToUVV(DZ_COMP1,  5, IOCMD5_DZ2to5OF, typRang);//работа с OF OT
+    224          
+    225          
+    226          }
+    227          
 
    Maximum stack usage in bytes:
 
@@ -259,12 +280,12 @@ D:\IAR projects\HR1_0100_00_I720_new2\SettingIci\SettingIci_OFDZ.c
 
    Bytes  Function/Label
    -----  --------------
-    2856  SettingIci_OFDZ
+    2980  SettingIci_OFDZ
 
  
- 2 856 bytes in section .text
+ 2 980 bytes in section .text
  
- 2 856 bytes of CODE memory
+ 2 980 bytes of CODE memory
 
 Errors: none
 Warnings: none

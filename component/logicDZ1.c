@@ -58,16 +58,8 @@ extern INT_64 resistance_fCMX, resistance_fCMY;
 extern int isValidZonaDZ1OF;//флаг валидности зоны
 extern int isValidZonaDZ1MF;//флаг валидности зоны
 extern int isTriangleZonaBD[];//зона ДЗ треугольник-четырехугольник
-/*
-extern int locPO_DZ2MF;
-extern int locPO_DZ2OF;
-extern int locPO_DZ3MF;
-extern int locPO_DZ3OF;
-extern int locPO_DZ4MF;
-extern int locPO_DZ4OF;
-extern int locPO_DZ5MF;
-extern int locPO_DZ5OF;
-*/
+
+extern int flag_max_monitoring;//макс параметры сработки
 
 void  logicDZ1(int idxC) @ "Fast_function"
 {
@@ -231,12 +223,14 @@ int LocalPO_DZ1MFC = isViewZMethod_64VRT( 1, ISZ_DZ1MFC);// &
       //Сраб МТЗ ДЗ1МФ
       (locPO_MDZ1MF^1);
 
+   int max_tmp = 
    //DZ1_PO1
    TL_LOGIC(TLCMD30_DZ1MF) =
    //Сраб ПО ДЗ1МФ
    IO_LOGIC(IOCMD2_DZ1) =
    LSIGNAL_TIMER(TIMER1_DZ1)  = //DZ1_TIM1
             locPO_DZ1MF;
+    if(max_tmp) flag_max_monitoring |= MAXMONITORING_COLLECT;//макс параметры сработки
 
    //Сраб ПО МТЗ ДЗ1МФ
    IO_LOGIC(IOCMD4_DZ1) =

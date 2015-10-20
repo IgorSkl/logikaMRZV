@@ -208,6 +208,8 @@ void  SettingIci_Rangir()
    SettingIci_RangirOTToDV(DV5_SM);//уст сброс триг
    SettingIci_RangirOTToDV(DV6_SM);//уст сброс триг
 
+//void SettingIci_RangirOTToRele(int nRele)
+
    SettingIci_RangirOutOTToRele(RELE1_SM);//Выход триг
    SettingIci_RangirOutOTToRele(RELE2_SM);//Выход триг
    SettingIci_RangirOutOTToRele(RELE3_SM);//Выход триг

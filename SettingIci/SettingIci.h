@@ -178,7 +178,7 @@ typedef struct
 {
 //маски для 8 опред OT
 UNS_32 pP1OT1cmdMaska[DQUADRO];//определение Запуск1ОT1
-UNS_32 pP2OT1cmdMaska[DQUADRO];//определение Запуск2ОT1
+UNS_32 pP2OT1cmdMaska[DQUADRO];//определение Запуск2ОT1-
 UNS_32 pP3OT1cmdMaska[DQUADRO];//определение Запуск3ОT1
 UNS_32 pP4OT1cmdMaska[DQUADRO];//определение Запуск4ОT1
 //----------------------------------------

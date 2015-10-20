@@ -1,53 +1,42 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V7.40.3.8902/W32 for ARM        15/Oct/2015  16:39:19
+# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        20/Oct/2015  12:12:25
 # Copyright 1999-2015 IAR Systems AB.
 #
 #    Cpu mode     =  arm
 #    Endian       =  little
 #    Source file  =  
-#        D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\virtualMenu\rangmanager.c
+#        D:\IAR projects\HR1_0100_00_I720_new2\virtualMenu\rangmanager.c
 #    Command line =  
-#        "D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\virtualMenu\rangmanager.c" -lcN
-#        "D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
-#        xRAM\List\" -o "D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug xRAM\Obj\" --no_cse
+#        "D:\IAR projects\HR1_0100_00_I720_new2\virtualMenu\rangmanager.c" -lcN
+#        "D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug xRAM\List\" -o
+#        "D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug xRAM\Obj\" --no_cse
 #        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
 #        --no_scheduling --debug --endian=little --cpu=ARM926EJ-S -e
-#        --fpu=VFP9-S --dlib_config "D:\Program Files\IAR Systems\Embedded
-#        Workbench 7.2\arm\INC\c\DLib_Config_Normal.h" -I "D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\Program
-#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I
-#        "D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\Program
-#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\Igor\" -I
-#        "D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\Program
-#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\component\" -I
-#        "D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I
-#        "D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I
-#        "D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I
-#        "D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I
-#        "D:\Program Files\IAR
-#        Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\Program
-#        Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\..\" --interwork
-#        --cpu_mode arm -On --use_c++_inline
+#        --fpu=VFP9-S --dlib_config "C:\Program Files\IAR Systems\Embedded
+#        Workbench 7.40\arm\INC\c\DLib_Config_Normal.h" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\NXP\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\LIB\include\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\inc\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\Igor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\mal\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\component\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\psupervisor\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\virtualMenu\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\callbackElement\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\logictimers\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\zonaVRT\" -I "D:\IAR
+#        projects\HR1_0100_00_I720_new2\EWP\..\" --interwork --cpu_mode arm -On
+#        --use_c++_inline
 #    List file    =  
-#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug
 #        xRAM\List\rangmanager.lst
 #    Object file  =  
-#        D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\EWP\Debug
-#        xRAM\Obj\rangmanager.o
+#        D:\IAR projects\HR1_0100_00_I720_new2\EWP\Debug xRAM\Obj\rangmanager.o
 #
 ###############################################################################
 
-D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\virtualMenu\rangmanager.c
+D:\IAR projects\HR1_0100_00_I720_new2\virtualMenu\rangmanager.c
       1          /*
       2          
       3          #include <vcl.h>
@@ -584,92 +573,126 @@ D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\virtualMenu\rangmanage
     534          //    memcpy(pP3OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
     535              return struct_maskaOTAPVUROVOFcmd.pP3OF16cmdMaska;
     536          
-    537            // case PUSK1OT1_SM://определение Запуск1ОT
-    538            //  return struct_maskaOTcmd.pP1OT1cmdMaska;
-    539            // case PUSK2OT1_SM://определение Запуск2ОT
-    540            //  return struct_maskaOTcmd.pP2OT1cmdMaska;
-    541          
-    542             case PUSK1OT1_SM://определение Запуск1ОT1
-    543              return struct_maskaOTcmd.pP1OT1cmdMaska;
-    544             case PUSK2OT1_SM://определение Запуск2ОT1
-    545              return struct_maskaOTcmd.pP2OT1cmdMaska;
+    537             case PUSK1OT1_SM://определение Запуск1ОT1
+    538              return struct_maskaOTcmd.pP1OT1cmdMaska;
+    539             case PUSK2OT1_SM://определение Запуск2ОT1
+    540              return struct_maskaOTcmd.pP2OT1cmdMaska;
+    541             case PUSK3OT1_SM://определение Запуск2ОT1
+    542              return struct_maskaOTcmd.pP3OT1cmdMaska;
+    543             case PUSK4OT1_SM://определение Запуск2ОT1
+    544              return struct_maskaOTcmd.pP4OT1cmdMaska;
+    545          
     546             case PUSK1OT2_SM://определение Запуск1ОT2
     547              return struct_maskaOTcmd.pP1OT2cmdMaska;
     548             case PUSK2OT2_SM://определение Запуск2ОT2
     549              return struct_maskaOTcmd.pP2OT2cmdMaska;
-    550             case PUSK1OT3_SM://определение Запуск1ОT3
-    551              return struct_maskaOTcmd.pP1OT3cmdMaska;
-    552             case PUSK2OT3_SM://определение Запуск2ОT3
-    553              return struct_maskaOTcmd.pP2OT3cmdMaska;
-    554             case PUSK1OT4_SM://определение Запуск1ОT4
-    555              return struct_maskaOTcmd.pP1OT4cmdMaska;
-    556             case PUSK2OT4_SM://определение Запуск2ОT4
-    557              return struct_maskaOTcmd.pP2OT4cmdMaska;
-    558             case PUSK1OT5_SM://определение Запуск1ОT5
-    559              return struct_maskaOTcmd.pP1OT5cmdMaska;
-    560             case PUSK2OT5_SM://определение Запуск2ОT5
-    561              return struct_maskaOTcmd.pP2OT5cmdMaska;
-    562             case PUSK1OT6_SM://определение Запуск1ОT6
-    563              return struct_maskaOTcmd.pP1OT6cmdMaska;
-    564             case PUSK2OT6_SM://определение Запуск2ОT6
-    565              return struct_maskaOTcmd.pP2OT6cmdMaska;
-    566             case PUSK1OT7_SM://определение Запуск1ОT7
-    567              return struct_maskaOTcmd.pP1OT7cmdMaska;
-    568             case PUSK2OT7_SM://определение Запуск2ОT7
-    569              return struct_maskaOTcmd.pP2OT7cmdMaska;
-    570             case PUSK1OT8_SM://определение Запуск1ОT8
-    571              return struct_maskaOTcmd.pP1OT8cmdMaska;
-    572             case PUSK2OT8_SM://определение Запуск2ОT8
-    573              return struct_maskaOTcmd.pP2OT8cmdMaska;
-    574          
-    575            }//switch
-    576          
-    577            return  &(((UNS_32 *)ArrayRANGIR)[numUVV*DQUADRO]);
-    578          }//MngRangGetPointerUVVRANGIRtoRead(int numUVV)
-    579          
-    580          int GetCmdUVVFromClon(short kodC, short numClon, short numIO, short numUVV)
-    581          {
-    582          //Проверить команду numIO компонента kodC с номером клона numClon на numUVV
-    583            short idxClon = SearchCnfClonToComponent(kodC, numClon);
-    584            if(idxClon<0)return -1;//клон не найден
-    585            short idxCmd = getOffsetIOCmdCnf(idxClon) + numIO;//индекс команды
-    586          
-    587            return  NumBitCheckQuadro(idxCmd,
-    588                                         MngRangGetPointerUVVRANGIRtoRead(numUVV)
-    589                                        ); //установка бита по его индексу
-    590          }//SetUVVToClon(idxCmd, numUVV)
-    591          
-    592          void CopyEEPROMtoRANGIR()
-    593          {
-    594          //копировать данные из EEPROM в ранжир
-    595          extern char  tmp_eeprom[];//MAX_MNGUSTAVKI*4блока *4байта
-    596           memcpy(ArrayRANGIR, tmp_eeprom, 4*(MAX_MNGRANG+1));//для ранжир и CRC
-    597          }//CopyMngUstavki(int numBlok)
-    598          
-    599          /*
-    600          char ChkUVVToClon(int idxCmd, int numUVV)
-    601          {
-    602            MngRangPrepareArrayRANGIRtoEdit(numUVV);//Подготовить ArrayRANGIR к редактированию
-    603          
-    604            char tmp = NumBitCheckQuadro(idxCmd,
-    605                                         MngRangGetPointerUVVRANGIRtoEdit(numUVV)
-    606                                        ); //установка бита по его индексу
-    607          
-    608            MngRangEndingEditArrayRANGIR(numUVV);//Закончить редактировать ArrayRANGIR
-    609            return tmp;
-    610          }//ChkUVVToClon(short idxCmd, short numUVV)
-    611          */
-    612          /*
-    613          char ChkCmdToClon(short kodC, short numClon, short numIO, short numUVV)
-    614          {
-    615          //Проверить команду numIO компонента kodC с номером клона numClon на numUVV
-    616            short idxClon = SearchCnfClonToComponent(kodC, numClon);
-    617            if(idxClon<0)return -1;//клон не найден
-    618            short idxCmd = getOffsetIOCmdCnf(idxClon) + numIO;//индекс команды
-    619          
-    620            return ChkUVVToClon(idxCmd, numUVV);
-    621          }//ClrCmdToClon(short kodC, short numClon, short numIO, short numUVV)
-    622          */
+    550             case PUSK3OT2_SM://определение Запуск2ОT2
+    551              return struct_maskaOTcmd.pP3OT2cmdMaska;
+    552             case PUSK4OT2_SM://определение Запуск2ОT2
+    553              return struct_maskaOTcmd.pP4OT2cmdMaska;
+    554          
+    555             case PUSK1OT3_SM://определение Запуск1ОT3
+    556              return struct_maskaOTcmd.pP1OT3cmdMaska;
+    557             case PUSK2OT3_SM://определение Запуск2ОT3
+    558              return struct_maskaOTcmd.pP2OT3cmdMaska;
+    559             case PUSK3OT3_SM://определение Запуск2ОT3
+    560              return struct_maskaOTcmd.pP3OT3cmdMaska;
+    561             case PUSK4OT3_SM://определение Запуск2ОT3
+    562              return struct_maskaOTcmd.pP4OT3cmdMaska;
+    563          
+    564             case PUSK1OT4_SM://определение Запуск1ОT4
+    565              return struct_maskaOTcmd.pP1OT4cmdMaska;
+    566             case PUSK2OT4_SM://определение Запуск2ОT4
+    567              return struct_maskaOTcmd.pP2OT4cmdMaska;
+    568             case PUSK3OT4_SM://определение Запуск2ОT4
+    569              return struct_maskaOTcmd.pP3OT4cmdMaska;
+    570             case PUSK4OT4_SM://определение Запуск2ОT4
+    571              return struct_maskaOTcmd.pP4OT4cmdMaska;
+    572          
+    573             case PUSK1OT5_SM://определение Запуск1ОT5
+    574              return struct_maskaOTcmd.pP1OT5cmdMaska;
+    575             case PUSK2OT5_SM://определение Запуск2ОT5
+    576              return struct_maskaOTcmd.pP2OT5cmdMaska;
+    577             case PUSK3OT5_SM://определение Запуск2ОT5
+    578              return struct_maskaOTcmd.pP3OT5cmdMaska;
+    579             case PUSK4OT5_SM://определение Запуск2ОT5
+    580              return struct_maskaOTcmd.pP4OT5cmdMaska;
+    581          
+    582             case PUSK1OT6_SM://определение Запуск1ОT6
+    583              return struct_maskaOTcmd.pP1OT6cmdMaska;
+    584             case PUSK2OT6_SM://определение Запуск2ОT6
+    585              return struct_maskaOTcmd.pP2OT6cmdMaska;
+    586             case PUSK3OT6_SM://определение Запуск2ОT6
+    587              return struct_maskaOTcmd.pP3OT6cmdMaska;
+    588             case PUSK4OT6_SM://определение Запуск2ОT6
+    589              return struct_maskaOTcmd.pP4OT6cmdMaska;
+    590          
+    591             case PUSK1OT7_SM://определение Запуск1ОT7
+    592              return struct_maskaOTcmd.pP1OT7cmdMaska;
+    593             case PUSK2OT7_SM://определение Запуск2ОT7
+    594              return struct_maskaOTcmd.pP2OT7cmdMaska;
+    595             case PUSK3OT7_SM://определение Запуск2ОT7
+    596              return struct_maskaOTcmd.pP3OT7cmdMaska;
+    597             case PUSK4OT7_SM://определение Запуск2ОT7
+    598              return struct_maskaOTcmd.pP4OT7cmdMaska;
+    599          
+    600             case PUSK1OT8_SM://определение Запуск1ОT8
+    601              return struct_maskaOTcmd.pP1OT8cmdMaska;
+    602             case PUSK2OT8_SM://определение Запуск2ОT8
+    603              return struct_maskaOTcmd.pP2OT8cmdMaska;
+    604             case PUSK3OT8_SM://определение Запуск2ОT8
+    605              return struct_maskaOTcmd.pP3OT8cmdMaska;
+    606             case PUSK4OT8_SM://определение Запуск2ОT8
+    607              return struct_maskaOTcmd.pP4OT8cmdMaska;
+    608          
+    609            }//switch
+    610          
+    611            return  &(((UNS_32 *)ArrayRANGIR)[numUVV*DQUADRO]);
+    612          }//MngRangGetPointerUVVRANGIRtoRead(int numUVV)
+    613          
+    614          int GetCmdUVVFromClon(short kodC, short numClon, short numIO, short numUVV)
+    615          {
+    616          //Проверить команду numIO компонента kodC с номером клона numClon на numUVV
+    617            short idxClon = SearchCnfClonToComponent(kodC, numClon);
+    618            if(idxClon<0)return -1;//клон не найден
+    619            short idxCmd = getOffsetIOCmdCnf(idxClon) + numIO;//индекс команды
+    620          
+    621            return  NumBitCheckQuadro(idxCmd,
+    622                                         MngRangGetPointerUVVRANGIRtoRead(numUVV)
+    623                                        ); //установка бита по его индексу
+    624          }//SetUVVToClon(idxCmd, numUVV)
+    625          
+    626          void CopyEEPROMtoRANGIR()
+    627          {
+    628          //копировать данные из EEPROM в ранжир
+    629          extern char  tmp_eeprom[];//MAX_MNGUSTAVKI*4блока *4байта
+    630           memcpy(ArrayRANGIR, tmp_eeprom, 4*(MAX_MNGRANG+1));//для ранжир и CRC
+    631          }//CopyMngUstavki(int numBlok)
+    632          
+    633          /*
+    634          char ChkUVVToClon(int idxCmd, int numUVV)
+    635          {
+    636            MngRangPrepareArrayRANGIRtoEdit(numUVV);//Подготовить ArrayRANGIR к редактированию
+    637          
+    638            char tmp = NumBitCheckQuadro(idxCmd,
+    639                                         MngRangGetPointerUVVRANGIRtoEdit(numUVV)
+    640                                        ); //установка бита по его индексу
+    641          
+    642            MngRangEndingEditArrayRANGIR(numUVV);//Закончить редактировать ArrayRANGIR
+    643            return tmp;
+    644          }//ChkUVVToClon(short idxCmd, short numUVV)
+    645          */
+    646          /*
+    647          char ChkCmdToClon(short kodC, short numClon, short numIO, short numUVV)
+    648          {
+    649          //Проверить команду numIO компонента kodC с номером клона numClon на numUVV
+    650            short idxClon = SearchCnfClonToComponent(kodC, numClon);
+    651            if(idxClon<0)return -1;//клон не найден
+    652            short idxCmd = getOffsetIOCmdCnf(idxClon) + numIO;//индекс команды
+    653          
+    654            return ChkUVVToClon(idxCmd, numUVV);
+    655          }//ClrCmdToClon(short kodC, short numClon, short numIO, short numUVV)
+    656          */
 
    Maximum stack usage in bytes:
 
@@ -812,7 +835,23 @@ D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\virtualMenu\rangmanage
        4  ??DataTable13_70
        4  ??DataTable13_71
        4  ??DataTable13_72
+       4  ??DataTable13_73
+       4  ??DataTable13_74
+       4  ??DataTable13_75
+       4  ??DataTable13_76
+       4  ??DataTable13_77
+       4  ??DataTable13_78
+       4  ??DataTable13_79
        4  ??DataTable13_8
+       4  ??DataTable13_80
+       4  ??DataTable13_81
+       4  ??DataTable13_82
+       4  ??DataTable13_83
+       4  ??DataTable13_84
+       4  ??DataTable13_85
+       4  ??DataTable13_86
+       4  ??DataTable13_87
+       4  ??DataTable13_88
        4  ??DataTable13_9
        4  ?_0
     2644  ArrayRANGIR
@@ -824,7 +863,7 @@ D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\virtualMenu\rangmanage
      308  MngRangDeleteQuadroRANGIR
      180  MngRangEndingEditArrayRANGIR
       40  MngRangGetPointerUVVRANGIRtoEdit
-     668  MngRangGetPointerUVVRANGIRtoRead
+     796  MngRangGetPointerUVVRANGIRtoRead
      180  MngRangPrepareArrayRANGIRtoEdit
      328  MngRangTopAddNameStatusRANGIR
      320  MngRangTopAddNameStatusRANGIR_WL
@@ -843,9 +882,9 @@ D:\Program Files\IAR Systems\MYWORK\HR1_0100_00_I720_new2\virtualMenu\rangmanage
  
  29 784 bytes in section .bss
       4 bytes in section .rodata
-  3 528 bytes in section .text
+  3 720 bytes in section .text
  
-  3 528 bytes of CODE  memory
+  3 720 bytes of CODE  memory
       4 bytes of CONST memory
  29 784 bytes of DATA  memory
 

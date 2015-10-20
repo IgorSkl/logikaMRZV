@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        12/Oct/2015  11:05:06
+# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        20/Oct/2015  12:49:43
 # Copyright 1999-2015 IAR Systems AB.
 #
 #    Cpu mode     =  arm
@@ -81,7 +81,7 @@ D:\IAR projects\HR1_0100_00_I720_new2\SettingIci\SettingIci_OFUMM.c
      40          extern  long lMtz1,lMtz1Tmr,lSt1,lSt2, lst3, lst4;
      41          extern __MEASUREMENT_TO_PROTECTION TestMeasProtection;
      42          
-     43          void  SettingIci_OFUMM(int FlagMaska, int numOF)
+     43          void  SettingIci_OFUMM(int typFUNC, int FlagMaska, int numOF)
      44          {
      45          //отранж МТЗ на Реле
      46          //int numRele = nRele - RELE1_SM;//нормировка
@@ -89,65 +89,86 @@ D:\IAR projects\HR1_0100_00_I720_new2\SettingIci\SettingIci_OFUMM.c
      48          puskOFfunction *pntPuskOF;
      49          
      50            int typRang = PUSK1OF_SM;
-     51            typRang = typRang - numOF*3 - FlagMaska;
-     52          
-     53            switch(FlagMaska){
-     54             case 0://PLUS
-     55              pntPuskOF = &puskOFotZPLUS;
-     56             break;
-     57             case 1://MINUS
-     58              pntPuskOF = &puskOFotZMINUS;
-     59             break;
-     60             case 2://BLK
-     61              pntPuskOF = &puskOFotZBLK;
-     62             break;
-     63            }//switch
-     64          
-     65          //отранж UMM на Реле
-     66          //int numRele = nRele - RELE1_SM;//нормировка
-     67          // Блокировка UMin1
-     68            lSt1 = pntPuskOF(BLOCK_UMIN1_DI_OEPRF_ONB, numOF);
-     69            if(lSt1)    SetCmdToUVV(UMM_COMP1,  1, IOCMD3_UMM, typRang);//работа с OF OT
-     70          // Блокировка UMin2
-     71            lSt1 = pntPuskOF(BLOCK_UMIN2_DI_OEPRF_ONB, numOF);
-     72            if(lSt1)    SetCmdToUVV(UMM_COMP1,  1, IOCMD4_UMM, typRang);//работа с OF OT
-     73          // ПО UMin1
-     74            lSt1 = pntPuskOF(STPDEV_UMIN1_OEPRF_ONB, numOF);
-     75             if(lSt1)   SetCmdToUVV(UMM_COMP1,  1, IOCMD9_UMM, typRang);//работа с OF OT
-     76          // UMin1
-     77            lSt1 = pntPuskOF(UMIN1_OEPRF_ONB, numOF);
-     78             if(lSt1)   SetCmdToUVV(UMM_COMP1,  1, IOCMD10_UMM, typRang);//работа с OF OT
-     79          
-     80          // ПО UMin2
-     81            lSt1 = pntPuskOF(STPDEV_UMIN2_OEPRF_ONB, numOF);
-     82            if(lSt1)    SetCmdToUVV(UMM_COMP1,  1, IOCMD11_UMM, typRang);//работа с OF OT
-     83          // UMin2
-     84            lSt1 = pntPuskOF(UMIN2_OEPRF_ONB, numOF);
-     85             if(lSt1)   SetCmdToUVV(UMM_COMP1,  1, IOCMD12_UMM, typRang);//работа с OF OT
-     86          
-     87          // Блокировка UMax1
-     88          // if(isActivCmdRele(, numRele))//проверка активности команды на Реле
-     89          //      SetCmdToUVV(UMM_COMP1,  1, IOCMD1_UMM, nRele);//отранж 
-     90          // Блокировка UMax2
-     91          // if(isActivCmdRele(, numRele))//проверка активности команды на Реле
-     92            //    SetCmdToUVV(UMM_COMP1,  1, IOCMD2_UMM, nRele);//отранж 
-     93            
-     94          // ПО UMax1
-     95            lSt1 = pntPuskOF(STPDEV_UMAX1_OEPRF_ONB, numOF);
-     96             if(lSt1)   SetCmdToUVV(UMM_COMP1,  1, IOCMD5_UMM, typRang);//работа с OF OT
-     97          // UMax1
-     98            lSt1 = pntPuskOF(UMAX1_OEPRF_ONB, numOF);
-     99             if(lSt1)   SetCmdToUVV(UMM_COMP1,  1, IOCMD6_UMM, typRang);//работа с OF OT
-    100          // ПО UMax2
-    101            lSt1 = pntPuskOF(STPDEV_UMAX2_OEPRF_ONB, numOF);
-    102             if(lSt1)   SetCmdToUVV(UMM_COMP1,  1, IOCMD7_UMM, typRang);//работа с OF OT
-    103          // UMax2
-    104            lSt1 = pntPuskOF(UMAX2_OEPRF_ONB, numOF);
-    105             if(lSt1)   SetCmdToUVV(UMM_COMP1,  1, IOCMD8_UMM, typRang);//работа с OF OT
-    106          
+     51            if(typFUNC==0){//OF
+     52            typRang = typRang - numOF*3 - FlagMaska;
+     53          
+     54            switch(FlagMaska){
+     55             case 0://PLUS
+     56              pntPuskOF = &puskOFotZPLUS;
+     57             break;
+     58             case 1://MINUS
+     59              pntPuskOF = &puskOFotZMINUS;
+     60             break;
+     61             case 2://BLK
+     62              pntPuskOF = &puskOFotZBLK;
+     63             break;
+     64            }//switch
+     65            }//if(typFUNC==0)
+     66            if(typFUNC==1){//OT
+     67            typRang = PUSK1OT1_SM;
+     68            typRang = typRang - numOF*4 - FlagMaska;
+     69          
+     70            switch(FlagMaska){
+     71             case 0://PLUS Set
+     72              pntPuskOF = &puskSetOTotZPLUS;
+     73             break;
+     74             case 1://PLUS Rst
+     75              pntPuskOF = &puskRstOTotZPLUS;
+     76             break;
+     77             case 2://MINUS Set
+     78              pntPuskOF = &puskSetOTotZMINUS;
+     79             break;
+     80             case 3://MINUS Rst
+     81              pntPuskOF = &puskRstOTotZMINUS;
+     82             break;
+     83            }//switch
+     84            }//if(typFUNC==0)
+     85          
+     86          //отранж UMM на Реле
+     87          //int numRele = nRele - RELE1_SM;//нормировка
+     88          // Блокировка UMin1
+     89            lSt1 = pntPuskOF(BLOCK_UMIN1_DI_OEPRF_ONB, numOF);
+     90            if(lSt1)    SetCmdToUVV(UMM_COMP1,  1, IOCMD3_UMM, typRang);//работа с OF OT
+     91          // Блокировка UMin2
+     92            lSt1 = pntPuskOF(BLOCK_UMIN2_DI_OEPRF_ONB, numOF);
+     93            if(lSt1)    SetCmdToUVV(UMM_COMP1,  1, IOCMD4_UMM, typRang);//работа с OF OT
+     94          // ПО UMin1
+     95            lSt1 = pntPuskOF(STPDEV_UMIN1_OEPRF_ONB, numOF);
+     96             if(lSt1)   SetCmdToUVV(UMM_COMP1,  1, IOCMD9_UMM, typRang);//работа с OF OT
+     97          // UMin1
+     98            lSt1 = pntPuskOF(UMIN1_OEPRF_ONB, numOF);
+     99             if(lSt1)   SetCmdToUVV(UMM_COMP1,  1, IOCMD10_UMM, typRang);//работа с OF OT
+    100          
+    101          // ПО UMin2
+    102            lSt1 = pntPuskOF(STPDEV_UMIN2_OEPRF_ONB, numOF);
+    103            if(lSt1)    SetCmdToUVV(UMM_COMP1,  1, IOCMD11_UMM, typRang);//работа с OF OT
+    104          // UMin2
+    105            lSt1 = pntPuskOF(UMIN2_OEPRF_ONB, numOF);
+    106             if(lSt1)   SetCmdToUVV(UMM_COMP1,  1, IOCMD12_UMM, typRang);//работа с OF OT
     107          
-    108          }//SettingIci_OFUMM(int FlagMaska, int numOF)
-    109          
+    108          // Блокировка UMax1
+    109          // if(isActivCmdRele(, numRele))//проверка активности команды на Реле
+    110          //      SetCmdToUVV(UMM_COMP1,  1, IOCMD1_UMM, nRele);//отранж 
+    111          // Блокировка UMax2
+    112          // if(isActivCmdRele(, numRele))//проверка активности команды на Реле
+    113            //    SetCmdToUVV(UMM_COMP1,  1, IOCMD2_UMM, nRele);//отранж 
+    114            
+    115          // ПО UMax1
+    116            lSt1 = pntPuskOF(STPDEV_UMAX1_OEPRF_ONB, numOF);
+    117             if(lSt1)   SetCmdToUVV(UMM_COMP1,  1, IOCMD5_UMM, typRang);//работа с OF OT
+    118          // UMax1
+    119            lSt1 = pntPuskOF(UMAX1_OEPRF_ONB, numOF);
+    120             if(lSt1)   SetCmdToUVV(UMM_COMP1,  1, IOCMD6_UMM, typRang);//работа с OF OT
+    121          // ПО UMax2
+    122            lSt1 = pntPuskOF(STPDEV_UMAX2_OEPRF_ONB, numOF);
+    123             if(lSt1)   SetCmdToUVV(UMM_COMP1,  1, IOCMD7_UMM, typRang);//работа с OF OT
+    124          // UMax2
+    125            lSt1 = pntPuskOF(UMAX2_OEPRF_ONB, numOF);
+    126             if(lSt1)   SetCmdToUVV(UMM_COMP1,  1, IOCMD8_UMM, typRang);//работа с OF OT
+    127          
+    128          
+    129          }//SettingIci_OFUMM(int FlagMaska, int numOF)
+    130          
 
    Maximum stack usage in bytes:
 
@@ -162,12 +183,12 @@ D:\IAR projects\HR1_0100_00_I720_new2\SettingIci\SettingIci_OFUMM.c
 
    Bytes  Function/Label
    -----  --------------
-     744  SettingIci_OFUMM
+     868  SettingIci_OFUMM
 
  
- 744 bytes in section .text
+ 868 bytes in section .text
  
- 744 bytes of CODE memory
+ 868 bytes of CODE memory
 
 Errors: none
 Warnings: none

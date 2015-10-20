@@ -534,43 +534,77 @@ UNS_32 * MngRangGetPointerUVVRANGIRtoRead(int numUVV)
 //    memcpy(pP3OFcmdMaska, (void*)getShadowBuf(), DQUADRO*4);
     return struct_maskaOTAPVUROVOFcmd.pP3OF16cmdMaska;
 
-  // case PUSK1OT1_SM://определение Запуск1ОT
-  //  return struct_maskaOTcmd.pP1OT1cmdMaska;
-  // case PUSK2OT1_SM://определение Запуск2ОT
-  //  return struct_maskaOTcmd.pP2OT1cmdMaska;
-
    case PUSK1OT1_SM://определение Запуск1ОT1
     return struct_maskaOTcmd.pP1OT1cmdMaska;
    case PUSK2OT1_SM://определение Запуск2ОT1
     return struct_maskaOTcmd.pP2OT1cmdMaska;
+   case PUSK3OT1_SM://определение Запуск2ОT1
+    return struct_maskaOTcmd.pP3OT1cmdMaska;
+   case PUSK4OT1_SM://определение Запуск2ОT1
+    return struct_maskaOTcmd.pP4OT1cmdMaska;
+
    case PUSK1OT2_SM://определение Запуск1ОT2
     return struct_maskaOTcmd.pP1OT2cmdMaska;
    case PUSK2OT2_SM://определение Запуск2ОT2
     return struct_maskaOTcmd.pP2OT2cmdMaska;
+   case PUSK3OT2_SM://определение Запуск2ОT2
+    return struct_maskaOTcmd.pP3OT2cmdMaska;
+   case PUSK4OT2_SM://определение Запуск2ОT2
+    return struct_maskaOTcmd.pP4OT2cmdMaska;
+
    case PUSK1OT3_SM://определение Запуск1ОT3
     return struct_maskaOTcmd.pP1OT3cmdMaska;
    case PUSK2OT3_SM://определение Запуск2ОT3
     return struct_maskaOTcmd.pP2OT3cmdMaska;
+   case PUSK3OT3_SM://определение Запуск2ОT3
+    return struct_maskaOTcmd.pP3OT3cmdMaska;
+   case PUSK4OT3_SM://определение Запуск2ОT3
+    return struct_maskaOTcmd.pP4OT3cmdMaska;
+
    case PUSK1OT4_SM://определение Запуск1ОT4
     return struct_maskaOTcmd.pP1OT4cmdMaska;
    case PUSK2OT4_SM://определение Запуск2ОT4
     return struct_maskaOTcmd.pP2OT4cmdMaska;
+   case PUSK3OT4_SM://определение Запуск2ОT4
+    return struct_maskaOTcmd.pP3OT4cmdMaska;
+   case PUSK4OT4_SM://определение Запуск2ОT4
+    return struct_maskaOTcmd.pP4OT4cmdMaska;
+
    case PUSK1OT5_SM://определение Запуск1ОT5
     return struct_maskaOTcmd.pP1OT5cmdMaska;
    case PUSK2OT5_SM://определение Запуск2ОT5
     return struct_maskaOTcmd.pP2OT5cmdMaska;
+   case PUSK3OT5_SM://определение Запуск2ОT5
+    return struct_maskaOTcmd.pP3OT5cmdMaska;
+   case PUSK4OT5_SM://определение Запуск2ОT5
+    return struct_maskaOTcmd.pP4OT5cmdMaska;
+
    case PUSK1OT6_SM://определение Запуск1ОT6
     return struct_maskaOTcmd.pP1OT6cmdMaska;
    case PUSK2OT6_SM://определение Запуск2ОT6
     return struct_maskaOTcmd.pP2OT6cmdMaska;
+   case PUSK3OT6_SM://определение Запуск2ОT6
+    return struct_maskaOTcmd.pP3OT6cmdMaska;
+   case PUSK4OT6_SM://определение Запуск2ОT6
+    return struct_maskaOTcmd.pP4OT6cmdMaska;
+
    case PUSK1OT7_SM://определение Запуск1ОT7
     return struct_maskaOTcmd.pP1OT7cmdMaska;
    case PUSK2OT7_SM://определение Запуск2ОT7
     return struct_maskaOTcmd.pP2OT7cmdMaska;
+   case PUSK3OT7_SM://определение Запуск2ОT7
+    return struct_maskaOTcmd.pP3OT7cmdMaska;
+   case PUSK4OT7_SM://определение Запуск2ОT7
+    return struct_maskaOTcmd.pP4OT7cmdMaska;
+
    case PUSK1OT8_SM://определение Запуск1ОT8
     return struct_maskaOTcmd.pP1OT8cmdMaska;
    case PUSK2OT8_SM://определение Запуск2ОT8
     return struct_maskaOTcmd.pP2OT8cmdMaska;
+   case PUSK3OT8_SM://определение Запуск2ОT8
+    return struct_maskaOTcmd.pP3OT8cmdMaska;
+   case PUSK4OT8_SM://определение Запуск2ОT8
+    return struct_maskaOTcmd.pP4OT8cmdMaska;
 
   }//switch
 

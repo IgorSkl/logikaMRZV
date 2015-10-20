@@ -39,6 +39,7 @@ extern int   tempLog[];
 extern int  isFAILU_COMMON_MTZ;
 extern int offsetSPVCmdPRM1;//смещение для SPV PRM1
 
+extern int flag_max_monitoring;//макс параметры сработки
 //extern int timing;
 
 void  logicMTZ1(int idxC) @ "Fast_function"
@@ -246,7 +247,7 @@ void  logicMTZ1(int idxC) @ "Fast_function"
     IO_LOGIC(IOCMD2_MTZ1) =
     locPO_MTZ1;
 
-   // if(max_tmp) flag_max_monitoring |= MAXMONITORING_COLLECT;//макс параметры сработки
+    if(max_tmp) flag_max_monitoring |= MAXMONITORING_COLLECT;//макс параметры сработки
 
     max_tmp =
     //L2 MTZ1_V
@@ -257,7 +258,7 @@ void  logicMTZ1(int idxC) @ "Fast_function"
     IO_LOGIC(IOCMD3_MTZ1) =
     locPO_MTZ1_V;
 
-    //if(max_tmp) flag_max_monitoring |= MAXMONITORING_COLLECT;//макс параметры сработки
+    if(max_tmp) flag_max_monitoring |= MAXMONITORING_COLLECT;//макс параметры сработки
 
     max_tmp =
     //L3 MTZ1_N
@@ -268,7 +269,7 @@ void  logicMTZ1(int idxC) @ "Fast_function"
     IO_LOGIC(IOCMD4_MTZ1) =
     locPO_MTZ1_N;
 
-    //if(max_tmp) flag_max_monitoring |= MAXMONITORING_COLLECT;//макс параметры сработки
+    if(max_tmp) flag_max_monitoring |= MAXMONITORING_COLLECT;//макс параметры сработки
 
     max_tmp =
     //L4 MTZ1_PN
@@ -279,7 +280,7 @@ void  logicMTZ1(int idxC) @ "Fast_function"
     IO_LOGIC(IOCMD5_MTZ1) =
     locPO_MTZ1_PN;
 
-//    if(max_tmp) flag_max_monitoring |= MAXMONITORING_COLLECT;//макс параметры сработки
+    if(max_tmp) flag_max_monitoring |= MAXMONITORING_COLLECT;//макс параметры сработки
 
  int tmp = //L5
     LSIGNAL_TIMER(TIMER_BO_MTZ1)  =
@@ -293,7 +294,7 @@ void  logicMTZ1(int idxC) @ "Fast_function"
     IO_LOGIC(IOCMD6_MTZ1) =
           ILOG_TIMER(TIMER_BO_MTZ1)|tmp;
 
-  //  if(max_tmp) flag_max_monitoring |= MAXMONITORING_FIX;//макс параметры сработки
+    if(max_tmp) flag_max_monitoring |= MAXMONITORING_FIX;//макс параметры сработки
 
 }//logicMTZ1(short idxC)
 

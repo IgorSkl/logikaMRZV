@@ -53,10 +53,14 @@ extern MaskaOTcmd struct_maskaOTcmd;//маски для 8 опред триггеров
   puskOFfunction *pntPuskOF;//указатель на ф-цию
 
 
+
 void  SettingIci_OF()
 {
+
   memset(&struct_maskaOTAPVUROVOFcmd, 0, sizeof(MaskaOTAPVUROVOFcmd));//стереть старое
   memset(&struct_maskaOTcmd,          0, sizeof(MaskaOTcmd));//стереть старое
+
+
 /*
   for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OFcmdMaska[i]=0;//Очистить
   for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OFcmdMaska[i]=0;//Очистить
@@ -365,14 +369,6 @@ int puskOFotZBLK(int numCmd, int numOF)
                                        numCmd/8]&(1<<(numCmd%8))) rez=1;
   return rez;
 }//puskOFotZBLK(int num)
-
-/*
-unsigned char uc_ar_trg_setPl_rank_cfg[NUM_TRG*AMOUNT_BYTE_FOR_OEPRF];//
-unsigned char uc_ar_trg_setMn_rank_cfg[NUM_TRG*AMOUNT_BYTE_FOR_OEPRF];//
-
-unsigned char uc_ar_trg_rstPl_rank_cfg[NUM_TRG*AMOUNT_BYTE_FOR_OEPRF];//
-unsigned char uc_ar_trg_rstMn_rank_cfg[NUM_TRG*AMOUNT_BYTE_FOR_OEPRF];//
-*/
 
 int puskSetOTotZPLUS(int numCmd, int numOT)//AMOUNT_BYTE_FOR_OEPRF
 {

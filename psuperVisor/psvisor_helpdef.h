@@ -20,19 +20,19 @@
         TL_LOGIC(out)=0; \
         TL_LOGIC(old) = clr;\
         if(set) TL_LOGIC(out)=1;
+
 //определить EL триг по восх фронту
 //set- сиг уст; old- память; out- выход
 #define TRG_EL(set, old, out)  out = ((set ^ TL_LOGIC(old) )&set);\
         TL_LOGIC(old) = set;
-
 //определить EL триг по восх фронту
 //set- сиг уст; old- память; out- выход
-#define TRGL_EL(set, old, out)  out = ((set ^ old )&set);\
-          old = set;
+#define TRGL_EL(set, old, out)  out = ((set ^ old) &set);\
+        old = set;
 //определить EL триг по падающему фронту
 //set- сиг уст; old- память; out- выход
-#define TRGL_ELDOWN(set, old, out)  out = ((set ^ old )&old);\
-          old = set;
+#define TRGL_ELDOWN(set, old, out)  out = ((set ^ old )& old);\
+        old = set;
 
 //32 int на зону ДЗ(4 точки по 8int на точку)
 //в каждой ступени ДЗ по 2 зоны
@@ -47,4 +47,7 @@
 #define SPV_UST_WL(offset)      spvUSTAVKI_WL[tmpOffsetUSpv + offset]
 #define SPV_USTOUT_WL(offset)   spvUSTAVKI_WL[offset]
 
+//макс параметры сработки
+#define  MAXMONITORING_COLLECT  1
+#define  MAXMONITORING_FIX      2
 

@@ -69,6 +69,7 @@ int pusk1OT6, pusk2OT6;
 int pusk1OT7, pusk2OT7;
 int pusk1OT8, pusk2OT8;
 
+/*
 int pusk1OT1_old, pusk2OT1_old;
 int pusk1OT2_old, pusk2OT2_old;
 int pusk1OT3_old, pusk2OT3_old;
@@ -77,6 +78,7 @@ int pusk1OT5_old, pusk2OT5_old;
 int pusk1OT6_old, pusk2OT6_old;
 int pusk1OT7_old, pusk2OT7_old;
 int pusk1OT8_old, pusk2OT8_old;
+*/
 
 int rst1OT1, rst2OT1;
 int rst1OT2, rst2OT2;
@@ -87,6 +89,7 @@ int rst1OT6, rst2OT6;
 int rst1OT7, rst2OT7;
 int rst1OT8, rst2OT8;
 
+/*
 int rst1OT1_old, rst2OT1_old;
 int rst1OT2_old, rst2OT2_old;
 int rst1OT3_old, rst2OT3_old;
@@ -95,6 +98,25 @@ int rst1OT5_old, rst2OT5_old;
 int rst1OT6_old, rst2OT6_old;
 int rst1OT7_old, rst2OT7_old;
 int rst1OT8_old, rst2OT8_old;
+
+int setOT1DV_old;
+int setOT2DV_old;
+int setOT3DV_old;
+int setOT4DV_old;
+int setOT5DV_old;
+int setOT6DV_old;
+int setOT7DV_old;
+int setOT8DV_old;
+
+int resOT1DV_old;
+int resOT2DV_old;
+int resOT3DV_old;
+int resOT4DV_old;
+int resOT5DV_old;
+int resOT6DV_old;
+int resOT7DV_old;
+int resOT8DV_old;
+*/
 
 int OTout[8];//Выходы OT
 
@@ -184,23 +206,23 @@ pusk1OF14 = pusk2OF14 = pusk3OF14 = 0;
 pusk1OF15 = pusk2OF15 = pusk3OF15 = 0;
 pusk1OF16 = pusk2OF16 = pusk3OF16 = 0;
 
-pusk1OT1 = pusk2OT1 = 0;
-pusk1OT2 = pusk2OT2 = 0;
-pusk1OT3 = pusk2OT3 = 0;
-pusk1OT4 = pusk2OT4 = 0;
-pusk1OT5 = pusk2OT5 = 0;
-pusk1OT6 = pusk2OT6 = 0;
-pusk1OT7 = pusk2OT7 = 0;
-pusk1OT8 = pusk2OT8 = 0;
+pusk1OT1  = pusk2OT1 = 0;//set PLUS MINUS
+rst1OT1  = rst2OT1 = 0;//rst PLUS MINUS
 
-rst1OT1 = rst2OT1 = 0;
-rst1OT2 = rst2OT2 = 0;
-rst1OT3 = rst2OT3 = 0;
-rst1OT4 = rst2OT4 = 0;
-rst1OT5 = rst2OT5 = 0;
-rst1OT6 = rst2OT6 = 0;
-rst1OT7 = rst2OT7 = 0;
-rst1OT8 = rst2OT8 = 0;
+pusk1OT2  = pusk2OT2 = 0;//set PLUS MINUS
+rst1OT2  = rst2OT2 = 0;//rst PLUS MINUS
+pusk1OT3  = pusk2OT3 = 0;//set PLUS MINUS
+rst1OT3  = rst2OT3 = 0;//rst PLUS MINUS
+pusk1OT4  = pusk2OT4 = 0;//set PLUS MINUS
+rst1OT4  = rst2OT4 = 0;//rst PLUS MINUS
+pusk1OT5  = pusk2OT5 = 0;//set PLUS MINUS
+rst1OT5  = rst2OT5 = 0;//rst PLUS MINUS
+pusk1OT6  = pusk2OT6 = 0;//set PLUS MINUS
+rst1OT6  = rst2OT6 = 0;//rst PLUS MINUS
+pusk1OT7  = pusk2OT7 = 0;//set PLUS MINUS
+rst1OT7  = rst2OT7 = 0;//rst PLUS MINUS
+pusk1OT8  = pusk2OT8 = 0;//set PLUS MINUS8
+rst1OT8  = rst2OT8 = 0;//rst PLUS MINUS
 
  //ЗапускАПВ big EL
 // if(MakeAPVcmdPusk())
@@ -320,78 +342,78 @@ rst1OT8 = rst2OT8 = 0;
  if(CheckActualCMDInv(struct_maskaOTAPVUROVOFcmd.pP2OF16cmdMaska))  pusk2OF16  = 1;
  //Запуск3ОФ16
  if(CheckActualCMD(struct_maskaOTAPVUROVOFcmd.pP3OF16cmdMaska))  pusk3OF16  = 1;
+//------------OT---------------
+ //Запуск1SetOT1
+ if(CheckActualCMD(struct_maskaOTcmd.pP1OT1cmdMaska))  pusk1OT1  = 1;//set PLUS
+ //Запуск2SetOT1
+ if(CheckActualCMD(struct_maskaOTcmd.pP2OT1cmdMaska))  rst1OT1  = 1;//res PLUS
+ //Запуск3SetOT1
+ if(CheckActualCMD(struct_maskaOTcmd.pP3OT1cmdMaska))  pusk2OT1  = 1;//set MINUS
+ //Запуск4SetOT1
+ if(CheckActualCMD(struct_maskaOTcmd.pP4OT1cmdMaska))  rst2OT1  = 1;//res MINUS
 
- //Запуск1ОT1
- if(CheckActualCMD(struct_maskaOTcmd.pP1OT1cmdMaska))  pusk1OT1  = 1;
- //Запуск2ОT1
- if(CheckActualCMD(struct_maskaOTcmd.pP2OT1cmdMaska))  pusk2OT1  = 1;
- //rst1ОT1
- if(CheckActualCMD(struct_maskaOTcmd.pP3OT1cmdMaska))  rst1OT1  = 1;
- //rst2ОT1
- if(CheckActualCMD(struct_maskaOTcmd.pP4OT1cmdMaska))  rst2OT1  = 1;
+ //Запуск1SetOT2
+ if(CheckActualCMD(struct_maskaOTcmd.pP1OT2cmdMaska))  pusk1OT2  = 1;//set PLUS
+ //Запуск2SetOT2
+ if(CheckActualCMD(struct_maskaOTcmd.pP2OT2cmdMaska))  rst1OT2  = 1;//res PLUS
+ //Запуск3SetOT2
+ if(CheckActualCMD(struct_maskaOTcmd.pP3OT2cmdMaska))  pusk2OT2  = 1;//set MINUS
+ //Запуск4SetOT2
+ if(CheckActualCMD(struct_maskaOTcmd.pP4OT2cmdMaska))  rst2OT2  = 1;//res MINUS
 
- //Запуск1ОT2
- if(CheckActualCMD(struct_maskaOTcmd.pP1OT2cmdMaska))  pusk1OT2  = 1;
- //Запуск2ОT2
- if(CheckActualCMD(struct_maskaOTcmd.pP2OT2cmdMaska))  pusk2OT2  = 1;
- //rst1ОT2
- if(CheckActualCMD(struct_maskaOTcmd.pP3OT2cmdMaska))  rst1OT2  = 1;
- //rst2ОT2
- if(CheckActualCMD(struct_maskaOTcmd.pP4OT2cmdMaska))  rst2OT2  = 1;
+  //Запуск1SetOT3
+ if(CheckActualCMD(struct_maskaOTcmd.pP1OT3cmdMaska))  pusk1OT3  = 1;//set PLUS
+ //Запуск2SetOT3
+ if(CheckActualCMD(struct_maskaOTcmd.pP2OT3cmdMaska))  rst1OT3  = 1;//res PLUS
+ //Запуск3SetOT3
+ if(CheckActualCMD(struct_maskaOTcmd.pP3OT3cmdMaska))  pusk2OT3  = 1;//set MINUS
+ //Запуск4SetOT1
+ if(CheckActualCMD(struct_maskaOTcmd.pP4OT3cmdMaska))  rst2OT3  = 1;//res MINUS
 
- //Запуск1ОT3
- if(CheckActualCMD(struct_maskaOTcmd.pP1OT3cmdMaska))  pusk1OT3  = 1;
- //Запуск2ОT3
- if(CheckActualCMD(struct_maskaOTcmd.pP2OT3cmdMaska))  pusk2OT3  = 1;
- //rst1ОT3
- if(CheckActualCMD(struct_maskaOTcmd.pP3OT3cmdMaska))  rst1OT3  = 1;
- //rst2ОT3
- if(CheckActualCMD(struct_maskaOTcmd.pP4OT3cmdMaska))  rst2OT3  = 1;
+  //Запуск1SetOT4
+ if(CheckActualCMD(struct_maskaOTcmd.pP1OT4cmdMaska))  pusk1OT4  = 1;//set PLUS
+ //Запуск2SetOT4
+ if(CheckActualCMD(struct_maskaOTcmd.pP2OT4cmdMaska))  rst1OT4  = 1;//res PLUS
+ //Запуск3SetOT4
+ if(CheckActualCMD(struct_maskaOTcmd.pP3OT4cmdMaska))  pusk2OT4  = 1;//set MINUS
+ //Запуск4SetOT4
+ if(CheckActualCMD(struct_maskaOTcmd.pP4OT4cmdMaska))  rst2OT4  = 1;//res MINUS
 
- //Запуск1ОT4
- if(CheckActualCMD(struct_maskaOTcmd.pP1OT4cmdMaska))  pusk1OT4  = 1;
- //Запуск2ОT4
- if(CheckActualCMD(struct_maskaOTcmd.pP2OT4cmdMaska))  pusk2OT4  = 1;
- //rst1ОT4
- if(CheckActualCMD(struct_maskaOTcmd.pP3OT4cmdMaska))  rst1OT4  = 1;
- //rst2ОT4
- if(CheckActualCMD(struct_maskaOTcmd.pP4OT4cmdMaska))  rst2OT4  = 1;
+ //Запуск1SetOT5
+ if(CheckActualCMD(struct_maskaOTcmd.pP1OT5cmdMaska))  pusk1OT5  = 1;//set PLUS
+ //Запуск2SetOT5
+ if(CheckActualCMD(struct_maskaOTcmd.pP2OT5cmdMaska))  rst1OT5  = 1;//res PLUS
+ //Запуск3SetOT5
+ if(CheckActualCMD(struct_maskaOTcmd.pP3OT5cmdMaska))  pusk2OT5  = 1;//set MINUS
+ //Запуск4SetOT5
+ if(CheckActualCMD(struct_maskaOTcmd.pP4OT5cmdMaska))  rst2OT5  = 1;//res MINUS
 
- //Запуск1ОT5
- if(CheckActualCMD(struct_maskaOTcmd.pP1OT5cmdMaska))  pusk1OT5  = 1;
- //Запуск2ОT5
- if(CheckActualCMD(struct_maskaOTcmd.pP2OT5cmdMaska))  pusk2OT5  = 1;
- //rst1ОT5
- if(CheckActualCMD(struct_maskaOTcmd.pP3OT5cmdMaska))  rst1OT5  = 1;
- //rst2ОT5
- if(CheckActualCMD(struct_maskaOTcmd.pP4OT5cmdMaska))  rst2OT5  = 1;
+ //Запуск1SetOT6
+ if(CheckActualCMD(struct_maskaOTcmd.pP1OT6cmdMaska))  pusk1OT6  = 1;//set PLUS
+ //Запуск2SetOT6
+ if(CheckActualCMD(struct_maskaOTcmd.pP2OT6cmdMaska))  rst1OT6  = 1;//res PLUS
+ //Запуск3SetOT6
+ if(CheckActualCMD(struct_maskaOTcmd.pP3OT6cmdMaska))  pusk2OT6  = 1;//set MINUS
+ //Запуск4SetOT6
+ if(CheckActualCMD(struct_maskaOTcmd.pP4OT6cmdMaska))  rst2OT6  = 1;//res MINUS
+ 
+  //Запуск1SetOT7
+ if(CheckActualCMD(struct_maskaOTcmd.pP1OT7cmdMaska))  pusk1OT7  = 1;//set PLUS
+ //Запуск2SetOT7
+ if(CheckActualCMD(struct_maskaOTcmd.pP2OT7cmdMaska))  rst1OT7  = 1;//res PLUS
+ //Запуск3SetOT7
+ if(CheckActualCMD(struct_maskaOTcmd.pP3OT7cmdMaska))  pusk2OT7  = 1;//set MINUS
+ //Запуск4SetOT7
+ if(CheckActualCMD(struct_maskaOTcmd.pP4OT7cmdMaska))  rst2OT7  = 1;//res MINUS
 
- //Запуск1ОT6
- if(CheckActualCMD(struct_maskaOTcmd.pP1OT6cmdMaska))  pusk1OT6  = 1;
- //Запуск2ОT6
- if(CheckActualCMD(struct_maskaOTcmd.pP2OT6cmdMaska))  pusk2OT6  = 1;
- //rst1ОT6
- if(CheckActualCMD(struct_maskaOTcmd.pP3OT6cmdMaska))  rst1OT6  = 1;
- //rst2ОT6
- if(CheckActualCMD(struct_maskaOTcmd.pP4OT6cmdMaska))  rst2OT6  = 1;
-
- //Запуск1ОT7
- if(CheckActualCMD(struct_maskaOTcmd.pP1OT7cmdMaska))  pusk1OT7  = 1;
- //Запуск2ОT7
- if(CheckActualCMD(struct_maskaOTcmd.pP2OT7cmdMaska))  pusk2OT7  = 1;
- //rst1ОT7
- if(CheckActualCMD(struct_maskaOTcmd.pP3OT7cmdMaska))  rst1OT7  = 1;
- //rst2ОT7
- if(CheckActualCMD(struct_maskaOTcmd.pP4OT7cmdMaska))  rst2OT7  = 1;
-
- //Запуск1ОT8
- if(CheckActualCMD(struct_maskaOTcmd.pP1OT8cmdMaska))  pusk1OT8  = 1;
- //Запуск2ОT8
- if(CheckActualCMD(struct_maskaOTcmd.pP2OT8cmdMaska))  pusk2OT8  = 1;
- //rst1ОT8
- if(CheckActualCMD(struct_maskaOTcmd.pP3OT8cmdMaska))  rst1OT8  = 1;
- //rst2ОT8
- if(CheckActualCMD(struct_maskaOTcmd.pP4OT8cmdMaska))  rst2OT8  = 1;
+  //Запуск1SetOT8
+ if(CheckActualCMD(struct_maskaOTcmd.pP1OT8cmdMaska))  pusk1OT8  = 1;//set PLUS
+ //Запуск2SetOT8
+ if(CheckActualCMD(struct_maskaOTcmd.pP2OT8cmdMaska))  rst1OT8  = 1;//res PLUS
+ //Запуск3SetOT8
+ if(CheckActualCMD(struct_maskaOTcmd.pP3OT8cmdMaska))  pusk2OT8  = 1;//set MINUS
+ //Запуск4SetOT8
+ if(CheckActualCMD(struct_maskaOTcmd.pP4OT8cmdMaska))  rst2OT8  = 1;//res MINUS
 
 }//PuskAPV_UROV_OFWorking()
 

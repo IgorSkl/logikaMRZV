@@ -16,9 +16,6 @@
         <cstatargs>
           <useExtraArgs>0</useExtraArgs>
           <extraArgs></extraArgs>
-          <analyzeTimeout>600</analyzeTimeout>
-          <enableParallel>0</enableParallel>
-          <parallelThreads>1</parallelThreads>
         </cstatargs>
         <cstatsettings>
           <package checked="true" name="STDCHECKS">
@@ -1072,9 +1069,6 @@
         <cstatargs>
           <useExtraArgs>0</useExtraArgs>
           <extraArgs></extraArgs>
-          <analyzeTimeout>600</analyzeTimeout>
-          <enableParallel>0</enableParallel>
-          <parallelThreads>1</parallelThreads>
         </cstatargs>
         <cstatsettings>
           <package checked="true" name="STDCHECKS">
@@ -2670,6 +2664,9 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\SettingIci\SettingIci_RangirOF.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\SettingIci\SettingIci_RangirOT.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\SettingIci\SettingIci_RangirPRM1.c</name>

@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        12/Oct/2015  11:05:04
+# IAR ANSI C/C++ Compiler V7.40.2.8542/W32 for ARM        20/Oct/2015  12:49:41
 # Copyright 1999-2015 IAR Systems AB.
 #
 #    Cpu mode     =  arm
@@ -195,898 +195,1029 @@ D:\IAR projects\HR1_0100_00_I720_new2\component\OFComponent.c
     154          //ОФ16
     155          #define IOCMD_IN_OF16  30
     156          #define IOCMD_OUT_OF16 31
-    157          //к-во IO команд
-    158          #define IOCMD_OF_TOTAL    32
-    159          
-    160          //---------------TL COMMAND------------------
-    161          //РАСПРЕДЕЛЕНИЕ TL КОМАНД ДЛЯ OF
-    162          //к-во TL команд
-    163          #define TLCMD_OF_TOTAL    0
-    164          
-    165          //--------------- TIMERS ------------------
-    166          //РАСПРЕДЕЛЕНИЕ ТАЙМЕРОВ ДЛЯ OF
-    167          //таймер паузы ОФ1
-    168          #define TIMERP_OF1  0
-    169          //таймер работы ОФ1
-    170          #define TIMERR_OF1  1
-    171          //таймер паузы ОФ2
-    172          #define TIMERP_OF2  2
-    173          //таймер работы ОФ2
-    174          #define TIMERR_OF2  3
-    175          //таймер паузы ОФ3
-    176          #define TIMERP_OF3  4
-    177          //таймер работы ОФ3
-    178          #define TIMERR_OF3  5
-    179          //таймер паузы ОФ4
-    180          #define TIMERP_OF4  6
-    181          //таймер работы ОФ4
-    182          #define TIMERR_OF4  7
-    183          //таймер паузы ОФ5
-    184          #define TIMERP_OF5  8
-    185          //таймер работы ОФ5
-    186          #define TIMERR_OF5  9
-    187          //таймер паузы ОФ6
-    188          #define TIMERP_OF6  10
-    189          //таймер работы ОФ6
-    190          #define TIMERR_OF6  11
-    191          //таймер паузы ОФ7
-    192          #define TIMERP_OF7  12
-    193          //таймер работы ОФ7
-    194          #define TIMERR_OF7  13
-    195          //таймер паузы ОФ8
-    196          #define TIMERP_OF8  14
-    197          //таймер работы ОФ8
-    198          #define TIMERR_OF8  15
-    199          //таймер паузы ОФ9
-    200          #define TIMERP_OF9  16
-    201          //таймер работы ОФ9
-    202          #define TIMERR_OF9  17
-    203          //таймер паузы ОФ10
-    204          #define TIMERP_OF10  18
-    205          //таймер работы ОФ10
-    206          #define TIMERR_OF10  19
-    207          //таймер паузы ОФ11
-    208          #define TIMERP_OF11  20
-    209          //таймер работы ОФ11
-    210          #define TIMERR_OF11  21
-    211          //таймер паузы ОФ12
-    212          #define TIMERP_OF12  22
-    213          //таймер работы ОФ12
-    214          #define TIMERR_OF12  23
-    215          //таймер паузы ОФ13
-    216          #define TIMERP_OF13  24
-    217          //таймер работы ОФ13
-    218          #define TIMERR_OF13  25
-    219          //таймер паузы ОФ14
-    220          #define TIMERP_OF14  26
-    221          //таймер работы ОФ14
-    222          #define TIMERR_OF14  27
-    223          //таймер паузы ОФ15
-    224          #define TIMERP_OF15  28
-    225          //таймер работы ОФ15
-    226          #define TIMERR_OF15  29
-    227          //таймер паузы ОФ16
-    228          #define TIMERP_OF16  30
-    229          //таймер работы ОФ16
-    230          #define TIMERR_OF16  31
-    231          //к-во таймеров
-    232          #define TIMERS_OF_TOTAL   32
-    233          
-    234          #ifndef _HIDE_COMPONENT
-    235          
-    236          extern COMPONENT_OBJ rpzcomponent_obj;//обект компонента для репозитария
-    237          extern int  tmpUSTAVKI[];
-    238          
-    239          extern LineMenuItem sub_menu_cnf[];
-    240          extern LineMenuItem sub_menu_tmp[];
-    241          extern int  IndexUstSPV;//индекс уставок в супервизоре
-    242          extern int  IndexIO;//индекс IO
-    243          
-    244          extern COMPONENT_OBJ  cnfCOMPONENT[];
-    245          extern int  spvUSTAVKI[];//текущие уставки супервизора
-    246          extern char *bitStringUNI[];
-    247          extern int  timerEnableWL;//разрешение работы таймеров РЛ
-    248          
-    249          void PereinitUstListCompOF(short flg);
-    250          void UstListCompOF();
-    251          void ustRedactorCompOF();
-    252          void UstCompOF();
-    253          short  KadrMenuFormat_ust_compOF(void *workCntr);
-    254          
-    255          void PereinitUprListCompOF(short flg);
-    256          void UprListCompOF();
-    257          void uprRedactorCompOF();
-    258          void UprCompOF();
-    259          short  KadrMenuFormat_upr_compOF(void *workCntr);
-    260          int  initUstOF(char init);
-    261          void  prepareUstOF(short idxC);
-    262          
-    263          //int ViewerEditUstOF();
-    264          //int ViewerEditVidOF();
-    265          void EditUstOF();
-    266          //void EditVidOF();
-    267          void EditUprOF();
-    268          int codecUstOF(char codec, short offset, int ust);
-    269          int   isDISactiv_OF(int idxC);
-    270          void  logicOF(int idxC);
-    271          
-    272          char *selectorUprStrOF(short iBit, UNS_32 ustUpr);
-    273          
-    274          int  offsetIOCmdOF;//смещение для IO OF
-    275          int  offsetIOCmdOF_loc;//смещение для IO OF
-    276          
-    277          IONAMESTATUS_COMPONENT ionsOF[IOCMD_OF_TOTAL] =
-    278          {
-    279            {
-    280              1,//статус iocmd1
-    281              "Пуск О-функция 1"
-    282            },
-    283            {
-    284              1,//статус iocmd1
-    285              "Вых О-функция 1"
-    286            },
-    287            {
-    288              1,//статус iocmd1
-    289              "Пуск О-функция 2"
-    290            },
-    291            {
-    292              1,//статус iocmd1
-    293              "Вых О-функция 2"
-    294            },
-    295            {
-    296              1,//статус iocmd1
-    297              "Пуск О-функция 3"
-    298            },
-    299            {
-    300              1,//статус iocmd1
-    301              "Вых О-функция 3"
-    302            },
-    303            {
-    304              1,//статус iocmd1
-    305              "Пуск О-функция 4"
-    306            },
-    307            {
-    308              1,//статус iocmd1
-    309              "Вых О-функция 4"
-    310            },
-    311            {
-    312              1,//статус iocmd1
-    313              "Пуск О-функция 5"
-    314            },
-    315            {
-    316              1,//статус iocmd1
-    317              "Вых О-функция 5"
-    318            },
-    319            {
-    320              1,//статус iocmd1
-    321              "Пуск О-функция 6"
-    322            },
-    323            {
-    324              1,//статус iocmd1
-    325              "Вых О-функция 6"
-    326            },
-    327            {
-    328              1,//статус iocmd1
-    329              "Пуск О-функция 7"
-    330            },
-    331            {
-    332              1,//статус iocmd1
-    333              "Вых О-функция 7"
-    334            },
-    335            {
-    336              1,//статус iocmd1
-    337              "Пуск О-функция 8"
-    338            },
-    339            {
-    340              1,//статус iocmd1
-    341              "Вых О-функция 8"
-    342            },
-    343            {
-    344              1,//статус iocmd1
-    345              "Пуск О-функция 9"
-    346            },
-    347            {
-    348              1,//статус iocmd1
-    349              "Вых О-функция 9"
-    350            },
-    351            {
-    352              1,//статус iocmd1
-    353              "Пуск О-функция 10"
-    354            },
-    355            {
-    356              1,//статус iocmd1
-    357              "Вых О-функция 10"
-    358            },
-    359            {
-    360              1,//статус iocmd1
-    361              "Пуск О-функция 11"
-    362            },
-    363            {
-    364              1,//статус iocmd1
-    365              "Вых О-функция 11"
-    366            },
-    367            {
-    368              1,//статус iocmd1
-    369              "Пуск О-функция 12"
-    370            },
-    371            {
-    372              1,//статус iocmd1
-    373              "Вых О-функция 12"
-    374            },
-    375            {
-    376              1,//статус iocmd1
-    377              "Пуск О-функция 13"
-    378            },
-    379            {
-    380              1,//статус iocmd1
-    381              "Вых О-функция 13"
-    382            },
-    383            {
-    384              1,//статус iocmd1
-    385              "Пуск О-функция 14"
-    386            },
-    387            {
-    388              1,//статус iocmd1
-    389              "Вых О-функция 14"
-    390            },
-    391            {
-    392              1,//статус iocmd1
-    393              "Пуск О-функция 15"
-    394            },
-    395            {
-    396              1,//статус iocmd1
-    397              "Вых О-функция 15"
-    398            },
-    399            {
-    400              1,//статус iocmd1
-    401              "Пуск О-функция 16"
-    402            },
-    403            {
-    404              1,//статус iocmd1
-    405              "Вых О-функция 16"
-    406            },
-    407          };
-    408          
-    409          LineMenuItem sub_menu_comp_OF[8] =
-    410          {
-    411            { "Опред функции", NULL},//title
-    412            { &CONTROL1_COMP, &sub_menu_cnf, typeMenuSub},//control_item, parent
-    413            { "Таймера ОФ",    (void *)&UstListCompOF, typeMenuProg},
-    414            { "Управление ОФ", (void *)&UprListCompOF, typeMenuProg},
-    415            { NULL, NULL}
-    416          };
-    417          
-    418          LineMenuItem sub_menu_ust_compOF[] =
-    419          {
-    420            { "Таймера Опред функций", NULL},//title
-    421            { &CONTROL2_COMP, sub_menu_comp_OF, typeMenuList},//control_item, parent
-    422          /*
-    423            { "Таймер паузы ОФ1",  (void *)&UstCompOF, typeMenuProg},
-    424            { "Таймер работы ОФ1", (void *)&UstCompOF, typeMenuProg},
-    425            { "Таймер паузы ОФ2",  (void *)&UstCompOF, typeMenuProg},
-    426            { "Таймер работы ОФ2", (void *)&UstCompOF, typeMenuProg},
-    427            { "Таймер паузы ОФ3",  (void *)&UstCompOF, typeMenuProg},
-    428            { "Таймер работы ОФ3", (void *)&UstCompOF, typeMenuProg},
-    429            { "Таймер паузы ОФ4",  (void *)&UstCompOF, typeMenuProg},
-    430            { "Таймер работы ОФ4", (void *)&UstCompOF, typeMenuProg},
-    431            { "Таймер паузы ОФ5",  (void *)&UstCompOF, typeMenuProg},
-    432            { "Таймер работы ОФ5", (void *)&UstCompOF, typeMenuProg},
-    433            { "Таймер паузы ОФ6",  (void *)&UstCompOF, typeMenuProg},
-    434            { "Таймер работы ОФ6", (void *)&UstCompOF, typeMenuProg},
-    435            { "Таймер паузы ОФ7",  (void *)&UstCompOF, typeMenuProg},
-    436            { "Таймер работы ОФ7", (void *)&UstCompOF, typeMenuProg},
-    437            { "Таймер паузы ОФ8",  (void *)&UstCompOF, typeMenuProg},
-    438            { "Таймер работы ОФ8", (void *)&UstCompOF, typeMenuProg},
-    439            { "Таймер паузы ОФ9",  (void *)&UstCompOF, typeMenuProg},
-    440            { "Таймер работы ОФ9", (void *)&UstCompOF, typeMenuProg},
-    441            { "Таймер паузы ОФ10",  (void *)&UstCompOF, typeMenuProg},
-    442            { "Таймер работы ОФ10", (void *)&UstCompOF, typeMenuProg},
-    443            { "Таймер паузы ОФ11",  (void *)&UstCompOF, typeMenuProg},
-    444            { "Таймер работы ОФ11", (void *)&UstCompOF, typeMenuProg},
-    445            { "Таймер паузы ОФ12",  (void *)&UstCompOF, typeMenuProg},
-    446            { "Таймер работы ОФ12", (void *)&UstCompOF, typeMenuProg},
-    447            { "Таймер паузы ОФ13",  (void *)&UstCompOF, typeMenuProg},
-    448            { "Таймер работы ОФ13", (void *)&UstCompOF, typeMenuProg},
-    449            { "Таймер паузы ОФ14",  (void *)&UstCompOF, typeMenuProg},
-    450            { "Таймер работы ОФ14", (void *)&UstCompOF, typeMenuProg},
-    451            { "Таймер паузы ОФ15",  (void *)&UstCompOF, typeMenuProg},
-    452            { "Таймер работы ОФ15", (void *)&UstCompOF, typeMenuProg},
-    453            { "Таймер паузы ОФ16",  (void *)&UstCompOF, typeMenuProg},
-    454            { "Таймер работы ОФ16", (void *)&UstCompOF, typeMenuProg},
-    455          */
-    456            { NULL, NULL}
-    457          
-    458          };
-    459          
-    460          LineMenuItem sub_menu_upr_compOF[] =
-    461          {
-    462            { "Управл Опред функций", NULL},//title
-    463            { &CONTROL2_COMP, sub_menu_comp_OF, typeMenuList},//control_item, parent
-    464          /*
-    465            { "Тип ОФ1",  (void *)&UprCompOF, typeMenuProg},
-    466            { "Тип ОФ2",  (void *)&UprCompOF, typeMenuProg},
-    467            { "Тип ОФ3",  (void *)&UprCompOF, typeMenuProg},
-    468            { "Тип ОФ4",  (void *)&UprCompOF, typeMenuProg},
-    469            { "Тип ОФ5",  (void *)&UprCompOF, typeMenuProg},
-    470            { "Тип ОФ6",  (void *)&UprCompOF, typeMenuProg},
-    471            { "Тип ОФ7",  (void *)&UprCompOF, typeMenuProg},
-    472            { "Тип ОФ8",  (void *)&UprCompOF, typeMenuProg},
-    473            { "Тип ОФ9",  (void *)&UprCompOF, typeMenuProg},
-    474            { "Тип ОФ10",  (void *)&UprCompOF, typeMenuProg},
-    475            { "Тип ОФ11",  (void *)&UprCompOF, typeMenuProg},
-    476            { "Тип ОФ12",  (void *)&UprCompOF, typeMenuProg},
-    477            { "Тип ОФ13",  (void *)&UprCompOF, typeMenuProg},
-    478            { "Тип ОФ14",  (void *)&UprCompOF, typeMenuProg},
-    479            { "Тип ОФ15",  (void *)&UprCompOF, typeMenuProg},
-    480            { "Тип ОФ16",  (void *)&UprCompOF, typeMenuProg},
-    481          */
-    482            { NULL, NULL}
-    483          
-    484          };
-    485          
-    486          void PereinitUstListCompOF(short flg)
-    487          {
-    488          //переиниц
-    489            //инит компонентного контроля
-    490            TxtStreamInit(&CONTROL2_COMP, &KadrMenuFormat_ust_compOF, NULL);//инит control и формир кадра
-    491            if(flg==0)//END
-    492            {
-    493              TxtStreamSetEnd(&CONTROL2_COMP, SIZE_PAGE_VIEW/2);//перейти на END
-    494            }//if
-    495          
-    496            ViewDiskrMenuList();//вывести окно отображения
-    497            ListPStr();//доступ к уставкам
-    498          }//PereinitUstListComp2()
-    499          
-    500          void UstListCompOF()
-    501          {
-    502            SelectorMNGBAZA(0);//установка базу уставок
-    503          
-    504            SelectorSUBMENU(sub_menu_ust_compOF);//уcтановить текущее субменю
-    505          
-    506            SelectorTEXTCONTROL(&CONTROL2_COMP);//текущий control
-    507          
-    508            SelectorFHOME(&PereinitUstListCompOF);//указатель на ф-цию HOME
-    509            InitFHOME(1);//exe ф-цию HOME
-    510          
-    511            LanderUpDown();//wkl Up Down
-    512          }//UstListCompOF()
-    513          
-    514          void UstCompOF()
-    515          {
-    516            SelectorCRRLIGHTLINE();//найти подсвеченную строку текущего текст потока
-    517            PrepareEditMenu(sub_menu_ust_compOF);
-    518            PassWord(EditUstOF);
-    519          }//VidCompOF()
-    520          
-    521          void EditUstOF()
-    522          {
-    523          //редактировать уставку
-    524            SystemEditUst(sub_menu_ust_compOF);//[LIGHTLINEMENU +1+SUBDATA].Line1, LIGHTLINEMENU);
-    525          }//UstCompOF()
-    526          
-    527          short  KadrMenuFormat_ust_compOF(void *pstr)
-    528          {
-    529           WorkControl *workCntr = (WorkControl *)pstr;
-    530          //формирователь кадра
-    531            char locTxt[50];
-    532            RESET_COUNTER;//сброс счетчиков
-    533            for(int i=0;; i++)
+    157          
+    158          //ОT1
+    159          #define IOCMD_BKL_OT1  32
+    160          #define IOCMD_OTKL_OT1 33
+    161          #define IOCMD_OUT_OT1  34
+    162          //ОT2
+    163          #define IOCMD_BKL_OT2  35
+    164          #define IOCMD_OTKL_OT2 36
+    165          #define IOCMD_OUT_OT2  37
+    166          //ОT3
+    167          #define IOCMD_BKL_OT3  38
+    168          #define IOCMD_OTKL_OT3 39
+    169          #define IOCMD_OUT_OT3  40
+    170          //ОT4
+    171          #define IOCMD_BKL_OT4  41
+    172          #define IOCMD_OTKL_OT4 42
+    173          #define IOCMD_OUT_OT4  43
+    174          //ОT5
+    175          #define IOCMD_BKL_OT5  44
+    176          #define IOCMD_OTKL_OT5 45
+    177          #define IOCMD_OUT_OT5  46
+    178          //ОT6
+    179          #define IOCMD_BKL_OT6  47
+    180          #define IOCMD_OTKL_OT6 48
+    181          #define IOCMD_OUT_OT6  49
+    182          //ОT7
+    183          #define IOCMD_BKL_OT7  50
+    184          #define IOCMD_OTKL_OT7 51
+    185          #define IOCMD_OUT_OT7  52
+    186          //ОT8
+    187          #define IOCMD_BKL_OT8  53
+    188          #define IOCMD_OTKL_OT8 54
+    189          #define IOCMD_OUT_OT8  55
+    190          
+    191          //к-во IO команд
+    192          #define IOCMD_OF_TOTAL    56
+    193          
+    194          //---------------TL COMMAND------------------
+    195          //РАСПРЕДЕЛЕНИЕ TL КОМАНД ДЛЯ OF
+    196          //к-во TL команд
+    197          #define TLCMD_OF_TOTAL    0
+    198          
+    199          //--------------- TIMERS ------------------
+    200          //РАСПРЕДЕЛЕНИЕ ТАЙМЕРОВ ДЛЯ OF
+    201          //таймер паузы ОФ1
+    202          #define TIMERP_OF1  0
+    203          //таймер работы ОФ1
+    204          #define TIMERR_OF1  1
+    205          //таймер паузы ОФ2
+    206          #define TIMERP_OF2  2
+    207          //таймер работы ОФ2
+    208          #define TIMERR_OF2  3
+    209          //таймер паузы ОФ3
+    210          #define TIMERP_OF3  4
+    211          //таймер работы ОФ3
+    212          #define TIMERR_OF3  5
+    213          //таймер паузы ОФ4
+    214          #define TIMERP_OF4  6
+    215          //таймер работы ОФ4
+    216          #define TIMERR_OF4  7
+    217          //таймер паузы ОФ5
+    218          #define TIMERP_OF5  8
+    219          //таймер работы ОФ5
+    220          #define TIMERR_OF5  9
+    221          //таймер паузы ОФ6
+    222          #define TIMERP_OF6  10
+    223          //таймер работы ОФ6
+    224          #define TIMERR_OF6  11
+    225          //таймер паузы ОФ7
+    226          #define TIMERP_OF7  12
+    227          //таймер работы ОФ7
+    228          #define TIMERR_OF7  13
+    229          //таймер паузы ОФ8
+    230          #define TIMERP_OF8  14
+    231          //таймер работы ОФ8
+    232          #define TIMERR_OF8  15
+    233          //таймер паузы ОФ9
+    234          #define TIMERP_OF9  16
+    235          //таймер работы ОФ9
+    236          #define TIMERR_OF9  17
+    237          //таймер паузы ОФ10
+    238          #define TIMERP_OF10  18
+    239          //таймер работы ОФ10
+    240          #define TIMERR_OF10  19
+    241          //таймер паузы ОФ11
+    242          #define TIMERP_OF11  20
+    243          //таймер работы ОФ11
+    244          #define TIMERR_OF11  21
+    245          //таймер паузы ОФ12
+    246          #define TIMERP_OF12  22
+    247          //таймер работы ОФ12
+    248          #define TIMERR_OF12  23
+    249          //таймер паузы ОФ13
+    250          #define TIMERP_OF13  24
+    251          //таймер работы ОФ13
+    252          #define TIMERR_OF13  25
+    253          //таймер паузы ОФ14
+    254          #define TIMERP_OF14  26
+    255          //таймер работы ОФ14
+    256          #define TIMERR_OF14  27
+    257          //таймер паузы ОФ15
+    258          #define TIMERP_OF15  28
+    259          //таймер работы ОФ15
+    260          #define TIMERR_OF15  29
+    261          //таймер паузы ОФ16
+    262          #define TIMERP_OF16  30
+    263          //таймер работы ОФ16
+    264          #define TIMERR_OF16  31
+    265          //к-во таймеров
+    266          #define TIMERS_OF_TOTAL   32
+    267          
+    268          #ifndef _HIDE_COMPONENT
+    269          
+    270          extern COMPONENT_OBJ rpzcomponent_obj;//обект компонента для репозитария
+    271          extern int  tmpUSTAVKI[];
+    272          
+    273          extern LineMenuItem sub_menu_cnf[];
+    274          extern LineMenuItem sub_menu_tmp[];
+    275          extern int  IndexUstSPV;//индекс уставок в супервизоре
+    276          extern int  IndexIO;//индекс IO
+    277          
+    278          extern COMPONENT_OBJ  cnfCOMPONENT[];
+    279          extern int  spvUSTAVKI[];//текущие уставки супервизора
+    280          extern char *bitStringUNI[];
+    281          extern int  timerEnableWL;//разрешение работы таймеров РЛ
+    282          
+    283          void PereinitUstListCompOF(short flg);
+    284          void UstListCompOF();
+    285          void ustRedactorCompOF();
+    286          void UstCompOF();
+    287          short  KadrMenuFormat_ust_compOF(void *workCntr);
+    288          
+    289          void PereinitUprListCompOF(short flg);
+    290          void UprListCompOF();
+    291          void uprRedactorCompOF();
+    292          void UprCompOF();
+    293          short  KadrMenuFormat_upr_compOF(void *workCntr);
+    294          int  initUstOF(char init);
+    295          void  prepareUstOF(short idxC);
+    296          
+    297          //int ViewerEditUstOF();
+    298          //int ViewerEditVidOF();
+    299          void EditUstOF();
+    300          //void EditVidOF();
+    301          void EditUprOF();
+    302          int codecUstOF(char codec, short offset, int ust);
+    303          int   isDISactiv_OF(int idxC);
+    304          void  logicOF(int idxC);
+    305          
+    306          char *selectorUprStrOF(short iBit, UNS_32 ustUpr);
+    307          
+    308          int  offsetIOCmdOF;//смещение для IO OF
+    309          int  offsetIOCmdOF_loc;//смещение для IO OF
+    310          
+    311          IONAMESTATUS_COMPONENT ionsOF[IOCMD_OF_TOTAL] =
+    312          {
+    313            {
+    314              1,//статус iocmd1
+    315              "Пуск О-функция 1"
+    316            },
+    317            {
+    318              1,//статус iocmd1
+    319              "Вых О-функция 1"
+    320            },
+    321            {
+    322              1,//статус iocmd1
+    323              "Пуск О-функция 2"
+    324            },
+    325            {
+    326              1,//статус iocmd1
+    327              "Вых О-функция 2"
+    328            },
+    329            {
+    330              1,//статус iocmd1
+    331              "Пуск О-функция 3"
+    332            },
+    333            {
+    334              1,//статус iocmd1
+    335              "Вых О-функция 3"
+    336            },
+    337            {
+    338              1,//статус iocmd1
+    339              "Пуск О-функция 4"
+    340            },
+    341            {
+    342              1,//статус iocmd1
+    343              "Вых О-функция 4"
+    344            },
+    345            {
+    346              1,//статус iocmd1
+    347              "Пуск О-функция 5"
+    348            },
+    349            {
+    350              1,//статус iocmd1
+    351              "Вых О-функция 5"
+    352            },
+    353            {
+    354              1,//статус iocmd1
+    355              "Пуск О-функция 6"
+    356            },
+    357            {
+    358              1,//статус iocmd1
+    359              "Вых О-функция 6"
+    360            },
+    361            {
+    362              1,//статус iocmd1
+    363              "Пуск О-функция 7"
+    364            },
+    365            {
+    366              1,//статус iocmd1
+    367              "Вых О-функция 7"
+    368            },
+    369            {
+    370              1,//статус iocmd1
+    371              "Пуск О-функция 8"
+    372            },
+    373            {
+    374              1,//статус iocmd1
+    375              "Вых О-функция 8"
+    376            },
+    377            {
+    378              1,//статус iocmd1
+    379              "Пуск О-функция 9"
+    380            },
+    381            {
+    382              1,//статус iocmd1
+    383              "Вых О-функция 9"
+    384            },
+    385            {
+    386              1,//статус iocmd1
+    387              "Пуск О-функция 10"
+    388            },
+    389            {
+    390              1,//статус iocmd1
+    391              "Вых О-функция 10"
+    392            },
+    393            {
+    394              1,//статус iocmd1
+    395              "Пуск О-функция 11"
+    396            },
+    397            {
+    398              1,//статус iocmd1
+    399              "Вых О-функция 11"
+    400            },
+    401            {
+    402              1,//статус iocmd1
+    403              "Пуск О-функция 12"
+    404            },
+    405            {
+    406              1,//статус iocmd1
+    407              "Вых О-функция 12"
+    408            },
+    409            {
+    410              1,//статус iocmd1
+    411              "Пуск О-функция 13"
+    412            },
+    413            {
+    414              1,//статус iocmd1
+    415              "Вых О-функция 13"
+    416            },
+    417            {
+    418              1,//статус iocmd1
+    419              "Пуск О-функция 14"
+    420            },
+    421            {
+    422              1,//статус iocmd1
+    423              "Вых О-функция 14"
+    424            },
+    425            {
+    426              1,//статус iocmd1
+    427              "Пуск О-функция 15"
+    428            },
+    429            {
+    430              1,//статус iocmd1
+    431              "Вых О-функция 15"
+    432            },
+    433            {
+    434              1,//статус iocmd1
+    435              "Пуск О-функция 16"
+    436            },
+    437            {
+    438              1,//статус iocmd1
+    439              "Вых О-функция 16"
+    440            },
+    441          
+    442            {
+    443              1,//статус iocmd1
+    444              "ВКЛ О-Триггер 1"
+    445            },
+    446            {
+    447              1,//статус iocmd1
+    448              "ОТКЛ О-Триггер 1"
+    449            },
+    450            {
+    451              1,//статус iocmd1
+    452              "Вых О-Триггер 1"
+    453            },
+    454            {
+    455              1,//статус iocmd1
+    456              "ВКЛ О-Триггер 2"
+    457            },
+    458            {
+    459              1,//статус iocmd1
+    460              "ОТКЛ О-Триггер 2"
+    461            },
+    462            {
+    463              1,//статус iocmd1
+    464              "Вых О-Триггер 2"
+    465            },
+    466            {
+    467              1,//статус iocmd1
+    468              "ВКЛ О-Триггер 3"
+    469            },
+    470            {
+    471              1,//статус iocmd1
+    472              "ОТКЛ О-Триггер 3"
+    473            },
+    474            {
+    475              1,//статус iocmd1
+    476              "Вых О-Триггер 3"
+    477            },
+    478            {
+    479              1,//статус iocmd1
+    480              "ВКЛ О-Триггер 4"
+    481            },
+    482            {
+    483              1,//статус iocmd1
+    484              "ОТКЛ О-Триггер 4"
+    485            },
+    486            {
+    487              1,//статус iocmd1
+    488              "Вых О-Триггер 4"
+    489            },
+    490            {
+    491              1,//статус iocmd1
+    492              "ВКЛ О-Триггер 5"
+    493            },
+    494            {
+    495              1,//статус iocmd1
+    496              "ОТКЛ О-Триггер 5"
+    497            },
+    498            {
+    499              1,//статус iocmd1
+    500              "Вых О-Триггер 5"
+    501            },
+    502            {
+    503              1,//статус iocmd1
+    504              "ВКЛ О-Триггер 6"
+    505            },
+    506            {
+    507              1,//статус iocmd1
+    508              "ОТКЛ О-Триггер 6"
+    509            },
+    510            {
+    511              1,//статус iocmd1
+    512              "Вых О-Триггер 6"
+    513            },
+    514            {
+    515              1,//статус iocmd1
+    516              "ВКЛ О-Триггер 7"
+    517            },
+    518            {
+    519              1,//статус iocmd1
+    520              "ОТКЛ О-Триггер 7"
+    521            },
+    522            {
+    523              1,//статус iocmd1
+    524              "Вых О-Триггер 7"
+    525            },
+    526            {
+    527              1,//статус iocmd1
+    528              "ВКЛ О-Триггер 8"
+    529            },
+    530            {
+    531              1,//статус iocmd1
+    532              "ОТКЛ О-Триггер 8"
+    533            },
     534            {
-    535          //критерий терминатора
-    536              if(sub_menu_ust_compOF[i+1+SUBDATA].Line1==NULL)break;
-    537          
-    538              COMPARE_COUNTER
-    539              {
-    540                strcpy((char *)workCntr->twoString, (char *)sub_menu_ust_compOF[i+1+SUBDATA].Line1);
-    541                sprintf(locTxt, "   %d", getUstOffsetMngUSTAVKI(i));
-    542                strcpy((char *)workCntr->twoString + sizeof(WorkVariantChar)/2, locTxt);
-    543                return 1;//сравнить счетчики кадров
-    544              }
-    545            }//for
-    546          
-    547            return 1;
-    548          }//KadrMenuFormat_ust_compOF(void *pstr)
-    549          
-    550          //--------------------------------------------------
-    551          
-    552          void PereinitUprListCompOF(short flg)
-    553          {
-    554          //переиниц
-    555            //инит компонентного контроля
-    556            TxtStreamInit(&CONTROL2_COMP, &KadrMenuFormat_upr_compOF, NULL);//инит control и формир кадра
-    557            if(flg==0)//END
-    558            {
-    559              TxtStreamSetEnd(&CONTROL2_COMP, SIZE_PAGE_VIEW/2);//перейти на END
-    560            }//if
-    561          
-    562            ViewDiskrMenuList();//вывести окно отображения
-    563            ListPStr();//доступ к уставкам
-    564          }//PereinitUstListComp2()
-    565          
-    566          void UprListCompOF()
-    567          {
-    568            SelectorMNGBAZA(MNGUPR_OF);//установка базы уставок
-    569          
-    570            SelectorSUBMENU(sub_menu_upr_compOF);//утановить текущее субменю
-    571          
-    572            SelectorTEXTCONTROL(&CONTROL2_COMP);//текущий control
-    573          
-    574            SelectorFHOME(&PereinitUprListCompOF);//указатель на ф-цию HOME
-    575            InitFHOME(1);//exe ф-цию HOME
-    576          
-    577            LanderUpDown();//wkl Up Down
-    578          }//VidListCompOF()
-    579          
-    580          void UprCompOF()
-    581          {
-    582            SelectorCRRLIGHTLINE();//найти подсвеченную строку текущего текст потока
-    583            PrepareEditMenu(sub_menu_upr_compOF);
-    584            PassWord(EditUprOF);
-    585          
-    586          }//UprCompOF()
-    587          
-    588          void EditUprOF()
-    589          {
-    590          //редактировать уставку упр
-    591            char *nameUpr = (char *)sub_menu_upr_compOF[LIGHTLINEMENU +1+SUBDATA].Line1;
-    592            UpravlRedactor(nameUpr, LIGHTLINEMENU, &selectorUprStrOF);//редактировать уставку управления
-    593          }//EditUprOF()
-    594          
-    595          short  KadrMenuFormat_upr_compOF(void *pstr)
-    596          {
-    597           WorkControl *workCntr = (WorkControl *)pstr;
-    598          //формирователь кадра
-    599            RESET_COUNTER;//сброс счетчиков
-    600            for(int i=0;; i++)
-    601            {
-    602          //критерий терминатора
-    603              char *nameUpr = (char *)sub_menu_upr_compOF[i+1+SUBDATA].Line1;
-    604              if(nameUpr==NULL) break;
-    605          
-    606              COMPARE_COUNTER
-    607              {
-    608                strcpy((char *)workCntr->twoString, nameUpr);
-    609                strcpy((char *)workCntr->twoString + sizeof(WorkVariantChar)/2,
-    610                selectorUprStrOF(i, getCurrentMngUSTAVKI()));
-    611          
-    612                return 1;//сравнить счетчики кадров
-    613              }
-    614            }//for
-    615          
-    616            return 1;
-    617          }//KadrMenuFormat_upr_compOF(WorkControl *workCntr)
-    618          
-    619          char *selectorUprStrOF(short iBit, UNS_32 ustUpr)
-    620          {
-    621            switch(iBit)
-    622            {
-    623          
-    624            default:;
-    625            }//switch
-    626              if(NumBitCheckWord(iBit, &ustUpr)) return bitStringUNI[UNIUPR_OBRAT];
-    627              return bitStringUNI[UNIUPR_PRJAM];
-    628          }//selectorUprStrOF(short ibit, UNS_32 ustUpr)
-    629          
-    630          int initUstOF(char init)
-    631          {
-    632            //инициал уставок
-    633            if (init)
-    634            {
-    635          //OF1
-    636              //таймер паузы
-    637              tmpUSTAVKI[MNGPAUSA_OF1] = 41;
-    638              //таймер работы
-    639              tmpUSTAVKI[MNGWORK_OF1] = 45;
-    640          //OF2
-    641              //таймер паузы
-    642              tmpUSTAVKI[MNGPAUSA_OF2] = 42;
-    643              //таймер работы
-    644              tmpUSTAVKI[MNGWORK_OF2] = 46;
-    645          //OF3
-    646              //таймер паузы
-    647              tmpUSTAVKI[MNGPAUSA_OF3] = 43;
-    648              //таймер работы
-    649              tmpUSTAVKI[MNGWORK_OF3] = 47;
-    650          //OF4
-    651              //таймер паузы
-    652              tmpUSTAVKI[MNGPAUSA_OF4] = 44;
-    653              //таймер работы
-    654              tmpUSTAVKI[MNGWORK_OF4] = 48;
-    655          //OF5
-    656              //таймер паузы
-    657              tmpUSTAVKI[MNGPAUSA_OF5] = 45;
-    658              //таймер работы
-    659              tmpUSTAVKI[MNGWORK_OF5] = 49;
-    660          //OF6
-    661              //таймер паузы
-    662              tmpUSTAVKI[MNGPAUSA_OF6] = 46;
-    663              //таймер работы
-    664              tmpUSTAVKI[MNGWORK_OF6] = 50;
-    665          //OF7
-    666              //таймер паузы
-    667              tmpUSTAVKI[MNGPAUSA_OF7] = 47;
-    668              //таймер работы
-    669              tmpUSTAVKI[MNGWORK_OF7] = 51;
-    670          //OF8
-    671              //таймер паузы
-    672              tmpUSTAVKI[MNGPAUSA_OF8] = 48;
-    673              //таймер работы
-    674              tmpUSTAVKI[MNGWORK_OF8] = 52;
-    675          //OF9
-    676              //таймер паузы
-    677              tmpUSTAVKI[MNGPAUSA_OF9] = 49;
-    678              //таймер работы
-    679              tmpUSTAVKI[MNGWORK_OF9] = 53;
-    680          //OF10
-    681              //таймер паузы
-    682              tmpUSTAVKI[MNGPAUSA_OF10] = 50;
-    683              //таймер работы
-    684              tmpUSTAVKI[MNGWORK_OF10] = 54;
-    685          //OF11
-    686              //таймер паузы
-    687              tmpUSTAVKI[MNGPAUSA_OF11] = 51;
-    688              //таймер работы
-    689              tmpUSTAVKI[MNGWORK_OF11] = 55;
-    690          //OF12
-    691              //таймер паузы
-    692              tmpUSTAVKI[MNGPAUSA_OF12] = 52;
-    693              //таймер работы
-    694              tmpUSTAVKI[MNGWORK_OF12] = 56;
-    695          //OF13
-    696              //таймер паузы
-    697              tmpUSTAVKI[MNGPAUSA_OF13] = 53;
-    698              //таймер работы
-    699              tmpUSTAVKI[MNGWORK_OF13] = 57;
-    700          //OF14
-    701              //таймер паузы
-    702              tmpUSTAVKI[MNGPAUSA_OF14] = 54;
-    703              //таймер работы
-    704              tmpUSTAVKI[MNGWORK_OF14] = 58;
-    705          //OF15
-    706              //таймер паузы
-    707              tmpUSTAVKI[MNGPAUSA_OF15] = 55;
-    708              //таймер работы
-    709              tmpUSTAVKI[MNGWORK_OF15] = 59;
-    710          //OF16
-    711              //таймер паузы
-    712              tmpUSTAVKI[MNGPAUSA_OF16] = 56;
-    713              //таймер работы
-    714              tmpUSTAVKI[MNGWORK_OF16] = 60;
-    715          
-    716          //уставка управления
-    717              tmpUSTAVKI[MNGUPR_OF] = 0;
-    718            }//if
-    719          
-    720            IndexUstSPV += SPVUST_OF_TOTAL;//индекс уставок в супервизоре
-    721            return MNGUST_OF_TOTAL;//к-во уставок в менеджере уставок
-    722          }//initUstOF(short mngUst, char init)
-    723          
-    724          void  prepareUstOF(short idxC)
-    725          {
-    726            //подготовка ENA команд для клона
-    727            if(idxC>=0){
-    728            //копировать ENA из WideENA в ENAcmd
-    729            CopyWideENAToENAcmd(PrepareENACmd(idxC, MNGUPR_OF), ENACMD_OF_TOTAL);
-    730            //подготовка уставок
-    731            short tmpOffsetT    =
-    732              getOffsetTimersCnf(idxC);   //компонент в конфигурации
-    733          
-    734          //OF1
-    735              //таймер паузы
-    736             setTimerPorog(tmpOffsetT+ TIMERP_OF1,
-    737                    codecUstOF(1, MNGPAUSA_OF1, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF1)));
-    738              //таймер работы
-    739             setTimerPorog(tmpOffsetT+ TIMERR_OF1,
-    740                    codecUstOF(1, MNGWORK_OF1, getNativUstMngUSTAVKI(idxC, MNGWORK_OF1)));
-    741          //OF2
-    742              //таймер паузы
-    743             setTimerPorog(tmpOffsetT+ TIMERP_OF2,
-    744                    codecUstOF(1, MNGPAUSA_OF2, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF2)));
-    745              //таймер работы
-    746             setTimerPorog(tmpOffsetT+ TIMERR_OF2,
-    747                    codecUstOF(1, MNGWORK_OF2, getNativUstMngUSTAVKI(idxC, MNGWORK_OF2)));
-    748          //OF3
-    749              //таймер паузы
-    750             setTimerPorog(tmpOffsetT+ TIMERP_OF3,
-    751                    codecUstOF(1, MNGPAUSA_OF3, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF3)));
-    752              //таймер работы
-    753             setTimerPorog(tmpOffsetT+ TIMERR_OF3,
-    754                    codecUstOF(1, MNGWORK_OF3, getNativUstMngUSTAVKI(idxC, MNGWORK_OF3)));
-    755          //OF4
-    756              //таймер паузы
-    757             setTimerPorog(tmpOffsetT+ TIMERP_OF4,
-    758                    codecUstOF(1, MNGPAUSA_OF4, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF4)));
-    759              //таймер работы
-    760             setTimerPorog(tmpOffsetT+ TIMERR_OF4,
-    761                    codecUstOF(1, MNGWORK_OF4, getNativUstMngUSTAVKI(idxC, MNGWORK_OF4)));
-    762          //OF5
-    763              //таймер паузы
-    764             setTimerPorog(tmpOffsetT+ TIMERP_OF5,
-    765                    codecUstOF(1, MNGPAUSA_OF5, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF5)));
-    766              //таймер работы
-    767             setTimerPorog(tmpOffsetT+ TIMERR_OF5,
-    768                    codecUstOF(1, MNGWORK_OF5, getNativUstMngUSTAVKI(idxC, MNGWORK_OF5)));
-    769          //OF6
-    770              //таймер паузы
-    771             setTimerPorog(tmpOffsetT+ TIMERP_OF6,
-    772                    codecUstOF(1, MNGPAUSA_OF6, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF6)));
-    773              //таймер работы
-    774             setTimerPorog(tmpOffsetT+ TIMERR_OF6,
-    775                    codecUstOF(1, MNGWORK_OF6, getNativUstMngUSTAVKI(idxC, MNGWORK_OF6)));
-    776          //OF7
+    535              1,//статус iocmd1
+    536              "Вых О-Триггер 8"
+    537            },
+    538          };
+    539          
+    540          LineMenuItem sub_menu_comp_OF[8] =
+    541          {
+    542            { "Опред функции", NULL},//title
+    543            { &CONTROL1_COMP, &sub_menu_cnf, typeMenuSub},//control_item, parent
+    544            { "Таймера ОФ",    (void *)&UstListCompOF, typeMenuProg},
+    545            { "Управление ОФ", (void *)&UprListCompOF, typeMenuProg},
+    546            { NULL, NULL}
+    547          };
+    548          
+    549          LineMenuItem sub_menu_ust_compOF[] =
+    550          {
+    551            { "Таймера Опред функций", NULL},//title
+    552            { &CONTROL2_COMP, sub_menu_comp_OF, typeMenuList},//control_item, parent
+    553          /*
+    554            { "Таймер паузы ОФ1",  (void *)&UstCompOF, typeMenuProg},
+    555            { "Таймер работы ОФ1", (void *)&UstCompOF, typeMenuProg},
+    556            { "Таймер паузы ОФ2",  (void *)&UstCompOF, typeMenuProg},
+    557            { "Таймер работы ОФ2", (void *)&UstCompOF, typeMenuProg},
+    558            { "Таймер паузы ОФ3",  (void *)&UstCompOF, typeMenuProg},
+    559            { "Таймер работы ОФ3", (void *)&UstCompOF, typeMenuProg},
+    560            { "Таймер паузы ОФ4",  (void *)&UstCompOF, typeMenuProg},
+    561            { "Таймер работы ОФ4", (void *)&UstCompOF, typeMenuProg},
+    562            { "Таймер паузы ОФ5",  (void *)&UstCompOF, typeMenuProg},
+    563            { "Таймер работы ОФ5", (void *)&UstCompOF, typeMenuProg},
+    564            { "Таймер паузы ОФ6",  (void *)&UstCompOF, typeMenuProg},
+    565            { "Таймер работы ОФ6", (void *)&UstCompOF, typeMenuProg},
+    566            { "Таймер паузы ОФ7",  (void *)&UstCompOF, typeMenuProg},
+    567            { "Таймер работы ОФ7", (void *)&UstCompOF, typeMenuProg},
+    568            { "Таймер паузы ОФ8",  (void *)&UstCompOF, typeMenuProg},
+    569            { "Таймер работы ОФ8", (void *)&UstCompOF, typeMenuProg},
+    570            { "Таймер паузы ОФ9",  (void *)&UstCompOF, typeMenuProg},
+    571            { "Таймер работы ОФ9", (void *)&UstCompOF, typeMenuProg},
+    572            { "Таймер паузы ОФ10",  (void *)&UstCompOF, typeMenuProg},
+    573            { "Таймер работы ОФ10", (void *)&UstCompOF, typeMenuProg},
+    574            { "Таймер паузы ОФ11",  (void *)&UstCompOF, typeMenuProg},
+    575            { "Таймер работы ОФ11", (void *)&UstCompOF, typeMenuProg},
+    576            { "Таймер паузы ОФ12",  (void *)&UstCompOF, typeMenuProg},
+    577            { "Таймер работы ОФ12", (void *)&UstCompOF, typeMenuProg},
+    578            { "Таймер паузы ОФ13",  (void *)&UstCompOF, typeMenuProg},
+    579            { "Таймер работы ОФ13", (void *)&UstCompOF, typeMenuProg},
+    580            { "Таймер паузы ОФ14",  (void *)&UstCompOF, typeMenuProg},
+    581            { "Таймер работы ОФ14", (void *)&UstCompOF, typeMenuProg},
+    582            { "Таймер паузы ОФ15",  (void *)&UstCompOF, typeMenuProg},
+    583            { "Таймер работы ОФ15", (void *)&UstCompOF, typeMenuProg},
+    584            { "Таймер паузы ОФ16",  (void *)&UstCompOF, typeMenuProg},
+    585            { "Таймер работы ОФ16", (void *)&UstCompOF, typeMenuProg},
+    586          */
+    587            { NULL, NULL}
+    588          
+    589          };
+    590          
+    591          LineMenuItem sub_menu_upr_compOF[] =
+    592          {
+    593            { "Управл Опред функций", NULL},//title
+    594            { &CONTROL2_COMP, sub_menu_comp_OF, typeMenuList},//control_item, parent
+    595          /*
+    596            { "Тип ОФ1",  (void *)&UprCompOF, typeMenuProg},
+    597            { "Тип ОФ2",  (void *)&UprCompOF, typeMenuProg},
+    598            { "Тип ОФ3",  (void *)&UprCompOF, typeMenuProg},
+    599            { "Тип ОФ4",  (void *)&UprCompOF, typeMenuProg},
+    600            { "Тип ОФ5",  (void *)&UprCompOF, typeMenuProg},
+    601            { "Тип ОФ6",  (void *)&UprCompOF, typeMenuProg},
+    602            { "Тип ОФ7",  (void *)&UprCompOF, typeMenuProg},
+    603            { "Тип ОФ8",  (void *)&UprCompOF, typeMenuProg},
+    604            { "Тип ОФ9",  (void *)&UprCompOF, typeMenuProg},
+    605            { "Тип ОФ10",  (void *)&UprCompOF, typeMenuProg},
+    606            { "Тип ОФ11",  (void *)&UprCompOF, typeMenuProg},
+    607            { "Тип ОФ12",  (void *)&UprCompOF, typeMenuProg},
+    608            { "Тип ОФ13",  (void *)&UprCompOF, typeMenuProg},
+    609            { "Тип ОФ14",  (void *)&UprCompOF, typeMenuProg},
+    610            { "Тип ОФ15",  (void *)&UprCompOF, typeMenuProg},
+    611            { "Тип ОФ16",  (void *)&UprCompOF, typeMenuProg},
+    612          */
+    613            { NULL, NULL}
+    614          
+    615          };
+    616          
+    617          void PereinitUstListCompOF(short flg)
+    618          {
+    619          //переиниц
+    620            //инит компонентного контроля
+    621            TxtStreamInit(&CONTROL2_COMP, &KadrMenuFormat_ust_compOF, NULL);//инит control и формир кадра
+    622            if(flg==0)//END
+    623            {
+    624              TxtStreamSetEnd(&CONTROL2_COMP, SIZE_PAGE_VIEW/2);//перейти на END
+    625            }//if
+    626          
+    627            ViewDiskrMenuList();//вывести окно отображения
+    628            ListPStr();//доступ к уставкам
+    629          }//PereinitUstListComp2()
+    630          
+    631          void UstListCompOF()
+    632          {
+    633            SelectorMNGBAZA(0);//установка базу уставок
+    634          
+    635            SelectorSUBMENU(sub_menu_ust_compOF);//уcтановить текущее субменю
+    636          
+    637            SelectorTEXTCONTROL(&CONTROL2_COMP);//текущий control
+    638          
+    639            SelectorFHOME(&PereinitUstListCompOF);//указатель на ф-цию HOME
+    640            InitFHOME(1);//exe ф-цию HOME
+    641          
+    642            LanderUpDown();//wkl Up Down
+    643          }//UstListCompOF()
+    644          
+    645          void UstCompOF()
+    646          {
+    647            SelectorCRRLIGHTLINE();//найти подсвеченную строку текущего текст потока
+    648            PrepareEditMenu(sub_menu_ust_compOF);
+    649            PassWord(EditUstOF);
+    650          }//VidCompOF()
+    651          
+    652          void EditUstOF()
+    653          {
+    654          //редактировать уставку
+    655            SystemEditUst(sub_menu_ust_compOF);//[LIGHTLINEMENU +1+SUBDATA].Line1, LIGHTLINEMENU);
+    656          }//UstCompOF()
+    657          
+    658          short  KadrMenuFormat_ust_compOF(void *pstr)
+    659          {
+    660           WorkControl *workCntr = (WorkControl *)pstr;
+    661          //формирователь кадра
+    662            char locTxt[50];
+    663            RESET_COUNTER;//сброс счетчиков
+    664            for(int i=0;; i++)
+    665            {
+    666          //критерий терминатора
+    667              if(sub_menu_ust_compOF[i+1+SUBDATA].Line1==NULL)break;
+    668          
+    669              COMPARE_COUNTER
+    670              {
+    671                strcpy((char *)workCntr->twoString, (char *)sub_menu_ust_compOF[i+1+SUBDATA].Line1);
+    672                sprintf(locTxt, "   %d", getUstOffsetMngUSTAVKI(i));
+    673                strcpy((char *)workCntr->twoString + sizeof(WorkVariantChar)/2, locTxt);
+    674                return 1;//сравнить счетчики кадров
+    675              }
+    676            }//for
+    677          
+    678            return 1;
+    679          }//KadrMenuFormat_ust_compOF(void *pstr)
+    680          
+    681          //--------------------------------------------------
+    682          
+    683          void PereinitUprListCompOF(short flg)
+    684          {
+    685          //переиниц
+    686            //инит компонентного контроля
+    687            TxtStreamInit(&CONTROL2_COMP, &KadrMenuFormat_upr_compOF, NULL);//инит control и формир кадра
+    688            if(flg==0)//END
+    689            {
+    690              TxtStreamSetEnd(&CONTROL2_COMP, SIZE_PAGE_VIEW/2);//перейти на END
+    691            }//if
+    692          
+    693            ViewDiskrMenuList();//вывести окно отображения
+    694            ListPStr();//доступ к уставкам
+    695          }//PereinitUstListComp2()
+    696          
+    697          void UprListCompOF()
+    698          {
+    699            SelectorMNGBAZA(MNGUPR_OF);//установка базы уставок
+    700          
+    701            SelectorSUBMENU(sub_menu_upr_compOF);//утановить текущее субменю
+    702          
+    703            SelectorTEXTCONTROL(&CONTROL2_COMP);//текущий control
+    704          
+    705            SelectorFHOME(&PereinitUprListCompOF);//указатель на ф-цию HOME
+    706            InitFHOME(1);//exe ф-цию HOME
+    707          
+    708            LanderUpDown();//wkl Up Down
+    709          }//VidListCompOF()
+    710          
+    711          void UprCompOF()
+    712          {
+    713            SelectorCRRLIGHTLINE();//найти подсвеченную строку текущего текст потока
+    714            PrepareEditMenu(sub_menu_upr_compOF);
+    715            PassWord(EditUprOF);
+    716          
+    717          }//UprCompOF()
+    718          
+    719          void EditUprOF()
+    720          {
+    721          //редактировать уставку упр
+    722            char *nameUpr = (char *)sub_menu_upr_compOF[LIGHTLINEMENU +1+SUBDATA].Line1;
+    723            UpravlRedactor(nameUpr, LIGHTLINEMENU, &selectorUprStrOF);//редактировать уставку управления
+    724          }//EditUprOF()
+    725          
+    726          short  KadrMenuFormat_upr_compOF(void *pstr)
+    727          {
+    728           WorkControl *workCntr = (WorkControl *)pstr;
+    729          //формирователь кадра
+    730            RESET_COUNTER;//сброс счетчиков
+    731            for(int i=0;; i++)
+    732            {
+    733          //критерий терминатора
+    734              char *nameUpr = (char *)sub_menu_upr_compOF[i+1+SUBDATA].Line1;
+    735              if(nameUpr==NULL) break;
+    736          
+    737              COMPARE_COUNTER
+    738              {
+    739                strcpy((char *)workCntr->twoString, nameUpr);
+    740                strcpy((char *)workCntr->twoString + sizeof(WorkVariantChar)/2,
+    741                selectorUprStrOF(i, getCurrentMngUSTAVKI()));
+    742          
+    743                return 1;//сравнить счетчики кадров
+    744              }
+    745            }//for
+    746          
+    747            return 1;
+    748          }//KadrMenuFormat_upr_compOF(WorkControl *workCntr)
+    749          
+    750          char *selectorUprStrOF(short iBit, UNS_32 ustUpr)
+    751          {
+    752            switch(iBit)
+    753            {
+    754          
+    755            default:;
+    756            }//switch
+    757              if(NumBitCheckWord(iBit, &ustUpr)) return bitStringUNI[UNIUPR_OBRAT];
+    758              return bitStringUNI[UNIUPR_PRJAM];
+    759          }//selectorUprStrOF(short ibit, UNS_32 ustUpr)
+    760          
+    761          int initUstOF(char init)
+    762          {
+    763            //инициал уставок
+    764            if (init)
+    765            {
+    766          //OF1
+    767              //таймер паузы
+    768              tmpUSTAVKI[MNGPAUSA_OF1] = 41;
+    769              //таймер работы
+    770              tmpUSTAVKI[MNGWORK_OF1] = 45;
+    771          //OF2
+    772              //таймер паузы
+    773              tmpUSTAVKI[MNGPAUSA_OF2] = 42;
+    774              //таймер работы
+    775              tmpUSTAVKI[MNGWORK_OF2] = 46;
+    776          //OF3
     777              //таймер паузы
-    778             setTimerPorog(tmpOffsetT+ TIMERP_OF7,
-    779                    codecUstOF(1, MNGPAUSA_OF7, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF7)));
-    780              //таймер работы
-    781             setTimerPorog(tmpOffsetT+ TIMERR_OF7,
-    782                    codecUstOF(1, MNGWORK_OF7, getNativUstMngUSTAVKI(idxC, MNGWORK_OF7)));
-    783          //OF8
-    784              //таймер паузы
-    785             setTimerPorog(tmpOffsetT+ TIMERP_OF8,
-    786                    codecUstOF(1, MNGPAUSA_OF8, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF8)));
-    787              //таймер работы
-    788             setTimerPorog(tmpOffsetT+ TIMERR_OF8,
-    789                    codecUstOF(1, MNGWORK_OF8, getNativUstMngUSTAVKI(idxC, MNGWORK_OF8)));
-    790          //OF9
-    791              //таймер паузы
-    792             setTimerPorog(tmpOffsetT+ TIMERP_OF9,
-    793                    codecUstOF(1, MNGPAUSA_OF9, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF9)));
+    778              tmpUSTAVKI[MNGPAUSA_OF3] = 43;
+    779              //таймер работы
+    780              tmpUSTAVKI[MNGWORK_OF3] = 47;
+    781          //OF4
+    782              //таймер паузы
+    783              tmpUSTAVKI[MNGPAUSA_OF4] = 44;
+    784              //таймер работы
+    785              tmpUSTAVKI[MNGWORK_OF4] = 48;
+    786          //OF5
+    787              //таймер паузы
+    788              tmpUSTAVKI[MNGPAUSA_OF5] = 45;
+    789              //таймер работы
+    790              tmpUSTAVKI[MNGWORK_OF5] = 49;
+    791          //OF6
+    792              //таймер паузы
+    793              tmpUSTAVKI[MNGPAUSA_OF6] = 46;
     794              //таймер работы
-    795             setTimerPorog(tmpOffsetT+ TIMERR_OF9,
-    796                    codecUstOF(1, MNGWORK_OF9, getNativUstMngUSTAVKI(idxC, MNGWORK_OF9)));
-    797          //OF10
-    798              //таймер паузы
-    799             setTimerPorog(tmpOffsetT+ TIMERP_OF10,
-    800                    codecUstOF(1, MNGPAUSA_OF10, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF10)));
-    801              //таймер работы
-    802             setTimerPorog(tmpOffsetT+ TIMERR_OF10,
-    803                    codecUstOF(1, MNGWORK_OF10, getNativUstMngUSTAVKI(idxC, MNGWORK_OF10)));
-    804          //OF11
-    805              //таймер паузы
-    806             setTimerPorog(tmpOffsetT+ TIMERP_OF11,
-    807                    codecUstOF(1, MNGPAUSA_OF11, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF11)));
-    808              //таймер работы
-    809             setTimerPorog(tmpOffsetT+ TIMERR_OF11,
-    810                    codecUstOF(1, MNGWORK_OF11, getNativUstMngUSTAVKI(idxC, MNGWORK_OF11)));
-    811          //OF12
+    795              tmpUSTAVKI[MNGWORK_OF6] = 50;
+    796          //OF7
+    797              //таймер паузы
+    798              tmpUSTAVKI[MNGPAUSA_OF7] = 47;
+    799              //таймер работы
+    800              tmpUSTAVKI[MNGWORK_OF7] = 51;
+    801          //OF8
+    802              //таймер паузы
+    803              tmpUSTAVKI[MNGPAUSA_OF8] = 48;
+    804              //таймер работы
+    805              tmpUSTAVKI[MNGWORK_OF8] = 52;
+    806          //OF9
+    807              //таймер паузы
+    808              tmpUSTAVKI[MNGPAUSA_OF9] = 49;
+    809              //таймер работы
+    810              tmpUSTAVKI[MNGWORK_OF9] = 53;
+    811          //OF10
     812              //таймер паузы
-    813             setTimerPorog(tmpOffsetT+ TIMERP_OF12,
-    814                    codecUstOF(1, MNGPAUSA_OF12, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF12)));
-    815              //таймер работы
-    816             setTimerPorog(tmpOffsetT+ TIMERR_OF12,
-    817                    codecUstOF(1, MNGWORK_OF12, getNativUstMngUSTAVKI(idxC, MNGWORK_OF12)));
-    818          //OF13
-    819              //таймер паузы
-    820             setTimerPorog(tmpOffsetT+ TIMERP_OF13,
-    821                    codecUstOF(1, MNGPAUSA_OF13, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF13)));
-    822              //таймер работы
-    823             setTimerPorog(tmpOffsetT+ TIMERR_OF13,
-    824                    codecUstOF(1, MNGWORK_OF13, getNativUstMngUSTAVKI(idxC, MNGWORK_OF13)));
-    825          //OF14
-    826              //таймер паузы
-    827             setTimerPorog(tmpOffsetT+ TIMERP_OF14,
-    828                    codecUstOF(1, MNGPAUSA_OF14, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF14)));
+    813              tmpUSTAVKI[MNGPAUSA_OF10] = 50;
+    814              //таймер работы
+    815              tmpUSTAVKI[MNGWORK_OF10] = 54;
+    816          //OF11
+    817              //таймер паузы
+    818              tmpUSTAVKI[MNGPAUSA_OF11] = 51;
+    819              //таймер работы
+    820              tmpUSTAVKI[MNGWORK_OF11] = 55;
+    821          //OF12
+    822              //таймер паузы
+    823              tmpUSTAVKI[MNGPAUSA_OF12] = 52;
+    824              //таймер работы
+    825              tmpUSTAVKI[MNGWORK_OF12] = 56;
+    826          //OF13
+    827              //таймер паузы
+    828              tmpUSTAVKI[MNGPAUSA_OF13] = 53;
     829              //таймер работы
-    830             setTimerPorog(tmpOffsetT+ TIMERR_OF14,
-    831                    codecUstOF(1, MNGWORK_OF14, getNativUstMngUSTAVKI(idxC, MNGWORK_OF14)));
-    832          //OF15
-    833              //таймер паузы
-    834             setTimerPorog(tmpOffsetT+ TIMERP_OF15,
-    835                    codecUstOF(1, MNGPAUSA_OF15, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF15)));
-    836              //таймер работы
-    837             setTimerPorog(tmpOffsetT+ TIMERR_OF15,
-    838                    codecUstOF(1, MNGWORK_OF15, getNativUstMngUSTAVKI(idxC, MNGWORK_OF15)));
-    839          //OF16
-    840              //таймер паузы
-    841             setTimerPorog(tmpOffsetT+ TIMERP_OF16,
-    842                    codecUstOF(1, MNGPAUSA_OF16, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF16)));
-    843              //таймер работы
-    844             setTimerPorog(tmpOffsetT+ TIMERR_OF16,
-    845                    codecUstOF(1, MNGWORK_OF16, getNativUstMngUSTAVKI(idxC, MNGWORK_OF16)));
-    846            }//if
-    847            else{
-    848            //подготовка ENA команд для клона РЛ
-    849            //копировать ENA из WideENA в ENAcmd
-    850            CopyWideENAToENAcmd_WL(PrepareENACmd(idxC, MNGUPR_OF), ENACMD_OF_TOTAL);
-    851            //подготовка уставок
-    852            short tmpOffsetT    =
-    853              getOffsetTimersCnf_WL(idxC);   //компонент в конфигурации
+    830              tmpUSTAVKI[MNGWORK_OF13] = 57;
+    831          //OF14
+    832              //таймер паузы
+    833              tmpUSTAVKI[MNGPAUSA_OF14] = 54;
+    834              //таймер работы
+    835              tmpUSTAVKI[MNGWORK_OF14] = 58;
+    836          //OF15
+    837              //таймер паузы
+    838              tmpUSTAVKI[MNGPAUSA_OF15] = 55;
+    839              //таймер работы
+    840              tmpUSTAVKI[MNGWORK_OF15] = 59;
+    841          //OF16
+    842              //таймер паузы
+    843              tmpUSTAVKI[MNGPAUSA_OF16] = 56;
+    844              //таймер работы
+    845              tmpUSTAVKI[MNGWORK_OF16] = 60;
+    846          
+    847          //уставка управления
+    848              tmpUSTAVKI[MNGUPR_OF] = 0;
+    849            }//if
+    850          
+    851            IndexUstSPV += SPVUST_OF_TOTAL;//индекс уставок в супервизоре
+    852            return MNGUST_OF_TOTAL;//к-во уставок в менеджере уставок
+    853          }//initUstOF(short mngUst, char init)
     854          
-    855          //OF1
-    856              //таймер паузы
-    857             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF1,
-    858                    codecUstOF(1, MNGPAUSA_OF1, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF1)));
-    859              //таймер работы
-    860             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF1,
-    861                    codecUstOF(1, MNGWORK_OF1, getNativUstMngUSTAVKI(idxC, MNGWORK_OF1)));
-    862          //OF2
-    863              //таймер паузы
-    864             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF2,
-    865                    codecUstOF(1, MNGPAUSA_OF2, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF2)));
-    866              //таймер работы
-    867             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF2,
-    868                    codecUstOF(1, MNGWORK_OF2, getNativUstMngUSTAVKI(idxC, MNGWORK_OF2)));
-    869          //OF3
-    870              //таймер паузы
-    871             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF3,
-    872                    codecUstOF(1, MNGPAUSA_OF3, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF3)));
-    873              //таймер работы
-    874             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF3,
-    875                    codecUstOF(1, MNGWORK_OF3, getNativUstMngUSTAVKI(idxC, MNGWORK_OF3)));
-    876          //OF4
-    877              //таймер паузы
-    878             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF4,
-    879                    codecUstOF(1, MNGPAUSA_OF4, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF4)));
-    880              //таймер работы
-    881             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF4,
-    882                    codecUstOF(1, MNGWORK_OF4, getNativUstMngUSTAVKI(idxC, MNGWORK_OF4)));
-    883          //OF5
-    884              //таймер паузы
-    885             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF5,
-    886                    codecUstOF(1, MNGPAUSA_OF5, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF5)));
-    887              //таймер работы
-    888             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF5,
-    889                    codecUstOF(1, MNGWORK_OF5, getNativUstMngUSTAVKI(idxC, MNGWORK_OF5)));
-    890          //OF6
-    891              //таймер паузы
-    892             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF6,
-    893                    codecUstOF(1, MNGPAUSA_OF6, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF6)));
-    894              //таймер работы
-    895             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF6,
-    896                    codecUstOF(1, MNGWORK_OF6, getNativUstMngUSTAVKI(idxC, MNGWORK_OF6)));
-    897          //OF7
-    898              //таймер паузы
-    899             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF7,
-    900                    codecUstOF(1, MNGPAUSA_OF7, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF7)));
-    901              //таймер работы
-    902             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF7,
-    903                    codecUstOF(1, MNGWORK_OF7, getNativUstMngUSTAVKI(idxC, MNGWORK_OF7)));
-    904          //OF8
-    905              //таймер паузы
-    906             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF8,
-    907                    codecUstOF(1, MNGPAUSA_OF8, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF8)));
-    908              //таймер работы
-    909             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF8,
-    910                    codecUstOF(1, MNGWORK_OF8, getNativUstMngUSTAVKI(idxC, MNGWORK_OF8)));
-    911          //OF9
-    912              //таймер паузы
-    913             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF9,
-    914                    codecUstOF(1, MNGPAUSA_OF9, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF9)));
-    915              //таймер работы
-    916             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF9,
-    917                    codecUstOF(1, MNGWORK_OF9, getNativUstMngUSTAVKI(idxC, MNGWORK_OF9)));
-    918          //OF10
-    919              //таймер паузы
-    920             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF10,
-    921                    codecUstOF(1, MNGPAUSA_OF10, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF10)));
-    922              //таймер работы
-    923             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF10,
-    924                    codecUstOF(1, MNGWORK_OF10, getNativUstMngUSTAVKI(idxC, MNGWORK_OF10)));
-    925          //OF11
-    926              //таймер паузы
-    927             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF11,
-    928                    codecUstOF(1, MNGPAUSA_OF11, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF11)));
-    929              //таймер работы
-    930             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF11,
-    931                    codecUstOF(1, MNGWORK_OF11, getNativUstMngUSTAVKI(idxC, MNGWORK_OF11)));
-    932          //OF12
-    933              //таймер паузы
-    934             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF12,
-    935                    codecUstOF(1, MNGPAUSA_OF12, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF12)));
-    936              //таймер работы
-    937             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF12,
-    938                    codecUstOF(1, MNGWORK_OF12, getNativUstMngUSTAVKI(idxC, MNGWORK_OF12)));
-    939          //OF13
-    940              //таймер паузы
-    941             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF13,
-    942                    codecUstOF(1, MNGPAUSA_OF13, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF13)));
-    943              //таймер работы
-    944             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF13,
-    945                    codecUstOF(1, MNGWORK_OF13, getNativUstMngUSTAVKI(idxC, MNGWORK_OF13)));
-    946          //OF14
-    947              //таймер паузы
-    948             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF14,
-    949                    codecUstOF(1, MNGPAUSA_OF14, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF14)));
-    950              //таймер работы
-    951             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF14,
-    952                    codecUstOF(1, MNGWORK_OF14, getNativUstMngUSTAVKI(idxC, MNGWORK_OF14)));
-    953          //OF15
-    954              //таймер паузы
-    955             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF15,
-    956                    codecUstOF(1, MNGPAUSA_OF15, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF15)));
-    957              //таймер работы
-    958             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF15,
-    959                    codecUstOF(1, MNGWORK_OF15, getNativUstMngUSTAVKI(idxC, MNGWORK_OF15)));
-    960          //OF16
-    961              //таймер паузы
-    962             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF16,
-    963                    codecUstOF(1, MNGPAUSA_OF16, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF16)));
-    964              //таймер работы
-    965             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF16,
-    966                    codecUstOF(1, MNGWORK_OF16, getNativUstMngUSTAVKI(idxC, MNGWORK_OF16)));
-    967             }//else WL
-    968          }//prepareUstMTZ2(short idxC)
-    969          
-    970          int initIOCmd_OF()
-    971          {
-    972            //инициал IO команд
-    973            offsetIOCmdOF_loc = IndexIO;//смещение для IO OF
-    974            return commonInitIOCmd(IOCMD_OF_TOTAL);
-    975          }
-    976          
-    977          int initTLCmd_OF()
-    978          {
-    979            //инициал TL команд
-    980            return commonInitTLCmd(TLCMD_OF_TOTAL);
-    981          }//initTLCmd_OF()
-    982          
-    983          int initENACmd_OF()
-    984          {
-    985            //инициал ENA команд
-    986            return commonInitENACmd(ENACMD_OF_TOTAL);
-    987          }//initENACmd_OF()
-    988          
-    989          void initTimersOF(short idxC)
-    990          {
-    991            //запрос и инициал таймеров
-    992            if(idxC>=0)
-    993             commonInitTimers(TIMERS_OF_TOTAL);
-    994            else {
-    995             commonInitTimers_WL(TIMERS_OF_TOTAL);
-    996             timerEnableWL = 1;//разрешение работы таймеров РЛ
-    997                 }
-    998          }//initTimersOF()
-    999          
-   1000          int codecUstOF(char codec, short offset, int ust)
-   1001          //codec=0-кодировать
-   1002          //codec=1-раскодировать
-   1003          {
-   1004            //кодировать-раскодировать уставку
-   1005            if(codec) return ust*1;
-   1006            return ust/1;
-   1007          }//codecUstOF(char *buf, short offset, int ust)
-   1008          
-   1009          int isDISactiv_OF(int idxC)
-   1010          {
-   1011           //активность Регистратора ДИС
-   1012            return 0;//нет активности
-   1013          }//isDISactiv_OF(int idxC)
-   1014          
-   1015          char copyOFToRepozitar(char packet)
-   1016          {
-   1017            memset(&rpzcomponent_obj, 0, sizeof(COMPONENT_OBJ));//стереть старое
-   1018          //копировать компонент в репозитарий
-   1019            rpzcomponent_obj.componentEnable = 1;//разрешение компонента
-   1020            rpzcomponent_obj.kodC   = KOD_COMPONENT;         //код компонента
-   1021            rpzcomponent_obj.packet = 0;    //номер пакетного компонента
-   1022            rpzcomponent_obj.permanent = 0; //перманентный компонент
-   1023          
-   1024            strcpy(rpzcomponent_obj.nameComponent,  "ОФ");       //имя компонента
-   1025            rpzcomponent_obj.sub_menu_component =  sub_menu_comp_OF;//меню компонента
-   1026          
-   1027            rpzcomponent_obj.cntClon    = 5;   //max к-во клонов
-   1028          
-   1029            rpzcomponent_obj.initUstMng    = initUstOF;    //инициал уставок
-   1030            rpzcomponent_obj.prepareUstSpv = prepareUstOF;//подготовка уставок
-   1031            rpzcomponent_obj.initIOCmd     = initIOCmd_OF;      //инициал IO команд
-   1032            rpzcomponent_obj.initTLCmd     = initTLCmd_OF;      //инициал TL команд
-   1033            rpzcomponent_obj.initENACmd    = initENACmd_OF;     //инициал ENA команд
-   1034            rpzcomponent_obj.bo_bvCmd       = NULL; //настройка БО БВ команд
-   1035            rpzcomponent_obj.isDISactiv     = isDISactiv_OF; //активность Регистратора ДИС
-   1036            rpzcomponent_obj.setBOBVtimer   = NULL; //инициал таймеров БО БВ
-   1037          
-   1038            rpzcomponent_obj.nameStatusIO = ionsOF;          //имена и статус команд IO
-   1039            rpzcomponent_obj.initTimers   = initTimersOF;    //запрос и инициал таймеров
-   1040            rpzcomponent_obj.logic        = logicOF;         //логика компонента
-   1041          
-   1042            rpzcomponent_obj.codecUst = codecUstOF;   //кодировать-раскодировать уставку
-   1043          
-   1044            return 0;//не пакетная регистрация
-   1045          }//
-   1046          
-   1047          #endif // _HIDE_COMPONENT
-   1048          
+    855          void  prepareUstOF(short idxC)
+    856          {
+    857            //подготовка ENA команд для клона
+    858            if(idxC>=0){
+    859            //копировать ENA из WideENA в ENAcmd
+    860            CopyWideENAToENAcmd(PrepareENACmd(idxC, MNGUPR_OF), ENACMD_OF_TOTAL);
+    861            //подготовка уставок
+    862            short tmpOffsetT    =
+    863              getOffsetTimersCnf(idxC);   //компонент в конфигурации
+    864          
+    865          //OF1
+    866              //таймер паузы
+    867             setTimerPorog(tmpOffsetT+ TIMERP_OF1,
+    868                    codecUstOF(1, MNGPAUSA_OF1, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF1)));
+    869              //таймер работы
+    870             setTimerPorog(tmpOffsetT+ TIMERR_OF1,
+    871                    codecUstOF(1, MNGWORK_OF1, getNativUstMngUSTAVKI(idxC, MNGWORK_OF1)));
+    872          //OF2
+    873              //таймер паузы
+    874             setTimerPorog(tmpOffsetT+ TIMERP_OF2,
+    875                    codecUstOF(1, MNGPAUSA_OF2, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF2)));
+    876              //таймер работы
+    877             setTimerPorog(tmpOffsetT+ TIMERR_OF2,
+    878                    codecUstOF(1, MNGWORK_OF2, getNativUstMngUSTAVKI(idxC, MNGWORK_OF2)));
+    879          //OF3
+    880              //таймер паузы
+    881             setTimerPorog(tmpOffsetT+ TIMERP_OF3,
+    882                    codecUstOF(1, MNGPAUSA_OF3, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF3)));
+    883              //таймер работы
+    884             setTimerPorog(tmpOffsetT+ TIMERR_OF3,
+    885                    codecUstOF(1, MNGWORK_OF3, getNativUstMngUSTAVKI(idxC, MNGWORK_OF3)));
+    886          //OF4
+    887              //таймер паузы
+    888             setTimerPorog(tmpOffsetT+ TIMERP_OF4,
+    889                    codecUstOF(1, MNGPAUSA_OF4, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF4)));
+    890              //таймер работы
+    891             setTimerPorog(tmpOffsetT+ TIMERR_OF4,
+    892                    codecUstOF(1, MNGWORK_OF4, getNativUstMngUSTAVKI(idxC, MNGWORK_OF4)));
+    893          //OF5
+    894              //таймер паузы
+    895             setTimerPorog(tmpOffsetT+ TIMERP_OF5,
+    896                    codecUstOF(1, MNGPAUSA_OF5, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF5)));
+    897              //таймер работы
+    898             setTimerPorog(tmpOffsetT+ TIMERR_OF5,
+    899                    codecUstOF(1, MNGWORK_OF5, getNativUstMngUSTAVKI(idxC, MNGWORK_OF5)));
+    900          //OF6
+    901              //таймер паузы
+    902             setTimerPorog(tmpOffsetT+ TIMERP_OF6,
+    903                    codecUstOF(1, MNGPAUSA_OF6, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF6)));
+    904              //таймер работы
+    905             setTimerPorog(tmpOffsetT+ TIMERR_OF6,
+    906                    codecUstOF(1, MNGWORK_OF6, getNativUstMngUSTAVKI(idxC, MNGWORK_OF6)));
+    907          //OF7
+    908              //таймер паузы
+    909             setTimerPorog(tmpOffsetT+ TIMERP_OF7,
+    910                    codecUstOF(1, MNGPAUSA_OF7, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF7)));
+    911              //таймер работы
+    912             setTimerPorog(tmpOffsetT+ TIMERR_OF7,
+    913                    codecUstOF(1, MNGWORK_OF7, getNativUstMngUSTAVKI(idxC, MNGWORK_OF7)));
+    914          //OF8
+    915              //таймер паузы
+    916             setTimerPorog(tmpOffsetT+ TIMERP_OF8,
+    917                    codecUstOF(1, MNGPAUSA_OF8, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF8)));
+    918              //таймер работы
+    919             setTimerPorog(tmpOffsetT+ TIMERR_OF8,
+    920                    codecUstOF(1, MNGWORK_OF8, getNativUstMngUSTAVKI(idxC, MNGWORK_OF8)));
+    921          //OF9
+    922              //таймер паузы
+    923             setTimerPorog(tmpOffsetT+ TIMERP_OF9,
+    924                    codecUstOF(1, MNGPAUSA_OF9, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF9)));
+    925              //таймер работы
+    926             setTimerPorog(tmpOffsetT+ TIMERR_OF9,
+    927                    codecUstOF(1, MNGWORK_OF9, getNativUstMngUSTAVKI(idxC, MNGWORK_OF9)));
+    928          //OF10
+    929              //таймер паузы
+    930             setTimerPorog(tmpOffsetT+ TIMERP_OF10,
+    931                    codecUstOF(1, MNGPAUSA_OF10, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF10)));
+    932              //таймер работы
+    933             setTimerPorog(tmpOffsetT+ TIMERR_OF10,
+    934                    codecUstOF(1, MNGWORK_OF10, getNativUstMngUSTAVKI(idxC, MNGWORK_OF10)));
+    935          //OF11
+    936              //таймер паузы
+    937             setTimerPorog(tmpOffsetT+ TIMERP_OF11,
+    938                    codecUstOF(1, MNGPAUSA_OF11, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF11)));
+    939              //таймер работы
+    940             setTimerPorog(tmpOffsetT+ TIMERR_OF11,
+    941                    codecUstOF(1, MNGWORK_OF11, getNativUstMngUSTAVKI(idxC, MNGWORK_OF11)));
+    942          //OF12
+    943              //таймер паузы
+    944             setTimerPorog(tmpOffsetT+ TIMERP_OF12,
+    945                    codecUstOF(1, MNGPAUSA_OF12, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF12)));
+    946              //таймер работы
+    947             setTimerPorog(tmpOffsetT+ TIMERR_OF12,
+    948                    codecUstOF(1, MNGWORK_OF12, getNativUstMngUSTAVKI(idxC, MNGWORK_OF12)));
+    949          //OF13
+    950              //таймер паузы
+    951             setTimerPorog(tmpOffsetT+ TIMERP_OF13,
+    952                    codecUstOF(1, MNGPAUSA_OF13, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF13)));
+    953              //таймер работы
+    954             setTimerPorog(tmpOffsetT+ TIMERR_OF13,
+    955                    codecUstOF(1, MNGWORK_OF13, getNativUstMngUSTAVKI(idxC, MNGWORK_OF13)));
+    956          //OF14
+    957              //таймер паузы
+    958             setTimerPorog(tmpOffsetT+ TIMERP_OF14,
+    959                    codecUstOF(1, MNGPAUSA_OF14, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF14)));
+    960              //таймер работы
+    961             setTimerPorog(tmpOffsetT+ TIMERR_OF14,
+    962                    codecUstOF(1, MNGWORK_OF14, getNativUstMngUSTAVKI(idxC, MNGWORK_OF14)));
+    963          //OF15
+    964              //таймер паузы
+    965             setTimerPorog(tmpOffsetT+ TIMERP_OF15,
+    966                    codecUstOF(1, MNGPAUSA_OF15, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF15)));
+    967              //таймер работы
+    968             setTimerPorog(tmpOffsetT+ TIMERR_OF15,
+    969                    codecUstOF(1, MNGWORK_OF15, getNativUstMngUSTAVKI(idxC, MNGWORK_OF15)));
+    970          //OF16
+    971              //таймер паузы
+    972             setTimerPorog(tmpOffsetT+ TIMERP_OF16,
+    973                    codecUstOF(1, MNGPAUSA_OF16, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF16)));
+    974              //таймер работы
+    975             setTimerPorog(tmpOffsetT+ TIMERR_OF16,
+    976                    codecUstOF(1, MNGWORK_OF16, getNativUstMngUSTAVKI(idxC, MNGWORK_OF16)));
+    977            }//if
+    978            else{
+    979            //подготовка ENA команд для клона РЛ
+    980            //копировать ENA из WideENA в ENAcmd
+    981            CopyWideENAToENAcmd_WL(PrepareENACmd(idxC, MNGUPR_OF), ENACMD_OF_TOTAL);
+    982            //подготовка уставок
+    983            short tmpOffsetT    =
+    984              getOffsetTimersCnf_WL(idxC);   //компонент в конфигурации
+    985          
+    986          //OF1
+    987              //таймер паузы
+    988             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF1,
+    989                    codecUstOF(1, MNGPAUSA_OF1, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF1)));
+    990              //таймер работы
+    991             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF1,
+    992                    codecUstOF(1, MNGWORK_OF1, getNativUstMngUSTAVKI(idxC, MNGWORK_OF1)));
+    993          //OF2
+    994              //таймер паузы
+    995             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF2,
+    996                    codecUstOF(1, MNGPAUSA_OF2, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF2)));
+    997              //таймер работы
+    998             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF2,
+    999                    codecUstOF(1, MNGWORK_OF2, getNativUstMngUSTAVKI(idxC, MNGWORK_OF2)));
+   1000          //OF3
+   1001              //таймер паузы
+   1002             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF3,
+   1003                    codecUstOF(1, MNGPAUSA_OF3, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF3)));
+   1004              //таймер работы
+   1005             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF3,
+   1006                    codecUstOF(1, MNGWORK_OF3, getNativUstMngUSTAVKI(idxC, MNGWORK_OF3)));
+   1007          //OF4
+   1008              //таймер паузы
+   1009             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF4,
+   1010                    codecUstOF(1, MNGPAUSA_OF4, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF4)));
+   1011              //таймер работы
+   1012             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF4,
+   1013                    codecUstOF(1, MNGWORK_OF4, getNativUstMngUSTAVKI(idxC, MNGWORK_OF4)));
+   1014          //OF5
+   1015              //таймер паузы
+   1016             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF5,
+   1017                    codecUstOF(1, MNGPAUSA_OF5, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF5)));
+   1018              //таймер работы
+   1019             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF5,
+   1020                    codecUstOF(1, MNGWORK_OF5, getNativUstMngUSTAVKI(idxC, MNGWORK_OF5)));
+   1021          //OF6
+   1022              //таймер паузы
+   1023             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF6,
+   1024                    codecUstOF(1, MNGPAUSA_OF6, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF6)));
+   1025              //таймер работы
+   1026             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF6,
+   1027                    codecUstOF(1, MNGWORK_OF6, getNativUstMngUSTAVKI(idxC, MNGWORK_OF6)));
+   1028          //OF7
+   1029              //таймер паузы
+   1030             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF7,
+   1031                    codecUstOF(1, MNGPAUSA_OF7, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF7)));
+   1032              //таймер работы
+   1033             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF7,
+   1034                    codecUstOF(1, MNGWORK_OF7, getNativUstMngUSTAVKI(idxC, MNGWORK_OF7)));
+   1035          //OF8
+   1036              //таймер паузы
+   1037             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF8,
+   1038                    codecUstOF(1, MNGPAUSA_OF8, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF8)));
+   1039              //таймер работы
+   1040             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF8,
+   1041                    codecUstOF(1, MNGWORK_OF8, getNativUstMngUSTAVKI(idxC, MNGWORK_OF8)));
+   1042          //OF9
+   1043              //таймер паузы
+   1044             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF9,
+   1045                    codecUstOF(1, MNGPAUSA_OF9, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF9)));
+   1046              //таймер работы
+   1047             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF9,
+   1048                    codecUstOF(1, MNGWORK_OF9, getNativUstMngUSTAVKI(idxC, MNGWORK_OF9)));
+   1049          //OF10
+   1050              //таймер паузы
+   1051             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF10,
+   1052                    codecUstOF(1, MNGPAUSA_OF10, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF10)));
+   1053              //таймер работы
+   1054             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF10,
+   1055                    codecUstOF(1, MNGWORK_OF10, getNativUstMngUSTAVKI(idxC, MNGWORK_OF10)));
+   1056          //OF11
+   1057              //таймер паузы
+   1058             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF11,
+   1059                    codecUstOF(1, MNGPAUSA_OF11, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF11)));
+   1060              //таймер работы
+   1061             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF11,
+   1062                    codecUstOF(1, MNGWORK_OF11, getNativUstMngUSTAVKI(idxC, MNGWORK_OF11)));
+   1063          //OF12
+   1064              //таймер паузы
+   1065             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF12,
+   1066                    codecUstOF(1, MNGPAUSA_OF12, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF12)));
+   1067              //таймер работы
+   1068             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF12,
+   1069                    codecUstOF(1, MNGWORK_OF12, getNativUstMngUSTAVKI(idxC, MNGWORK_OF12)));
+   1070          //OF13
+   1071              //таймер паузы
+   1072             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF13,
+   1073                    codecUstOF(1, MNGPAUSA_OF13, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF13)));
+   1074              //таймер работы
+   1075             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF13,
+   1076                    codecUstOF(1, MNGWORK_OF13, getNativUstMngUSTAVKI(idxC, MNGWORK_OF13)));
+   1077          //OF14
+   1078              //таймер паузы
+   1079             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF14,
+   1080                    codecUstOF(1, MNGPAUSA_OF14, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF14)));
+   1081              //таймер работы
+   1082             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF14,
+   1083                    codecUstOF(1, MNGWORK_OF14, getNativUstMngUSTAVKI(idxC, MNGWORK_OF14)));
+   1084          //OF15
+   1085              //таймер паузы
+   1086             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF15,
+   1087                    codecUstOF(1, MNGPAUSA_OF15, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF15)));
+   1088              //таймер работы
+   1089             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF15,
+   1090                    codecUstOF(1, MNGWORK_OF15, getNativUstMngUSTAVKI(idxC, MNGWORK_OF15)));
+   1091          //OF16
+   1092              //таймер паузы
+   1093             setTimerPorog_WL(tmpOffsetT+ TIMERP_OF16,
+   1094                    codecUstOF(1, MNGPAUSA_OF16, getNativUstMngUSTAVKI(idxC, MNGPAUSA_OF16)));
+   1095              //таймер работы
+   1096             setTimerPorog_WL(tmpOffsetT+ TIMERR_OF16,
+   1097                    codecUstOF(1, MNGWORK_OF16, getNativUstMngUSTAVKI(idxC, MNGWORK_OF16)));
+   1098             }//else WL
+   1099          }//prepareUstMTZ2(short idxC)
+   1100          
+   1101          int initIOCmd_OF()
+   1102          {
+   1103            //инициал IO команд
+   1104            offsetIOCmdOF_loc = IndexIO;//смещение для IO OF
+   1105            return commonInitIOCmd(IOCMD_OF_TOTAL);
+   1106          }
+   1107          
+   1108          int initTLCmd_OF()
+   1109          {
+   1110            //инициал TL команд
+   1111            return commonInitTLCmd(TLCMD_OF_TOTAL);
+   1112          }//initTLCmd_OF()
+   1113          
+   1114          int initENACmd_OF()
+   1115          {
+   1116            //инициал ENA команд
+   1117            return commonInitENACmd(ENACMD_OF_TOTAL);
+   1118          }//initENACmd_OF()
+   1119          
+   1120          void initTimersOF(short idxC)
+   1121          {
+   1122            //запрос и инициал таймеров
+   1123            if(idxC>=0)
+   1124             commonInitTimers(TIMERS_OF_TOTAL);
+   1125            else {
+   1126             commonInitTimers_WL(TIMERS_OF_TOTAL);
+   1127             timerEnableWL = 1;//разрешение работы таймеров РЛ
+   1128                 }
+   1129          }//initTimersOF()
+   1130          
+   1131          int codecUstOF(char codec, short offset, int ust)
+   1132          //codec=0-кодировать
+   1133          //codec=1-раскодировать
+   1134          {
+   1135            //кодировать-раскодировать уставку
+   1136            if(codec) return ust*1;
+   1137            return ust/1;
+   1138          }//codecUstOF(char *buf, short offset, int ust)
+   1139          
+   1140          int isDISactiv_OF(int idxC)
+   1141          {
+   1142           //активность Регистратора ДИС
+   1143            return 0;//нет активности
+   1144          }//isDISactiv_OF(int idxC)
+   1145          
+   1146          char copyOFToRepozitar(char packet)
+   1147          {
+   1148            memset(&rpzcomponent_obj, 0, sizeof(COMPONENT_OBJ));//стереть старое
+   1149          //копировать компонент в репозитарий
+   1150            rpzcomponent_obj.componentEnable = 1;//разрешение компонента
+   1151            rpzcomponent_obj.kodC   = KOD_COMPONENT;         //код компонента
+   1152            rpzcomponent_obj.packet = 0;    //номер пакетного компонента
+   1153            rpzcomponent_obj.permanent = 0; //перманентный компонент
+   1154          
+   1155            strcpy(rpzcomponent_obj.nameComponent,  "ОФ");       //имя компонента
+   1156            rpzcomponent_obj.sub_menu_component =  sub_menu_comp_OF;//меню компонента
+   1157          
+   1158            rpzcomponent_obj.cntClon    = 5;   //max к-во клонов
+   1159          
+   1160            rpzcomponent_obj.initUstMng    = initUstOF;    //инициал уставок
+   1161            rpzcomponent_obj.prepareUstSpv = prepareUstOF;//подготовка уставок
+   1162            rpzcomponent_obj.initIOCmd     = initIOCmd_OF;      //инициал IO команд
+   1163            rpzcomponent_obj.initTLCmd     = initTLCmd_OF;      //инициал TL команд
+   1164            rpzcomponent_obj.initENACmd    = initENACmd_OF;     //инициал ENA команд
+   1165            rpzcomponent_obj.bo_bvCmd       = NULL; //настройка БО БВ команд
+   1166            rpzcomponent_obj.isDISactiv     = isDISactiv_OF; //активность Регистратора ДИС
+   1167            rpzcomponent_obj.setBOBVtimer   = NULL; //инициал таймеров БО БВ
+   1168          
+   1169            rpzcomponent_obj.nameStatusIO = ionsOF;          //имена и статус команд IO
+   1170            rpzcomponent_obj.initTimers   = initTimersOF;    //запрос и инициал таймеров
+   1171            rpzcomponent_obj.logic        = logicOF;         //логика компонента
+   1172          
+   1173            rpzcomponent_obj.codecUst = codecUstOF;   //кодировать-раскодировать уставку
+   1174          
+   1175            return 0;//не пакетная регистрация
+   1176          }//
+   1177          
+   1178          #endif // _HIDE_COMPONENT
+   1179          
 
    Maximum stack usage in bytes:
 
@@ -1216,15 +1347,39 @@ D:\IAR projects\HR1_0100_00_I720_new2\component\OFComponent.c
       20  ?_30
       20  ?_31
       16  ?_32
-      12  ?_33
+      20  ?_33
       16  ?_34
-      24  ?_35
-      24  ?_36
-       8  ?_37
-       4  ?_38
+      16  ?_35
+      20  ?_36
+      16  ?_37
+      16  ?_38
+      20  ?_39
       20  ?_4
+      16  ?_40
+      16  ?_41
+      20  ?_42
+      16  ?_43
+      16  ?_44
+      20  ?_45
+      16  ?_46
+      16  ?_47
+      20  ?_48
+      16  ?_49
       16  ?_5
+      16  ?_50
+      20  ?_51
+      16  ?_52
+      16  ?_53
+      20  ?_54
+      16  ?_55
+      16  ?_56
+      12  ?_57
+      16  ?_58
+      24  ?_59
       20  ?_6
+      24  ?_60
+       8  ?_61
+       4  ?_62
       16  ?_7
       20  ?_8
       16  ?_9
@@ -1245,7 +1400,7 @@ D:\IAR projects\HR1_0100_00_I720_new2\component\OFComponent.c
       16  initTLCmd_OF
       64  initTimersOF
      440  initUstOF
-     256  ionsOF
+     448  ionsOF
       12  isDISactiv_OF
        4  offsetIOCmdOF
        4  offsetIOCmdOF_loc
@@ -1257,13 +1412,13 @@ D:\IAR projects\HR1_0100_00_I720_new2\component\OFComponent.c
 
  
      8 bytes in section .bss
-   424 bytes in section .data
-   708 bytes in section .rodata
+   616 bytes in section .data
+ 1 124 bytes in section .rodata
  5 724 bytes in section .text
  
  5 724 bytes of CODE  memory
-   708 bytes of CONST memory
-   432 bytes of DATA  memory
+ 1 124 bytes of CONST memory
+   624 bytes of DATA  memory
 
 Errors: none
 Warnings: none

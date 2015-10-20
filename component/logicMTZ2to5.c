@@ -40,6 +40,8 @@ extern int   tempLog[];
 extern int  isFAILU_COMMON_MTZ;
 extern int offsetSPVCmdPRM1;//смещение для SPV PRM1
 
+extern int flag_max_monitoring;//макс параметры сработки
+
 void  logicMTZ2to5(int idxC) @ "Fast_function"
 {
 //логика компонента
@@ -216,6 +218,7 @@ void  logicMTZ2to5(int idxC) @ "Fast_function"
         //ELOUTTRG_NCN_MTZ2to5
         (TL_LOGIC(TLCMDOUTNCN_MTZ2to5)^1);
 
+   int max_tmp = 
    tmp1 =
     //L1
     //MTZ2to5_PO1
@@ -224,6 +227,8 @@ void  logicMTZ2to5(int idxC) @ "Fast_function"
       //CMD_MTZ2to5_PO1
       IO_LOGIC(IOCMD4_MTZ2to5) =
       locPO_MTZ2to5;
+
+    if(max_tmp) flag_max_monitoring |= MAXMONITORING_COLLECT;//макс параметры сработки
 
   //L5
 //  int tmp =
@@ -235,6 +240,7 @@ void  logicMTZ2to5(int idxC) @ "Fast_function"
   //дельта таймера MTZ2to5_TIM1
   TL_LOGIC(TL10_MTZ2TO5) = IS_TIMER_DELTA12(TIMER1_MTZ2to5)^1;   
 
+  max_tmp = 
   tmp2 =
     //L2
     //MTZ2to5_PO2
@@ -243,6 +249,7 @@ void  logicMTZ2to5(int idxC) @ "Fast_function"
       //CMD_MTZ2to5_PO2
       IO_LOGIC(IOCMD5_MTZ2to5) =
       locPO_MTZ2to5_V;
+    if(max_tmp) flag_max_monitoring |= MAXMONITORING_COLLECT;//макс параметры сработки
 
   //L6
   //tmp =
@@ -255,6 +262,7 @@ void  logicMTZ2to5(int idxC) @ "Fast_function"
   TL_LOGIC(TL10_MTZ2TO5_V) = IS_TIMER_DELTA12(TIMER2_MTZ2to5)^1;   
 
   int tmp3 =
+  max_tmp = 
     //L3
     //MTZ2to5_PO3
     TL_LOGIC(TLCMD7_MTZ2to5) =
@@ -262,6 +270,7 @@ void  logicMTZ2to5(int idxC) @ "Fast_function"
       //CMD_MTZ2to5_PO3
       IO_LOGIC(IOCMD6_MTZ2to5) =
       locPO_MTZ2to5_N;
+    if(max_tmp) flag_max_monitoring |= MAXMONITORING_COLLECT;//макс параметры сработки
 
   //tmp =
   //MTZ2to5_TIM3
@@ -272,6 +281,7 @@ void  logicMTZ2to5(int idxC) @ "Fast_function"
   //проверка таймера MTZ2to5_TIM3
   TL_LOGIC(TL10_MTZ2TO5_N) = IS_TIMER_DELTA12(TIMER3_MTZ2to5)^1;   
 
+  max_tmp =
   tmp4 =
     //L4
     //MTZ2to5_PO4
@@ -280,6 +290,7 @@ void  logicMTZ2to5(int idxC) @ "Fast_function"
       //CMD_MTZ2to5_PO4
       IO_LOGIC(IOCMD7_MTZ2to5) =
       locPO_MTZ2to5_PN;
+    if(max_tmp) flag_max_monitoring |= MAXMONITORING_COLLECT;//макс параметры сработки
 
   //tmp =
   //MTZ2to5_TIM4
@@ -309,9 +320,11 @@ void  logicMTZ2to5(int idxC) @ "Fast_function"
               TL_LOGIC(TLCMD15_MTZ2to5_PN) |
               tmp1;
 
+  max_tmp =
   //Сраб МТЗ2
   //CMD_MTZ2to5
   IO_LOGIC(IOCMD8_MTZ2to5) =
     ILOG_TIMER(TIMER_BO_MTZ2to5)|tmp;
+    if(max_tmp) flag_max_monitoring |= MAXMONITORING_FIX;//макс параметры сработки
 
 }//logicMTZ2to5(short idxC)
