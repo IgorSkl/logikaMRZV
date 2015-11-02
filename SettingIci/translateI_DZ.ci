@@ -1,0 +1,303 @@
+
+//трансляция DZ-------------------------------------------
+// Блокировка DZ1
+   //широкий ком массив RT INTERFACE
+   WideCmdStateINTERFACE[BLOCK_DSTP1_DI_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ1 +
+			 IOCMD1_DZ1
+			 ];
+
+// ПО ДЗ1 МФ
+   WideCmdStateINTERFACE[STPDEV_DSTP1_MF_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ1 +
+			 IOCMD2_DZ1
+			 ];
+// Cраб ДЗ1 МФ
+   WideCmdStateINTERFACE[DSTP1_MF_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ1 +
+			 IOCMD3_DZ1 
+			 ];
+// ПО МТЗ ДЗ1
+   WideCmdStateINTERFACE[STPDEV_MCP_DSTP1_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ1 +
+			 IOCMD4_DZ1 
+			 ];
+// Сраб МТЗ ДЗ1
+   WideCmdStateINTERFACE[MCP_DSTP1_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ1 +
+			 IOCMD5_DZ1 
+			 ];
+// ПО ДЗ1 ОФ
+   WideCmdStateINTERFACE[STPDEV_DSTP1_OF_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ1 +
+			 IOCMD6_DZ1 
+			 ];
+// сраб ДЗ1 ОФ
+   WideCmdStateINTERFACE[DSTP1_OF_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ1 +
+			 IOCMD7_DZ1 
+			 ];
+
+// Блокировка DZ2
+   WideCmdStateINTERFACE[BLOCK_DSTP2_DI_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*3 +
+			 IOCMD1_DZ2to5 
+			 ];
+//Блокировка ускор Дист З2
+   WideCmdStateINTERFACE[BLOCK_ACCLT_DSTP2_DI_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*3 +
+			 IOCMD2_DZ2to5 
+			 ];
+//Оперативное ускорение Дист З2
+   WideCmdStateINTERFACE[ACCLT_DSTP2_DI_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*3 +
+			 IOCMD3_DZ2to5 
+			 ];
+// ПО ДЗ2 МФ
+   WideCmdStateINTERFACE[STPDEV_DSTP2_MF_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*3 +
+			 IOCMD4_DZ2to5MF 
+			 ];
+// Cраб ДЗ2 МФ
+   WideCmdStateINTERFACE[DSTP2_MF_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*3 +
+			 IOCMD5_DZ2to5MF 
+			 ];
+// ПО МТЗ ДЗ2
+   WideCmdStateINTERFACE[STPDEV_MCP_DSTP2_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*3 +
+			 IOCMD4_MDZ2to5MF 
+			 ];
+// Сраб МТЗ ДЗ2
+   WideCmdStateINTERFACE[MCP_DSTP2_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*3 +
+			 IOCMD5_MDZ2to5MF 
+			 ];
+// ПО ДЗ2 ОФ
+   WideCmdStateINTERFACE[STPDEV_DSTP2_OF_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*3 +
+			 IOCMD4_DZ2to5OF 
+			 ];
+// сраб ДЗ2 ОФ
+   WideCmdStateINTERFACE[DSTP2_OF_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*3 +
+			 IOCMD5_DZ2to5OF 
+			 ];
+
+
+// Блокировка DZ3
+   WideCmdStateINTERFACE[BLOCK_DSTP3_DI_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*2 +
+			 IOCMD1_DZ2to5 
+			 ];
+//Блокировка ускор Дист З3
+   WideCmdStateINTERFACE[BLOCK_ACCLT_DSTP3_DI_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*2 +
+			 IOCMD2_DZ2to5 
+			 ];
+//Оперативное ускорение Дист З3
+   WideCmdStateINTERFACE[ACCLT_DSTP3_DI_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*2 +
+			 IOCMD3_DZ2to5 
+			 ];
+// ПО ДЗ3 МФ
+   WideCmdStateINTERFACE[STPDEV_DSTP3_MF_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*2 +
+			 IOCMD4_DZ2to5MF 
+			 ];
+// Cраб ДЗ3 МФ
+   WideCmdStateINTERFACE[DSTP3_MF_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*2 +
+			 IOCMD5_DZ2to5MF 
+			 ];
+// ПО МТЗ ДЗ3
+   WideCmdStateINTERFACE[STPDEV_MCP_DSTP3_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*2 +
+			 IOCMD4_MDZ2to5MF 
+			 ];
+// Сраб МТЗ ДЗ3
+   WideCmdStateINTERFACE[MCP_DSTP3_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*2 +
+			 IOCMD5_MDZ2to5MF 
+			 ];
+// ПО ДЗ3 ОФ
+   WideCmdStateINTERFACE[STPDEV_DSTP3_OF_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*2 +
+			 IOCMD4_DZ2to5OF 
+			 ];
+// сраб ДЗ3 ОФ
+   WideCmdStateINTERFACE[DSTP3_OF_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*2 +
+			 IOCMD5_DZ2to5OF 
+			 ];
+
+// Блокировка DZ4
+   WideCmdStateINTERFACE[BLOCK_DSTP4_DI_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*1 +
+			 IOCMD1_DZ2to5 
+			 ];
+//Блокировка ускор Дист З4
+   WideCmdStateINTERFACE[BLOCK_ACCLT_DSTP4_DI_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*1 +
+			 IOCMD2_DZ2to5 
+			 ];
+//Оперативное ускорение Дист З4
+   WideCmdStateINTERFACE[ACCLT_DSTP4_DI_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*1 +
+			 IOCMD3_DZ2to5 
+			 ];
+// ПО ДЗ4 МФ
+   WideCmdStateINTERFACE[STPDEV_DSTP4_MF_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*1 +
+			 IOCMD4_DZ2to5MF 
+			 ];
+// Cраб ДЗ4 МФ
+   WideCmdStateINTERFACE[DSTP4_MF_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*1 +
+			 IOCMD5_DZ2to5MF 
+			 ];
+// ПО МТЗ ДЗ4
+   WideCmdStateINTERFACE[STPDEV_MCP_DSTP4_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*1 +
+			 IOCMD4_MDZ2to5MF 
+			 ];
+// Сраб МТЗ ДЗ4
+   WideCmdStateINTERFACE[MCP_DSTP4_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*1 +
+			 IOCMD5_MDZ2to5MF 
+			 ];
+// ПО ДЗ4 ОФ
+   WideCmdStateINTERFACE[STPDEV_DSTP4_OF_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*1 +
+			 IOCMD4_DZ2to5OF 
+			 ];
+// сраб ДЗ4 ОФ
+   WideCmdStateINTERFACE[DSTP4_OF_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*1 +
+			 IOCMD5_DZ2to5OF 
+			 ];
+
+// Блокировка DZ5
+   WideCmdStateINTERFACE[BLOCK_DSTP5_DI_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*0 +
+			 IOCMD1_DZ2to5 
+			 ];
+//Блокировка ускор Дист З5
+   WideCmdStateINTERFACE[BLOCK_ACCLT_DSTP5_DI_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*0 +
+			 IOCMD2_DZ2to5 
+			 ];
+//Оперативное ускорение Дист З5
+   WideCmdStateINTERFACE[ACCLT_DSTP5_DI_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*0 +
+			 IOCMD3_DZ2to5 
+			 ];
+// ПО ДЗ5 МФ
+   WideCmdStateINTERFACE[STPDEV_DSTP5_MF_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*0 +
+			 IOCMD4_DZ2to5MF 
+			 ];
+// Cраб ДЗ5 МФ
+   WideCmdStateINTERFACE[DSTP5_MF_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*0 +
+			 IOCMD5_DZ2to5MF 
+			 ];
+// ПО МТЗ ДЗ5
+   WideCmdStateINTERFACE[STPDEV_MCP_DSTP5_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*0 +
+			 IOCMD4_MDZ2to5MF 
+			 ];
+// Сраб МТЗ ДЗ5
+   WideCmdStateINTERFACE[MCP_DSTP5_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*0 +
+			 IOCMD5_MDZ2to5MF 
+			 ];
+// ПО ДЗ5 ОФ
+   WideCmdStateINTERFACE[STPDEV_DSTP5_OF_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*0 +
+			 IOCMD4_DZ2to5OF 
+			 ];
+// сраб ДЗ5 ОФ
+   WideCmdStateINTERFACE[DSTP5_OF_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdDZ5 +
+                           IOCMD_DZ2to5_TOTAL*0 +
+			 IOCMD5_DZ2to5OF 
+			 ];

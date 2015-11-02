@@ -1,0 +1,152 @@
+
+//{
+//*******USKMTZ2********
+  //L
+ int tmpBL =
+       //CMD_BLOK_USK_MTZ2to5
+       IO_LOGIC(IOCMD2_MTZ2to5)^1;
+
+
+  //L1
+  //таймер VUSKOR_MTZ2to5_TIM
+  LSIGNAL_TIMER(TIMER_VUSK_MTZ2to5) = 
+	  ENA_LOGIC(ENA4_MTZ2to5) & //ENA_USK_MTZ2to5
+	  IO_LOGICOUT(offsetIOCmdPRM1 +IOCMD1_PRM1);//CMD_POL_VV
+
+  int tmp1 =
+       //MTZ2to5_PO1
+       TL_LOGIC(TLCMD5_MTZ2to5);
+
+ //L3
+ //AU_MTZ2to5
+  TL_LOGIC(TLCMD16_MTZ2to5) =
+          (
+          //таймер VUSKOR_MTZ2to5_TIM
+          FLOG_TIMER(TIMER_VUSK_MTZ2to5) |
+          //ENA_AUSK_MTZ2to5
+	  ENA_LOGIC(ENA5_MTZ2to5)
+	  ) &
+	  tmpBL;
+
+  //L4
+  //TU_MTZ2to5
+  TL_LOGIC(TLCMD17_MTZ2to5) =
+          //VU_TU_MTZ2to5
+//          TL_LOGIC(TLCMD18_MTZ2to5) &
+          //ENA_TUSK_MTZ2to5
+	  ENA_LOGIC(ENA6_MTZ2to5) &
+	  tmpBL;
+
+ //L2
+ //OU_MTZ2to5
+  TL_LOGIC(TLCMD19_MTZ2to5) =
+       //CMD_OPERAT_USK_MTZ2to5
+       IO_LOGIC(IOCMD3_MTZ2to5) &
+       tmpBL;
+
+   //L5
+   int tmp2 =
+       //OU_MTZ2to5
+       TL_LOGIC(TLCMD19_MTZ2to5) &
+       tmp1;
+
+//триг по восх фронту
+//TRG_FRONT(set, clr, old, out)
+//ELOLDTRG_OUSKOR_MTZ2to5  ELOUTTRG_OUSKOR_MTZ2to5
+  TRG_FRONT(tmp2, tmp1, TLCMD9_MTZ2to5, TLCMD10_MTZ2to5)
+
+  //L8
+  int tmp4 = 
+  //USKOR_MTZ2to5_TIM_OU
+  LSIGNAL_TIMER(TIMER5_MTZ2to5_OU)  =
+             //ELOUTTRG_USKOR_MTZ2to5
+             TL_LOGIC(TLCMD10_MTZ2to5) &
+             TL_LOGIC(TL8_MTZ2TO5) &
+             TL_LOGIC(TL10_MTZ2TO5) &
+             tmp1;
+
+   //L6
+  tmp2 =
+       //AU_MTZ2to5
+       TL_LOGIC(TLCMD16_MTZ2to5) &
+       tmp1;
+       
+//триг по восх фронту
+//TRG_FRONT(set, clr, old, out)
+//ELOLDTRG_AUSKOR_MTZ2to5  ELOUTTRG_AUSKOR_MTZ2to5
+  TRG_FRONT(tmp2, tmp1, TLCMD11_MTZ2to5, TLCMD12_MTZ2to5)
+
+  //L9
+  int tmp5 =
+  //USKOR_MTZ2to5_TIM
+  LSIGNAL_TIMER(TIMER5_MTZ2to5)  =
+             //ELOUTTRG_AUSKOR_MTZ2to5
+             TL_LOGIC(TLCMD12_MTZ2to5) &
+             TL_LOGIC(TL9_MTZ2TO5) &
+             TL_LOGIC(TL10_MTZ2TO5) &
+             tmp1;
+
+   //L7
+  tmp2 =
+       //TU_MTZ2to5
+       TL_LOGIC(TLCMD17_MTZ2to5) &
+       tmp1;
+
+//триг по восх фронту
+//TRG_FRONT(set, clr, old, out)
+//ELOLDTRG_TUSKOR_MTZ2to5  ELOUTTRG_TUSKOR_MTZ2to5
+  TRG_FRONT(tmp2, tmp1, TLCMD13_MTZ2to5, TLCMD14_MTZ2to5)
+
+  //L10
+  int tmp6 =
+  //USKOR_MTZ2to5_TIM_TU
+  LSIGNAL_TIMER(TIMER5_MTZ2to5_TU)  =
+             //ELOUTTRG_AUSKOR_MTZ2to5
+             TL_LOGIC(TLCMD14_MTZ2to5) &
+             TL_LOGIC(TL7_MTZ2TO5) &
+             TL_LOGIC(TL10_MTZ2TO5) &
+             tmp1;
+
+  //L13
+   TL_LOGIC(TL8_MTZ2TO5) =
+            (
+             //tmp5 |
+             IS_TIMER_DELTA6(TIMER5_MTZ2to5) |
+             //tmp6
+             IS_TIMER_DELTA9(TIMER5_MTZ2to5_TU)
+             )^1;
+  //L14
+   TL_LOGIC(TL9_MTZ2TO5) =
+            (
+             //tmp4 |
+             IS_TIMER_DELTA3(TIMER5_MTZ2to5_OU) |
+             //tmp6
+             IS_TIMER_DELTA9(TIMER5_MTZ2to5_TU)
+             )^1;
+  //L15
+   TL_LOGIC(TL7_MTZ2TO5) =
+            (
+             //tmp5 |
+             IS_TIMER_DELTA6(TIMER5_MTZ2to5) |
+             //tmp4
+             IS_TIMER_DELTA3(TIMER5_MTZ2to5_OU)
+             )^1;
+
+  //L12
+  //RES_MTZ2to5
+  TL_LOGIC(TLCMD1_MTZ2to5) =
+           (tmp4 |
+            tmp5 |
+            tmp6)^1;
+
+  //L11
+  //MTZ2to5_USKOR
+  TL_LOGIC(TLCMD15_MTZ2to5) =
+       //USKOR_MTZ2to5_TIM
+      PLOG_TIMER(TIMER5_MTZ2to5) |
+       //USKOR_MTZ2to5_OU_TIM
+      PLOG_TIMER(TIMER5_MTZ2to5_OU) |
+       //USKOR_MTZ2to5_TU_TIM
+      PLOG_TIMER(TIMER5_MTZ2to5_TU);
+
+//}

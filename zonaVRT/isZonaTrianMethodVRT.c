@@ -1,0 +1,427 @@
+/*
+#include <stdio.h>
+#include <TCHAR.H >
+#include <conio.h>
+#include <sys\stat.h>
+
+#include <fstream.h>
+#include <typeinfo.h>
+
+#include <comctrls.hpp>
+
+#include <vcl.h>
+#include <strstrea.h>
+#pragma hdrstop
+*/
+
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+
+#include "zonaVRTdef.h"
+#include "zonaVRTfnc.h"
+
+//координаты вершин зоны сработки
+extern float X1;
+extern float Y1;
+
+extern float X2;
+extern float Y2;
+
+extern float X3;
+extern float Y3;
+
+//extern float X4;
+//extern float Y4;
+
+extern double  X12V, Y12V, X21V, Y21V, X23V, Y23V, X32V, Y32V;
+extern double  /*X34V, Y34V, X41V, Y41V, X43V, Y43V,*/ X31V, Y31V;
+extern double  X13V, Y13V;
+
+//extern double  X14V,    Y14V;
+
+extern INT_64 X1_64, Y1_64, X2_64, Y2_64, X3_64, Y3_64;//, X4_64, Y4_64;
+//координаты вершин зоны возврата
+extern INT_64 /*X14V_64, Y14V_64,*/ /*X12V_64, Y12V_64,*/ X21V_64, Y21V_64, /*X23V_64, Y23V_64,*/ X32V_64, Y32V_64;
+//extern INT_64 /*X34V_64, Y34V_64,*/// X41V_64, Y41V_64; /*X43V_64, Y43V_64, X31V_64, Y31V_64, X13V_64, Y13V_64;*/
+
+//нормализованный вектор сработки 34
+//extern VectorXY_VRT  nVector34vrt;
+//extern VectorXY_64   nVector34_64vrt;
+//нормализованный вектор сработки 32
+extern VectorXY_VRT  nVector32vrt;
+extern VectorXY_64   nVector32_64vrt;
+//нормализованный вектор сработки 12
+extern VectorXY_VRT  nVector12vrt;
+extern VectorXY_64   nVector12_64vrt;
+//нормализованный вектор сработки 14
+//extern VectorXY_VRT  nVector14vrt;
+//extern VectorXY_64   nVector14_64vrt;
+
+//нормализованный вектор сработки 41
+//extern VectorXY_VRT  nVector41vrt;
+//extern VectorXY_64   nVector41_64vrt;
+//нормализованный вектор сработки 43
+//extern VectorXY_VRT  nVector43vrt;
+//extern VectorXY_64   nVector43_64vrt;
+//нормализованный вектор сработки 23
+extern VectorXY_VRT  nVector23vrt;
+extern VectorXY_64   nVector23_64vrt;
+//нормализованный вектор сработки 21
+extern VectorXY_VRT  nVector21vrt;
+extern VectorXY_64   nVector21_64vrt;
+
+extern  VectorXY_64   nVector34_64vrtBD[];//для хранения зон для 5 ступеней
+extern  VectorXY_64   nVector32_64vrtBD[];
+extern  VectorXY_64   nVector12_64vrtBD[];
+extern  VectorXY_64   nVector14_64vrtBD[];
+
+extern  VectorXY_64   nVector41_64vrtBD[];
+extern  VectorXY_64   nVector43_64vrtBD[];
+extern  VectorXY_64   nVector23_64vrtBD[];
+extern  VectorXY_64   nVector21_64vrtBD[];
+//для треугольника
+ VectorXY_64   nVector31_64vrtBD[10];
+ VectorXY_64   nVector13_64vrtBD[10];
+
+//5 ступеней по 2 зоны на 4 точки с 2 коорд XY на сраб и столько же на возврат
+extern  INT_64  zonaVertexBD[4 *2 *5 *2*2];//массив вершин
+
+extern double VozvG;//гистерезис возврата
+
+//вектор Z
+extern INT_64 koordXZ_64;
+extern INT_64 koordYZ_64;
+
+//extern int    spvUSTAVKI[];
+
+//нормализованный вектор сработки 31
+ VectorXY_VRT   nVector31vrt;
+ VectorXY_64    nVector31_64vrt;
+//нормализованный вектор сработки 13
+ VectorXY_VRT  nVector13vrt;
+ VectorXY_64   nVector13_64vrt;
+
+ INT_64  X13V_64, Y13V_64;
+
+short isZonaTrianMethodVRT(int numclon)
+{
+  X1_64 = (INT_64)ceil(X1*TO_INTEGER64);
+  Y1_64 = (INT_64)ceil(Y1*TO_INTEGER64);
+
+  X2_64 = (INT_64)ceil(X2*TO_INTEGER64);
+  Y2_64 = (INT_64)ceil(Y2*TO_INTEGER64);
+
+  X3_64 = (INT_64)ceil(X3*TO_INTEGER64);
+  Y3_64 = (INT_64)ceil(Y3*TO_INTEGER64);
+
+  X12V = X1;
+  Y12V = Y1;
+//  X14V = X1;
+//  Y14V = Y1;
+  X21V = X2;
+  Y21V = Y2;
+  X23V = X2;
+  Y23V = Y2;
+  X32V = X3;
+  Y32V = Y3;
+//  X41V = X4;
+//  Y41V = Y4;
+//  X34V = X3;
+//  Y34V = Y3;
+
+  X31V = X3;
+  Y31V = Y3;
+
+  X13V = X1;
+  Y13V = Y1;
+
+  if (controlPoint1VRT()) //контроль 1-й точки
+  {
+    return ERROR_1_POINT;//true;//уйти с ошибкой
+  }
+//  errorZona = false;//ошибка расположения вершин зоны
+  if (controlPoint3TrianVRT()) //контроль 3-й точки
+  {
+//    ControlLabel->Caption = "ОШИБКА 3 точки!";
+//    sendText("visualView W1");
+//    errorZona = true;//ошибка расположения вершин зоны
+  //  return true;//уйти с ошибкой
+    return ERROR_3_POINT;//true;//уйти с ошибкой
+  }//if
+
+  if (controlPoint2VRT()) //контроль 2-й точки
+  {
+//    ControlLabel->Caption = "ОШИБКА 2 точки!";
+//    sendText("visualView W1");
+//    errorZona = true;//ошибка расположения вершин зоны
+//    return true;//уйти с ошибкой
+    return ERROR_2_POINT;//true;//уйти с ошибкой
+  }//if
+
+//************** НОРМАЛИЗОВАННЫЕ ВЕКТОРА СРАБОТКИ *************
+//нормализованный вектор комплекта A
+  double tmpLen = makeNormalVectorVRT(X3, Y3,//опорная точка
+                                      X1, Y1,//нижний вектор
+                                      &nVector31vrt);//нормализованный вектор 31
+//целочисленный вариант
+  nVector31_64vrt.xVect_64 = (INT_64)ceil(nVector31vrt.xVect*TO_INTEGER64);
+  nVector31_64vrt.yVect_64 = (INT_64)ceil(nVector31vrt.yVect*TO_INTEGER64);
+//  X1_64 = (INT_64)ceil(X1*TO_INTEGER64);
+//  Y1_64 = (INT_64)ceil(Y1*TO_INTEGER64);
+
+  if (tmpLen<MIN_STORONA)
+  {
+//    ControlLabel->Caption = "ОШИБКА Короткая сторона 31!";
+//    sendText("visualView W1");
+//    return true;//уйти с ошибкой
+    return ERROR_31_STORONA;//true;//уйти с ошибкой
+  }//if
+
+//нормализованный вектор комплекта A
+  tmpLen = makeNormalVectorVRT(X3, Y3,//опорная точка
+                               X2, Y2,//верхний вектор
+                               &nVector32vrt);//нормализованный вектор 32
+//целочисленный вариант
+  nVector32_64vrt.xVect_64 = (INT_64)ceil(nVector32vrt.xVect*TO_INTEGER64);
+  nVector32_64vrt.yVect_64 = (INT_64)ceil(nVector32vrt.yVect*TO_INTEGER64);
+//  X3_64 = (INT_64)ceil(X3*TO_INTEGER64);
+//  Y3_64 = (INT_64)ceil(Y3*TO_INTEGER64);
+
+  if (tmpLen<MIN_STORONA)
+  {
+//    ControlLabel->Caption = "ОШИБКА Короткая сторона 32!";
+  //  sendText("visualView W1");
+    //return true;//уйти с ошибкой
+    return ERROR_32_STORONA;//true;//уйти с ошибкой
+  }//if
+
+  int   raz = 0;
+//  float tempShift;
+
+//  X3S1Edit->Text = ugolString(makeUgolVector(&nVector31));//угол сработки
+//  X3S2Edit->Text = ugolString(makeUgolVector(&nVector32));//угол сработки
+//  X4S1Edit->Text = "Сраб";//угол сработки
+//  X4S2Edit->Text = "Сраб";//угол сработки
+
+  double tmpUgol1  = makeUgolVectorVRT(&nVector32vrt);
+  double tempShift = splitUgolSVRT(tmpUgol1, &raz);//наклон сторон
+
+  makeVozvPointVRT(32, tempShift, raz);//нарисовать сторону возврата
+
+  double tmpUgol2  = makeUgolVectorVRT(&nVector31vrt);
+  tempShift = splitUgolSVRT(tmpUgol2, &raz);//наклон сторон
+  makeVozvPointVRT(34, tempShift, raz);//нарисовать сторону возврата
+
+//  char  LocTxt[200];
+
+  double diff = tmpUgol1 - tmpUgol2;
+  char  tmp1=0;
+  if (diff>=MAX_UGOL) tmp1=1;//errorZona = true;//ошибка расположения вершин зоны
+  if (diff<0 && (diff=(diff+360.0))>MAX_UGOL) tmp1=1;//errorZona = true;//ошибка расположения вершин зоны
+//  sprintf(LocTxt,  "t3= %5.3f", diff);
+//  TestLabel3->Caption = LocTxt;
+
+  if (tmp1) //контроль 3-й точки
+  {
+//    ControlLabel->Caption = "ОШИБКА Угол в точке 3!";
+//    sendText("visualView W1");
+//    return true;//уйти с ошибкой
+    return ERROR_3_UGOL;//true;//уйти с ошибкой
+  }//if
+
+//нормализованный вектор комплекта A
+  tmpLen = makeNormalVectorVRT(X1, Y1,//опорная точка
+                               X2, Y2,//нижний вектор
+                               &nVector12vrt);//нормализованный вектор 12
+//целочисленный вариант
+  nVector12_64vrt.xVect_64 = (INT_64)ceil(nVector12vrt.xVect*TO_INTEGER64);
+  nVector12_64vrt.yVect_64 = (INT_64)ceil(nVector12vrt.yVect*TO_INTEGER64);
+//  X2_64 = (INT_64)ceil(X2*TO_INTEGER64);
+//  Y2_64 = (INT_64)ceil(Y2*TO_INTEGER64);
+
+
+  if (tmpLen<MIN_STORONA)
+  {
+//    ControlLabel->Caption = "ОШИБКА Короткая сторона 12!";
+//    sendText("visualView W1");
+//    return true;//уйти с ошибкой
+    return ERROR_12_STORONA;//уйти с ошибкой
+  }//if
+
+//нормализованный вектор комплекта A
+  makeNormalVectorVRT(X1, Y1,//опорная точка
+                      X3, Y3,//верхний вектор
+                      &nVector13vrt);//нормализованный вектор 13
+//целочисленный вариант
+  nVector13_64vrt.xVect_64 = (INT_64)ceil(nVector13vrt.xVect*TO_INTEGER64);
+  nVector13_64vrt.yVect_64 = (INT_64)ceil(nVector13vrt.yVect*TO_INTEGER64);
+
+//  X1S1Edit->Text = ugolString(makeUgolVector(&nVector13));//угол сработки
+//  X1S2Edit->Text = ugolString(makeUgolVector(&nVector12));//угол сработки
+
+  tmpUgol1 = makeUgolVectorVRT(&nVector13vrt);
+  tmpUgol2 = makeUgolVectorVRT(&nVector12vrt);
+  tempShift = splitUgolSVRT(tmpUgol2, &raz);//наклон сторон
+  makeVozvPointVRT(12, tempShift, raz);//нарисовать сторону возврата
+
+  diff = tmpUgol1 - tmpUgol2;
+  if (diff>=MAX_UGOL) tmp1=1;//errorZona = true;//ошибка расположения вершин зоны
+  if (diff<0 && (diff=(diff+360.0))>MAX_UGOL) tmp1=1;//errorZona = true;//ошибка расположения вершин зоны
+//  sprintf(LocTxt,  "t1= %5.3f", diff);
+//  TestLabel1->Caption = LocTxt;
+
+  if (tmp1) //контроль 1-й точки
+  {
+//    ControlLabel->Caption = "ОШИБКА Угол в точке 1!";
+//    sendText("visualView W1");
+//    return true;//уйти с ошибкой
+    return ERROR_1_UGOL;//уйти с ошибкой
+  }//if
+
+//  TestLabel4->Caption = "t4= OFF";
+
+//нормализованный вектор 23
+  makeNormalVectorVRT(X2, Y2,//опорная точка
+                      X3, Y3,//вектор
+                      &nVector23vrt);//нормализованный вектор 23
+//целочисленный вариант
+  nVector23_64vrt.xVect_64 = (INT_64)ceil(nVector23vrt.xVect*TO_INTEGER64);
+  nVector23_64vrt.yVect_64 = (INT_64)ceil(nVector23vrt.yVect*TO_INTEGER64);
+
+//нормализованный вектор 21
+  makeNormalVectorVRT(X2, Y2,//опорная точка
+                      X1, Y1,//вектор
+                      &nVector21vrt);//нормализованный вектор 21
+//целочисленный вариант
+  nVector21_64vrt.xVect_64 = (INT_64)ceil(nVector21vrt.xVect*TO_INTEGER64);
+  nVector21_64vrt.yVect_64 = (INT_64)ceil(nVector21vrt.yVect*TO_INTEGER64);
+
+//  X2S1Edit->Text = ugolString(makeUgolVector(&nVector21));//угол сработки
+//  X2S2Edit->Text = ugolString(makeUgolVector(&nVector23));//угол сработки
+
+  diff = makeUgolVectorVRT(&nVector21vrt) - makeUgolVectorVRT(&nVector23vrt);
+  if (diff>=MAX_UGOL) tmp1=1;//errorZona = true;//ошибка расположения вершин зоны
+  if (diff<0 && (diff=(diff+360.0))>MAX_UGOL) tmp1=1;//errorZona = true;//ошибка расположения вершин зоны
+//  sprintf(LocTxt,  "t2= %5.3f", diff);
+//  TestLabel2->Caption = LocTxt;
+
+  if (tmp1) //контроль 2-й точки
+  {
+//    ControlLabel->Caption = "ОШИБКА Угол в точке 2!";
+//    sendText("visualView W1");
+//    return true;//уйти с ошибкой
+    return ERROR_2_UGOL;//уйти с ошибкой
+  }//if
+
+//исследовать все стороны возврата
+  LineXY_VRT lineV32_23, lineV12_21, lineV31_13;
+  makeLineVVRT(X32V, Y32V, X23V, Y23V, &lineV32_23);//исследовать сторону возврата
+  makeLineVVRT(X31V, Y31V, X13V, Y13V, &lineV31_13);//исследовать сторону возврата
+  makeLineVVRT(X12V, Y12V, X21V, Y21V, &lineV12_21);//исследовать сторону возврата
+
+  VectorXY_VRT vXY1, vXY2;
+
+  vXY1.xVect = X32V;
+  vXY1.yVect = Y32V;
+  vXY2.xVect = X31V;
+  vXY2.yVect = Y31V;
+
+  VectorXY_VRT tempXY =
+  makeVozvCrossPointVRT(&vXY1, &vXY2, &lineV32_23, &lineV31_13);//вычислить возврат
+  X32V = tempXY.xVect;
+  Y32V = tempXY.yVect;
+  X31V = X32V;//tempXY.xVect;
+  Y31V = Y32V;//tempXY.yVect;
+//целочисленный вариант
+  X32V_64 = (INT_64)ceil(X32V*TO_INTEGER64);
+  Y32V_64 = (INT_64)ceil(Y32V*TO_INTEGER64);
+//  X31V_64 = X32V_64;
+//  Y31V_64 = Y32V_64;
+
+  vXY1.xVect = X32V;
+  vXY1.yVect = Y32V;
+  vXY2.xVect = X12V;
+  vXY2.yVect = Y12V;
+  tempXY =
+  makeVozvCrossPointVRT(&vXY1, &vXY2, &lineV32_23, &lineV12_21);//вычислить возврат
+  X21V = tempXY.xVect;
+  Y21V = tempXY.yVect;
+  X23V = X21V;//tempXY.xVect;
+  Y23V = Y21V;//tempXY.yVect;
+//целочисленный вариант
+  X21V_64 = (INT_64)ceil(X21V*TO_INTEGER64);
+  Y21V_64 = (INT_64)ceil(Y21V*TO_INTEGER64);
+//  X23V_64 = X21V_64;
+//  Y23V_64 = Y21V_64;
+
+  vXY1.xVect = X12V;
+  vXY1.yVect = Y12V;
+  vXY2.xVect = X13V;
+  vXY2.yVect = Y13V;
+  tempXY =
+  makeVozvCrossPointVRT(&vXY1, &vXY2, &lineV12_21, &lineV31_13);
+  X12V = tempXY.xVect;
+  Y12V = tempXY.yVect;
+  X13V = X12V;//tempXY.xVect;
+  Y13V = Y12V;//tempXY.yVect;
+//целочисленный вариант
+//  X12V_64 = (INT_64)ceil(X12V*TO_INTEGER64);
+//  Y12V_64 = (INT_64)ceil(Y12V*TO_INTEGER64);
+  X13V_64 = (INT_64)ceil(X12V*TO_INTEGER64);
+  Y13V_64 = (INT_64)ceil(Y12V*TO_INTEGER64);
+//  X13V_64 = X12V_64;
+//  Y13V_64 = Y12V_64;
+
+//сохранить массив вершин
+ int ii=0;
+ zonaVertexBD[numclon*16 + ii++] = X1_64;//0//4 *2 *5];//массив вершин
+ zonaVertexBD[numclon*16 + ii++] = Y1_64;//0//4 *2 *5];//массив вершин
+
+ zonaVertexBD[numclon*16 + ii++] = X2_64;//0//4 *2 *5];//массив вершин
+ zonaVertexBD[numclon*16 + ii++] = Y2_64;//0//4 *2 *5];//массив вершин
+
+ zonaVertexBD[numclon*16 + ii++] = X3_64;//0//4 *2 *5];//массив вершин
+ zonaVertexBD[numclon*16 + ii++] = Y3_64;//0//4 *2 *5];//массив вершин
+ ii++;
+ ii++;
+// zonaVertexBD[numclon*16 + ii++] = X4_64;//0//4 *2 *5];//массив вершин
+// zonaVertexBD[numclon*16 + ii++] = Y4_64;//0//4 *2 *5];//массив вершин
+
+// zonaVertexBD[numclon*16 + ii++] = X14V_64;//0//4 *2 *5];//массив вершин
+// zonaVertexBD[numclon*16 + ii++] = Y14V_64;//0//4 *2 *5];//массив вершин
+//для треугольника
+ zonaVertexBD[numclon*16 + ii++] = X13V_64;//0//4 *2 *5];//массив вершин
+ zonaVertexBD[numclon*16 + ii++] = Y13V_64;//0//4 *2 *5];//массив вершин
+//
+ zonaVertexBD[numclon*16 + ii++] = X21V_64;//0//4 *2 *5];//массив вершин
+ zonaVertexBD[numclon*16 + ii++] = Y21V_64;//0//4 *2 *5];//массив вершин
+
+ zonaVertexBD[numclon*16 + ii++] = X32V_64;//0//4 *2 *5];//массив вершин
+ zonaVertexBD[numclon*16 + ii++] = Y32V_64;//0//4 *2 *5];//массив вершин
+
+//сохранить нормализ вектора
+//для хранения зон для 5 ступеней
+// memcpy(&(nVector34_64vrtBD[numclon]), &nVector34_64vrt, sizeof(VectorXY_64));
+ memcpy(&(nVector32_64vrtBD[numclon]), &nVector32_64vrt, sizeof(VectorXY_64));
+ memcpy(&(nVector12_64vrtBD[numclon]), &nVector12_64vrt, sizeof(VectorXY_64));
+// memcpy(&(nVector14_64vrtBD[numclon]), &nVector14_64vrt, sizeof(VectorXY_64));
+
+// memcpy(&(nVector41_64vrtBD[numclon]), &nVector41_64vrt, sizeof(VectorXY_64));
+// memcpy(&(nVector43_64vrtBD[numclon]), &nVector43_64vrt, sizeof(VectorXY_64));
+ memcpy(&(nVector23_64vrtBD[numclon]), &nVector23_64vrt, sizeof(VectorXY_64));
+ memcpy(&(nVector21_64vrtBD[numclon]), &nVector21_64vrt, sizeof(VectorXY_64));
+//для треугольника
+ memcpy(&(nVector31_64vrtBD[numclon]), &nVector31_64vrt, sizeof(VectorXY_64));
+ memcpy(&(nVector13_64vrtBD[numclon]), &nVector13_64vrt, sizeof(VectorXY_64));
+
+  return 0;//false;
+}//isNewZonaTrianMethod()
+
+char controlPoint3TrianVRT()
+{
+//контроль 3-й точки
+  if ((X1-X3)<0.0) return 1;//true;//ОШИБКА
+  return 0;//false;
+}//controlPoint3TrianVRT()
+

@@ -1,0 +1,101 @@
+
+//трансляция NZOP-------------------------------------------
+//Блокировка ЗОП1
+   WideCmdStateINTERFACE[BLOCK_ZOP1_DI_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[offsetIOCmdNZOP2 -
+                           IOCMD_NZOP1to2_TOTAL*1 +
+			 IOCMD1_NZOP1to2 
+			 ];
+ //Сектор НЗОП1Впер 
+   WideCmdStateINTERFACE[STPDEV_SECTOR_ZOP1_STAIGHT_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[offsetIOCmdNZOP2 -
+                           IOCMD_NZOP1to2_TOTAL*1 +
+			 IOCMD6_NZOP1to2 
+			 ];
+ //Сектор НЗОП1назад
+   WideCmdStateINTERFACE[STPDEV_SECTOR_ZOP1_BACK_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[offsetIOCmdNZOP2 -
+                           IOCMD_NZOP1to2_TOTAL*1 +
+			 IOCMD7_NZOP1to2 
+			 ];
+ //ПО ЗОП1
+   WideCmdStateINTERFACE[STPDEV_ZOP1_BORING_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[offsetIOCmdNZOP2 -
+                           IOCMD_NZOP1to2_TOTAL*1 +
+			 IOCMD2_NZOP1to2
+			 ];
+ //ПО НЗОП1Впер
+   WideCmdStateINTERFACE[STPDEV_ZOP1_STAIGHT_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[offsetIOCmdNZOP2 -
+                           IOCMD_NZOP1to2_TOTAL*1 +
+			 IOCMD3_NZOP1to2 
+			 ];
+ //ПО НЗОП1ННазад
+   WideCmdStateINTERFACE[STPDEV_ZOP1_BACK_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[offsetIOCmdNZOP2 -
+                           IOCMD_NZOP1to2_TOTAL*1 +
+			 IOCMD4_NZOP1to2 
+			 ];
+ //Сраб НЗОП1
+   WideCmdStateINTERFACE[ZOP1_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[offsetIOCmdNZOP2 -
+                           IOCMD_NZOP1to2_TOTAL*1 +
+			 IOCMD5_NZOP1to2 
+			 ];
+
+//Блокировка ЗОП2
+   WideCmdStateINTERFACE[BLOCK_ZOP2_DI_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[offsetIOCmdNZOP2 +
+                           IOCMD_NZOP1to2_TOTAL*0 +
+			 IOCMD1_NZOP1to2 
+			 ];
+ //Сектор НЗОП2Впер 
+   WideCmdStateINTERFACE[STPDEV_SECTOR_ZOP2_STAIGHT_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[offsetIOCmdNZOP2 +
+                           IOCMD_NZOP1to2_TOTAL*0 +
+			 IOCMD6_NZOP1to2 
+			 ];
+ //Сектор НЗОП2назад
+   WideCmdStateINTERFACE[STPDEV_SECTOR_ZOP2_BACK_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[offsetIOCmdNZOP2 +
+                           IOCMD_NZOP1to2_TOTAL*0 +
+			 IOCMD7_NZOP1to2 
+			 ];
+ //ПО ЗОП2
+   WideCmdStateINTERFACE[STPDEV_ZOP2_BORING_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[offsetIOCmdNZOP2 +
+                           IOCMD_NZOP1to2_TOTAL*0 +
+			 IOCMD2_NZOP1to2 
+			 ];
+ //ПО НЗОП2Впер
+   WideCmdStateINTERFACE[STPDEV_ZOP2_STAIGHT_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[offsetIOCmdNZOP2 +
+                           IOCMD_NZOP1to2_TOTAL*0 +
+			 IOCMD3_NZOP1to2 
+			 ];
+ //ПО НЗОП2ННазад
+   WideCmdStateINTERFACE[STPDEV_ZOP2_BACK_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[offsetIOCmdNZOP2 +
+                           IOCMD_NZOP1to2_TOTAL*0 +
+			 IOCMD4_NZOP1to2 
+			 ];
+ //Сраб НЗОП2
+   WideCmdStateINTERFACE[ZOP2_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[offsetIOCmdNZOP2 +
+                           IOCMD_NZOP1to2_TOTAL*0 +
+			 IOCMD5_NZOP1to2 
+			 ];

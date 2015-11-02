@@ -1,0 +1,77 @@
+/*###ICF### Section handled by ICF editor, don't touch! ****/
+/*-Editor annotation file-*/
+/* IcfEditorFile="$TOOLKIT_DIR$\config\ide\IcfEditor\a_v1_0.xml" */
+/*-Specials-*/
+
+/*-Memory Regions-*/
+define symbol __ICFEDIT_region_iRAM_start__                     = 0x08000000;
+define symbol __ICFEDIT_region_iRAM_end__                       = 0x0803FFFF;
+define symbol __ICFEDIT_region_ROM_start__                      = 0xE0000000;
+define symbol __ICFEDIT_region_ROM_end__                        = 0xE00FFFFF;
+define symbol __ICFEDIT_region_ROM_no_cache_start__             = 0xE0100000;
+define symbol __ICFEDIT_region_ROM_no_cache_end__               = 0xE01FFFFF;
+define symbol __ICFEDIT_region_RAM_code_start__                 = 0xE1000000;
+define symbol __ICFEDIT_region_RAM_code_end__                   = 0xE107EFFF;
+define symbol __ICFEDIT_region_RAM_code_no_cache_start__        = 0xE107F000;
+define symbol __ICFEDIT_region_RAM_code_no_cache_end__          = 0xE107FFFF;
+define symbol __ICFEDIT_region_RAM_date_start__                 = 0xE1080000;
+define symbol __ICFEDIT_region_RAM_date_end__                   = 0xE10FEFFF;
+define symbol __ICFEDIT_region_RAM_date_no_cache_start__        = 0xE10FF000;
+define symbol __ICFEDIT_region_RAM_date_no_cache_end__          = 0xE10FFFFF;
+/*-Sizes-*/
+define symbol __ICFEDIT_size_startup__  = 0x100;
+define symbol __ICFEDIT_size_vectors__  = 0x100;
+define symbol __ICFEDIT_size_cstack__   = 0x2000;
+define symbol __ICFEDIT_size_svcstack__ = 0x40;
+define symbol __ICFEDIT_size_irqstack__ = 0x100;
+define symbol __ICFEDIT_size_fiqstack__ = 0x40;
+define symbol __ICFEDIT_size_undstack__ = 0x40;
+define symbol __ICFEDIT_size_abtstack__ = 0x40;
+define symbol __ICFEDIT_size_heap__     = 0x1000;
+
+/*-Exports-*/
+export symbol __ICFEDIT_region_RAM_date_start__;
+export symbol __ICFEDIT_region_RAM_date_no_cache_end__; 
+
+/**** End of ICF editor section. ###ICF###*/
+
+define memory mem with size = 4G;
+
+//define region VEC_region                = mem:[from  __ICFEDIT_region_iRAM_start__                              size __ICFEDIT_size_vectors__             ];
+define region iRAM_region               = mem:[from (__ICFEDIT_region_iRAM_start__+__ICFEDIT_size_vectors__)     to __ICFEDIT_region_iRAM_end__             ];
+define region ROM_region                = mem:[from  __ICFEDIT_region_ROM_start__                                to  __ICFEDIT_region_ROM_end__             ];
+define region ROM_no_cache_region       = mem:[from  __ICFEDIT_region_ROM_no_cache_start__                       to __ICFEDIT_region_ROM_no_cache_end__     ];
+define region STA_region                = mem:[from  __ICFEDIT_region_RAM_code_start__                          size __ICFEDIT_size_startup__               ];
+define region RAM_code_region           = mem:[from (__ICFEDIT_region_RAM_code_start__+__ICFEDIT_size_startup__) to __ICFEDIT_region_RAM_code_end__         ];
+define region RAM_code_no_cache_region  = mem:[from  __ICFEDIT_region_RAM_code_no_cache_start__                  to __ICFEDIT_region_RAM_code_no_cache_end__];
+define region RAM_date_region           = mem:[from  __ICFEDIT_region_RAM_date_start__                           to __ICFEDIT_region_RAM_date_end__         ];
+define region RAM_date_no_cache_region  = mem:[from  __ICFEDIT_region_RAM_date_no_cache_start__                  to __ICFEDIT_region_RAM_date_no_cache_end__];
+
+define block CSTACK    with alignment = 8, size = __ICFEDIT_size_cstack__   { };
+define block SVC_STACK with alignment = 8, size = __ICFEDIT_size_svcstack__ { };
+define block IRQ_STACK with alignment = 8, size = __ICFEDIT_size_irqstack__ { };
+define block FIQ_STACK with alignment = 8, size = __ICFEDIT_size_fiqstack__ { };
+define block UND_STACK with alignment = 8, size = __ICFEDIT_size_undstack__ { };
+define block ABT_STACK with alignment = 8, size = __ICFEDIT_size_abtstack__ { };
+define block HEAP      with alignment = 8, size = __ICFEDIT_size_heap__     { };
+
+//initialize by copy { section .intvec };
+initialize by copy { readwrite };
+initialize by copy { section Fast_function };
+initialize by copy { section Fast_function_no_cache };
+do not initialize  { section .noinit };
+do not initialize  { section MMU_TT };
+
+//place at start of VEC_region            { section .intvec };
+place at start of STA_region            { section .cstartup };
+place in RAM_code_region                { section Fast_function, readonly };
+place in RAM_code_no_cache_region       { section Fast_function_no_cache, readonly section CODE_NOCACHE};
+place in RAM_date_region                { zeroinit, readwrite,
+                                          block CSTACK, block SVC_STACK, block IRQ_STACK, block FIQ_STACK,
+                                          block UND_STACK, block ABT_STACK, block HEAP};
+place in RAM_date_no_cache_region       { readwrite data section DMA_BUFFERS};
+
+place in iRAM_region  {readwrite data section MMU_TT, section I_RAM_variables, section IRAM_function};
+
+place at end of iRAM_region {readwrite data section ICI_NC_BUFFERS};
+ 

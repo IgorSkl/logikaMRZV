@@ -1,0 +1,137 @@
+//{
+//*******APV2********
+    //L3
+    int tmp5 =
+    //APV_TIM_10MS
+    LSIGNAL_TIMER(TIMER13_APV)  = 
+        //1C_APV
+        TL_LOGIC(TLCMD9_APV) |
+        //2C_APV
+        TL_LOGIC(TLCMD10_APV) |
+        //BLOK1
+        TL_LOGIC(TLCMD1_APV);
+
+    //L5
+    //WORK_APV
+    TL_LOGIC(TLCMD8_APV) =
+    //CMD_WORK_APV
+    IO_LOGIC(IOCMD6_APV) =
+          ILOG_TIMER(TIMER13_APV)|tmp5;
+
+  //L6
+  tmp5 =
+        //WORK_APV
+        TL_LOGIC(TLCMD8_APV) &
+        //Рестарт АПВ
+        IO_LOGIC(IOCMD3_APV);
+
+  int tmp2 = 0;
+//определить EL триг по восх фронту
+//set- сиг уст; old- память; out- выход
+//TRG_EL(set, old, out)
+  //        TRG3_APV
+  TRG_EL(tmp5, TLCMD19_APV, tmp2)  
+
+  int tmp3 = 0;
+//определить EL триг по восх фронту
+//set- сиг уст; old- память; out- выход
+//TRG_EL(set, old, out)
+  //                TRG4_APV
+  TRG_EL((tmp2^1), TLCMD20_APV, tmp3)
+
+  //L8
+  //START2
+  TL_LOGIC(TLCMD6_APV) =
+        //BLOK1
+        TL_LOGIC(TLCMD1_APV) &
+        //PUSK_PULSE
+        TL_LOGIC(TLCMD4_APV);
+
+//  int tmp1 =0;
+//определить EL триг по восх фронту
+//set- сиг уст; old- память; out- выход
+//TRG_EL(set, old, out)
+  //                               TRG5_APV
+//  TRG_EL((IO_LOGIC(IOCMD2_APV)^1), TLCMD21_APV, tmp1)
+ //пуск АПВ от ДВ
+ int tmp1 = IO_LOGIC(IOCMD2_APV) | puskAPV;
+  int tmp4 =0;
+//определить EL триг по восх фронту
+//set- сиг уст; old- память; out- выход
+//TRG_EL(set, old, out)
+  //      PUSK_APV            TRG6_APV
+  TRG_EL((tmp1^1), TLCMD22_APV, tmp4)
+
+  //L9
+  //PUSK_PULSE
+  TL_LOGIC(TLCMD4_APV) =
+              //tmp1  |
+              tmp3  |
+              tmp4;
+              //puskAPV;
+
+  //таймер BV APV1
+  LSIGNAL_TIMER(TIMER4_APV) =
+        //BVCMD_APV1
+        TL_LOGIC(TLCMD11_APV);
+
+  //таймер APV_TIM7 Время Блокир АПВ1 tim7
+  LSIGNAL_TIMER(TIMER7_APV) =
+  //Вкл ВВ АПВ1
+  IO_LOGIC(IOCMD4_APV) = 
+            //таймер BV APV1
+            FLOG_TIMERRES(TIMER4_APV,
+           //сброс блока включения
+            reset_bv);
+           //SPV_USTOUT(offsetSPVCmdPRM1+ SPV_RESET_BV));
+
+  //BLOK1
+  TL_LOGIC(TLCMD1_APV)  =
+        //таймер APV_TIM7 Время Блокир АПВ1 tim7
+        //                        RES_APV
+        FLOG_TIMERRES(TIMER7_APV, TL_LOGIC(TLCMD7_APV));
+
+//------------------------------------
+//  int tt5 =
+  //таймер BV APV2
+  LSIGNAL_TIMER(TIMER5_APV) =
+        //BVCMD_APV2
+        TL_LOGIC(TLCMD12_APV);
+
+// if(tt5){
+//  tt5=0;
+// }//if
+
+//  int tt2 =
+  //таймер APV_TIM8 Время Блокир АПВ tim8
+  LSIGNAL_TIMER(TIMER8_APV) =
+  //Вкл ВВ АПВ2
+  IO_LOGIC(IOCMD5_APV) = 
+            //таймер BV APV2
+            FLOG_TIMERRES(TIMER5_APV,
+           //сброс блока включения
+           SPV_USTOUT(offsetSPVCmdPRM1+ SPV_RESET_BV));
+
+  //BLOK3
+  TL_LOGIC(TLCMD3_APV)  =
+        //таймер APV_TIM8 Время Блокир АПВ tim8
+        //                        RES_APV
+        FLOG_TIMERRES(TIMER8_APV, TL_LOGIC(TLCMD7_APV));
+
+//-----------------------------------
+//Время внеш запрета АПВ tim6
+  LSIGNAL_TIMER(TIMER6_APV) =
+          //CMD_HANDOTKL_VV
+	  IO_LOGICOUT(offsetIOCmdPRM1 +IOCMD3_PRM1);
+
+  //L4
+  //RES_APV
+  TL_LOGIC(TLCMD7_APV) = 
+          //Время внеш запрета АПВ tim6
+          FLOG_TIMER(TIMER6_APV) |
+          tmp2 |
+          //CТАТ БЛОК АПВ
+          IO_LOGIC(IOCMD1_APV) |
+          //Управл АПВ1
+          (ENA_LOGIC(ENA_APV_1)^1);
+

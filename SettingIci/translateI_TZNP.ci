@@ -1,0 +1,309 @@
+
+//трансляция TZNP-------------------------------------------
+//Стат блок ТЗНП1
+   WideCmdStateINTERFACE[BLOCK_TZNP1_DI_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*4 +
+			 IOCMD1_TZNP1to5
+			 ];
+//Блок уск ТЗНП1
+//   WideCmdStateINTERFACE[, ] =
+//      SetCmdToUVV(TZNP_COMP1,  1, IOCMD2_TZNP1to5 
+//Опер уск ТЗНП1
+   WideCmdStateINTERFACE[ACCLT_TZNP1_DI_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*4 +
+			 IOCMD3_TZNP1to5 
+			 ];
+//Сраб ПО ТЗНП1
+   WideCmdStateINTERFACE[STPDEV_TZNP1_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*4 +
+			 IOCMD4_TZNP1to5 
+			 ];
+//Сраб ТЗНП1
+   WideCmdStateINTERFACE[TZNP1_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*4 +
+			 IOCMD5_TZNP1to5 
+			 ];
+//Сраб ПО ТЗНП1 3I0
+   WideCmdStateINTERFACE[STPDEV_TZNP1_3I0_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*4 +
+			 IOCMD6_TZNP1to5 
+			 ];
+//Сраб ТЗНП1 3I0
+   WideCmdStateINTERFACE[TZNP1_3I0_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*4 +
+			 IOCMD7_TZNP1to5 
+			 ];
+//Сраб ПО ТЗНП1 3U0
+   WideCmdStateINTERFACE[STPDEV_TZNP1_3U0_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*4 +
+			 IOCMD8_TZNP1to5 
+			 ];
+//Сраб ТЗНП1 3U0
+   WideCmdStateINTERFACE[TZNP1__3U0_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*4 +
+			 IOCMD9_TZNP1to5 
+			 ];
+
+//Стат блок ТЗНП2
+   WideCmdStateINTERFACE[BLOCK_TZNP1_DI_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*3 +
+			 IOCMD1_TZNP1to5 
+			 ];
+//Блок уск ТЗНП2
+//   WideCmdStateINTERFACE[] =
+	   //широкий ком массив RT 
+//	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+//                           IOCMD_TZNP1to5_TOTAL*3 +
+//      SetCmdToUVV(TZNP_COMP1,  2, IOCMD2_TZNP1to5 
+//			 ];
+//Опер уск ТЗНП2
+   WideCmdStateINTERFACE[ACCLT_TZNP2_DI_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*3 +
+			 IOCMD3_TZNP1to5 
+			 ];
+//Сраб ПО ТЗНП2
+   WideCmdStateINTERFACE[STPDEV_TZNP2_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*3 +
+			 IOCMD4_TZNP1to5 
+			 ];
+//Сраб ТЗНП2
+   WideCmdStateINTERFACE[TZNP2_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*3 +
+			 IOCMD5_TZNP1to5 
+			 ];
+//Сраб ПО ТЗНП2 3I0
+   WideCmdStateINTERFACE[STPDEV_TZNP2_3I0_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*3 +
+			 IOCMD6_TZNP1to5 
+			 ];
+//Сраб ТЗНП2 3I0
+   WideCmdStateINTERFACE[TZNP2_3I0_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*3 +
+			 IOCMD7_TZNP1to5 
+			 ];
+//Сраб ПО ТЗНП2 3U0
+   WideCmdStateINTERFACE[STPDEV_TZNP2_3U0_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*3 +
+			 IOCMD8_TZNP1to5 
+			 ];
+//Сраб ТЗНП2 3U0
+   WideCmdStateINTERFACE[TZNP2_3U0_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*3 +
+			 IOCMD9_TZNP1to5 
+			 ];
+
+//Стат блок ТЗНП3
+   WideCmdStateINTERFACE[BLOCK_TZNP3_DI_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*2 +
+			 IOCMD1_TZNP1to5 
+			 ];
+//Блок уск ТЗНП3
+//   WideCmdStateINTERFACE[] =
+	   //широкий ком массив RT 
+//	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+//                           IOCMD_TZNP1to5_TOTAL*3 +
+//			 IOCMD2_TZNP1to5 
+//			 ];
+//Опер уск ТЗНП3
+   WideCmdStateINTERFACE[ACCLT_TZNP3_DI_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*2 +
+			 IOCMD3_TZNP1to5 
+			 ];
+//Сраб ПО ТЗНП3
+   WideCmdStateINTERFACE[STPDEV_TZNP3_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*2 +
+			 IOCMD4_TZNP1to5 
+			 ];
+//Сраб ТЗНП3
+   WideCmdStateINTERFACE[TZNP3_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*2 +
+			 IOCMD5_TZNP1to5 
+			 ];
+//Сраб ПО ТЗНП3 3I0
+   WideCmdStateINTERFACE[STPDEV_TZNP3_3I0_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*2 +
+			 IOCMD6_TZNP1to5 
+			 ];
+//Сраб ТЗНП3 3I0
+   WideCmdStateINTERFACE[TZNP3_3I0_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*2 +
+			 IOCMD7_TZNP1to5 
+			 ];
+//Сраб ПО ТЗНП3 3U0
+   WideCmdStateINTERFACE[STPDEV_TZNP3_3U0_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*2 +
+			 IOCMD8_TZNP1to5 
+			 ];
+//Сраб ТЗНП3 3U0
+   WideCmdStateINTERFACE[TZNP3_3U0_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*2 +
+			 IOCMD9_TZNP1to5 
+			 ];
+
+//Стат блок ТЗНП4
+   WideCmdStateINTERFACE[BLOCK_TZNP4_DI_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*1 +
+			 IOCMD1_TZNP1to5 
+			 ];
+//Блок уск ТЗНП4
+//   WideCmdStateINTERFACE[] =
+	   //широкий ком массив RT 
+//	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+//			 IOCMD2_TZNP1to5 
+//			 ];
+//Опер уск ТЗНП4
+   WideCmdStateINTERFACE[ACCLT_TZNP4_DI_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*1 +
+			 IOCMD3_TZNP1to5 
+			 ];
+                         
+//Сраб ПО ТЗНП4
+   WideCmdStateINTERFACE[STPDEV_TZNP4_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*1 +
+			 IOCMD4_TZNP1to5 
+			 ];
+//Сраб ТЗНП4
+   WideCmdStateINTERFACE[TZNP4_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*1 +
+			 IOCMD5_TZNP1to5 
+			 ];
+//Сраб ПО ТЗНП4 3I0
+   WideCmdStateINTERFACE[STPDEV_TZNP4_3I0_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*1 +
+			 IOCMD6_TZNP1to5 
+			 ];
+//Сраб ТЗНП4 3I0
+   WideCmdStateINTERFACE[TZNP4_3I0_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*1 +
+			 IOCMD7_TZNP1to5 
+			 ];
+//Сраб ПО ТЗНП4 3U0
+   WideCmdStateINTERFACE[STPDEV_TZNP4_3U0_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*1 +
+			 IOCMD8_TZNP1to5 
+			 ];
+//Сраб ТЗНП4 3U0
+   WideCmdStateINTERFACE[TZNP4_3U0_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 -
+                           IOCMD_TZNP1to5_TOTAL*1 +
+			 IOCMD9_TZNP1to5 
+			 ];
+
+//Стат блок ТЗНП5
+   WideCmdStateINTERFACE[BLOCK_TZNP5_DI_OEPRF_ONB] =
+	   //широкий ком массив RT 
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 +
+                           IOCMD_TZNP1to5_TOTAL*0 +
+			 IOCMD1_TZNP1to5 
+			 ];
+//Блок уск ТЗНП5
+//   WideCmdStateINTERFACE[] =
+//	   WideCmdRTBuffer[ offsetIOCmdTZNP5 +
+//                           IOCMD_TZNP1to5_TOTAL*0 +
+//			 IOCMD2_TZNP1to5 
+//			 ];
+//Опер уск ТЗНП5
+   WideCmdStateINTERFACE[ACCLT_TZNP5_DI_OEPRF_ONB] =
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 +
+                           IOCMD_TZNP1to5_TOTAL*0 +
+			 IOCMD3_TZNP1to5 
+			 ];
+//Сраб ПО ТЗНП5
+   WideCmdStateINTERFACE[STPDEV_TZNP5_OEPRF_ONB] =
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 +
+                           IOCMD_TZNP1to5_TOTAL*0 +
+			 IOCMD4_TZNP1to5 
+			 ];
+//Сраб ТЗНП5
+   WideCmdStateINTERFACE[TZNP5_OEPRF_ONB] =
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 +
+                           IOCMD_TZNP1to5_TOTAL*0 +
+			 IOCMD5_TZNP1to5 
+			 ];
+//Сраб ПО ТЗНП5 3I0
+   WideCmdStateINTERFACE[STPDEV_TZNP5_3I0_OEPRF_ONB] =
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 +
+                           IOCMD_TZNP1to5_TOTAL*0 +
+			 IOCMD6_TZNP1to5 
+			 ];
+//Сраб ТЗНП5 3I0
+   WideCmdStateINTERFACE[TZNP5_3I0_OEPRF_ONB] =
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 +
+                           IOCMD_TZNP1to5_TOTAL*0 +
+			 IOCMD7_TZNP1to5 
+			 ];
+//Сраб ПО ТЗНП5 3U0
+   WideCmdStateINTERFACE[STPDEV_TZNP5_3U0_OEPRF_ONB] =
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 +
+                           IOCMD_TZNP1to5_TOTAL*0 +
+			 IOCMD8_TZNP1to5 
+			 ];
+//Сраб ТЗНП5 3U0
+   WideCmdStateINTERFACE[TZNP5_3U0_OEPRF_ONB] =
+	   WideCmdRTBuffer[ offsetIOCmdTZNP5 +
+                           IOCMD_TZNP1to5_TOTAL*0 +
+			 IOCMD9_TZNP1to5 
+			 ];
