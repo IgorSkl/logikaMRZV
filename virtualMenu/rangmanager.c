@@ -296,7 +296,7 @@ short SetCmdToUVV(short kodC, short numClon, short numIO, short numUVV)
 
   short conflict = SetUVVToClon(idxCmd, numUVV);
   SaveCRCrang();//сохранить CRC ранжир
-  PrepareBOBV();//подготовить Блок ОТКЛ, Блок ВКЛ
+//  PrepareBOBV();//подготовить Блок ОТКЛ, Блок ВКЛ
   return conflict;
 }//SetCmdToUVV(short kodC, short numClon, short numIO, short numUVV)
 /*

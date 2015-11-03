@@ -126,7 +126,7 @@ int tt1 =
   LSIGNAL_TIMER(TIMER_PRIVODVV_PRM1) =
         //L1 L2
        //Контроль Вкл         //Контроль Откл
-        (IO_LOGIC(IOCMD8_PRM1)  ^ IO_LOGIC(IOCMD9_PRM1)^1);
+        (IO_LOGIC(IOCMD8_PRM1)  ^ IO_LOGIC(IOCMD9_PRM1))^1;
 
 //L3
    //Привод ВВ
@@ -158,6 +158,13 @@ int tt1 =
 	  ENA_LOGIC(ENA_PRM1_ZADWKLVV)
           );
 
+
+		//Вкл ВВ
+  LSIGNAL_TIMER(TIMER_VKLVV_PRM1) = IO_LOGIC(IOCMD7_PRM1);
+  IO_LOGIC(IOCMD7_PRM1) = FLOG_TIMER(TIMER_VKLVV_PRM1);
+		//Откл ВВ
+  LSIGNAL_TIMER(TIMER_OTKLVV_PRM1) = IO_LOGIC(IOCMD3_PRM1);
+  IO_LOGIC(IOCMD3_PRM1) = FLOG_TIMER(TIMER_OTKLVV_PRM1);
 
 int tt2 = tmpOffsetT + TIMER1_PRM1;
 

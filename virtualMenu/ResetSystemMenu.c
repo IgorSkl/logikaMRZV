@@ -541,6 +541,8 @@ void PrepareBOBV()
 {
 //подготовить Блок ОТКЛ, Блок ВКЛ
 extern UNS_32 maskaReleBO, maskaReleBV;
+extern int offsetIOCmdPRM1;//смещение для IO PRM1
+
       maskaReleBO = 0;
       maskaReleBV = 0;
     int i=RELE1_SM;

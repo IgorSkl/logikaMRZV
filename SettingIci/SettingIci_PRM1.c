@@ -44,23 +44,23 @@ void  SettingIci_PRM1()
   SetUstToClon(PRM1_COMP1,  1, MNGVID_PRM1_CMNCNDZ, lMtz1Tmr*10);//выдержка обрат последоват CM НЦН ДЗ
 
  //T привод ВВ
-     lMtz1Tmr = brCfgTbl.ownrBru.time_ActuatorHVS;  
+     lMtz1Tmr = brCfgTbl.ownrBruStageParamStore.time_ActuatorHVS;//ownrBru.time_ActuatorHVS;  
   SetUstToClon(PRM1_COMP1,  1, MNGVID_PRM1_PRIVODVV, lMtz1Tmr*10);
 
 //выдержка формирователя Блока отключения
-     lMtz1Tmr = brCfgTbl.ownrBru.time_stageOFFUnit;   
+     lMtz1Tmr = brCfgTbl.ownrBruStageParamStore.time_stageOFFUnit;   
   SetUstToClon(PRM1_COMP1,  1, MNGUST_PRM1_BO, lMtz1Tmr*10);
 
 //выдержка формирователя Блока включения
-     lMtz1Tmr = brCfgTbl.ownrBru.time_stageONUnit;   
+     lMtz1Tmr = brCfgTbl.ownrBruStageParamStore.time_stageONUnit;   
   SetUstToClon(PRM1_COMP1,  1, MNGUST_PRM1_BV, lMtz1Tmr*10);
 
 //выдержка формирователя блокировки Блока включения
-     lMtz1Tmr = brCfgTbl.ownrBru.time_stageONCtrl;   
+     lMtz1Tmr = brCfgTbl.ownrBruStageParamStore.time_stageONCtrl;   
   SetUstToClon(PRM1_COMP1,  1, MNGVID_PRM1_BLOKIRBLOKVKL, lMtz1Tmr*10);
 
 //выдержка формирователя удлинения блокировки Блока включения
-     lMtz1Tmr = brCfgTbl.ownrBru.time_stageONUnitBlk;   
+     lMtz1Tmr = brCfgTbl.ownrBruStageParamStore.time_stageONUnitBlk;   
   SetUstToClon(PRM1_COMP1,  1, MNGVID_PRM1_DELAYBLOKIRBLOKVKL, lMtz1Tmr*10);
 
 

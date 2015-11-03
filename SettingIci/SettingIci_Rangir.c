@@ -217,6 +217,8 @@ void  SettingIci_Rangir()
    SettingIci_RangirOutOTToRele(RELE5_SM);//Выход триг
    SettingIci_RangirOutOTToRele(RELE6_SM);//Выход триг
 
+  PrepareBOBV();//подготовить Блок ОТКЛ, Блок ВКЛ
+
 }//SettingIci_Rangir()
 
 int isActivCmdDV(int numCmd, int numDV)

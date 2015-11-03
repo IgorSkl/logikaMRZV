@@ -338,15 +338,19 @@ unsigned short time_stageONUnitBlk;//выдержка формирователя удлинения блокировки
 #define TIMER_05NCNDZ_PRM1  9
 //Привод ВВ
 #define TIMER_PRIVODVV_PRM1 10
+//Вкл ВВ
+#define TIMER_VKLVV_PRM1    11
+//Откл ВВ
+#define TIMER_OTKLVV_PRM1   12
 
 //выдержка формирователя блокировки Блока включения
-#define TIMER_BLOKIRBLOKVKL_PRM1     11
+#define TIMER_BLOKIRBLOKVKL_PRM1     13
 
 //выдержка формирователя удлинения блокировки Блока включения
-#define TIMER_DELAYBLOKIRBLOKVKL_PRM1 12
+#define TIMER_DELAYBLOKIRBLOKVKL_PRM1 14
 
 //к-во таймеров
-#define TIMERS_PRM1_TOTAL     13
+#define TIMERS_PRM1_TOTAL     15
 
 #ifndef _HIDE_COMPONENT
 
@@ -470,7 +474,55 @@ IONAMESTATUS_COMPONENT ionsPRM1[IOCMD_PRM1_TOTAL] =
     //TEST
     1,//статус iocmd
     "TEST"
-  }
+  },
+  {
+    //CMD_VKL_VV
+    1,//статус iocmd
+    "вкл ВВ"
+  },
+
+  {
+    //CMD_KONTROL_VKL
+    1,//статус iocmd
+    "Контроль Вкл"
+  },
+
+  {
+    //CMD_KONTROL_OTKL
+    1,//статус iocmd
+    "Контроль Откл"
+  },
+
+  {
+    //
+    1,//статус iocmd
+    "Сбос реле"
+  },
+
+  {
+    //
+    1,//статус iocmd
+    "Сброс индикации"
+  },
+
+  {
+    //
+    1,//статус iocmd
+    "Блокировка включения ВВ"
+  },
+
+  {
+    //
+    1,//статус iocmd
+    "РазБлокировка включения ВВ"
+  },
+
+  {
+    //
+    1,//статус iocmd
+    "Привод ВВ"
+  },
+
 };
 
 LineMenuItem sub_menu_comp_PRM1[8] =
@@ -1456,6 +1508,10 @@ void  prepareUstPRM1(short idxC)
    //таймер БB
   setTimerPorog(tmpOffsetT+ TIMER_RELEBV,// 33);
     getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_BV));
+//Вкл ВВ
+  setTimerPorog(tmpOffsetT+ TIMER_VKLVV_PRM1, 10);
+//Откл ВВ
+  setTimerPorog(tmpOffsetT+ TIMER_OTKLVV_PRM1, 10);
 
 //Привод ВВ
   setTimerPorog(tmpOffsetT+ TIMER_PRIVODVV_PRM1,

@@ -336,9 +336,13 @@ void periodical_operations(void)
 
 //исполнить ранжирование реле
   rele_bdvv1 = WorkRangirRele();
-  if((rele_bdvv1&0x40)!=0){
-    int tt1=0;
-  }//if
+//  if((rele_bdvv1&0x40)!=0){
+//    int tt1=0;
+//  }//if
+
+ //pullReleBO();//тянуть реле на БО
+   pullReleBO();
+
 //исполнить ранжирование СДИ
   cdi_bdvv1 = WorkRangirCDI();
   isTimeSection = 0;//критическая секция с двойным доступом

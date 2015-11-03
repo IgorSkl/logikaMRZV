@@ -163,32 +163,37 @@ extern UNS_32 maskaReleBO;
 }//pullReleBO()
 */
 
+//int IVV_maxMonitoring;//сбор данных макс сраб по I для ВВ
+
+//int Cnt_VV_OTKL;//к-во отключений ВВ
+//int resurs_vymykacha;//остаток отключений ВВ
+
 void pullReleBO() @ "Fast_function"
 {
 //тянуть реле на БО
   static int isTimerBO_old;
 extern UNS_32 rele_bdvv1;//селекция реле
-extern UNS_32 rele_bdbo_old;//селекция реле
+static UNS_32 rele_bdbo_old;//селекция реле
 extern UNS_32 maskaReleBO;
-//extern int IA_maxMonitoring;//сбор данных макс сраб по IA
-extern int IVV_maxMonitoring;//сбор данных макс сраб по I для ВВ
+static int IA_maxMonitoring;//сбор данных макс сраб по IA
+static int IVV_maxMonitoring;//сбор данных макс сраб по I для ВВ
 
-//extern int IVV_maxFix;//фиксация данных макс сраб по I для ВВ
-extern int Cnt_VV_OTKL;//к-во отключений ВВ
-extern int resurs_vymykacha;//остаток отключений ВВ
+static int IVV_maxFix;//фиксация данных макс сраб по I для ВВ
+static int Cnt_VV_OTKL;//к-во отключений ВВ
+static int resurs_vymykacha;//остаток отключений ВВ
 extern int GlobalLevelI_ABC[];//уровни фазных токов Фурье
 
  int tmpOffsetT = offsetTimersPRM1;//смещение на таймерный индекс PRM1
 
  int isTimerBO =0;
  //нисходящий фронт
-  int focusReleBO =(
-    (rele_bdvv1^rele_bdbo_old)&rele_bdbo_old//селекция реле
-     )&maskaReleBO;
-  rele_bdbo_old = rele_bdvv1;
+ // int focusReleBO =(
+  //  (rele_bdvv1^rele_bdbo_old)&rele_bdbo_old//селекция реле
+  //   )&maskaReleBO;
+ // rele_bdbo_old = rele_bdvv1;
 
  int tmp=0;
- if(focusReleBO){
+ if(rele_bdvv1&maskaReleBO){//focusReleBO){
    tmp = 1;
  }//if
 
