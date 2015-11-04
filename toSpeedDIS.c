@@ -173,8 +173,9 @@ void pullReleBO() @ "Fast_function"
 //тянуть реле на БО
   static int isTimerBO_old;
 extern UNS_32 rele_bdvv1;//селекция реле
-static UNS_32 rele_bdbo_old;//селекция реле
 extern UNS_32 maskaReleBO;
+
+static UNS_32 rele_bdbo_old;//селекция реле
 static int IA_maxMonitoring;//сбор данных макс сраб по IA
 static int IVV_maxMonitoring;//сбор данных макс сраб по I для ВВ
 
@@ -187,17 +188,15 @@ extern int GlobalLevelI_ABC[];//уровни фазных токов Фурье
 
  int isTimerBO =0;
  //нисходящий фронт
- // int focusReleBO =(
-  //  (rele_bdvv1^rele_bdbo_old)&rele_bdbo_old//селекция реле
-  //   )&maskaReleBO;
- // rele_bdbo_old = rele_bdvv1;
-
- int tmp=0;
+ int tmp1=0;
  if(rele_bdvv1&maskaReleBO){//focusReleBO){
-   tmp = 1;
+   tmp1 = 1;
  }//if
+ int focusReleBO = (tmp1^rele_bdbo_old)&rele_bdbo_old;
+  rele_bdbo_old = tmp1;
 
- LSIGNAL_TIMER(TIMER_RELEBO) = tmp;//таймер БО
+
+ LSIGNAL_TIMER(TIMER_RELEBO) = focusReleBO;//tmp;//таймер БО
   isTimerBO = FLOG_TIMER(TIMER_RELEBO);
  if(isTimerBO){
   //таймер активный - тянуть
@@ -252,6 +251,7 @@ extern UNS_32 maskaReleBO, maskaReleBV;
  int tmpOffsetT = offsetTimersPRM1;//смещение на таймерный индекс PRM1
 
  //восходящий фронт
+/*
   int focusReleBV =(
     (rele_bdvv1^rele_bdbv_old)&rele_bdvv1//селекция реле
      )&maskaReleBV;
@@ -261,8 +261,15 @@ extern UNS_32 maskaReleBO, maskaReleBV;
  if(focusReleBV){
    tmp = 1;
  }//if
+*/
 
- LSIGNAL_TIMER(TIMER_RELEBV) = tmp;//таймер БB
+ //восходящий фронт
+ int tmp1=0;
+ if(rele_bdvv1&maskaReleBV){//focusReleBO){
+   tmp1 = 1;
+ }//if
+
+ LSIGNAL_TIMER(TIMER_RELEBV) = tmp1;//таймер БB
  int timlog = FLOG_TIMER(TIMER_RELEBV);
  if(timlog){
   //таймер активный - тянуть
