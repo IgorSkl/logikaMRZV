@@ -105,8 +105,12 @@ void  SettingIci_OFTZNP(int numFUNC, int FlagMaska, int numOF);
 void  SettingIci_OFUMM(int numFUNC, int FlagMaska, int numOF);
 void SettingIci_OFOF(int typFUNC, int FlagMaska, int numOF);
 void  SettingIci_OFNZOP(int typFUNC, int FlagMaska, int numOF);
+void  SettingIci_OFAPV(int typFUNC, int FlagMaska, int numOF);
+void  SettingIci_OFUROV(int typFUNC, int FlagMaska, int numOF);
+
 
 void SettingIci_RangirOTToDV(int nDV);
+UNS_32 puskInversDV1(int offsetDV);//, int cntDV);
 
 typedef struct 
 {

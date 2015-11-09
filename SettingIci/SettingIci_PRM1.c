@@ -95,53 +95,50 @@ void  SettingIci_PRM1()
   if(lSt1>0) uprPRM1 |= 32; // WKL
   else  uprPRM1 &= ~32; // OTKL 
 
-/*
-//задержка включения ВВ
-#define ENA_PRM1_ZADWKLVV   2
-//блокировка Вкл ВВ общ
-#define ENA_PRM1_BLOKWKLVV  3
-//Контроль ВВ
-#define ENA_PRM1_KONTROLVV  4
-//Ресурс ВВ
-#define ENA_PRM1_RESURSVV   5
-//Очистить Ресурс ВВ
-#define ENA_PRM1_RESETRESURSVV  6
-
-*/
   SetUstToClon(PRM1_COMP1,  1, MNGUPR_PRM1, uprPRM1);//управление PRM1
 
+extern UNS_32 InversMaska1;//маска инверсии ДВ
+//для первых 8 ДВ
+int tt2 = brCfgTbl.arUchTypeInput[0];
+  InversMaska1 = (tt2&0xFF)^0xFF;//puskInversDV1(0); 
+                 // ~((brCfgTbl.arUchTypeInput[0])&0xff);
+
+ // int tt1=0;
+  
 }//SettingIci_PRM1()
+/*
+extern UNS_32 InversMaska1;//маска инверсии ДВ
+
+UNS_32 puskInversDV1(int offsetDV)//, int cntDV)
+{
+//для первых 8 ДВ
+ UNS_32 rez=0;
+   for(int i=0; i<8; i++){
+     lSt1 = brCfgTbl.arUchTypeInput[0];//offsetDV + i];
+     if(lSt1==0) rez |= 1<<i;
+    }//for
+ return rez;
+}//puskInversDV1()
+*/
 
 /*
-typedef struct BruDsc_TagIn
+int puskRstOTotZPLUS(int numCmd, int numOT)
 {
+//Пуск от Защит +
+  int rez=0;
+    if(brCfgTbl.uc_ar_trg_rstPl_rank_cfg[(numOT*AMOUNT_BYTE_FOR_OEPRF)+
+                                       (numCmd>>3)]&(1<<(numCmd%8))) rez=1;
+  return rez;
+}//puskSetOTotZPLUS(int num)
 
-unsigned short time_stageOFFUnit;  //выдержка формирователя Блока отключения
-unsigned short time_stageONUnit;   //выдержка формирователя Блока включения
-unsigned short time_stageONCtrl;   //выдержка формирователя блокировки Блока включения
-unsigned short time_stageONUnitBlk;//выдержка формирователя удлинения блокировки Блока включения
-unsigned short time_ActuatorHVS;   //T привод ВВ
-//////////////////////////////////////////////////////////////////////////////////////////
-unsigned char state_Delay_ON_Unit;//Задержка вкл.
-unsigned char state_Blk_SetON;    //Блокировка вкл ВВ общ   
-
-}BruDsc;
-
-typedef struct BruMngStoreDsc_TagIn
-{
-
-//////////////////////////////////////////////////////////////////////////////////////////
-unsigned char state_Delay_ON_Unit;//Задержка вкл.
-unsigned char state_Blk_SetON;    //Блокировка вкл ВВ общ   
-
-unsigned char state_CheckHVS;     //Контроль ВВ
-unsigned char state_ResourceHVS; //Ресурс   ВВ
-}BruMngStoreDsc;
-
-BruMngStoreDsc ownrBruMngStore;
-
-RclrMngStoreDsc   ownrRclrMng;//АПВ
-BrfMngStoreDsc    ownrBrfMng; //УРОВ
-BruDsc    ownrBru; //
+unsigned char  arUchTypeInput[(NUM_IN>>3)];//normal inverse
+/*
+	Маска режима работы дискретных входов
+	1 - прямой
+	0 - инверсный
+	Маска
+	MSB ...LSB
+	ДВ31 	ДВ0
 
 */
+

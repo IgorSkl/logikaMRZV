@@ -879,8 +879,8 @@ void  prepareUstAPV(short idxC)
    setTimerPorog(tmpOffsetT+ TIMER7BIS_APV,
           codecUstAPV(1, MNGVID4_APV, getNativUstMngUSTAVKI(idxC, MNGVID4_APV)));
 
-  setTimerPorog(tmpOffsetT+ TIMER4_APV, 500);
-  setTimerPorog(tmpOffsetT+ TIMER5_APV, 500);
+  setTimerPorog(tmpOffsetT+ TIMER4_APV, 1);//500);
+  setTimerPorog(tmpOffsetT+ TIMER5_APV, 1);//500);
 
   //таймер APV_TIM_10MS
   setTimerPorog(tmpOffsetT+ TIMER13_APV, 10);

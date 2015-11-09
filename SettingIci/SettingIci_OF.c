@@ -48,91 +48,13 @@ extern MaskaOTAPVUROVOFcmd struct_maskaOTAPVUROVOFcmd;//маски для 16 опред функц
 
 extern MaskaOTcmd struct_maskaOTcmd;//маски для 8 опред триггеров
 
-//int puskOFotZPLUS();//int num);
-
   puskOFfunction *pntPuskOF;//указатель на ф-цию
-
-
 
 void  SettingIci_OF()
 {
 
   memset(&struct_maskaOTAPVUROVOFcmd, 0, sizeof(MaskaOTAPVUROVOFcmd));//стереть старое
   memset(&struct_maskaOTcmd,          0, sizeof(MaskaOTcmd));//стереть старое
-
-
-/*
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OFcmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OFcmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OFcmdMaska[i]=0;//Очистить
-
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OF2cmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OF2cmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OF2cmdMaska[i]=0;//Очистить
-
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OF3cmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OF3cmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OF3cmdMaska[i]=0;//Очистить
-
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OF4cmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OF4cmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OF4cmdMaska[i]=0;//Очистить
-
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OF5cmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OF5cmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OF5cmdMaska[i]=0;//Очистить
-
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OF6cmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OF6cmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OF6cmdMaska[i]=0;//Очистить
-
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OF7cmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OF7cmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OF7cmdMaska[i]=0;//Очистить
-
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OF8cmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OF8cmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OF8cmdMaska[i]=0;//Очистить
-
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OF9cmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OF9cmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OF9cmdMaska[i]=0;//Очистить
-
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OF10cmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OF10cmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OF10cmdMaska[i]=0;//Очистить
-
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OF11cmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OF11cmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OF11cmdMaska[i]=0;//Очистить
-
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OF12cmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OF12cmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OF12cmdMaska[i]=0;//Очистить
-
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OF13cmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OF13cmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OF13cmdMaska[i]=0;//Очистить
-
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OF14cmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OF14cmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OF14cmdMaska[i]=0;//Очистить
-
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OF15cmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OF15cmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OF15cmdMaska[i]=0;//Очистить
-
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP1OF16cmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP2OF16cmdMaska[i]=0;//Очистить
-  for(int i=0; i<DQUADRO; i++) struct_maskaOTAPVUROVOFcmd.pP3OF16cmdMaska[i]=0;//Очистить
-*/
-
-//OFuncDsc   ownrOFunc;  //Опред. функции
-//unsigned char uch_ar_type_df[NUM_DEF_FUN];
-//Тип Определяемой функции1
-//	1- прямая
-//	2 - инверсная
-
 
 //OF1
     lMtz1Tmr = brCfgTbl.ownrOFunc.ul_ar_time_delay_df[0];
@@ -336,6 +258,8 @@ void puskOFModern(int FlagMaska, int numOF)
   SettingIci_OFOF(0,   FlagMaska, numOF);
   SettingIci_OFNZOP(0, FlagMaska, numOF);
   SettingIci_OFPRM1(0, FlagMaska, numOF);
+  SettingIci_OFAPV(0, FlagMaska, numOF);
+  SettingIci_OFUROV(0, FlagMaska, numOF);
 }//puskOFModern(int FlagMaska, int numOF)
 
 void puskOTModern(int FlagMaska, int numOT)
@@ -347,14 +271,16 @@ void puskOTModern(int FlagMaska, int numOT)
   SettingIci_OFOF  (1, FlagMaska, numOT);
   SettingIci_OFNZOP(1, FlagMaska, numOT);
   SettingIci_OFPRM1(1, FlagMaska, numOT);
+  SettingIci_OFAPV(1, FlagMaska, numOT);
+  SettingIci_OFUROV(1, FlagMaska, numOT);
 }//puskOFModern(int FlagMaska, int numOT)
 
-int puskOFotZPLUS(int numCmd, int numOF)//AMOUNT_BYTE_FOR_OEPRF
+int puskOFotZPLUS(int numCmd, int numOF)
 {
 //Пуск от Защит +
   int rez=0;
     if(brCfgTbl.uc_ar_df1_pl_rank_cfg[(numOF*AMOUNT_BYTE_FOR_OEPRF)+
-                                       numCmd/8]&(1<<(numCmd%8))) rez=1;
+                                       (numCmd>>3)]&(1<<(numCmd%8))) rez=1;
   return rez;
 }//puskOFotZPLUS(int num)
 
@@ -363,7 +289,7 @@ int puskOFotZMINUS(int numCmd, int numOF)
 //Пуск от Защит -
   int rez=0;
     if(brCfgTbl.uc_ar_df1_mn_rank_cfg[(numOF*AMOUNT_BYTE_FOR_OEPRF)+
-                                       numCmd/8]&(1<<(numCmd%8))) rez=1;
+                                       (numCmd>>3)]&(1<<(numCmd%8))) rez=1;
   return rez;
 }//puskOFotZMINUS(int num)
 
@@ -372,7 +298,7 @@ int puskOFotZBLK(int numCmd, int numOF)
 //Пуск от Защит -
   int rez=0;
     if(brCfgTbl.uc_ar_df1_blk_rank_cfg[(numOF*AMOUNT_BYTE_FOR_OEPRF)+
-                                       numCmd/8]&(1<<(numCmd%8))) rez=1;
+                                       (numCmd>>3)]&(1<<(numCmd%8))) rez=1;
   return rez;
 }//puskOFotZBLK(int num)
 
@@ -381,7 +307,7 @@ int puskSetOTotZPLUS(int numCmd, int numOT)//AMOUNT_BYTE_FOR_OEPRF
 //Пуск от Защит +
   int rez=0;
     if(brCfgTbl.uc_ar_trg_setPl_rank_cfg[(numOT*AMOUNT_BYTE_FOR_OEPRF)+
-                                       numCmd/8]&(1<<(numCmd%8))) rez=1;
+                                       (numCmd>>3)]&(1<<(numCmd%8))) rez=1;
   return rez;
 }//puskSetOTotZPLUS(int num)
 
@@ -390,16 +316,16 @@ int puskSetOTotZMINUS(int numCmd, int numOT)
 //Пуск от Защит -
   int rez=0;
     if(brCfgTbl.uc_ar_trg_setMn_rank_cfg[(numOT*AMOUNT_BYTE_FOR_OEPRF)+
-                                       numCmd/8]&(1<<(numCmd%8))) rez=1;
+                                        (numCmd>>3)]&(1<<(numCmd%8))) rez=1;
   return rez;
 }//puskSetOTotZMINUS(int num)
 
-int puskRstOTotZPLUS(int numCmd, int numOT)//AMOUNT_BYTE_FOR_OEPRF
+int puskRstOTotZPLUS(int numCmd, int numOT)
 {
 //Пуск от Защит +
   int rez=0;
     if(brCfgTbl.uc_ar_trg_rstPl_rank_cfg[(numOT*AMOUNT_BYTE_FOR_OEPRF)+
-                                       numCmd/8]&(1<<(numCmd%8))) rez=1;
+                                       (numCmd>>3)]&(1<<(numCmd%8))) rez=1;
   return rez;
 }//puskSetOTotZPLUS(int num)
 
@@ -408,6 +334,6 @@ int puskRstOTotZMINUS(int numCmd, int numOT)
 //Пуск от Защит -
   int rez=0;
     if(brCfgTbl.uc_ar_trg_rstMn_rank_cfg[(numOT*AMOUNT_BYTE_FOR_OEPRF)+
-                                       numCmd/8]&(1<<(numCmd%8))) rez=1;
+                                       (numCmd>>3)]&(1<<(numCmd%8))) rez=1;
   return rez;
 }//puskSetOTotZMINUS(int num)

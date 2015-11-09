@@ -54,6 +54,9 @@ int numRele = nRele - RELE1_SM;//нормировка
 //Пуск АПВ от ДВ 
  if(isActivCmdRele(START_AFU_DI_OEPRF_ONB, numRele))//проверка активности команды на Реле
       SetCmdToUVV(APV_COMP1,  1, IOCMD2_APV, nRele);//отранж 
+        //Блокировка АПВ ОТ ДВ
+ if(isActivCmdRele(BLOCK_AFU_DI_OEPRF_ONB, numRele))//проверка активности команды на Реле
+      SetCmdToUVV(APV_COMP1,  1, IOCMD1_APV, nRele);//отранж 
 
 //APV1
  if(isActivCmdRele(ARCL1_OEPRF_ONB, numRele))//проверка активности команды на Реле

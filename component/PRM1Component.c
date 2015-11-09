@@ -1509,9 +1509,9 @@ void  prepareUstPRM1(short idxC)
   setTimerPorog(tmpOffsetT+ TIMER_RELEBV,// 33);
     getNativUstMngUSTAVKI(idxC, MNGUST_PRM1_BV));
 //Вкл ВВ
-  setTimerPorog(tmpOffsetT+ TIMER_VKLVV_PRM1, 10);
+  setTimerPorog(tmpOffsetT+ TIMER_VKLVV_PRM1, 1);
 //Откл ВВ
-  setTimerPorog(tmpOffsetT+ TIMER_OTKLVV_PRM1, 10);
+  setTimerPorog(tmpOffsetT+ TIMER_OTKLVV_PRM1, 1);
 
 //Привод ВВ
   setTimerPorog(tmpOffsetT+ TIMER_PRIVODVV_PRM1,
